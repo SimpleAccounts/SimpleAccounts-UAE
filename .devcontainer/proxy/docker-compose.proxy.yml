@@ -29,6 +29,7 @@ services:
     restart: unless-stopped
     environment:
       - DOCKER_API_VERSION=1.44
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     command:
       # API and Dashboard
       - '--api.dashboard=true'
@@ -40,11 +41,13 @@ services:
       # Entrypoints
       - '--entrypoints.web.address=:80'
       - '--entrypoints.websecure.address=:443'
-      # NOTE: No blanket HTTP→HTTPS redirect here to preserve local domain HTTP access
-      # HTTPS redirect is handled per-router via middleware for nip.io domains only
-      # Let's Encrypt Certificate Resolver
-      - '--certificatesresolvers.letsencrypt.acme.httpchallenge=true'
-      - '--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web'
+      # HTTP to HTTPS redirect for dev.simpleaccounts.io
+      - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
+      # Let's Encrypt Certificate Resolver with Cloudflare DNS challenge
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge=true'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare'
+      - '--certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53'
       - '--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@simpleaccounts.io}'
       - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
       # Logs
