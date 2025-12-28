@@ -10,6 +10,9 @@ This document captures important lessons learned during development to prevent r
 2. [Apache POI / Java 17 Compatibility](#2-apache-poi--java-17-compatibility)
 3. [SonarQube SSL Configuration in Coolify](#3-sonarqube-ssl-configuration-in-coolify)
 4. [Java Dependency Version Validity & API Stability](#4-java-dependency-version-validity--api-stability)
+5. [DevPod SSH Authentication Failures](#5-devpod-ssh-authentication-failures)
+6. [Traefik Multi-Network Container Routing](#6-traefik-multi-network-container-routing)
+7. [Vite External Host Access (403 Forbidden)](#7-vite-external-host-access-403-forbidden)
 
 ---
 
@@ -187,6 +190,262 @@ java.lang.NoSuchMethodError: org.apache.commons.csv.CSVFormat.withFirstRecordAsH
 2. **Prefer Stable:** For core libraries (commons-\*, guava, etc.), prefer versions that have been out for at least a few months unless a specific bugfix/feature is needed.
 3. **Address Deprecations:** Resolve deprecation warnings (`new CSVParser`) proactively to avoid breakage when libraries are eventually upgraded.
 4. **Local vs CI:** If a build passes locally but fails in CI, check for version mismatches or mirrors not yet having the latest artifacts.
+
+---
+
+## 5. DevPod SSH Authentication Failures
+
+**Date:** December 2025
+
+**Issue:** DevPod workspace creation gets stuck indefinitely on "Waiting for devpod agent to come up..." and eventually fails with SSH authentication errors.
+
+**Root Cause:**
+Multiple SSH keys loaded in the ssh-agent cause the SSH server to reject the connection before finding the correct key. The server's `MaxAuthTries` limit (typically 6) is exceeded when DevPod tries each key in the agent sequentially.
+
+**Error Messages:**
+
+```
+Too many authentication failures
+Disconnected from 65.108.51.136 port 22
+
+# Or after clearing agent:
+moshinhashmi@65.108.51.136: Permission denied (publickey,password).
+```
+
+**Symptoms:**
+
+- DevPod repeatedly shows "Waiting for devpod agent to come up..."
+- Debug mode (`--debug`) reveals "Too many authentication failures"
+- SSH works fine from terminal but DevPod fails
+- The issue persists even after configuring `IdentitiesOnly yes` in SSH config
+
+**Technical Details:**
+
+1. DevPod by default adds ALL private keys from `~/.ssh/` to the ssh-agent before connecting
+2. Even with `IdentitiesOnly yes` in SSH config, the ssh-agent keys are tried first
+3. With 6+ keys in the agent, the server rejects before the correct key is tried
+4. DevPod also needs SSH agent forwarding enabled for git operations on the remote
+
+**Solution:**
+
+1. **Disable DevPod's automatic key loading:**
+   ```bash
+   devpod context set-options -o SSH_ADD_PRIVATE_KEYS=false
+   ```
+
+2. **Add `ForwardAgent yes` to SSH config for git credential forwarding:**
+   ```
+   Host dev-server
+       HostName 65.108.51.136
+       User mohsin
+       IdentityFile ~/.ssh/id_ed25519
+       IdentitiesOnly yes
+       ForwardAgent yes
+       ServerAliveInterval 30
+       ServerAliveCountMax 3
+       TCPKeepAlive yes
+   ```
+
+3. **Manually manage ssh-agent keys - load only required keys:**
+   ```bash
+   # Clear all keys
+   ssh-add -D
+
+   # Add only the key for the dev server
+   ssh-add ~/.ssh/id_ed25519
+
+   # Add GitHub key for git operations (will be forwarded)
+   ssh-add ~/.ssh/id_rsa_personal
+
+   # Verify only 2 keys are loaded
+   ssh-add -l
+   ```
+
+4. **Clean up and recreate the workspace:**
+   ```bash
+   # Delete the stuck workspace
+   devpod delete <workspace-name> --force
+
+   # Clean up remote containers if needed
+   ssh dev-server "docker ps -a --format '{{.Names}}' | xargs -r docker rm -f"
+
+   # Pull latest image
+   ssh dev-server "docker pull ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest"
+
+   # Create fresh workspace from current directory
+   devpod up . --provider ssh --ide cursor --id simpleaccounts-uae
+   ```
+
+**Prevention:**
+
+1. Always set `SSH_ADD_PRIVATE_KEYS=false` in DevPod context when using multiple SSH keys
+2. Configure `ForwardAgent yes` in SSH config for hosts where you need git access
+3. Keep only necessary keys in ssh-agent (2-3 max)
+4. Use explicit `IdentityFile` and `IdentitiesOnly yes` in SSH config
+5. When DevPod hangs on agent startup, use `--debug` flag to see the actual error
+
+**DevPod Configuration Reference:**
+
+```bash
+# View current SSH provider options
+devpod provider options ssh
+
+# Update SSH provider with specific flags (if needed)
+devpod provider update ssh -o EXTRA_FLAGS="-o IdentitiesOnly=yes"
+
+# List workspaces
+devpod list
+
+# Delete workspace with force
+devpod delete <name> --force
+```
+
+**Related Commands:**
+
+```bash
+# Check ssh-agent keys
+ssh-add -l
+
+# Clear all keys from agent
+ssh-add -D
+
+# Add specific key
+ssh-add ~/.ssh/id_ed25519
+
+# Test SSH connection with verbose output
+ssh -v dev-server "echo OK"
+
+# Test SSH agent forwarding
+ssh -A dev-server "ssh -T git@github.com"
+```
+
+---
+
+## 6. Traefik Multi-Network Container Routing
+
+**Date:** December 2025
+
+**Issue:** External URLs via Traefik return 504 Gateway Timeout, even though services are running inside the container and Traefik shows them as "UP".
+
+**Root Cause:**
+When a Docker container is connected to multiple networks, Traefik may pick the wrong network IP to route traffic. Traefik selects the first network alphabetically unless explicitly configured.
+
+**Symptoms:**
+
+- Traefik API shows services as "UP" with an IP address
+- Requests via Traefik timeout (504 Gateway Timeout)
+- Direct container access works fine
+- Container is on multiple Docker networks
+
+**Example Scenario:**
+```
+Container dev-mohsin:
+  - mohsin-internal: 172.18.0.4  (internal network for db/redis)
+  - dev-proxy-network: 172.19.0.3  (Traefik's network)
+
+Traefik incorrectly tries to route to 172.18.0.4 (wrong network)
+```
+
+**Solution:**
+
+Add the `traefik.docker.network` label to specify which network Traefik should use:
+
+```yaml
+# docker-compose.yml
+services:
+  devcontainer:
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=dev-proxy-network'  # Add this line!
+      - 'traefik.http.routers.myapp.rule=Host(`myapp.example.com`)'
+      - 'traefik.http.services.myapp.loadbalancer.server.port=3000'
+```
+
+After adding the label, restart both the container and Traefik:
+```bash
+docker restart my-container
+docker restart traefik
+```
+
+**Prevention:**
+
+1. Always add `traefik.docker.network` label when containers are on multiple networks
+2. Keep the Traefik proxy network consistent across all services
+3. Verify the correct IP is shown in Traefik dashboard after changes
+4. When debugging, check `docker inspect <container>` to see all network IPs
+
+**Verification:**
+```bash
+# Check Traefik is using correct IP
+curl -s http://localhost:8090/api/http/services | python3 -c \
+  'import json,sys; [print(s["name"], s.get("serverStatus",{})) for s in json.load(sys.stdin)]'
+
+# Should show the dev-proxy-network IP, not internal network IP
+```
+
+---
+
+## 7. Vite External Host Access (403 Forbidden)
+
+**Date:** December 2025
+
+**Issue:** Vite dev server returns 403 Forbidden when accessed via external proxy (Traefik) or non-localhost hostname.
+
+**Root Cause:**
+Vite 5+ has stricter security defaults that reject requests from unknown hosts. Even with `--host 0.0.0.0`, Vite validates the `Host` header and blocks requests that don't match localhost or allowed patterns.
+
+**Error Message:**
+
+- HTTP 403 Forbidden response
+- No error in Vite logs (silent rejection)
+
+**Symptoms:**
+
+- `curl localhost:3000` works
+- `curl external-url.nip.io` returns 403
+- No CORS errors (not a CORS issue)
+- Traefik shows service as UP
+
+**Solution:**
+
+Add `allowedHosts: true` to the Vite server configuration:
+
+```javascript
+// vite.config.js
+export default defineConfig({
+  server: {
+    port: 3000,
+    host: true, // Listen on all interfaces
+    allowedHosts: true, // Allow all hosts (needed for external proxy access)
+    // Or specify explicit hosts:
+    // allowedHosts: ['localhost', '.nip.io', '.yourdomain.com'],
+  },
+});
+```
+
+**Alternative Solutions:**
+
+1. **Specific hosts pattern:**
+   ```javascript
+   allowedHosts: ['localhost', '.nip.io', 'myapp.example.com'],
+   ```
+
+2. **Disable host check (less secure):**
+   ```javascript
+   server: {
+     host: true,
+     allowedHosts: true,
+   }
+   ```
+
+**Prevention:**
+
+1. When setting up proxy access, always configure `allowedHosts` in Vite
+2. Use wildcard patterns for dynamic subdomains (e.g., `.nip.io`)
+3. Document the required Vite configuration for external access
+4. Test with the actual external URL during development setup
+
+**Note:** This is a security feature. In production, Vite's dev server should not be exposed - use a proper build instead.
 
 ---
 

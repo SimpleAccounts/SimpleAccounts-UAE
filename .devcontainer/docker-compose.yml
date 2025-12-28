@@ -69,6 +69,7 @@ services:
     # Traefik labels for external routing (active when connected to dev-proxy-network)
     labels:
       - 'traefik.enable=true'
+      - 'traefik.docker.network=dev-proxy-network'
       # Frontend routing (port 3000)
       - 'traefik.http.routers.${USER:-devuser}-frontend.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
       - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=web'
