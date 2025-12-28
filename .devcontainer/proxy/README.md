@@ -17,7 +17,8 @@ Each user environment includes:
 
 - **Zombie-free containers** - Uses `init: true` (tini) to prevent zombie process accumulation
 - **Isolated databases** - Each user has their own PostgreSQL instance
-- **Shareable URLs** - Access via `username.server-ip.nip.io`
+- **Shareable URLs** - Access via `https://username.dev.simpleaccounts.io`
+- **Valid SSL Certificates** - Wildcard Let's Encrypt certificate via Cloudflare DNS challenge
 - **Auto-shutdown** - Idle containers are automatically stopped after 30 minutes of inactivity
 - **DevPod Integration** - Works seamlessly with DevPod for IDE integration
 
@@ -112,7 +113,7 @@ Each user's environment has two networks:
 2. **Docker Compose starts** → Creates user-specific containers with Traefik labels
 3. **Post-start script runs** → Detects Traefik and connects container to `dev-proxy-network`
 4. **Traefik discovers container** → Routes traffic based on hostname labels
-5. **User gets shareable URLs** → `http://username.server-ip.nip.io`
+5. **User gets shareable URLs** → `https://username.dev.simpleaccounts.io`
 
 ### What Each User Gets
 
@@ -128,22 +129,22 @@ Each user's environment has two networks:
 
 ## Access URLs
 
-After starting your environment, you get shareable URLs:
+After starting your environment, you get shareable URLs with valid SSL certificates:
 
-| Service   | URL                                        |
-| --------- | ------------------------------------------ |
-| Frontend  | `http://<username>.<server-ip>.nip.io`     |
-| Backend   | `http://<username>-api.<server-ip>.nip.io` |
-| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
-| Dashboard | `http://proxy.<server-ip>.nip.io:8090`     |
+| Service   | URL                                            |
+| --------- | ---------------------------------------------- |
+| Frontend  | `https://<username>.dev.simpleaccounts.io`     |
+| Backend   | `https://<username>-api.dev.simpleaccounts.io` |
+| Web IDE   | `https://<username>-ide.dev.simpleaccounts.io` |
+| Dashboard | `http://localhost:8090` (on server only)       |
 
-**Example for user `alice` on server `65.108.51.136`:**
+**Example for user `alice`:**
 
-- Frontend: `http://alice.65-108-51-136.nip.io`
-- Backend: `http://alice-api.65-108-51-136.nip.io`
-- Web IDE: `http://alice-ide.65-108-51-136.nip.io`
+- Frontend: `https://alice.dev.simpleaccounts.io`
+- Backend: `https://alice-api.dev.simpleaccounts.io`
+- Web IDE: `https://alice-ide.dev.simpleaccounts.io`
 
-**How nip.io works**: It's a free DNS service that resolves based on the IP in the domain name. No configuration needed!
+**SSL Certificate**: Wildcard Let's Encrypt certificate (`*.dev.simpleaccounts.io`) issued via Cloudflare DNS challenge. Auto-renews every 90 days.
 
 ## Web IDE (Code-Server)
 

@@ -18,7 +18,7 @@ DevPod creates reproducible development environments using containers. Benefits:
 | Setup              | Best For                           | Access Method                        |
 | ------------------ | ---------------------------------- | ------------------------------------ |
 | **Local DevPod**   | Local development, solo work       | `localhost:3000` via port forwarding |
-| **Remote DevPod**  | Team collaboration, shared server  | `username.server-ip.nip.io` via Traefik |
+| **Remote DevPod**  | Team collaboration, shared server  | `https://username.dev.simpleaccounts.io` via Traefik |
 
 Both setups use the same DevPod workflow - the only difference is where containers run.
 
@@ -119,18 +119,18 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
 
 ### Shareable URLs
 
-After startup, you get shareable URLs (if Traefik is running):
+After startup, you get shareable URLs with valid SSL certificates (if Traefik is running):
 
-| Service   | URL                                        |
-| --------- | ------------------------------------------ |
-| Frontend  | `http://<username>.<server-ip>.nip.io`     |
-| Backend   | `http://<username>-api.<server-ip>.nip.io` |
-| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
+| Service   | URL                                            |
+| --------- | ---------------------------------------------- |
+| Frontend  | `https://<username>.dev.simpleaccounts.io`     |
+| Backend   | `https://<username>-api.dev.simpleaccounts.io` |
+| Web IDE   | `https://<username>-ide.dev.simpleaccounts.io` |
 
-**Example for user `alice` on server `65.108.51.136`:**
-- Frontend: `http://alice.65-108-51-136.nip.io`
-- Backend: `http://alice-api.65-108-51-136.nip.io`
-- Web IDE: `http://alice-ide.65-108-51-136.nip.io`
+**Example for user `alice`:**
+- Frontend: `https://alice.dev.simpleaccounts.io`
+- Backend: `https://alice-api.dev.simpleaccounts.io`
+- Web IDE: `https://alice-ide.dev.simpleaccounts.io`
 
 ### Web IDE Password
 

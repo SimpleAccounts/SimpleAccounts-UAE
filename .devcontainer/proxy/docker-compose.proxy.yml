@@ -9,16 +9,16 @@
 # User environments are created automatically via DevPod.
 # Each user's devcontainer auto-connects to this proxy on startup.
 #
-# URL Format (nip.io - no DNS config needed):
-#   - Frontend: http://<username>.<server-ip>.nip.io
-#   - Backend:  http://<username>-api.<server-ip>.nip.io
-#   - Web IDE:  http://<username>-ide.<server-ip>.nip.io
-#   - Dashboard: http://proxy.<server-ip>.nip.io:8090
+# URL Format (dev.simpleaccounts.io - valid SSL certificates):
+#   - Frontend: https://<username>.dev.simpleaccounts.io
+#   - Backend:  https://<username>-api.dev.simpleaccounts.io
+#   - Web IDE:  https://<username>-ide.dev.simpleaccounts.io
+#   - Dashboard: http://localhost:8090 (on server only)
 #
-# Example for user 'alice' on server 65.108.51.136:
-#   - http://alice.65-108-51-136.nip.io
-#   - http://alice-api.65-108-51-136.nip.io
-#   - http://alice-ide.65-108-51-136.nip.io
+# Example for user 'alice':
+#   - https://alice.dev.simpleaccounts.io
+#   - https://alice-api.dev.simpleaccounts.io
+#   - https://alice-ide.dev.simpleaccounts.io
 #
 # =============================================================================
 

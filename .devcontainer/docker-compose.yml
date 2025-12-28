@@ -11,6 +11,12 @@
 #   - Services communicate via hostnames: db:5432, redis:6379
 #   - Devcontainer connects to Traefik network for external routing
 #
+# Credential Mounts:
+#   - Local Docker: Copy .env.local to .env to mount from ~/.claude, ~/.ssh, etc.
+#   - Remote SSH: Uses default ${HOME}/.devpod-mount/ for isolated credentials
+#
+# See .env.local for local Docker configuration
+#
 # =============================================================================
 
 services:
@@ -25,19 +31,21 @@ services:
       - vscode-extensions:/home/vscode/.vscode-server/extensions
       - maven-cache:/home/vscode/.m2
       - npm-cache:/home/vscode/.npm
-      # User config/credentials (persist in host home directory)
-      - ${HOME}/.devpod-mount/code-server:/home/vscode/.config/code-server
-      - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
-      - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
-      - ${HOME}/.devpod-mount/codex:/home/vscode/.codex
-      - ${HOME}/.devpod-mount/gh:/home/vscode/.config/gh
-      - ${HOME}/.devpod-mount/bash-history:/home/vscode/.bash_history_dir
-      - ${HOME}/.devpod-mount/gitconfig:/home/vscode/.gitconfig_dir
-      - ${HOME}/.devpod-mount/ssh:/home/vscode/.ssh
-      - ${HOME}/.devpod-mount/docker:/home/vscode/.docker
-      - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
-      - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
-      - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
+      # User config/credentials
+      # - Local Docker: Set DEVPOD_CREDENTIALS_LOCAL=true to use ~/.claude, ~/.ssh, etc.
+      # - Remote SSH: Defaults to ${HOME}/.devpod-mount/ for isolated credentials
+      - ${DEVPOD_CREDS_CLAUDE:-${HOME}/.devpod-mount/claude}:/home/vscode/.claude
+      - ${DEVPOD_CREDS_GEMINI:-${HOME}/.devpod-mount/gemini}:/home/vscode/.gemini
+      - ${DEVPOD_CREDS_CODEX:-${HOME}/.devpod-mount/codex}:/home/vscode/.codex
+      - ${DEVPOD_CREDS_GH:-${HOME}/.devpod-mount/gh}:/home/vscode/.config/gh
+      - ${DEVPOD_CREDS_SSH:-${HOME}/.devpod-mount/ssh}:/home/vscode/.ssh
+      - ${DEVPOD_CREDS_DOCKER:-${HOME}/.devpod-mount/docker}:/home/vscode/.docker
+      - ${DEVPOD_CREDS_KUBE:-${HOME}/.devpod-mount/kube}:/home/vscode/.kube
+      - ${DEVPOD_CREDS_AWS:-${HOME}/.devpod-mount/aws}:/home/vscode/.aws
+      - ${DEVPOD_CREDS_AZURE:-${HOME}/.devpod-mount/azure}:/home/vscode/.azure
+      - ${DEVPOD_CREDS_CODESERVER:-${HOME}/.devpod-mount/code-server}:/home/vscode/.config/code-server
+      - ${DEVPOD_CREDS_BASH:-${HOME}/.devpod-mount/bash-history}:/home/vscode/.bash_history_dir
+      - ${DEVPOD_CREDS_GIT:-${HOME}/.devpod-mount/gitconfig}:/home/vscode/.gitconfig_dir
       # Mount host docker socket for Traefik network connection
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
