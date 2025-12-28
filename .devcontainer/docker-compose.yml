@@ -70,40 +70,24 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=dev-proxy-network'
-      # ============= HTTPS redirect middleware (for nip.io domains only) =============
-      - 'traefik.http.middlewares.${USER:-devuser}-https-redirect.redirectscheme.scheme=https'
-      - 'traefik.http.middlewares.${USER:-devuser}-https-redirect.redirectscheme.permanent=true'
       # ============= Frontend routing (port 3000) =============
-      # HTTP router (redirects to HTTPS)
-      - 'traefik.http.routers.${USER:-devuser}-frontend-http.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-frontend-http.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-frontend-http.middlewares=${USER:-devuser}-https-redirect'
-      # HTTPS router with Let's Encrypt
-      - 'traefik.http.routers.${USER:-devuser}-frontend.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.rule=Host(`${USER:-devuser}.dev.simpleaccounts.io`)'
       - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=websecure'
       - 'traefik.http.routers.${USER:-devuser}-frontend.tls=true'
       - 'traefik.http.routers.${USER:-devuser}-frontend.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.tls.domains[0].main=dev.simpleaccounts.io'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.tls.domains[0].sans=*.dev.simpleaccounts.io'
       - 'traefik.http.routers.${USER:-devuser}-frontend.service=${USER:-devuser}-frontend'
       - 'traefik.http.services.${USER:-devuser}-frontend.loadbalancer.server.port=3000'
       # ============= Backend API routing (port 8080) =============
-      # HTTP router (redirects to HTTPS)
-      - 'traefik.http.routers.${USER:-devuser}-api-http.rule=HostRegexp(`${USER:-devuser}-api.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-api-http.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-api-http.middlewares=${USER:-devuser}-https-redirect'
-      # HTTPS router with Let's Encrypt
-      - 'traefik.http.routers.${USER:-devuser}-api.rule=HostRegexp(`${USER:-devuser}-api.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-api.rule=Host(`${USER:-devuser}-api.dev.simpleaccounts.io`)'
       - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=websecure'
       - 'traefik.http.routers.${USER:-devuser}-api.tls=true'
       - 'traefik.http.routers.${USER:-devuser}-api.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.${USER:-devuser}-api.service=${USER:-devuser}-api'
       - 'traefik.http.services.${USER:-devuser}-api.loadbalancer.server.port=8080'
       # ============= Code-server / Web IDE routing (port 8443) =============
-      # HTTP router (redirects to HTTPS)
-      - 'traefik.http.routers.${USER:-devuser}-ide-http.rule=HostRegexp(`${USER:-devuser}-ide.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-ide-http.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-ide-http.middlewares=${USER:-devuser}-https-redirect'
-      # HTTPS router with Let's Encrypt
-      - 'traefik.http.routers.${USER:-devuser}-ide.rule=HostRegexp(`${USER:-devuser}-ide.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.${USER:-devuser}-ide.rule=Host(`${USER:-devuser}-ide.dev.simpleaccounts.io`)'
       - 'traefik.http.routers.${USER:-devuser}-ide.entrypoints=websecure'
       - 'traefik.http.routers.${USER:-devuser}-ide.tls=true'
       - 'traefik.http.routers.${USER:-devuser}-ide.tls.certresolver=letsencrypt'
