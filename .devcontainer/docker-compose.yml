@@ -70,22 +70,31 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=dev-proxy-network'
-      # Frontend routing (port 3000)
+      # ============= Frontend routing (port 3000) =============
+      # HTTPS router with Let's Encrypt
       - 'traefik.http.routers.${USER:-devuser}-frontend.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=websecure'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.tls=true'
+      - 'traefik.http.routers.${USER:-devuser}-frontend.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.${USER:-devuser}-frontend.service=${USER:-devuser}-frontend'
       - 'traefik.http.services.${USER:-devuser}-frontend.loadbalancer.server.port=3000'
-      # Backend API routing (port 8080)
+      # ============= Backend API routing (port 8080) =============
+      # HTTPS router with Let's Encrypt
       - 'traefik.http.routers.${USER:-devuser}-api.rule=HostRegexp(`${USER:-devuser}-api.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=websecure'
+      - 'traefik.http.routers.${USER:-devuser}-api.tls=true'
+      - 'traefik.http.routers.${USER:-devuser}-api.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.${USER:-devuser}-api.service=${USER:-devuser}-api'
       - 'traefik.http.services.${USER:-devuser}-api.loadbalancer.server.port=8080'
-      # Code-server / Web IDE routing (port 8443)
+      # ============= Code-server / Web IDE routing (port 8443) =============
+      # HTTPS router with Let's Encrypt
       - 'traefik.http.routers.${USER:-devuser}-ide.rule=HostRegexp(`${USER:-devuser}-ide.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-ide.entrypoints=web'
+      - 'traefik.http.routers.${USER:-devuser}-ide.entrypoints=websecure'
+      - 'traefik.http.routers.${USER:-devuser}-ide.tls=true'
+      - 'traefik.http.routers.${USER:-devuser}-ide.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.${USER:-devuser}-ide.service=${USER:-devuser}-ide'
       - 'traefik.http.services.${USER:-devuser}-ide.loadbalancer.server.port=8443'
-      # Local domain routing
+      # ============= Local domain routing (no TLS) =============
       - 'traefik.http.routers.${USER:-devuser}-frontend-local.rule=Host(`${USER:-devuser}.dev.simpleaccounts.local`)'
       - 'traefik.http.routers.${USER:-devuser}-frontend-local.entrypoints=web'
       - 'traefik.http.routers.${USER:-devuser}-frontend-local.service=${USER:-devuser}-frontend'
