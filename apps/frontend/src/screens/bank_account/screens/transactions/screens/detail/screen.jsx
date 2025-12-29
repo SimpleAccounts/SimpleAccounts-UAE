@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   NavLink,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { CommonActions } from 'services/global';
@@ -52,10 +52,10 @@ const mapDispatchToProps = dispatch => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

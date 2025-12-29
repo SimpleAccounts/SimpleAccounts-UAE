@@ -32,7 +32,7 @@ fi
 
 # 2. Prettier Check (Frontend)
 echo "📝 Checking Prettier formatting..."
-if npm run format:check >/dev/null 2>&1; then
+if npx prettier --check . >/dev/null 2>&1; then
     echo -e "${GREEN}✅ Prettier formatting OK${NC}"
 else
     echo -e "${RED}❌ Prettier check failed. Run: npm run format${NC}"

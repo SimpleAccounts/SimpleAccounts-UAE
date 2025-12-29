@@ -3,7 +3,7 @@ import './style.css';
 import { withNavigation } from 'utils/withNavigation';
 
 // Simple inline spinner component to replace react-loader-spinner
-const Spinner = ({ color = '#2064d8', size = 50 }) => (
+const Spinner = ({ color = '#1e6eff', size = 50 }) => (
   <div
     style={{
       width: size,
@@ -54,7 +54,7 @@ class ImageUploader extends React.Component {
   /*
    Load image at the beggining if defaultImage prop exists
    */
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.defaultImages !== this.props.defaultImages) {
       this.setState({ pictures: nextProps.defaultImages });
     }
@@ -253,7 +253,7 @@ class ImageUploader extends React.Component {
           {this.renderIcon()}
           {this.renderLabel()}
           <div className="errorsContainer">{this.renderErrors()}</div>
-          {loadFile ? <Spinner color="#2064d8" size={50} /> : null}
+          {loadFile ? <Spinner color="#1e6eff" size={50} /> : null}
           <button
             type={this.props.buttonType}
             className={'chooseFileButton ' + this.props.buttonClassName}

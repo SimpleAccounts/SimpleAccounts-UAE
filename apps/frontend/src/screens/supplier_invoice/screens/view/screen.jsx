@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Card, Table } from 'reactstrap';
+import { Button, Row, Col, Card, Table } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
@@ -244,7 +244,7 @@ const ViewInvoice = props => {
         <Card>
           <div style={{ display: debitNoteDataList.creditNoteId ? '' : 'none' }}>
             <Table>
-              <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+              <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                 <tr>
                   <th className="center" style={{ padding: '0.5rem' }}>
                     #

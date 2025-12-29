@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -281,7 +281,7 @@ const ViewCustomerInvoice = props => {
           <CardContent className="p-0">
             <div style={{ display: creditNoteDataList.creditNoteId ? '' : 'none' }}>
               <Table>
-                <TableHeader style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <TableHeader style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <TableRow>
                     <TableHead className="text-center" style={{ padding: '0.5rem' }}>
                       #

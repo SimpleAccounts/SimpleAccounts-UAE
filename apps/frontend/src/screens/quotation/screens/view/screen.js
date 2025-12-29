@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as QuotationDetailsAction from '../detail/actions';
@@ -12,11 +12,10 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
-import { data } from '../../../Language/index';
 
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
-import { Pencil, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

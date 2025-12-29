@@ -5,27 +5,23 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
-  Col,
-  Table,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent2 from '../filterComponet2';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index';
 import { ReportTables } from 'screens/financial_report/sections';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from '../filterComponent3';
-import { Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

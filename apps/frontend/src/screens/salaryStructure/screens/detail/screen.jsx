@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import * as EmployeeActions from '../../actions';
@@ -24,7 +24,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
+import { UserCircle, CircleDot, Ban } from 'lucide-react';
 
 const regEx = /^[0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;

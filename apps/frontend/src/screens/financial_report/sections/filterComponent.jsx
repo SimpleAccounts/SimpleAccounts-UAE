@@ -1,5 +1,15 @@
-import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup, Label, Form } from 'reactstrap';
+import { Component } from 'react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
+  FormGroup,
+  Label,
+  Form,
+} from 'components/migration';
 import DatePicker from 'react-datepicker';
 import { useForm, Controller } from 'react-hook-form';
 import dayjs from '@/utils/date';
@@ -14,8 +24,8 @@ function FilterComponentForm({ generateReport, viewFilter }) {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-    watch,
+    formState: { errors: _errors },
+    watch: _watch,
   } = useForm({
     defaultValues: {
       endDate: dayjs().endOf('month').format('YYYY-MM-DD hh:mm'),

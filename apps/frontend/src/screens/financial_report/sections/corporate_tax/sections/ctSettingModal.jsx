@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -13,7 +13,7 @@ import {
   ModalFooter,
   CardBody,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';

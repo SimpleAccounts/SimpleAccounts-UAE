@@ -1,4 +1,3 @@
-import dayjs from '@/utils/date';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -38,7 +37,8 @@ export const postZipCodeError = (value, countryID) => {
 
 export const addressValidation = values => {
   const error = {};
-  if (values.fax && values.fax?.length !== 15) {
+  if (!values) return error;
+  if (values?.fax && values.fax?.length !== 15) {
     error.fax = strings.PleaseEnter15DigitFax;
   }
   if (!values.address) {

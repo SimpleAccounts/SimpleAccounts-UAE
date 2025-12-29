@@ -1,5 +1,4 @@
 --liquibase formatted sql
-<!-- USER below line on top of script to execute your sql script <author : version>
 
 --changeset Zain Khan:1
 

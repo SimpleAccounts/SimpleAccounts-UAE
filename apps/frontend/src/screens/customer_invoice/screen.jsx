@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -26,15 +26,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
-import {
-  DataTableRowActions,
-  commonActions as tableActions,
-} from '@/components/ui/data-table-actions';
+import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
 import { Loader, ConfirmDeleteModal, SentInvoice } from 'components';
 import { selectOptionsFactory } from 'utils';
 
-import EmailModal from './sections/email_template';
 import * as CustomerInvoiceDetailActions from './screens/detail/actions';
 import * as CustomerInvoiceActions from './actions';
 import * as CreditNotesActions from '../creditNotes/screens/create/actions';

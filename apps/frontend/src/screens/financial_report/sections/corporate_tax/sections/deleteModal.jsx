@@ -1,6 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, ModalHeader } from 'reactstrap';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  CardBody,
+  ModalHeader,
+} from 'components/migration';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
 import { data } from '../../../../Language/index';
@@ -28,7 +37,7 @@ let strings = new LocalizedStrings(data);
 
 const DeleteModal = props => {
   const [language] = useState(window['localStorage'].getItem('language'));
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
 
   const deleteById = current_report_id => {
     props.ctReportActions

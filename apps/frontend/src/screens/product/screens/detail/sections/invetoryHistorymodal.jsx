@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -12,7 +12,7 @@ import {
   ButtonGroup,
   CardBody,
   Modal,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';

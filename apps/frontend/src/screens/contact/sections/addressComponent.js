@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col, FormGroup, Input, Label } from 'reactstrap';
+import { Col, FormGroup, Input, Label } from 'components/migration';
 import Select from 'react-select';
 import { ZipCodeInput } from 'components';
 import { upperFirst } from 'lodash-es';
-import { selectOptionsFactory, DropdownLists } from 'utils';
+import { DropdownLists } from 'utils';
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import * as ContactActions from 'screens/contact/actions';

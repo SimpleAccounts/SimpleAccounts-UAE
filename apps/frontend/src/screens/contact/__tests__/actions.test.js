@@ -1,5 +1,5 @@
 import configureMockStore from 'redux-mock-store';
-import { thunk } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
 import * as actions from '../actions';
 import { CONTACT } from 'constants/types';
 import { authApi } from 'utils';
@@ -8,6 +8,7 @@ jest.mock('utils', () => ({
   authApi: jest.fn(),
 }));
 
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -67,22 +68,21 @@ describe('Contact Actions', () => {
 
       await store.dispatch(actions.getContactList(params));
 
-      expect(authApi).toHaveBeenCalledWith(
-        expect.objectContaining({
-          method: 'GET',
-          url: expect.stringContaining('name=John Doe'),
-        })
-      );
-      expect(authApi).toHaveBeenCalledWith(
-        expect.objectContaining({
-          url: expect.stringContaining('email=john.doe@example.com'),
-        })
-      );
-      expect(authApi).toHaveBeenCalledWith(
-        expect.objectContaining({
-          url: expect.stringContaining('contactType=1'),
-        })
-      );
+      // Check that authApi was called with correct parameters
+      expect(authApi).toHaveBeenCalled();
+      const callArgs = authApi.mock.calls[0][0];
+      expect(callArgs.method).toBe('GET');
+
+      // URLSearchParams encodes: spaces as +, @ as %40, and parameters may be in any order
+      const url = callArgs.url;
+      expect(url).toMatch(/name=John\+Doe/);
+      expect(url).toMatch(/email=john\.doe(%40|@)example\.com/);
+      expect(url).toMatch(/contactType=1/);
+      expect(url).toMatch(/pageNo=2/);
+      expect(url).toMatch(/pageSize=20/);
+      expect(url).toMatch(/order=asc/);
+      expect(url).toMatch(/sortingCol=email/);
+      expect(url).toMatch(/paginationDisable=false/);
     });
 
     it('should not dispatch action when paginationDisable is true', async () => {

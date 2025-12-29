@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Card, Table } from 'reactstrap';
+import { Button, Row, Col, Card, Table } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
@@ -17,7 +17,7 @@ import { Currency, InvoiceViewJournalEntries } from 'components';
 import dayjs from '@/utils/date';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
-import { Pencil, FileText, Printer, X } from 'lucide-react';
+import { FileText, Printer, X } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -288,7 +288,7 @@ class ViewInvoice extends React.Component {
           <Card>
             <div style={{ display: this.state.debitNoteDataList.creditNoteId ? '' : 'none' }}>
               <Table>
-                <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <tr>
                     <th className="center" style={{ padding: '0.5rem' }}>
                       #

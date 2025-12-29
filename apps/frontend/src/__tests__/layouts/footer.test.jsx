@@ -3,7 +3,6 @@
  * Verifies Footer component migration to shadcn/ui
  */
 
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Footer from '../../layouts/components/footer';
 

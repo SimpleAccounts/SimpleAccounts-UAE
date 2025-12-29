@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'reactstrap';
+import { Modal } from 'components/migration';
 import 'react-phone-input-2/lib/style.css';
 import CreateEmployee from 'screens/payrollemp/screens/create/screen';
 

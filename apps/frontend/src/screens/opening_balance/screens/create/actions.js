@@ -1,4 +1,3 @@
-import { OPENING_BALANCE } from 'constants/types';
 import { authApi } from 'utils';
 
 // Create & Save

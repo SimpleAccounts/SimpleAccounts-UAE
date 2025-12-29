@@ -12,8 +12,7 @@
  *
  * See: apps/frontend/src/routes/routing.v6.test.js for v6 test suite
  */
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Route, Switch, Redirect, Link, MemoryRouter } from 'react-router-dom';
 // Note: history package removed - v5 patterns documented below use MemoryRouter instead
 

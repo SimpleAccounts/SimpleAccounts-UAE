@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Switch } from '@/components/ui/switch';
@@ -39,7 +39,6 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
 // Use import instead of require for Vite compatibility
-import invoiceimage from 'assets/images/invoice/invoice.png';
 import { HandCoins, Upload, X, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 // Zod validation schema
@@ -1130,7 +1129,7 @@ const CreateCreditNote = ({
                                       setTaxType(newTaxType);
                                       updateAmount(data);
                                     }}
-                                    onColor="#2064d8"
+                                    onColor="#1e6eff"
                                     onHandleColor="#2693e6"
                                     handleDiameter={25}
                                     uncheckedIcon={false}

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardHeader,
@@ -16,7 +15,7 @@ import {
   Form,
   FormGroup,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
@@ -25,7 +24,6 @@ import './style.scss';
 import * as RolesActions from './actions';
 import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';
-import { CommonActions } from 'services/global';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Users, Plus } from 'lucide-react';

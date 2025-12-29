@@ -114,7 +114,7 @@ div.Select.is-invalid {
 .Mui-focused {
   border: none !important;
   box-shadow: none !important;
-  outline: 1px solid #2064d8;
+  outline: 1px solid #1e6eff;
 }
 
 ::placeholder {
@@ -249,7 +249,7 @@ th {
 
     .modal-header {
       border-radius: 0 !important;
-      background-color: #2064d8;
+      background-color: #1e6eff;
 
       button.close {
         display: none;
@@ -434,12 +434,12 @@ th {
   min-width: 100% !important;
 }
 .textarea:focus {
-  border-color: #2064d8 !important;
-  outline: 1px solid #2064d8 !important;
+  border-color: #1e6eff !important;
+  outline: 1px solid #1e6eff !important;
 }
 .card-body .textarea:focus {
-  border-color: #2064d8 !important;
-  outline: 1px solid #2064d8 !important;
+  border-color: #1e6eff !important;
+  outline: 1px solid #1e6eff !important;
   box-shadow: none !important;
 }
 

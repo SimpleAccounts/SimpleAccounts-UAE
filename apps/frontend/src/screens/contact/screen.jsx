@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, RefreshCw, Users, Edit } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 
 import * as ContactActions from './actions';
 import { CommonActions } from 'services/global';
@@ -22,9 +21,9 @@ const strings = new LocalizedStrings(data);
 // Neumorphic theme constants
 const theme = {
   bg: '#e8eef5',
-  primary: '#1e6eff',
-  primaryDark: '#0052cc',
-  secondary: '#00c896',
+  primary: '#2064d8',
+  primaryDark: '#1a4fa8',
+  secondary: '#21d8aa',
   warning: '#f59e0b',
   danger: '#ff4d6a',
   textPrimary: '#1e3a5f',
@@ -89,14 +88,30 @@ function Contact() {
   // Initialize data
   const initializeData = useCallback(() => {
     const paginationData = {
-      pageNo: pagination.pageIndex,
-      pageSize: pagination.pageSize,
+      pageNo: pagination.pageIndex ?? 0,
+      pageSize: pagination.pageSize ?? 10,
     };
-    const sortingData = {
-      order: sorting[0]?.desc ? 'desc' : sorting[0]?.id ? 'asc' : '',
-      sortingCol: sorting[0]?.id || '',
-    };
-    const postData = { ...filterData, ...paginationData, ...sortingData };
+
+    // Only include sorting if we have sorting data
+    const sortingData = {};
+    if (sorting && sorting.length > 0 && sorting[0]?.id) {
+      sortingData.order = sorting[0].desc ? 'desc' : 'asc';
+      sortingData.sortingCol = sorting[0].id;
+    }
+
+    // Build filter data, omitting empty strings
+    const cleanFilterData = {};
+    if (filterData.name && filterData.name.trim()) {
+      cleanFilterData.name = filterData.name.trim();
+    }
+    if (filterData.email && filterData.email.trim()) {
+      cleanFilterData.email = filterData.email.trim();
+    }
+    if (filterData.contactType) {
+      cleanFilterData.contactType = filterData.contactType;
+    }
+
+    const postData = { ...cleanFilterData, ...paginationData, ...sortingData };
 
     contactActions
       .getContactList(postData)

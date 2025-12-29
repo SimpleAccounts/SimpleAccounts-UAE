@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
@@ -20,7 +20,7 @@ import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import './style.scss';
 import { CommonActions } from 'services/global';
-import { Settings, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

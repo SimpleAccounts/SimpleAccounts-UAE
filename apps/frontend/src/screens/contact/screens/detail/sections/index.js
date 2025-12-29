@@ -1,3 +1,1 @@
-import Temp from './temp';
-
-export { Temp };
+// No sections exported from detail screen

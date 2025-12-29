@@ -1,14 +1,31 @@
 # ------------------------------------------------------
-# Build Stage - Maven build
+# Build Stage - Maven build with BuildKit cache mounts
+# Optimized for minimal network bandwidth usage
 # ------------------------------------------------------
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
+
+# Copy pom.xml first for better layer caching
 COPY pom.xml .
+
+# Download dependencies only (creates cacheable layer)
+# This layer will be cached if pom.xml doesn't change
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn dependency:go-offline -B -q || true
+
+# Copy source code (separate layer - only rebuilds when code changes)
 COPY src ./src
-RUN mvn clean package -DskipTests -q
+
+# Build with cache mount for Maven repository
+# BuildKit cache mount persists Maven dependencies between builds
+# Using -o (offline) flag to use cached dependencies when possible
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn clean package -DskipTests -q -o || \
+    mvn clean package -DskipTests -q
 
 # ------------------------------------------------------
 # Runtime Stage - Tomcat
+# Pre-pull base image to reduce network usage
 # ------------------------------------------------------
 FROM eclipse-temurin:21-jdk-jammy
 

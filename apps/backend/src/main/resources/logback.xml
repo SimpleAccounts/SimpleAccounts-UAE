@@ -39,4 +39,6 @@
 	<!-- Application logging -->
 	<logger name="com.simpleaccounts.rest.companycontroller" level="info" />
 	<logger name="com.simpleaccounts.service" level="info" />
+	<logger name="com.simpleaccounts.rest.contactcontroller" level="debug" />
+	<logger name="com.simpleaccounts.aop" level="error" />
 </configuration>

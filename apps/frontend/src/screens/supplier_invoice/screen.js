@@ -14,11 +14,11 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import EmailModal from '../customer_invoice/sections/email_template';
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as SupplierInvoiceActions from './actions';
 import { CommonActions } from 'services/global';
@@ -29,10 +29,6 @@ import LocalizedStrings from 'react-localization';
 import { upperCase } from 'lodash-es';
 import config from 'constants/config';
 import { ToWords } from 'to-words';
-import invoiceimage from 'assets/images/invoice/invoice.png';
-import overWeekly from 'assets/images/invoice/week1.png';
-import overduemonthly from 'assets/images/invoice/month.png';
-import overdue from 'assets/images/invoice/due1.png';
 import { ServerDataTable } from '@/components/ui/server-data-table';
 import {
   ChevronUp,
@@ -77,10 +73,10 @@ const mapDispatchToProps = dispatch => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardHeader,
@@ -11,12 +10,11 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import FilterComponent from '../filterComponent';
 import './style.scss';
@@ -25,7 +23,6 @@ import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { ReportTables } from 'screens/financial_report/sections';
 import { useNavigate } from 'react-router-dom';
-import { CommonActions } from 'services/global';
 import { Settings, Printer } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);

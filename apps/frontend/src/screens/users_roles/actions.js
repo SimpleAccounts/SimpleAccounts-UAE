@@ -9,17 +9,12 @@ export const getRoleList = postObj => {
       method: 'GET',
       url: `/rest/user/getrole?order=${order}&sortingCol=${sortingCol}`,
     };
-
-    try {
-      const res = await authApi(data);
-      dispatch({
-        type: USER.ROLE_LIST,
-        payload: res.data,
-      });
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const res = await authApi(data);
+    dispatch({
+      type: USER.ROLE_LIST,
+      payload: res.data,
+    });
+    return res;
   };
 };
 
@@ -29,13 +24,7 @@ export const getModuleList = id => {
       method: 'GET',
       url: `/rest/roleModule/getModuleListByRoleCode?roleCode=${id}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -45,13 +34,7 @@ export const getUsersCountForRole = id => {
       method: 'GET',
       url: `/rest/roleModule/getUsersCountForRole?roleId=${id}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };
 
@@ -61,12 +44,6 @@ export const deleteRole = id => {
       method: 'DELETE',
       url: `/rest/roleModule/delete?roleCode=${id}`,
     };
-
-    try {
-      const res = await authApi(data);
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    return authApi(data);
   };
 };

@@ -5,17 +5,21 @@
  */
 package com.simpleaccounts.rest.contactcontroller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
  * @author admin
  */
-@Data
-@Builder(toBuilder = true)
+@Getter
+@Setter
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContactListModel {
 
     private Integer id;
@@ -58,6 +62,7 @@ public class ContactListModel {
 
     private Boolean isActive;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public String getFullName() {
         StringBuilder sb = new StringBuilder();
         if (firstName != null && !firstName.isEmpty()) {

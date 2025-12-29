@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Upload, Download, X } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import download from 'downloadjs';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

@@ -1,11 +1,11 @@
 // Register Chart.js components before any chart renders
 import 'utils/chartRegistry';
 
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import 'assets/css/tailwind.css';
 import 'assets/css/global.scss';
+import './index.css';
 import { ThemeProvider } from 'next-themes';
 
 import App from 'app';

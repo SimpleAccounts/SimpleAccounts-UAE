@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col, Table, Card } from 'reactstrap';
+import { Button, Row, Col, Table, Card } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
@@ -285,7 +285,7 @@ class ViewCreditNote extends React.Component {
           <Card>
             <div style={{ display: this.state.InvoiceDataList?.length === 0 ? 'none' : '' }}>
               <Table>
-                <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <tr>
                     <th className="center" style={{ padding: '0.5rem' }}>
                       #
@@ -354,7 +354,7 @@ class ViewCreditNote extends React.Component {
           <Card>
             <div style={{ display: this.state.applyToInvoiceData?.length === 0 ? 'none' : '' }}>
               <Table>
-                <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <tr>
                     <th className="center" style={{ padding: '0.5rem' }}>
                       #

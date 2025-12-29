@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -14,7 +14,7 @@ import {
   ModalFooter,
   CardBody,
   Card,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,10 +24,8 @@ import './style.scss';
 import * as VatreportAction from './actions';
 import * as FinancialReportActions from '../../../../actions';
 import DatePicker from 'react-datepicker';
-import dayjs from '@/utils/date';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Currency } from 'components';
 import { History, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {

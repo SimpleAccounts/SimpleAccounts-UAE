@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col } from 'components/migration';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as RequestForQuotationDetailsAction from '../detail/actions';
@@ -11,7 +11,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { RFQTemplate } from './sections';
-import { Card, CardBody, Table } from 'reactstrap';
+import { Card, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -166,7 +166,7 @@ const ViewRequestForQuotation = props => {
         <Card>
           <div style={{ display: PoDataList.length === 0 ? 'none' : '' }}>
             <Table>
-              <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+              <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                 <tr>
                   <th className="center" style={{ padding: '0.5rem' }}>
                     #

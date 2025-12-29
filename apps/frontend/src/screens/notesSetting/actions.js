@@ -1,4 +1,4 @@
-import { authApi, authFileUploadApi } from 'utils';
+import { authApi } from 'utils';
 
 export const getNoteSettingsInfo = () => {
   return dispatch => {

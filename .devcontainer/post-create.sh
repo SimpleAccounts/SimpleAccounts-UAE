@@ -3,40 +3,155 @@
 
 set -e
 
+# Temporarily unset NODE_OPTIONS to avoid issues during setup
+unset NODE_OPTIONS
+
+
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
+<<<<<<< HEAD
 # Install root dependencies
 echo "📦 Installing root npm dependencies..."
+<<<<<<< HEAD
 npm ci --prefer-offline || npm install
+=======
+npm install
+>>>>>>> origin/develop
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
 cd apps/frontend
+<<<<<<< HEAD
 npm ci --legacy-peer-deps --prefer-offline || npm install --legacy-peer-deps
+=======
+npm install --legacy-peer-deps
+>>>>>>> origin/develop
 cd ../..
 
 # Install Playwright browsers (using system Chromium)
 echo "🎭 Setting up Playwright..."
-cd apps/frontend
-# npx playwright install-deps 2>/dev/null || true  <-- Dependencies now in Dockerfile
-cd ../..
+=======
+# Determine the target user home directory
+# In devcontainer, we typically run as vscode user, but post-create may run as root
+TARGET_USER="vscode"
+TARGET_HOME="/home/vscode"
 
-# Download Maven dependencies
-echo "☕ Downloading Maven dependencies..."
-cd apps/backend
-if [ -f "./mvnw" ]; then
-    chmod +x ./mvnw
-    ./mvnw dependency:go-offline -B -q || true
-else
-    mvn dependency:go-offline -B -q || true
+# Function to fix ownership of a directory (uses sudo if needed)
+fix_ownership() {
+    local dir="$1"
+    if [ -d "$dir" ]; then
+        # Check if directory is owned by someone other than target user
+        local owner
+        owner=$(stat -c '%U' "$dir" 2>/dev/null || stat -f '%Su' "$dir" 2>/dev/null)
+        if [ "$owner" != "$TARGET_USER" ]; then
+            if [ "$(id -u)" = "0" ]; then
+                chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
+            else
+                sudo chown -R "$TARGET_USER:$TARGET_USER" "$dir" 2>/dev/null || true
+            fi
+        fi
+    fi
+}
+
+# Function to ensure directory exists with correct permissions
+ensure_dir() {
+    local dir="$1"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir" 2>/dev/null || sudo mkdir -p "$dir" 2>/dev/null || true
+    fi
+    fix_ownership "$dir"
+}
+
+# ============================================
+# Setup Maven directories BEFORE any maven commands
+# ============================================
+echo "📁 Setting up Maven directories..."
+
+# The .m2 directory is mounted as a volume - ensure it's writable
+ensure_dir "$TARGET_HOME/.m2"
+ensure_dir "$TARGET_HOME/.m2/repository"
+ensure_dir "$TARGET_HOME/.m2/wrapper"
+ensure_dir "$TARGET_HOME/.m2/wrapper/dists"
+
+# Also ensure npm cache directory is writable
+ensure_dir "$TARGET_HOME/.npm"
+n# ============================================
+# Fix volume permissions (run early to ensure tools work)
+# ============================================
+echo "🔧 Fixing volume permissions..."
+for dir in "$TARGET_HOME/.claude" "$TARGET_HOME/.gemini" "$TARGET_HOME/.codex" "$TARGET_HOME/.config/gh" "$TARGET_HOME/.bash_history_dir" "$TARGET_HOME/.gitconfig_dir" "$TARGET_HOME/.ssh" "$TARGET_HOME/.docker" "$TARGET_HOME/.kube" "$TARGET_HOME/.aws" "$TARGET_HOME/.azure"; do
+    [ -d "$dir" ] && fix_ownership "$dir"
+done
+
+# ============================================
+# Install npm dependencies
+# ============================================
+echo "📦 Installing root npm dependencies..."
+# Try npm ci first (faster, uses lock file exactly)
+# Fall back to npm install if lock file is out of sync
+if ! npm ci --prefer-offline 2>/dev/null; then
+    echo "  ⚠️  npm ci failed, falling back to npm install..."
+    npm install
+fi
+
+echo "📦 Installing frontend dependencies..."
+>>>>>>> origin/develop
+cd apps/frontend
+if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
+    echo "  ⚠️  npm ci failed, falling back to npm install..."
+    npm install --legacy-peer-deps
 fi
 cd ../..
 
+<<<<<<< HEAD
+# Download Maven dependencies
+=======
+# ============================================
+# Setup Playwright
+# ============================================
+echo "🎭 Setting up Playwright..."
+# Playwright browser deps are installed in Dockerfile
+# Just ensure the cache directory exists
+ensure_dir "$TARGET_HOME/.cache/ms-playwright"
+
+# ============================================
+# Download Maven dependencies
+# ============================================
+>>>>>>> origin/develop
+echo "☕ Downloading Maven dependencies..."
+cd apps/backend
+
+if [ -f "./mvnw" ]; then
+    chmod +x ./mvnw
+
+    # Set MAVEN_USER_HOME explicitly to ensure wrapper uses correct location
+    export MAVEN_USER_HOME="$TARGET_HOME"
+
+    # Use 'compile' instead of 'dependency:go-offline' because go-offline
+    # tries to resolve ALL transitive dependencies including deprecated ones
+    # from HTTP repositories that Maven 3.8.1+ blocks by default.
+    # Compile resolves only the dependencies actually needed for the build.
+    if ! ./mvnw compile -B -q \
+        -Dmaven.repo.local="$TARGET_HOME/.m2/repository" \
+        -DskipTests 2>/dev/null; then
+        echo "  ⚠️  Maven compile had issues (non-fatal)"
+    else
+        echo "  ✅ Maven dependencies downloaded successfully"
+    fi
+else
+    echo "  ⚠️  Maven wrapper not found, skipping dependency download"
+fi
+cd ../..
+
+# ============================================
 # Setup git hooks
+# ============================================
 echo "🪝 Setting up git hooks..."
 npm run prepare 2>/dev/null || true
 
-# Create local environment files if they don't exist
+# ============================================
+# Create local environment files
+# ============================================
 if [ ! -f "apps/frontend/.env.local" ]; then
     echo "📝 Creating frontend .env.local..."
     cat > apps/frontend/.env.local << 'EOF'
@@ -47,7 +162,7 @@ fi
 
 if [ ! -f "apps/backend/src/main/resources/application-local.properties" ]; then
     echo "📝 Creating backend application-local.properties..."
-    cat > apps/backend/src/main/resources/application-local.properties << 'EOF'
+    cat > apps/backend/src/main/resources/application-local.properties << 'BACKENDEOF'
 # Local development configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/simpleaccounts
 spring.datasource.username=simpleaccounts
@@ -55,7 +170,7 @@ spring.datasource.password=simpleaccounts_dev
 spring.jpa.hibernate.ddl-auto=update
 spring.redis.host=localhost
 spring.redis.port=6379
-EOF
+BACKENDEOF
 fi
 
 echo "✅ Development environment setup complete!"

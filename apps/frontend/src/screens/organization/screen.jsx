@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   Form,
   FormGroup,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 
 import ImageUploader from 'react-images-upload';
 import Select from 'react-select';

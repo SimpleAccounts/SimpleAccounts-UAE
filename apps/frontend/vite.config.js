@@ -58,7 +58,6 @@ export default defineConfig({
       'dayjs', // Pre-bundle dayjs to avoid initialization issues
       'bootstrap', // Pre-bundle bootstrap to ensure jQuery is loaded first
       '@emotion/react', // Pre-bundle emotion to ensure React is available
-      '@emotion/styled', // Pre-bundle emotion styled
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
@@ -114,6 +113,7 @@ export default defineConfig({
     host: true, // Listen on all interfaces (0.0.0.0 and ::)
     open: false, // Don't auto-open browser
     strictPort: false, // Allow fallback to next available port if 3000 is taken
+    allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local', '.dev.simpleaccounts.io'], // Restrict to known hosts for security
     // Reduce memory usage in dev
     fs: {
       // Limit file system access

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'reactstrap';
+import { Button } from 'components/migration';
 import { bindActionCreators } from 'redux';
 import dayjs from '@/utils/date';
 import { data } from 'screens/Language/index';

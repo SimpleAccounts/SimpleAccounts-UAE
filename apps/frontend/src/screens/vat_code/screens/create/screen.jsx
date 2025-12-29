@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,13 +16,13 @@ import {
   Row,
   Col,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import { Loader } from 'components';
 import { CommonActions } from 'services/global';
 import './style.scss';
 import * as VatCreateActions from './actions';
 import * as VatActions from '../../actions';
-import NumberFormat from 'react-number-format';
+import { NumericFormat } from 'react-number-format';
 import PropTypes from 'prop-types';
 import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
@@ -33,7 +33,7 @@ function NumberFormatCustom(props) {
   const { inputRef, onChange, ...other } = props;
 
   return (
-    <NumberFormat
+    <NumericFormat
       {...other}
       getInputRef={inputRef}
       onValueChange={values => {
@@ -230,7 +230,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                           control={control}
                           render={({ field }) => (
                             <div className="w-full">
-                              <NumberFormat
+                              <NumericFormat
                                 customInput={ShadcnInput}
                                 type="text"
                                 id="vat"

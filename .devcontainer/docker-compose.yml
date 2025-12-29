@@ -1,16 +1,57 @@
+<<<<<<< HEAD
+=======
+# =============================================================================
+# SimpleAccounts UAE - Development Container Stack
+# =============================================================================
+# Network Architecture:
+#   All services share the 'db' container's network namespace via network_mode.
+#   This means:
+#   - All services share the same hostname (simpleaccounts-dev)
+#   - All services share the same IP address and network interfaces
+#   - Services can communicate via localhost (e.g., localhost:5432 for Postgres)
+#
+# Why this design?
+#   - Simpler configuration: no need for service discovery or DNS
+#   - localhost access: connect to Postgres/Redis without hostname changes
+#   - Consistent with local development patterns
+#
+# See .devcontainer/README.md for detailed documentation.
+# =============================================================================
+
+>>>>>>> origin/develop
 services:
   devcontainer:
+    # Use prebuilt image (default for fast startup)
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
-    # For local development/testing, uncomment below and comment out image:
+    # For local development/testing, comment out 'image:' above and uncomment below:
     # build:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
+    env_file:
+      - .env
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
+<<<<<<< HEAD
+=======
+      # Cache volumes (can be rebuilt, use Docker named volumes)
+>>>>>>> origin/develop
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
+      # User config/credentials (persist in host home directory)
+      - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
+      - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
+      - ${HOME}/.devpod-mount/codex:/home/vscode/.codex
+      - ${HOME}/.devpod-mount/gh:/home/vscode/.config/gh
+      - ${HOME}/.devpod-mount/bash-history:/home/vscode/.bash_history_dir
+      - ${HOME}/.devpod-mount/gitconfig:/home/vscode/.gitconfig_dir
+      - ${HOME}/.devpod-mount/ssh:/home/vscode/.ssh
+      - ${HOME}/.devpod-mount/docker:/home/vscode/.docker
+      - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
+      - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
+      - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
     command: sleep infinity
+    # Share network namespace with db container for localhost access to all services
     network_mode: service:db
     depends_on:
       - db
@@ -18,6 +59,9 @@ services:
 
   db:
     image: postgres:16-alpine
+    # Hostname is shared by all containers using network_mode: service:db
+    # This sets the hostname for devcontainer and redis as well
+    hostname: simpleaccounts-dev
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -38,6 +82,7 @@ services:
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
+    # Share network namespace with db - accessible via localhost:6379
     network_mode: service:db
 
 volumes:

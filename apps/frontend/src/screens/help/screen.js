@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import configData from '../../constants/config';
 
 // import { bindActionCreators } from 'redux'
-import { Card, CardBody, Col, Row, CardGroup } from 'reactstrap';
+import { Card, CardBody, Col, Row, CardGroup } from 'components/migration';
 import { data } from '../../screens//Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
@@ -105,6 +104,7 @@ class Help extends React.Component {
                               target="_blank"
                               href="https://www.simpleaccounts.io/faqs/"
                               style={{ color: '#2266d8', marginTop: '30px !important' }}
+                              rel="noreferrer"
                             >
                               {strings.GotoFAQ}
                             </a>

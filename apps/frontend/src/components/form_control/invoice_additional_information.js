@@ -1,5 +1,4 @@
-import React from 'react';
-import { FormGroup, Input, Label, Col } from 'reactstrap';
+import { FormGroup, Input, Label, Col } from 'components/migration';
 
 function InvoiceAdditionaNotesInformation(props) {
   const {

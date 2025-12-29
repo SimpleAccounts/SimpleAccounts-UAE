@@ -16,25 +16,20 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { LeavePage, Loader, EmployeeModal, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
-import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
-import * as PayrollEmployeeActions from '../../../payrollemp/actions';
 import { DataTable } from '@/components/ui/data-table';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
-import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
-import 'react-dates/lib/css/_datepicker.css';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Ban, CheckCheck, CircleDot, HelpCircle, Trash2, UserCircle } from 'lucide-react';
@@ -44,10 +39,10 @@ const strings = new LocalizedStrings(languageData);
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };
@@ -80,7 +75,6 @@ const UpdatePayroll = () => {
   const [apiSelector, setApiSelector] = useState('');
   const [submitButton, setSubmitButton] = useState(true);
   const [paidDays, setPaidDays] = useState(30);
-  const [focusedInput, setFocusedInput] = useState(null);
   const [currencyIsoCode, setCurrencyIsoCode] = useState('AED');
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [isPayrollSubjectNameExist, setIsPayrollSubjectNameExist] = useState(false);
@@ -540,14 +534,17 @@ const UpdatePayroll = () => {
     setDialog(null);
   };
 
-  const handleDatesChange = ({ startDate, endDate }) => {
-    setValue('startDate', startDate);
-    setValue('endDate', endDate);
+  const handleDateRangeChange = dates => {
+    const [start, end] = dates;
+    const startDayjs = start ? dayjs(start) : null;
+    const endDayjs = end ? dayjs(end) : null;
+    setValue('startDate', startDayjs);
+    setValue('endDate', endDayjs);
     setCheckForLopSetting(true);
-    calculatePayperiod(startDate, endDate);
+    if (startDayjs && endDayjs) {
+      calculatePayperiod(startDayjs, endDayjs);
+    }
   };
-
-  const handleFocusChange = focusedInput => setFocusedInput(focusedInput);
 
   const columns = useMemo(
     () => [
@@ -740,19 +737,15 @@ const UpdatePayroll = () => {
                               </Label>
                               <div style={{ display: 'flex' }}>
                                 <FormGroup>
-                                  <DateRangePicker
-                                    displayFormat="DD-MM-YYYY"
-                                    startDate={startDate}
-                                    startDateId="tata-start-date"
-                                    endDate={endDate}
-                                    endDateId="tata-end-date"
-                                    onDatesChange={handleDatesChange}
-                                    focusedInput={focusedInput}
-                                    disabled={disableForAddButton() ? true : false}
-                                    onFocusChange={option => {
-                                      setFocusedInput(option);
-                                    }}
-                                    isOutsideRange={() => null}
+                                  <DatePicker
+                                    selectsRange
+                                    startDate={startDate ? startDate.toDate() : null}
+                                    endDate={endDate ? endDate.toDate() : null}
+                                    onChange={handleDateRangeChange}
+                                    dateFormat="dd-MM-yyyy"
+                                    className="form-control"
+                                    placeholderText="Select date range"
+                                    disabled={disableForAddButton()}
                                   />
 
                                   {errors.startDate && (

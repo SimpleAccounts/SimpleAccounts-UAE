@@ -79,11 +79,9 @@ export const getStateList = createAsyncThunk(
         method: 'get',
         url: '/rest/company/getState?countryCode=' + 229,
       };
-      if (229) {
-        const res = await api(data);
-        if (res.status === 200) {
-          return res.data;
-        }
+      const res = await api(data);
+      if (res.status === 200) {
+        return res.data;
       }
       return [];
     } catch (err) {

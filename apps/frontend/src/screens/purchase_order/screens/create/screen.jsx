@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,10 +15,10 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { LeavePage, Loader } from 'components';
+import { LeavePage } from 'components';
 import * as SupplierInvoiceCreateActions from './actions';
 import * as PurchaseOrderCreateAction from './actions';
 import * as PurchaseOrderAction from '../../actions';
@@ -32,7 +32,7 @@ import { ProductModal } from '../../../customer_invoice/sections';
 import { Textarea } from '@/components/ui/textarea';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import { optionFactory, selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
+import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';

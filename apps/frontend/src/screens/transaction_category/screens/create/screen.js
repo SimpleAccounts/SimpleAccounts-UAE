@@ -12,7 +12,7 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
+} from 'components/migration';
 import { toast } from 'sonner';
 import Select from 'react-select';
 import Autosuggest from 'react-autosuggest';

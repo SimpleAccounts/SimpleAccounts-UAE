@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'reactstrap';
+import { Modal } from 'components/migration';
 import { SalaryComponentScreen } from '../../salary_component/sections';
 
 class SalaryComponentDeduction extends React.Component {

@@ -11,7 +11,7 @@ import {
   Col,
   Label,
   Alert,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 
 import { selectOptionsFactory } from 'utils';
@@ -193,7 +193,7 @@ class ExplainTransactionModal extends React.Component {
     let amount = 0;
     this.state.explainList.map(obj => {
       for (let item in this.state.categoryList) {
-        if (this.state.categoryList.hasOwnProperty(item)) {
+        if (Object.prototype.hasOwnProperty.call(this.state.categoryList, item)) {
           let tempAmount;
           if (item === obj['categoryLabel']) {
             temp = this.state.categoryList[`${obj['categoryLabel']}`].filter(
@@ -366,7 +366,7 @@ class ExplainTransactionModal extends React.Component {
                 <div className="details-container">
                   {explainList &&
                     explainList.map((item, index) => (
-                      <div className="d-flex detail-row">
+                      <div key={index} className="d-flex detail-row">
                         <div className="sub-container">
                           <div className="mb-3 mr-2" style={{ width: '30%' }}>
                             <Label className="label">{strings.ChartOfAccountCategory}</Label>

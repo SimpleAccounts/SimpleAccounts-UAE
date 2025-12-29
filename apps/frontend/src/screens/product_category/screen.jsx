@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Boxes, Download, Trash2 } from 'lucide-react';
+import { Plus, Boxes } from 'lucide-react';
 
 import { DataTable } from '@/components/ui/data-table';
 
@@ -20,9 +20,9 @@ const strings = new LocalizedStrings(data);
 // Neumorphic theme constants
 const theme = {
   bg: '#e8eef5',
-  primary: '#1e6eff',
-  primaryDark: '#0052cc',
-  secondary: '#00c896',
+  primary: '#2064d8',
+  primaryDark: '#1a4fa8',
+  secondary: '#21d8aa',
   warning: '#f59e0b',
   danger: '#ff4d6a',
   textPrimary: '#1e3a5f',

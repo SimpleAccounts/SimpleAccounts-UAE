@@ -2,7 +2,6 @@
  * Tests for PrivateRoute component (React Router v6)
  */
 
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import PrivateRoute from '../private';

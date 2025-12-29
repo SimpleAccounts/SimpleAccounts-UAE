@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Row, Col } from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col } from 'components/migration';
 import { Loader, LeavePage } from 'components';
 import { CommonActions } from 'services/global';
 import * as DetailSalaryComponentAction from './actions';

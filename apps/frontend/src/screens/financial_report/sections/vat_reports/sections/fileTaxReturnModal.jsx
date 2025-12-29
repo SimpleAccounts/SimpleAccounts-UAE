@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -12,14 +12,13 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DatePicker from 'react-datepicker';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
-import { toast } from 'sonner';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
@@ -166,7 +165,8 @@ const FileTaxReturnModalForm = ({
         <Row className="mb-4">
           <Col>
             <h4>
-              Once report is filed, you won't be able to edit any transactions for this tax period.
+              Once report is filed, you won&apos;t be able to edit any transactions for this tax
+              period.
             </h4>
           </Col>
         </Row>

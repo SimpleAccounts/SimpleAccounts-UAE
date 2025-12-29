@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Button, Col, Card, CardHeader, CardBody, Row } from 'reactstrap';
-import { AuthActions, CommonActions } from 'services/global';
+import { Button, Card, CardHeader, CardBody } from 'components/migration';
 import * as VatreportAction from './actions';
 import logo from 'assets/images/brand/logo.png';
 import dayjs from '@/utils/date';

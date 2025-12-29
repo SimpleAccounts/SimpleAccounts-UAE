@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Row,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -404,8 +404,10 @@ const SupplierModal = ({
                     <b>
                       <a
                         target="_blank"
+                        rel="noreferrer"
                         href="https://tax.gov.ae/en/default.aspx"
                         style={{ color: '#2266d8' }}
+                        rel="noreferrer"
                       >
                         {strings.VerifyTRN}
                       </a>

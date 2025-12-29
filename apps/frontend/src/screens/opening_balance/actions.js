@@ -38,12 +38,10 @@ export const getOpeningBalanceList = obj => {
     };
     return authApi(data)
       .then(res => {
-        if (true) {
-          dispatch({
-            type: OPENING_BALANCE.OPENING_BALANCE_LIST,
-            payload: res.data,
-          });
-        }
+        dispatch({
+          type: OPENING_BALANCE.OPENING_BALANCE_LIST,
+          payload: res.data,
+        });
         return res;
       })
       .catch(err => {

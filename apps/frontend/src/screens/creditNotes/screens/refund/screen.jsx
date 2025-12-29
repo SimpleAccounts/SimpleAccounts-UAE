@@ -15,13 +15,13 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
@@ -52,10 +52,10 @@ const mapDispatchToProps = dispatch => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };
