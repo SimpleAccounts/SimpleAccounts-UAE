@@ -61,14 +61,14 @@
     }
   },
 
-  // Port forwarding
-  "forwardPorts": [3000, 8080, 8443, 5432, 6379],
+  // Port forwarding (for services running inside devcontainer)
+  // Note: PostgreSQL (db:5432) and Redis (redis:6379) are on separate containers
+  // Access them from devcontainer via hostnames, not localhost
+  "forwardPorts": [3000, 8080, 8443],
   "portsAttributes": {
     "3000": { "label": "Frontend (Vite)", "onAutoForward": "notify" },
     "8080": { "label": "Backend (Spring Boot)", "onAutoForward": "notify" },
-    "8443": { "label": "Code Server (Web IDE)", "onAutoForward": "notify" },
-    "5432": { "label": "PostgreSQL", "onAutoForward": "silent" },
-    "6379": { "label": "Redis", "onAutoForward": "silent" }
+    "8443": { "label": "Code Server (Web IDE)", "onAutoForward": "notify" }
   },
 
   // Lifecycle scripts

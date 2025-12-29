@@ -15,12 +15,12 @@ code .
 ### Multi-User (Shared Dev Server)
 
 ```bash
-cd .devcontainer/proxy
-./setup-user.sh <your-username>
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=<dev-server>
 
-# Then attach VS Code:
-# Cmd+Shift+P > "Dev Containers: Attach to Running Container"
-# Select: dev-<your-username>
+# Container auto-connects to Traefik proxy for shareable URLs
 ```
 
 ---
@@ -30,7 +30,7 @@ cd .devcontainer/proxy
 | Setup | Best For | Access URLs |
 |-------|----------|-------------|
 | **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
-| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
+| **Multi-User** | Shared dev server, team collaboration | `https://alice.dev.simpleaccounts.io` |
 
 ---
 
@@ -42,15 +42,14 @@ Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Shared Network Namespace                  │
-│                   (hostname: simpleaccounts-dev)             │
+│                    Internal Docker Network                   │
+│                   (user-specific isolation)                  │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │ devcontainer │  │      db      │  │    redis     │       │
 │  │              │  │  (postgres)  │  │              │       │
-│  │ localhost:   │  │ localhost:   │  │ localhost:   │       │
-│  │   5432 ─────────► 5432        │  │   6379 ◄─────────────│
-│  │   6379 ◄────────────────────────────► 6379      │       │
+│  │   db:5432 ──────► :5432       │  │              │       │
+│  │   redis:6379 ───────────────────────► :6379     │       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -59,17 +58,17 @@ Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
 
 | Service    | Access From DevContainer |
 | ---------- | ------------------------ |
-| PostgreSQL | `localhost:5432`         |
-| Redis      | `localhost:6379`         |
+| PostgreSQL | `db:5432`                |
+| Redis      | `redis:6379`             |
 | Frontend   | `localhost:3000`         |
 | Backend    | `localhost:8080`         |
 
-### Why Shared Network Namespace?
+### Why Internal Network?
 
-1. **Simplicity**: No DNS resolution or service discovery needed
-2. **Localhost Access**: Applications connect to `localhost` just like local development
-3. **Consistency**: Same connection strings work locally and in the container
-4. **Performance**: No network overlay overhead
+1. **Multi-user Isolation**: Each user gets their own network namespace
+2. **Traefik Compatible**: Devcontainer can join Traefik network for external routing
+3. **Simple Hostnames**: Services use predictable hostnames (`db`, `redis`)
+4. **Consistent**: Same connection strings work for single and multi-user setups
 
 ---
 
@@ -108,39 +107,38 @@ Uses `.devcontainer/proxy/` with Traefik reverse proxy.
 ### Features
 
 - **Isolated environments**: Each user has their own DB, Redis, and container
-- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
+- **Shareable URLs**: Share `https://alice.dev.simpleaccounts.io` with teammates
+- **Valid SSL Certificates**: Wildcard Let's Encrypt certificate via Cloudflare DNS
 - **No port conflicts**: Traefik routes by hostname, not port
-- **Zero DNS config**: Uses nip.io for automatic DNS resolution
 
 ### Usage
 
 ```bash
-# Setup your environment (auto-starts proxy if needed)
-cd .devcontainer/proxy
-./setup-user.sh alice
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=dev-server
 
-# Access URLs printed after setup:
-#   Frontend: http://alice.192-168-1-100.nip.io
-#   Backend:  http://alice-api.192-168-1-100.nip.io
+# Container auto-registers with Traefik. Access URLs shown at startup:
+#   Frontend: https://<username>.dev.simpleaccounts.io
+#   Backend:  https://<username>-api.dev.simpleaccounts.io
+#   Web IDE:  https://<username>-ide.dev.simpleaccounts.io
 ```
 
 ### User Management
 
 ```bash
-# Add new user
-./setup-user.sh bob
+# List active user containers
+docker ps --filter "name=simpleaccounts" --format "table {{.Names}}\t{{.Status}}"
 
-# List active users
-docker ps --filter "name=dev-" --format "table {{.Names}}\t{{.Status}}"
+# Stop user environment (via DevPod)
+devpod stop simpleaccounts-uae
 
-# Stop user environment
-docker compose -f docker-compose.alice.yml down
-
-# Remove user environment (with data)
-docker compose -f docker-compose.alice.yml down -v
+# Delete user environment (via DevPod)
+devpod delete simpleaccounts-uae
 ```
 
-See [proxy/README.md](proxy/README.md) for full documentation.
+See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
 
 ---
 
@@ -157,30 +155,34 @@ See [proxy/README.md](proxy/README.md) for full documentation.
 
 ## Volumes
 
-### Persistent Data
+### Persistent Data (Named Volumes)
 
-- `postgres-data` - PostgreSQL database files
-- `redis-data` - Redis persistence
+Named Docker volumes (user-specific for isolation on shared hosts):
 
-### Developer Tool Caches (Survives Rebuilds)
+- `${USER}-postgres-data` - PostgreSQL database files
+- `${USER}-redis-data` - Redis persistence
+- `${USER}-vscode-extensions` - VS Code extensions
+- `${USER}-maven-cache` - Maven dependencies (~/.m2)
+- `${USER}-npm-cache` - npm cache (~/.npm)
 
-- `devcontainer-vscode-extensions` - VS Code extensions
-- `devcontainer-maven-cache` - Maven dependencies (~/.m2)
-- `devcontainer-npm-cache` - npm cache (~/.npm)
+> **Note**: Volume names include the username prefix via Docker Compose's `name:` property, ensuring isolation between users on shared Docker hosts.
 
-### Credentials & Configuration (Survives Rebuilds)
+### Credentials & Configuration (Host Bind Mounts)
 
-- `devcontainer-claude-config` - Claude CLI credentials (~/.claude)
-- `devcontainer-gemini-config` - Gemini CLI config (~/.gemini)
-- `devcontainer-codex-config` - Codex CLI config (~/.codex)
-- `devcontainer-gh-config` - GitHub CLI auth (~/.config/gh)
-- `devcontainer-ssh` - SSH keys (~/.ssh)
-- `devcontainer-docker` - Docker config (~/.docker)
-- `devcontainer-kube` - Kubernetes config (~/.kube)
-- `devcontainer-aws` - AWS credentials (~/.aws)
-- `devcontainer-azure` - Azure credentials (~/.azure)
-- `devcontainer-gitconfig` - Git configuration (~/.gitconfig)
-- `devcontainer-bash-history` - Bash history
+Persisted to host directory `~/.devpod-mount/` for portability:
+
+- `~/.devpod-mount/claude` → ~/.claude (Claude CLI)
+- `~/.devpod-mount/gemini` → ~/.gemini (Gemini CLI)
+- `~/.devpod-mount/codex` → ~/.codex (Codex CLI)
+- `~/.devpod-mount/gh` → ~/.config/gh (GitHub CLI)
+- `~/.devpod-mount/ssh` → ~/.ssh (SSH keys)
+- `~/.devpod-mount/docker` → ~/.docker (Docker config)
+- `~/.devpod-mount/kube` → ~/.kube (Kubernetes config)
+- `~/.devpod-mount/aws` → ~/.aws (AWS credentials)
+- `~/.devpod-mount/azure` → ~/.azure (Azure credentials)
+- `~/.devpod-mount/gitconfig` → ~/.gitconfig_dir (Git config)
+- `~/.devpod-mount/bash-history` → ~/.bash_history_dir (Bash history)
+- `~/.devpod-mount/code-server` → ~/.config/code-server (Web IDE config)
 
 ## Local Overrides
 
@@ -210,21 +212,14 @@ docker compose down
 docker compose up -d
 ```
 
-### Check Hostname
-
-```bash
-hostname
-# Output: simpleaccounts-dev
-```
-
 ### Verify Network Connectivity
 
 ```bash
-# PostgreSQL
-pg_isready -h localhost -p 5432
+# PostgreSQL (uses internal hostname 'db')
+pg_isready -h db -p 5432
 
-# Redis
-redis-cli ping
+# Redis (uses internal hostname 'redis')
+redis-cli -h redis ping
 ```
 
 ### View Container Logs
@@ -236,7 +231,7 @@ docker compose logs -f redis
 
 ## Troubleshooting
 
-### "Connection refused" to localhost:5432
+### "Connection refused" to db:5432
 
 The db container may not be ready. Check health:
 
@@ -245,21 +240,12 @@ docker compose ps
 docker compose logs db
 ```
 
-### Hostname shows random ID instead of simpleaccounts-dev
-
-The container needs to be rebuilt to pick up the hostname change:
-
-```bash
-docker compose down
-docker compose up -d
-```
-
 ### Credentials lost after rebuild
 
 Credentials are stored in named volumes and should persist. Check volume exists:
 
 ```bash
-docker volume ls | grep devcontainer-claude-config
+docker volume ls | grep "$(whoami)-"
 ```
 
 ### Multi-user: URL not accessible
