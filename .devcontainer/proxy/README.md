@@ -6,12 +6,12 @@ This setup allows multiple developers to work on the same dev-server with isolat
 
 Each user environment includes:
 
-| Component    | Version  | Description                          |
-| ------------ | -------- | ------------------------------------ |
-| Devcontainer | Latest   | Pre-configured development environment |
-| PostgreSQL   | **18**   | Database server                      |
-| Redis        | 7        | Cache and session storage            |
-| Traefik      | 2.11     | Reverse proxy for URL routing        |
+| Component    | Version | Description                            |
+| ------------ | ------- | -------------------------------------- |
+| Devcontainer | Latest  | Pre-configured development environment |
+| PostgreSQL   | **18**  | Database server                        |
+| Redis        | 7       | Cache and session storage              |
+| Traefik      | 2.11    | Reverse proxy for URL routing          |
 
 **Features:**
 
@@ -58,7 +58,6 @@ DevPod will:
 2. Start isolated containers (devcontainer + db + redis)
 3. Auto-connect to Traefik for shareable URLs
 4. Open VS Code connected to the container
-
 
 ## Architecture
 
@@ -116,15 +115,15 @@ Each user's environment has two networks:
 
 ### What Each User Gets
 
-| Resource          | Naming Convention          | Isolated? |
-| ----------------- | -------------------------- | --------- |
-| Workspace         | `/home/<user>/.devpod/...` | ✅ Yes    |
-| Devcontainer      | `dev-<username>`           | ✅ Yes    |
-| PostgreSQL        | `db-<username>`            | ✅ Yes    |
-| Redis             | `redis-<username>`         | ✅ Yes    |
-| Volumes           | `<username>-postgres-data` | ✅ Yes    |
-| Network           | `<username>-internal`      | ✅ Yes    |
-| Traefik Routes    | `<username>.*`             | ✅ Yes    |
+| Resource       | Naming Convention          | Isolated? |
+| -------------- | -------------------------- | --------- |
+| Workspace      | `/home/<user>/.devpod/...` | ✅ Yes    |
+| Devcontainer   | `dev-<username>`           | ✅ Yes    |
+| PostgreSQL     | `db-<username>`            | ✅ Yes    |
+| Redis          | `redis-<username>`         | ✅ Yes    |
+| Volumes        | `<username>-postgres-data` | ✅ Yes    |
+| Network        | `<username>-internal`      | ✅ Yes    |
+| Traefik Routes | `<username>.*`             | ✅ Yes    |
 
 ## Access URLs
 
@@ -167,6 +166,7 @@ cat ~/.config/code-server/config.yaml
 ```
 
 Output:
+
 ```yaml
 bind-addr: 0.0.0.0:8443
 auth: password
@@ -202,10 +202,10 @@ bash /workspaces/SimpleAccounts-UAE/.devcontainer/post-start.sh
 
 ### Password Storage
 
-| Location | Purpose |
-|----------|---------|
-| `~/.config/code-server/config.yaml` | Password and settings |
-| Mounted from | `$HOME/.devpod-mount/code-server/` on host |
+| Location                            | Purpose                                    |
+| ----------------------------------- | ------------------------------------------ |
+| `~/.config/code-server/config.yaml` | Password and settings                      |
+| Mounted from                        | `$HOME/.devpod-mount/code-server/` on host |
 
 Password persists across container restarts because the config directory is mounted from the host.
 
@@ -302,13 +302,13 @@ sudo ./uninstall-traefik-service.sh
 
 ## Files
 
-| File                           | Purpose                              |
-| ------------------------------ | ------------------------------------ |
-| `docker-compose.proxy.yml`     | Traefik reverse proxy configuration  |
-| `install-traefik-service.sh`   | Install Traefik as systemd service   |
-| `uninstall-traefik-service.sh` | Remove Traefik systemd service       |
-| `traefik.service`              | Systemd unit file                    |
-| `idle-shutdown.sh`             | Auto-shutdown idle containers        |
+| File                           | Purpose                             |
+| ------------------------------ | ----------------------------------- |
+| `docker-compose.proxy.yml`     | Traefik reverse proxy configuration |
+| `install-traefik-service.sh`   | Install Traefik as systemd service  |
+| `uninstall-traefik-service.sh` | Remove Traefik systemd service      |
+| `traefik.service`              | Systemd unit file                   |
+| `idle-shutdown.sh`             | Auto-shutdown idle containers       |
 
 ## Troubleshooting
 

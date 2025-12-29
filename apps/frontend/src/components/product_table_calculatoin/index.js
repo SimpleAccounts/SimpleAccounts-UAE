@@ -17,8 +17,6 @@ export const updateAmount = (data, vat_list, taxType) => {
       let discount;
       let vat_amount;
 
-      let discount;
-      let vat_amount;
       if (taxType === false) {
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;

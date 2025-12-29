@@ -229,11 +229,13 @@ moshinhashmi@65.108.51.136: Permission denied (publickey,password).
 **Solution:**
 
 1. **Disable DevPod's automatic key loading:**
+
    ```bash
    devpod context set-options -o SSH_ADD_PRIVATE_KEYS=false
    ```
 
 2. **Add `ForwardAgent yes` to SSH config for git credential forwarding:**
+
    ```
    Host dev-server
        HostName 65.108.51.136
@@ -247,6 +249,7 @@ moshinhashmi@65.108.51.136: Permission denied (publickey,password).
    ```
 
 3. **Manually manage ssh-agent keys - load only required keys:**
+
    ```bash
    # Clear all keys
    ssh-add -D
@@ -262,6 +265,7 @@ moshinhashmi@65.108.51.136: Permission denied (publickey,password).
    ```
 
 4. **Clean up and recreate the workspace:**
+
    ```bash
    # Delete the stuck workspace
    devpod delete <workspace-name> --force
@@ -338,6 +342,7 @@ When a Docker container is connected to multiple networks, Traefik may pick the 
 - Container is on multiple Docker networks
 
 **Example Scenario:**
+
 ```
 Container dev-mohsin:
   - mohsin-internal: 172.18.0.4  (internal network for db/redis)
@@ -356,12 +361,13 @@ services:
   devcontainer:
     labels:
       - 'traefik.enable=true'
-      - 'traefik.docker.network=dev-proxy-network'  # Add this line!
+      - 'traefik.docker.network=dev-proxy-network' # Add this line!
       - 'traefik.http.routers.myapp.rule=Host(`myapp.example.com`)'
       - 'traefik.http.services.myapp.loadbalancer.server.port=3000'
 ```
 
 After adding the label, restart both the container and Traefik:
+
 ```bash
 docker restart my-container
 docker restart traefik
@@ -375,6 +381,7 @@ docker restart traefik
 4. When debugging, check `docker inspect <container>` to see all network IPs
 
 **Verification:**
+
 ```bash
 # Check Traefik is using correct IP
 curl -s http://localhost:8090/api/http/services | python3 -c \
@@ -424,6 +431,7 @@ export default defineConfig({
 **Security Note:** Avoid using `allowedHosts: true` as it disables Vite's host-header check, which mitigates DNS rebinding attacks. Always use a specific allowlist.
 
 **Common patterns:**
+
 - `.dev.simpleaccounts.io` - for production dev URLs with valid SSL (e.g., `alice.dev.simpleaccounts.io`)
 - `.nip.io` - for dynamic IP-based URLs (e.g., `user.65-108-51-136.nip.io`) - legacy
 - `.dev.simpleaccounts.local` - for local domain routing
