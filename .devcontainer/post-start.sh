@@ -3,36 +3,19 @@
 
 echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
-# Wait for PostgreSQL to be ready (with timeout)
+# Wait for PostgreSQL to be ready
 echo "⏳ Waiting for PostgreSQL..."
-TIMEOUT=60
-ELAPSED=0
 until pg_isready -h db -p 5432 -U simpleaccounts -q; do
     sleep 1
-    ELAPSED=$((ELAPSED + 1))
-    if [ $ELAPSED -ge $TIMEOUT ]; then
-        echo "⚠️  PostgreSQL not ready after ${TIMEOUT}s, continuing anyway..."
-        break
-    fi
 done
-if [ $ELAPSED -lt $TIMEOUT ]; then
-    echo "✅ PostgreSQL is ready"
-fi
+echo "✅ PostgreSQL is ready"
 
-# Wait for Redis to be ready (with timeout)
+# Wait for Redis to be ready
 echo "⏳ Waiting for Redis..."
-ELAPSED=0
 until redis-cli -h redis ping > /dev/null 2>&1; do
     sleep 1
-    ELAPSED=$((ELAPSED + 1))
-    if [ $ELAPSED -ge $TIMEOUT ]; then
-        echo "⚠️  Redis not ready after ${TIMEOUT}s, continuing anyway..."
-        break
-    fi
 done
-if [ $ELAPSED -lt $TIMEOUT ]; then
-    echo "✅ Redis is ready"
-fi
+echo "✅ Redis is ready"
 
 # Symlink Claude settings from persistent mount
 if [ -f /home/vscode/.claude/claude.json ] && [ ! -L /home/vscode/.claude.json ]; then
@@ -71,8 +54,7 @@ CONFIGEOF
 
     if ! pgrep -x "code-server" > /dev/null; then
         echo "🌐 Starting code-server (Web IDE)..."
-        # Unset VSCODE_IPC_HOOK_CLI to prevent code-server from connecting to existing VS Code/Cursor instance
-        (unset VSCODE_IPC_HOOK_CLI; nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &)
+        nohup code-server /workspaces/SimpleAccounts-UAE > /tmp/code-server.log 2>&1 &
         echo "✅ Code-server started on port 8443 (password protected)"
     else
         echo "✅ Code-server already running"
@@ -98,8 +80,8 @@ connect_to_traefik() {
         return 1
     fi
 
-    # Get the devcontainer name (DEV_USER is set from docker-compose environment)
-    DEV_USER="${DEV_USER:-devuser}"
+    # Get the devcontainer name
+    DEV_USER="${DEV_USER:-$(whoami)}"
     DEV_CONTAINER_NAME="dev-${DEV_USER}"
 
     # Check if devcontainer exists
@@ -171,15 +153,13 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 if [ "$TRAEFIK_ENABLED" = true ]; then
     echo ""
-    echo "🌐 Shareable URLs (via Traefik with HTTPS):"
+    echo "🌐 Shareable URLs (via Traefik):"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Frontend: https://${DEV_USER}.${NIP_IP}.nip.io"
-    echo "  Backend:  https://${DEV_USER}-api.${NIP_IP}.nip.io"
-    echo "  Web IDE:  https://${DEV_USER}-ide.${NIP_IP}.nip.io"
+    echo "  Frontend: http://${DEV_USER}.${NIP_IP}.nip.io"
+    echo "  Backend:  http://${DEV_USER}-api.${NIP_IP}.nip.io"
+    echo "  Web IDE:  http://${DEV_USER}-ide.${NIP_IP}.nip.io"
     echo "  Dashboard: http://proxy.${NIP_IP}.nip.io:8090"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "🔒 SSL certificates are automatically provisioned by Let's Encrypt"
 else
     echo ""
     echo "📡 Local Development (use port forwarding):"
