@@ -21,7 +21,7 @@ import DatePicker from 'react-datepicker';
 import * as CustomerRecordPaymentActions from './actions';
 import * as CnActions from '../../actions';
 import { CustomerModal } from '../../sections';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';

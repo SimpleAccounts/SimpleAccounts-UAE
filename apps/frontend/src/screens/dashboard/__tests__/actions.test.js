@@ -2,7 +2,6 @@ import configureMockStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import * as actions from '../actions';
-import { DASHBOARD } from 'constants/types';
 import { authApi } from 'utils';
 
 jest.mock('utils', () => ({

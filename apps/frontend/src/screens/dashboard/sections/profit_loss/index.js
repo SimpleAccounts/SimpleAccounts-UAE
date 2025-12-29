@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Currency } from 'components';
 import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'components/migration';
 import './style.scss';

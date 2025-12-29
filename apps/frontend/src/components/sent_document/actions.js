@@ -73,8 +73,7 @@ export const getEmailContentById = payload => {
       url: `/rest/mail/emailContent/getById`,
       data: payload,
     };
-    const res = await authApi(data);
-    return res;
+    return authApi(data);
   };
 };
 

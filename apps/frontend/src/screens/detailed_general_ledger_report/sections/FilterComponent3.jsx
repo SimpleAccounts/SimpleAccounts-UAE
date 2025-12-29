@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Button, Row, Col, FormGroup, Label, Form } from 'components/migration';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -8,7 +8,7 @@ import Select from 'react-select';
 import './style.scss';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { optionFactory, selectOptionsFactory } from 'utils';
+import { selectOptionsFactory } from 'utils';
 import { CircleDot, Ban } from 'lucide-react';
 
 const customStyles = {

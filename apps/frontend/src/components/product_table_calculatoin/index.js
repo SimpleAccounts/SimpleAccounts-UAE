@@ -14,6 +14,8 @@ export const updateAmount = (data, vat_list, taxType) => {
       const vat = index !== '' && vat_list[`${index}`] && index >= 0 ? vat_list[`${index}`].vat : 0;
 
       //Exclusive case
+      let discount;
+      let vat_amount;
 
       let discount;
       let vat_amount;

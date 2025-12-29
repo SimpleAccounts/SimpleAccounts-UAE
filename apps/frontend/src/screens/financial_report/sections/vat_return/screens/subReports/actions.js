@@ -1,5 +1,4 @@
-import { EMPLOYEEPAYROLL } from 'constants/types';
-import { authApi, authFileUploadApi } from 'utils';
+import { authApi } from 'utils';
 
 export const getAmountDetailsByPlaceOfSupply = postData => {
   const { startDate, endDate, placeOfSupplyId } = postData;

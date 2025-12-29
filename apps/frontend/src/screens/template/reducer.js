@@ -1,5 +1,3 @@
-import { TEMPLATE } from 'constants/types';
-
 const initState = {};
 
 const TemplateReducer = (state = initState, action) => {

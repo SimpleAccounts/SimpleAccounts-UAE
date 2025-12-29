@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, CardBody, Table, Input } from 'components/migration';
 import dayjs from '@/utils/date';
 import '../style.scss';

@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import * as actions from '../actions';
-import { authApi, api } from 'utils';
+import { authApi } from 'utils';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

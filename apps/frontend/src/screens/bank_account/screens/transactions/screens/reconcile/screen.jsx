@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -322,7 +322,7 @@ function ReconcileTransaction() {
                     <div className="col-span-12">
                       <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="grid grid-cols-12 gap-4">
-                          <div className="col-span-12 lg:col-span-4">
+                          <div className="col-span-4">
                             <div className="mb-3">
                               <Label htmlFor="date">
                                 <span className="text-danger">* </span>
@@ -351,7 +351,7 @@ function ReconcileTransaction() {
                               )}
                             </div>
                           </div>
-                          <div className="col-span-12 lg:col-span-4">
+                          <div className="col-span-4">
                             <div className="mb-3">
                               <Label htmlFor="closingBalance">
                                 <span className="text-danger">* </span>

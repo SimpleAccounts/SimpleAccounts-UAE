@@ -11,7 +11,7 @@ import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
-import { Pencil, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

@@ -4,7 +4,8 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/SimpleAccounts-UAE",
 
-  // Docker CLI, GitHub CLI, Git, and code-server are pre-installed in the image
+  // Docker CLI, GitHub CLI, and Git are pre-installed in the image
+  // No features needed - everything is baked into the Dockerfile for faster startup
 
   // Configure tool-specific properties
   "customizations": {
@@ -61,14 +62,13 @@
     }
   },
 
-  // Port forwarding (for services running inside devcontainer)
-  // Note: PostgreSQL (db:5432) and Redis (redis:6379) are on separate containers
-  // Access them from devcontainer via hostnames, not localhost
-  "forwardPorts": [3000, 8080, 8443],
+  // Port forwarding
+  "forwardPorts": [3000, 8080, 5432, 6379],
   "portsAttributes": {
     "3000": { "label": "Frontend (Vite)", "onAutoForward": "notify" },
     "8080": { "label": "Backend (Spring Boot)", "onAutoForward": "notify" },
-    "8443": { "label": "Code Server (Web IDE)", "onAutoForward": "notify" }
+    "5432": { "label": "PostgreSQL", "onAutoForward": "silent" },
+    "6379": { "label": "Redis", "onAutoForward": "silent" }
   },
 
   // Lifecycle scripts
@@ -84,7 +84,9 @@
     "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     // Node.js Memory Optimization
     "NODE_OPTIONS": "--max-old-space-size=4096",
+    // Bash history persistence
     "HISTFILE": "/home/vscode/.bash_history_dir/bash_history",
+    // Git config persistence
     "GIT_CONFIG_GLOBAL": "/home/vscode/.gitconfig_dir/gitconfig"
   },
 

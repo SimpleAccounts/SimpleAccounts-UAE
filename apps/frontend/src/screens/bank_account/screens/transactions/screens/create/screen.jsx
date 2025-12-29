@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -18,7 +18,6 @@ import {
 } from 'components/migration';
 import { bindActionCreators } from 'redux';
 import Select from 'react-select';
-import { Switch } from '@/components/ui/switch';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 
@@ -29,10 +28,8 @@ import * as AllPayrollActions from '../../../../../payroll_run/actions';
 import * as CurrencyConvertActions from '../../../../../currencyConvert/actions';
 import { CommonActions } from 'services/global';
 import { LeavePage, Loader } from 'components';
-import { Checkbox } from '@/components/ui/checkbox';
 import { defaultState } from './helpers/defaultstate';
 import { calculateVAT } from './helpers/calculateVat';
-import { amountFormat } from './helpers/amountformater';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';

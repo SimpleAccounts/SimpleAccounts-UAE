@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -17,7 +17,7 @@ import {
   Label,
   UncontrolledTooltip,
 } from 'components/migration';
-import { LeavePage, ConfirmDeleteModal, Loader } from 'components';
+import { LeavePage, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import * as SalaryComponentActions from '../../actions';
 import 'react-datepicker/dist/react-datepicker.css';

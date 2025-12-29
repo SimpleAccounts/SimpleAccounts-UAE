@@ -366,7 +366,7 @@ class ExplainTransactionModal extends React.Component {
                 <div className="details-container">
                   {explainList &&
                     explainList.map((item, index) => (
-                      <div key={item.id} className="d-flex detail-row">
+                      <div key={index} className="d-flex detail-row">
                         <div className="sub-container">
                           <div className="mb-3 mr-2" style={{ width: '30%' }}>
                             <Label className="label">{strings.ChartOfAccountCategory}</Label>

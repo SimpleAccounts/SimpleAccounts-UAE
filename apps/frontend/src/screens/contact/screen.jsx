@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, RefreshCw, Users, Edit } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 
 import * as ContactActions from './actions';
 import { CommonActions } from 'services/global';

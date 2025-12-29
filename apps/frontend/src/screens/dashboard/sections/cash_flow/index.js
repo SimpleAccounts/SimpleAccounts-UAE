@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Card, CardBody } from 'components/migration';
 import { Currency } from 'components';
-import { ArrowUpCircle, ArrowDownCircle, Scale, Calendar } from 'lucide-react';
+import { ArrowUpCircle, ArrowDownCircle, Scale } from 'lucide-react';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

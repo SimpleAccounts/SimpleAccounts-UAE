@@ -6,7 +6,6 @@
  *
  * IMPORTANT: Chart.js 3+ has significant breaking changes in the options API.
  */
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 // Import after mocking

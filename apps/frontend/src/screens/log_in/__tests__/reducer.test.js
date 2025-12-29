@@ -1,5 +1,3 @@
-import { AUTH } from 'constants/types';
-
 describe('LogIn Reducer', () => {
   const initialState = {
     isAuthenticated: false,

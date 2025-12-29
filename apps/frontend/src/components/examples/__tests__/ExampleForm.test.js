@@ -3,7 +3,6 @@
  * Verifies Phase 4: Example Form Component
  */
 
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ExampleForm } from '../ExampleForm';
 

@@ -1,32 +1,38 @@
 # =============================================================================
 # SimpleAccounts UAE - Development Container Stack
 # =============================================================================
-#
-# Works for both LOCAL and DEV-SERVER:
-#   - Local: Uses port forwarding via DevPod/VS Code
-#   - Dev-Server: Auto-connects to Traefik for shareable URLs
-#
 # Network Architecture:
-#   - All services share an internal network for communication
-#   - Services communicate via hostnames: db:5432, redis:6379
-#   - Devcontainer connects to Traefik network for external routing
+#   All services share the 'db' container's network namespace via network_mode.
+#   This means:
+#   - All services share the same hostname (simpleaccounts-dev)
+#   - All services share the same IP address and network interfaces
+#   - Services can communicate via localhost (e.g., localhost:5432 for Postgres)
 #
+# Why this design?
+#   - Simpler configuration: no need for service discovery or DNS
+#   - localhost access: connect to Postgres/Redis without hostname changes
+#   - Consistent with local development patterns
+#
+# See .devcontainer/README.md for detailed documentation.
 # =============================================================================
 
 services:
   devcontainer:
+    # Use prebuilt image (default for fast startup)
     image: ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
-    container_name: dev-${USER:-devuser}
-    init: true # Use tini as PID 1 to properly reap zombie processes
-
+    # For local development/testing, comment out 'image:' above and uncomment below:
+    # build:
+    #   context: ..
+    #   dockerfile: .devcontainer/Dockerfile
+    env_file:
+      - .env
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
-      # Cache volumes (project-prefixed by Docker Compose)
-      - vscode-extensions:/home/vscode/.vscode-server/extensions
-      - maven-cache:/home/vscode/.m2
-      - npm-cache:/home/vscode/.npm
+      # Cache volumes (can be rebuilt, use Docker named volumes)
+      - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
+      - devcontainer-maven-cache:/home/vscode/.m2
+      - devcontainer-npm-cache:/home/vscode/.npm
       # User config/credentials (persist in host home directory)
-      - ${HOME}/.devpod-mount/code-server:/home/vscode/.config/code-server
       - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
       - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
       - ${HOME}/.devpod-mount/codex:/home/vscode/.codex
@@ -38,67 +44,18 @@ services:
       - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
       - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
       - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
-      # Mount host docker socket for Traefik network connection
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
-    environment:
-      - DEV_USER=${USER:-devuser}
-      # Database connection (uses hostname 'db' on internal network)
-      - SIMPLEACCOUNTS_DB_HOST=db
-      - SIMPLEACCOUNTS_DB_PORT=5432
-      - SIMPLEACCOUNTS_DB=simpleaccounts
-      - SIMPLEACCOUNTS_DB_USER=simpleaccounts
-      - SIMPLEACCOUNTS_DB_PASSWORD=simpleaccounts_dev
-      - SIMPLEACCOUNTS_DB_SSL=false
-      - SIMPLEACCOUNTS_DB_SSLMODE=disable
-      # Redis connection (uses hostname 'redis' on internal network)
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-
     command: sleep infinity
-
-    networks:
-      - internal
-
+    # Share network namespace with db container for localhost access to all services
+    network_mode: service:db
     depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-
-    # Traefik labels for external routing (active when connected to dev-proxy-network)
-    labels:
-      - 'traefik.enable=true'
-      # Frontend routing (port 3000)
-      - 'traefik.http.routers.${USER:-devuser}-frontend.rule=HostRegexp(`${USER:-devuser}.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-frontend.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-frontend.service=${USER:-devuser}-frontend'
-      - 'traefik.http.services.${USER:-devuser}-frontend.loadbalancer.server.port=3000'
-      # Backend API routing (port 8080)
-      - 'traefik.http.routers.${USER:-devuser}-api.rule=HostRegexp(`${USER:-devuser}-api.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-api.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-api.service=${USER:-devuser}-api'
-      - 'traefik.http.services.${USER:-devuser}-api.loadbalancer.server.port=8080'
-      # Code-server / Web IDE routing (port 8443)
-      - 'traefik.http.routers.${USER:-devuser}-ide.rule=HostRegexp(`${USER:-devuser}-ide.{ip:[0-9-]+}.nip.io`)'
-      - 'traefik.http.routers.${USER:-devuser}-ide.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-ide.service=${USER:-devuser}-ide'
-      - 'traefik.http.services.${USER:-devuser}-ide.loadbalancer.server.port=8443'
-      # Local domain routing
-      - 'traefik.http.routers.${USER:-devuser}-frontend-local.rule=Host(`${USER:-devuser}.dev.simpleaccounts.local`)'
-      - 'traefik.http.routers.${USER:-devuser}-frontend-local.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-frontend-local.service=${USER:-devuser}-frontend'
-      - 'traefik.http.routers.${USER:-devuser}-api-local.rule=Host(`${USER:-devuser}-api.dev.simpleaccounts.local`)'
-      - 'traefik.http.routers.${USER:-devuser}-api-local.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-api-local.service=${USER:-devuser}-api'
-      - 'traefik.http.routers.${USER:-devuser}-ide-local.rule=Host(`${USER:-devuser}-ide.dev.simpleaccounts.local`)'
-      - 'traefik.http.routers.${USER:-devuser}-ide-local.entrypoints=web'
-      - 'traefik.http.routers.${USER:-devuser}-ide-local.service=${USER:-devuser}-ide'
+      - db
+      - redis
 
   db:
-    image: postgres:18-alpine
-    container_name: db-${USER:-devuser}
-    hostname: db
+    image: postgres:16-alpine
+    # Hostname is shared by all containers using network_mode: service:db
+    # This sets the hostname for devcontainer and redis as well
+    hostname: simpleaccounts-dev
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -112,27 +69,19 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - internal
 
   redis:
     image: redis:7-alpine
-    container_name: redis-${USER:-devuser}
-    hostname: redis
     restart: unless-stopped
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
-    networks:
-      - internal
-
-networks:
-  internal:
-    name: ${USER:-devuser}-internal
+    # Share network namespace with db - accessible via localhost:6379
+    network_mode: service:db
 
 volumes:
   postgres-data:
   redis-data:
-  vscode-extensions:
-  maven-cache:
-  npm-cache:
+  devcontainer-vscode-extensions:
+  devcontainer-maven-cache:
+  devcontainer-npm-cache:

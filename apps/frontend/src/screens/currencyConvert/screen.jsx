@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Card, CardHeader, CardBody, Button, Row, Col } from 'components/migration';
 import { toast } from 'sonner';
-import { CommonActions } from 'services/global';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 import * as CurrencyConvertActions from './actions';
 import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';

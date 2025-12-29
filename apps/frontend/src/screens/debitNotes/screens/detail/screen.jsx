@@ -1,41 +1,22 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  UncontrolledTooltip,
-} from 'components/migration';
+import { Card, CardHeader, CardBody, Button, Form, Input } from 'components/migration';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
-import * as DebitNotesDetailActions from './actions';
 import * as DebitNotesActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
-import * as CurrencyConvertActions from '../../../currencyConvert/actions';
 import { Textarea } from '@/components/ui/textarea';
-import { LeavePage, Loader, ConfirmDeleteModal, ProductTableCalculation } from 'components';
+import { Loader, ProductTableCalculation } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
+import { selectOptionsFactory, selectStyles } from 'utils';
 import './style.scss';
-import dayjs from '@/utils/date';
-import { Switch } from '@/components/ui/switch';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'sonner';
 import { Trash2, CreditCard } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);

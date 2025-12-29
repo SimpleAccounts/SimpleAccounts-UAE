@@ -8,32 +8,27 @@ import {
   Row,
   Col,
   Table,
-  Button,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from 'components/migration';
 
-import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
 
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
-import { CSVLink } from '@/components/ui/csv-link';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 // import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import FilterComponent3 from '../filterComponent3';
-import { Settings, Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -474,35 +469,34 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.Cash}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['currentAssets']).map(
-                                    (item, index) =>
-                                      item === 'Petty Cash' ? (
-                                        <tr key={`petty-cash-${index}`}>
-                                          <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['currentAssets']).map(item =>
+                                    item === 'Petty Cash' ? (
+                                      <tr key={item}>
+                                        <td className="pt-0 pb-0">{item}</td>
 
-                                          <td className="pt-0 pb-0 text-right" colSpan={2}>
-                                            {this.state.data['currentAssets'] ? (
-                                              <Currency
-                                                value={this.state.data['currentAssets'][`${item}`]}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            ) : (
-                                              <Currency
-                                                value={'0.00'}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ) : null
+                                        <td className="pt-0 pb-0 text-right" colSpan={2}>
+                                          {this.state.data['currentAssets'] ? (
+                                            <Currency
+                                              value={this.state.data['currentAssets'][`${item}`]}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          ) : (
+                                            <Currency
+                                              value={'0.00'}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ) : null
                                   )}
                                   <tr>
                                     <td></td>
@@ -545,8 +539,8 @@ class HorizontalBalanceSheet extends React.Component {
                                     <td className="pt-1 pb-1 bld wh">{strings.Bank}</td>
                                     <td colSpan={2}></td>
                                   </tr>
-                                  {Object.keys(this.state.data['bank']).map((item, index) => (
-                                    <tr key={`bank-${index}`}>
+                                  {Object.keys(this.state.data['bank']).map(item => (
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
                                         {this.state.data['bank'] ? (
@@ -677,35 +671,34 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.CurrentAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['currentAssets']).map(
-                                    (item, index) =>
-                                      item !== 'Petty Cash' ? (
-                                        <tr key={`current-assets-${index}`}>
-                                          <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['currentAssets']).map(item =>
+                                    item !== 'Petty Cash' ? (
+                                      <tr key={item}>
+                                        <td className="pt-0 pb-0">{item}</td>
 
-                                          <td className="pt-0 pb-0 text-right" colSpan={2}>
-                                            {this.state.data['currentAssets'] ? (
-                                              <Currency
-                                                value={this.state.data['currentAssets'][`${item}`]}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            ) : (
-                                              <Currency
-                                                value={'0.00'}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ) : null
+                                        <td className="pt-0 pb-0 text-right" colSpan={2}>
+                                          {this.state.data['currentAssets'] ? (
+                                            <Currency
+                                              value={this.state.data['currentAssets'][`${item}`]}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          ) : (
+                                            <Currency
+                                              value={'0.00'}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ) : null
                                   )}
                                   <tr>
                                     <td></td>
@@ -745,37 +738,33 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.Other + ' ' + strings.CurrentAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['otherCurrentAssets']).map(
-                                    (item, index) => (
-                                      <tr key={`other-current-assets-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['otherCurrentAssets']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right" colSpan={2}>
-                                          {this.state.data['otherCurrentAssets'] ? (
-                                            <Currency
-                                              value={
-                                                this.state.data['otherCurrentAssets'][`${item}`]
-                                              }
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right" colSpan={2}>
+                                        {this.state.data['otherCurrentAssets'] ? (
+                                          <Currency
+                                            value={this.state.data['otherCurrentAssets'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td colSpan={2}></td>
@@ -818,35 +807,33 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.FixedAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['fixedAssets']).map(
-                                    (item, index) => (
-                                      <tr key={`fixed-assets-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['fixedAssets']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right" colSpan={2}>
-                                          {this.state.data['fixedAssets'] ? (
-                                            <Currency
-                                              value={this.state.data['fixedAssets'][`${item}`]}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right" colSpan={2}>
+                                        {this.state.data['fixedAssets'] ? (
+                                          <Currency
+                                            value={this.state.data['fixedAssets'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td colSpan={2}></td>
@@ -1032,35 +1019,33 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.Other + ' ' + strings.Liabilities}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['otherLiability']).map(
-                                    (item, index) => (
-                                      <tr key={`other-liability-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['otherLiability']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right">
-                                          {this.state.data['otherLiability'] ? (
-                                            <Currency
-                                              value={this.state.data['otherLiability'][`${item}`]}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right">
+                                        {this.state.data['otherLiability'] ? (
+                                          <Currency
+                                            value={this.state.data['otherLiability'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td colSpan={2}></td>
@@ -1104,8 +1089,8 @@ class HorizontalBalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentLiability']).map(
-                                    (item, index) => (
-                                      <tr key={`other-current-liability-${index}`}>
+                                    item => (
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right" colSpan={2}>
@@ -1220,8 +1205,8 @@ class HorizontalBalanceSheet extends React.Component {
                                       {strings.Equities}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['equities']).map((item, index) => (
-                                    <tr key={`equities-${index}`}>
+                                  {Object.keys(this.state.data['equities']).map(item => (
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right" colSpan={2}>
                                         {this.state.data['equities'] ? (

@@ -5,7 +5,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
   Col,
   Table,
   Dropdown,
@@ -19,12 +18,11 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from '../filterComponent3';
-import { Settings, Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -725,44 +723,42 @@ class TrailBalances extends React.Component {
                                   {strings.Assets}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['accountReceivable']).map(
-                                (item, index) => {
-                                  if (
-                                    this.state.data['accountReceivable'][`${item}`] === 0 ||
-                                    this.state.data['accountReceivable'][`${item}`] === undefined
-                                  ) {
-                                    return null;
-                                  }
-                                  return (
-                                    <tr key={`account-receivable-${index}`}>
-                                      <td className="pt-0 pb-0">{item}</td>
-                                      <td className="pt-0 pb-0 text-right">
-                                        {this.state.data['transactionCategoryMapper'][`${item}`] ===
-                                        'Debit'
-                                          ? this.state.data['accountReceivable'][
-                                              `${item}`
-                                            ].toLocaleString(navigator.language, {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 2,
-                                            })
-                                          : ''}
-                                      </td>
-                                      <td className="pt-0 pb-0 text-right">
-                                        {this.state.data['transactionCategoryMapper'][`${item}`] ===
-                                        'Credit'
-                                          ? this.state.data['accountReceivable'][
-                                              `${item}`
-                                            ].toLocaleString(navigator.language, {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 2,
-                                            })
-                                          : ''}
-                                      </td>
-                                    </tr>
-                                  );
+                              {Object.keys(this.state.data['accountReceivable']).map(item => {
+                                if (
+                                  this.state.data['accountReceivable'][`${item}`] === 0 ||
+                                  this.state.data['accountReceivable'][`${item}`] === undefined
+                                ) {
+                                  return null;
                                 }
-                              )}
-                              {Object.keys(this.state.data['bank']).map((item, index) => {
+                                return (
+                                  <tr key={item}>
+                                    <td className="pt-0 pb-0">{item}</td>
+                                    <td className="pt-0 pb-0 text-right">
+                                      {this.state.data['transactionCategoryMapper'][`${item}`] ===
+                                      'Debit'
+                                        ? this.state.data['accountReceivable'][
+                                            `${item}`
+                                          ].toLocaleString(navigator.language, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                          })
+                                        : ''}
+                                    </td>
+                                    <td className="pt-0 pb-0 text-right">
+                                      {this.state.data['transactionCategoryMapper'][`${item}`] ===
+                                      'Credit'
+                                        ? this.state.data['accountReceivable'][
+                                            `${item}`
+                                          ].toLocaleString(navigator.language, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                          })
+                                        : ''}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                              {Object.keys(this.state.data['bank']).map(item => {
                                 if (
                                   this.state.data['bank'][`${item}`] === 0 ||
                                   this.state.data['bank'][`${item}`] === undefined
@@ -770,7 +766,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`bank-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -793,7 +789,7 @@ class TrailBalances extends React.Component {
                                   </tr>
                                 );
                               })}
-                              {Object.keys(this.state.data['fixedAsset']).map((item, index) => {
+                              {Object.keys(this.state.data['fixedAsset']).map(item => {
                                 if (
                                   this.state.data['fixedAsset'][`${item}`] === 0 ||
                                   this.state.data['fixedAsset'][`${item}`] === undefined
@@ -801,7 +797,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`fixed-asset-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -824,7 +820,7 @@ class TrailBalances extends React.Component {
                                   </tr>
                                 );
                               })}
-                              {Object.keys(this.state.data['assets']).map((item, index) => {
+                              {Object.keys(this.state.data['assets']).map(item => {
                                 if (
                                   this.state.data['assets'][`${item}`] === 0 ||
                                   this.state.data['assets'][`${item}`] === undefined
@@ -832,7 +828,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`assets-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -872,7 +868,7 @@ class TrailBalances extends React.Component {
                                   {strings.Liabilities}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['accountpayable']).map((item, index) => {
+                              {Object.keys(this.state.data['accountpayable']).map(item => {
                                 if (
                                   this.state.data['accountpayable'][`${item}`] === 0 ||
                                   this.state.data['accountpayable'][`${item}`] === undefined
@@ -880,7 +876,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`accountpayable-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -907,7 +903,7 @@ class TrailBalances extends React.Component {
                                   </tr>
                                 );
                               })}
-                              {Object.keys(this.state.data['liabilities']).map((item, index) => {
+                              {Object.keys(this.state.data['liabilities']).map(item => {
                                 if (
                                   this.state.data['liabilities'][`${item}`] === 0 ||
                                   this.state.data['liabilities'][`${item}`] === undefined
@@ -915,7 +911,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`liabilities-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -955,7 +951,7 @@ class TrailBalances extends React.Component {
                                   {strings.Equities}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['equities']).map((item, index) => {
+                              {Object.keys(this.state.data['equities']).map(item => {
                                 if (
                                   this.state.data['equities'][`${item}`] === 0 ||
                                   this.state.data['equities'][`${item}`] === undefined
@@ -963,7 +959,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`equities-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -1003,7 +999,7 @@ class TrailBalances extends React.Component {
                                   {strings.Income}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['income']).map((item, index) => {
+                              {Object.keys(this.state.data['income']).map(item => {
                                 if (
                                   this.state.data['income'][`${item}`] === 0 ||
                                   this.state.data['income'][`${item}`] === undefined
@@ -1011,7 +1007,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`income-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===
@@ -1051,7 +1047,7 @@ class TrailBalances extends React.Component {
                                   {strings.Expense}
                                 </td>
                               </tr>
-                              {Object.keys(this.state.data['expense']).map((item, index) => {
+                              {Object.keys(this.state.data['expense']).map(item => {
                                 if (
                                   this.state.data['expense'][`${item}`] === 0 ||
                                   this.state.data['expense'][`${item}`] === undefined
@@ -1059,7 +1055,7 @@ class TrailBalances extends React.Component {
                                   return null;
                                 }
                                 return (
-                                  <tr key={`expense-${index}`}>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       {this.state.data['transactionCategoryMapper'][`${item}`] ===

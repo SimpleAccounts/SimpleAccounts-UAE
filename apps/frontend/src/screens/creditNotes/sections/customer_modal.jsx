@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   Row,
@@ -400,6 +400,7 @@ const CustomerModal = ({
                     <b>
                       <a
                         target="_blank"
+                        rel="noreferrer"
                         href="https://tax.gov.ae/en/default.aspx"
                         style={{ color: '#2266d8' }}
                         rel="noreferrer"

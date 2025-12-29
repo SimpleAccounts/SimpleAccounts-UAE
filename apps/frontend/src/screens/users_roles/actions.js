@@ -9,7 +9,6 @@ export const getRoleList = postObj => {
       method: 'GET',
       url: `/rest/user/getrole?order=${order}&sortingCol=${sortingCol}`,
     };
-
     const res = await authApi(data);
     dispatch({
       type: USER.ROLE_LIST,
@@ -25,9 +24,7 @@ export const getModuleList = id => {
       method: 'GET',
       url: `/rest/roleModule/getModuleListByRoleCode?roleCode=${id}`,
     };
-
-    const res = await authApi(data);
-    return res;
+    return authApi(data);
   };
 };
 
@@ -37,9 +34,7 @@ export const getUsersCountForRole = id => {
       method: 'GET',
       url: `/rest/roleModule/getUsersCountForRole?roleId=${id}`,
     };
-
-    const res = await authApi(data);
-    return res;
+    return authApi(data);
   };
 };
 
@@ -49,8 +44,6 @@ export const deleteRole = id => {
       method: 'DELETE',
       url: `/rest/roleModule/delete?roleCode=${id}`,
     };
-
-    const res = await authApi(data);
-    return res;
+    return authApi(data);
   };
 };

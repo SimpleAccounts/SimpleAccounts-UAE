@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -18,7 +18,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Select from 'react-select';
-import { EditorState } from 'draft-js';
 import { selectOptionsFactory } from 'utils';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';

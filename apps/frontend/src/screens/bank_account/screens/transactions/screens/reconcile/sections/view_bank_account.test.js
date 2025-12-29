@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import dayjs from '@/utils/date';
 import ConnectedComponent from './view_bank_account';

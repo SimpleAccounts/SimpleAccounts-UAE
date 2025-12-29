@@ -19,13 +19,11 @@ import {
 } from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { LeavePage, Loader, EmployeeModal, ConfirmDeleteModal } from 'components';
+import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
-import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
-import * as PayrollEmployeeActions from '../../../payrollemp/actions';
 import { DataTable } from '@/components/ui/data-table';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';

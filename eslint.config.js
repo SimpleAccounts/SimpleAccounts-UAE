@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 
 export default [
@@ -10,6 +11,7 @@ export default [
     plugins: {
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      'unused-imports': unusedImports,
     },
     languageOptions: {
       ecmaVersion: 'latest',
@@ -23,6 +25,7 @@ export default [
         ...globals.browser,
         ...globals.es2021,
         ...globals.node,
+        ...globals.jest,
       },
     },
     settings: {
@@ -43,7 +46,17 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
 
       // General rules
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
       'no-console': 'off',
       'no-undef': 'error',
     },

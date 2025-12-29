@@ -1,4 +1,4 @@
-import { EMPLOYEE_DESIGNATION, SALARY_ROLES } from 'constants/types';
+import { EMPLOYEE_DESIGNATION } from 'constants/types';
 import { authApi } from 'utils';
 
 export const getEmployeeDesignationList = obj => {

@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Plus, Coins, Download, Trash2, X } from 'lucide-react';
+import { Plus, Coins, Download, X } from 'lucide-react';
 import Select from 'react-select';
 
 import { DataTable } from '@/components/ui/data-table';
 import { Label } from '@/components/ui/label';
 
 import { Loader } from 'components';
-import { selectStyles } from 'utils';
 
 import * as currenciesActions from './actions';
 

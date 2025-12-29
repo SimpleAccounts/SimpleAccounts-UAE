@@ -29,7 +29,7 @@ import LocalizedStrings from 'react-localization';
 import { withNavigation } from 'utils/withNavigation';
 import * as Vatreport from '../vat_reports/actions';
 import { FileTaxReturnModal } from '../vat_reports/sections';
-import { Settings, Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

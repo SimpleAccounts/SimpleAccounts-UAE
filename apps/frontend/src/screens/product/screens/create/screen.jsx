@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -1058,9 +1058,7 @@ const CreateProduct = ({
                                       id="productPriceTypeOne"
                                       name="productPriceTypeOne"
                                       onChange={event => {
-                                        if (income === true) {
-                                          // Income mode - SALES checkbox is locked
-                                        } else {
+                                        if (income !== true) {
                                           if (field.value.includes('SALES')) {
                                             const nextValue = field.value.filter(
                                               value => value !== 'SALES'
@@ -1220,9 +1218,7 @@ const CreateProduct = ({
                                       maxLength="14,2"
                                       name="productPriceTypetwo"
                                       onChange={event => {
-                                        if (income === false) {
-                                          // Expense mode - PURCHASE checkbox is locked
-                                        } else {
+                                        if (income !== false) {
                                           if (field.value.includes('PURCHASE')) {
                                             const nextValue = field.value.filter(
                                               value => value !== 'PURCHASE'

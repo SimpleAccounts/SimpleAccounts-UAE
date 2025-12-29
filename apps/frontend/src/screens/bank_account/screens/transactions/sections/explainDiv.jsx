@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, FormGroup, Row, Col, Label, Alert } from 'components/migration';
@@ -229,7 +229,7 @@ const ExplainDiv = props => {
   if (selectedData !== '') {
     return (
       <div className="explain-modal-screen">
-        <div className="modal-primary">
+        <div data-isopen={openExplainTransactionModal} className="modal-primary">
           <div className="mb-2">
             <div className="header text">
               <h2>Explain AED {`${selectedData.withdrawalAmount}`}</h2>

@@ -20,7 +20,6 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
@@ -414,35 +413,34 @@ class BalanceSheet extends React.Component {
                                       {strings.Cash}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['currentAssets']).map(
-                                    (item, index) =>
-                                      item === 'Petty Cash' ? (
-                                        <tr key={`petty-cash-${index}`}>
-                                          <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['currentAssets']).map(item =>
+                                    item === 'Petty Cash' ? (
+                                      <tr key={item}>
+                                        <td className="pt-0 pb-0">{item}</td>
 
-                                          <td className="pt-0 pb-0 text-right">
-                                            {this.state.data['currentAssets'] ? (
-                                              <Currency
-                                                value={this.state.data['currentAssets'][`${item}`]}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            ) : (
-                                              <Currency
-                                                value={'0.00'}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ) : null
+                                        <td className="pt-0 pb-0 text-right">
+                                          {this.state.data['currentAssets'] ? (
+                                            <Currency
+                                              value={this.state.data['currentAssets'][`${item}`]}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          ) : (
+                                            <Currency
+                                              value={'0.00'}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ) : null
                                   )}
                                   <tr>
                                     <td></td>
@@ -485,8 +483,8 @@ class BalanceSheet extends React.Component {
                                     <td className="pt-1 pb-1 bld wh">{strings.Bank}</td>
                                     <td></td>
                                   </tr>
-                                  {Object.keys(this.state.data['bank']).map((item, index) => (
-                                    <tr key={`bank-${index}`}>
+                                  {Object.keys(this.state.data['bank']).map(item => (
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right">
                                         {this.state.data['bank'] ? (
@@ -617,35 +615,34 @@ class BalanceSheet extends React.Component {
                                       {strings.CurrentAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['currentAssets']).map(
-                                    (item, index) =>
-                                      item !== 'Petty Cash' ? (
-                                        <tr key={`current-assets-${index}`}>
-                                          <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['currentAssets']).map(item =>
+                                    item !== 'Petty Cash' ? (
+                                      <tr key={item}>
+                                        <td className="pt-0 pb-0">{item}</td>
 
-                                          <td className="pt-0 pb-0 text-right">
-                                            {this.state.data['currentAssets'] ? (
-                                              <Currency
-                                                value={this.state.data['currentAssets'][`${item}`]}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            ) : (
-                                              <Currency
-                                                value={'0.00'}
-                                                currencySymbol={
-                                                  universal_currency_list[0]
-                                                    ? universal_currency_list[0].currencyIsoCode
-                                                    : 'USD'
-                                                }
-                                              />
-                                            )}
-                                          </td>
-                                        </tr>
-                                      ) : null
+                                        <td className="pt-0 pb-0 text-right">
+                                          {this.state.data['currentAssets'] ? (
+                                            <Currency
+                                              value={this.state.data['currentAssets'][`${item}`]}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          ) : (
+                                            <Currency
+                                              value={'0.00'}
+                                              currencySymbol={
+                                                universal_currency_list[0]
+                                                  ? universal_currency_list[0].currencyIsoCode
+                                                  : 'USD'
+                                              }
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ) : null
                                   )}
                                   <tr>
                                     <td></td>
@@ -685,37 +682,33 @@ class BalanceSheet extends React.Component {
                                       {strings.Other + ' ' + strings.CurrentAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['otherCurrentAssets']).map(
-                                    (item, index) => (
-                                      <tr key={`other-current-assets-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['otherCurrentAssets']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right">
-                                          {this.state.data['otherCurrentAssets'] ? (
-                                            <Currency
-                                              value={
-                                                this.state.data['otherCurrentAssets'][`${item}`]
-                                              }
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right">
+                                        {this.state.data['otherCurrentAssets'] ? (
+                                          <Currency
+                                            value={this.state.data['otherCurrentAssets'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td></td>
@@ -758,35 +751,33 @@ class BalanceSheet extends React.Component {
                                       {strings.FixedAssets}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['fixedAssets']).map(
-                                    (item, index) => (
-                                      <tr key={`fixed-assets-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['fixedAssets']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right">
-                                          {this.state.data['fixedAssets'] ? (
-                                            <Currency
-                                              value={this.state.data['fixedAssets'][`${item}`]}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right">
+                                        {this.state.data['fixedAssets'] ? (
+                                          <Currency
+                                            value={this.state.data['fixedAssets'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td></td>
@@ -941,35 +932,33 @@ class BalanceSheet extends React.Component {
                                       {strings.Other + ' ' + strings.Liabilities}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['otherLiability']).map(
-                                    (item, index) => (
-                                      <tr key={`other-liability-${index}`}>
-                                        <td className="pt-0 pb-0">{item}</td>
+                                  {Object.keys(this.state.data['otherLiability']).map(item => (
+                                    <tr key={item}>
+                                      <td className="pt-0 pb-0">{item}</td>
 
-                                        <td className="pt-0 pb-0 text-right">
-                                          {this.state.data['otherLiability'] ? (
-                                            <Currency
-                                              value={this.state.data['otherLiability'][`${item}`]}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          ) : (
-                                            <Currency
-                                              value={'0.00'}
-                                              currencySymbol={
-                                                universal_currency_list[0]
-                                                  ? universal_currency_list[0].currencyIsoCode
-                                                  : 'USD'
-                                              }
-                                            />
-                                          )}
-                                        </td>
-                                      </tr>
-                                    )
-                                  )}
+                                      <td className="pt-0 pb-0 text-right">
+                                        {this.state.data['otherLiability'] ? (
+                                          <Currency
+                                            value={this.state.data['otherLiability'][`${item}`]}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        ) : (
+                                          <Currency
+                                            value={'0.00'}
+                                            currencySymbol={
+                                              universal_currency_list[0]
+                                                ? universal_currency_list[0].currencyIsoCode
+                                                : 'USD'
+                                            }
+                                          />
+                                        )}
+                                      </td>
+                                    </tr>
+                                  ))}
                                   <tr>
                                     <td></td>
                                     <td></td>
@@ -1013,8 +1002,8 @@ class BalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentLiability']).map(
-                                    (item, index) => (
-                                      <tr key={`other-current-liability-${index}`}>
+                                    item => (
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right">
@@ -1137,9 +1126,9 @@ class BalanceSheet extends React.Component {
                                       {strings.Equities}
                                     </td>
                                   </tr>
-                                  {Object.keys(this.state.data['equities']).map((item, index) =>
+                                  {Object.keys(this.state.data['equities']).map(item =>
                                     this.state.data['equities'][`${item}`] !== 0 ? (
-                                      <tr key={`equities-${index}`}>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
                                         <td className="pt-0 pb-0 text-right">
                                           {this.state.data['equities'] ? (

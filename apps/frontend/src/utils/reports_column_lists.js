@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Table } from 'components/migration';
 import { Currency } from 'components';
 import dayjs from '@/utils/date';
