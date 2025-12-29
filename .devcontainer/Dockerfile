@@ -175,9 +175,14 @@ COPY --chown=vscode:vscode apps/backend/.mvn .mvn
 # Download dependencies to ~/.m2/repository
 # Uses Maven wrapper since Maven is not pre-installed in the base image
 # Note: Uses dependency:resolve instead of go-offline to avoid HTTP repository blocking issues
+<<<<<<< HEAD
+# Allow partial caching if some dependencies fail (|| true)
+RUN chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
+=======
 # Create wrapper dist directory first (older wrapper versions don't create parent dirs)
 # Allow partial caching if some dependencies fail (|| true)
 RUN mkdir -p ~/.m2/wrapper/dists && chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
+>>>>>>> origin/develop
 
 # Pre-cache NPM dependencies
 # Note: Using npm install with fallback to allow partial caching if lockfiles are out of sync
