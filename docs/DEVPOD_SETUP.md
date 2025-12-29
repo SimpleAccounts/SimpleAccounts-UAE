@@ -15,10 +15,10 @@ DevPod creates reproducible development environments using containers. Benefits:
 
 ## Choose Your Setup
 
-| Setup              | Best For                           | Access Method                        |
-| ------------------ | ---------------------------------- | ------------------------------------ |
-| **Local DevPod**   | Local development, solo work       | `localhost:3000` via port forwarding |
-| **Remote DevPod**  | Team collaboration, shared server  | `username.server-ip.nip.io` via Traefik |
+| Setup             | Best For                          | Access Method                           |
+| ----------------- | --------------------------------- | --------------------------------------- |
+| **Local DevPod**  | Local development, solo work      | `localhost:3000` via port forwarding    |
+| **Remote DevPod** | Team collaboration, shared server | `username.server-ip.nip.io` via Traefik |
 
 Both setups use the same DevPod workflow - the only difference is where containers run.
 
@@ -121,13 +121,14 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
 
 After startup, you get shareable URLs (if Traefik is running):
 
-| Service   | URL                                        |
-| --------- | ------------------------------------------ |
-| Frontend  | `http://<username>.<server-ip>.nip.io`     |
-| Backend   | `http://<username>-api.<server-ip>.nip.io` |
-| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
+| Service  | URL                                        |
+| -------- | ------------------------------------------ |
+| Frontend | `http://<username>.<server-ip>.nip.io`     |
+| Backend  | `http://<username>-api.<server-ip>.nip.io` |
+| Web IDE  | `http://<username>-ide.<server-ip>.nip.io` |
 
 **Example for user `alice` on server `65.108.51.136`:**
+
 - Frontend: `http://alice.65-108-51-136.nip.io`
 - Backend: `http://alice-api.65-108-51-136.nip.io`
 - Web IDE: `http://alice-ide.65-108-51-136.nip.io`
@@ -137,11 +138,13 @@ After startup, you get shareable URLs (if Traefik is running):
 The Web IDE (code-server) is password protected. On first launch, a random password is generated and displayed in the terminal.
 
 **View your password:**
+
 ```bash
 cat ~/.config/code-server/config.yaml
 ```
 
 **Change your password:**
+
 ```bash
 nano ~/.config/code-server/config.yaml
 # Edit the 'password:' line, save, then restart:
@@ -312,11 +315,11 @@ These extensions are automatically installed:
 
 Containers are automatically named based on your username:
 
-| Container       | Name Pattern       |
-| --------------- | ------------------ |
-| Devcontainer    | `dev-<username>`   |
-| PostgreSQL      | `db-<username>`    |
-| Redis           | `redis-<username>` |
+| Container    | Name Pattern       |
+| ------------ | ------------------ |
+| Devcontainer | `dev-<username>`   |
+| PostgreSQL   | `db-<username>`    |
+| Redis        | `redis-<username>` |
 
 This ensures no conflicts when multiple developers use the same server.
 

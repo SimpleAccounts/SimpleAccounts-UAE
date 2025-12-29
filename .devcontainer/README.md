@@ -27,10 +27,10 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
 
 ## Choose Your Setup
 
-| Setup | Best For | Access URLs |
-|-------|----------|-------------|
-| **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
-| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
+| Setup           | Best For                              | Access URLs                        |
+| --------------- | ------------------------------------- | ---------------------------------- |
+| **Single User** | Local development, one developer      | `localhost:3000`, `localhost:8080` |
+| **Multi-User**  | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io`       |
 
 ---
 

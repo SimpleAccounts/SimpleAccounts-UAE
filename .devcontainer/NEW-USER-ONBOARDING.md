@@ -4,10 +4,10 @@ Welcome to SimpleAccounts UAE development! Choose your setup based on your envir
 
 ## Choose Your Setup
 
-| Setup | Best For | Command |
-|-------|----------|---------|
+| Setup                        | Best For                              | Command                        |
+| ---------------------------- | ------------------------------------- | ------------------------------ |
 | **Multi-User (Recommended)** | Shared dev server, team collaboration | `devpod up ... --provider ssh` |
-| **Single User** | Local development, solo work | `devpod up simpleaccounts-uae` |
+| **Single User**              | Local development, solo work          | `devpod up simpleaccounts-uae` |
 
 ---
 
@@ -136,25 +136,25 @@ This will:
 
 ### Multi-User Commands
 
-| Task                  | Command                                             |
-| --------------------- | --------------------------------------------------- |
+| Task                  | Command                                                        |
+| --------------------- | -------------------------------------------------------------- |
 | Setup environment     | `devpod up ... --provider ssh --provider-option HOST=<server>` |
-| List active users     | `docker ps --filter "name=simpleaccounts"`          |
-| Stop your environment | `devpod stop simpleaccounts-uae`                    |
-| View your logs        | `devpod logs simpleaccounts-uae`                    |
-| Open VS Code          | `devpod up simpleaccounts-uae --ide vscode`         |
+| List active users     | `docker ps --filter "name=simpleaccounts"`                     |
+| Stop your environment | `devpod stop simpleaccounts-uae`                               |
+| View your logs        | `devpod logs simpleaccounts-uae`                               |
+| Open VS Code          | `devpod up simpleaccounts-uae --ide vscode`                    |
 
 ### Single-User (DevPod) Commands
 
-| Task              | Command                                   |
-| ----------------- | ----------------------------------------- |
-| Open in VS Code   | `devpod up simpleaccounts-uae --ide vscode` |
-| SSH into workspace | `ssh simpleaccounts-uae.devpod`           |
-| Web IDE (browser) | `http://localhost:8443` (after SSH)       |
-| Stop workspace    | `devpod stop simpleaccounts-uae`          |
-| Start workspace   | `devpod up simpleaccounts-uae`            |
-| Delete workspace  | `devpod delete simpleaccounts-uae`        |
-| View logs         | `devpod logs simpleaccounts-uae`          |
+| Task               | Command                                     |
+| ------------------ | ------------------------------------------- |
+| Open in VS Code    | `devpod up simpleaccounts-uae --ide vscode` |
+| SSH into workspace | `ssh simpleaccounts-uae.devpod`             |
+| Web IDE (browser)  | `http://localhost:8443` (after SSH)         |
+| Stop workspace     | `devpod stop simpleaccounts-uae`            |
+| Start workspace    | `devpod up simpleaccounts-uae`              |
+| Delete workspace   | `devpod delete simpleaccounts-uae`          |
+| View logs          | `devpod logs simpleaccounts-uae`            |
 
 ---
 
@@ -280,11 +280,11 @@ sudo chown -R 1000:1000 /home/<username>/.devpod-mount/
 
 ## Scripts Reference
 
-| Script                        | Location             | Purpose                          |
-| ----------------------------- | -------------------- | -------------------------------- |
-| `install-traefik-service.sh`  | `.devcontainer/proxy/` | Install Traefik proxy (admin)    |
-| `post-create.sh`              | `.devcontainer/`     | Initial container setup          |
-| `post-start.sh`               | `.devcontainer/`     | Container startup (Traefik connect) |
-| `admin-add-user.sh`           | `scripts/`           | Admin adds new DevPod user       |
-| `user-quick-setup.sh`         | `scripts/`           | User one-click DevPod setup      |
-| `devpod-setup.sh`             | `scripts/`           | Full self-service DevPod setup   |
+| Script                       | Location               | Purpose                             |
+| ---------------------------- | ---------------------- | ----------------------------------- |
+| `install-traefik-service.sh` | `.devcontainer/proxy/` | Install Traefik proxy (admin)       |
+| `post-create.sh`             | `.devcontainer/`       | Initial container setup             |
+| `post-start.sh`              | `.devcontainer/`       | Container startup (Traefik connect) |
+| `admin-add-user.sh`          | `scripts/`             | Admin adds new DevPod user          |
+| `user-quick-setup.sh`        | `scripts/`             | User one-click DevPod setup         |
+| `devpod-setup.sh`            | `scripts/`             | Full self-service DevPod setup      |
