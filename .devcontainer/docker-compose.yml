@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 # =============================================================================
 # SimpleAccounts UAE - Development Container Stack
 # =============================================================================
@@ -16,6 +18,7 @@
 # See .devcontainer/README.md for detailed documentation.
 # =============================================================================
 
+>>>>>>> origin/develop
 services:
   devcontainer:
     # Use prebuilt image (default for fast startup)
@@ -28,7 +31,10 @@ services:
       - .env
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
+<<<<<<< HEAD
+=======
       # Cache volumes (can be rebuilt, use Docker named volumes)
+>>>>>>> origin/develop
       - devcontainer-vscode-extensions:/home/vscode/.vscode-server/extensions
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm

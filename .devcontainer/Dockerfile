@@ -7,11 +7,44 @@ FROM mcr.microsoft.com/devcontainers/java:21-bookworm
 ARG NODE_VERSION="20"
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"
 
+<<<<<<< HEAD
+# ============================================
+# INSTALL TOOLS (baked in for faster startup)
+# ============================================
+
+# Install Docker CLI and Docker Compose
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release \
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends docker-ce-cli docker-compose-plugin \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# Install GitHub CLI
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends gh \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# ============================================
+# INSTALL SYSTEM DEPENDENCIES
+# ============================================
+
+=======
 # ============================================ 
 # INSTALL TOOLS (baked in for faster startup)
 # ============================================ 
 
 # Install Docker CLI, Docker Compose, GitHub CLI, and System Dependencies
+>>>>>>> origin/develop
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         apt-transport-https \
@@ -91,6 +124,9 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
 <<<<<<< HEAD
+# Set working directory
+=======
+<<<<<<< HEAD
 =======
 # Install code-server for web-based IDE access
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local \
@@ -164,6 +200,7 @@ RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright 
 
 # Reset working directory
 USER root
+>>>>>>> origin/develop
 WORKDIR /workspaces
 
 # Default command

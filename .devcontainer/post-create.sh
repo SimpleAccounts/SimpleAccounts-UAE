@@ -9,6 +9,20 @@ unset NODE_OPTIONS
 
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
+<<<<<<< HEAD
+# Install root dependencies
+echo "📦 Installing root npm dependencies..."
+npm install
+
+# Install frontend dependencies
+echo "📦 Installing frontend dependencies..."
+cd apps/frontend
+npm install --legacy-peer-deps
+cd ../..
+
+# Install Playwright browsers (using system Chromium)
+echo "🎭 Setting up Playwright..."
+=======
 # Determine the target user home directory
 # In devcontainer, we typically run as vscode user, but post-create may run as root
 TARGET_USER="vscode"
@@ -73,6 +87,7 @@ if ! npm ci --prefer-offline 2>/dev/null; then
 fi
 
 echo "📦 Installing frontend dependencies..."
+>>>>>>> origin/develop
 cd apps/frontend
 if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
     echo "  ⚠️  npm ci failed, falling back to npm install..."
@@ -80,6 +95,9 @@ if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
 fi
 cd ../..
 
+<<<<<<< HEAD
+# Download Maven dependencies
+=======
 # ============================================
 # Setup Playwright
 # ============================================
@@ -91,6 +109,7 @@ ensure_dir "$TARGET_HOME/.cache/ms-playwright"
 # ============================================
 # Download Maven dependencies
 # ============================================
+>>>>>>> origin/develop
 echo "☕ Downloading Maven dependencies..."
 cd apps/backend
 
