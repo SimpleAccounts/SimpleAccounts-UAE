@@ -2,24 +2,57 @@ import { CONTACT } from 'constants/types';
 import { authApi } from 'utils';
 
 export const getContactList = obj => {
-  let name = obj.name ? obj.name : '';
-  let email = obj.email ? obj.email : '';
-  let contactType = obj.contactType ? obj.contactType.value : '';
-  let pageNo = obj.pageNo ? obj.pageNo : '';
-  let pageSize = obj.pageSize ? obj.pageSize : '';
-  let order = obj.order ? obj.order : '';
-  let sortingCol = obj.sortingCol ? obj.sortingCol : '';
-  let paginationDisable = obj.paginationDisable ? obj.paginationDisable : false;
+  // Build query parameters, only including non-empty values
+  const params = new URLSearchParams();
+
+  // String parameters - only add if not empty
+  if (obj.name && obj.name.trim()) {
+    params.append('name', obj.name.trim());
+  }
+  if (obj.email && obj.email.trim()) {
+    params.append('email', obj.email.trim());
+  }
+  if (obj.contactType) {
+    // Handle both object with .value and direct value
+    const contactTypeValue =
+      typeof obj.contactType === 'object' ? obj.contactType.value : obj.contactType;
+    if (contactTypeValue) {
+      params.append('contactType', contactTypeValue);
+    }
+  }
+
+  // Numeric parameters - ensure they are numbers, default to 0 for pageNo, 10 for pageSize
+  const pageNo =
+    obj.pageNo !== undefined && obj.pageNo !== null && obj.pageNo !== '' ? Number(obj.pageNo) : 0;
+  const pageSize =
+    obj.pageSize !== undefined && obj.pageSize !== null && obj.pageSize !== ''
+      ? Number(obj.pageSize)
+      : 10;
+
+  params.append('pageNo', pageNo);
+  params.append('pageSize', pageSize);
+
+  // Sorting parameters - only add if not empty
+  if (obj.order && obj.order.trim()) {
+    params.append('order', obj.order.trim());
+  }
+  if (obj.sortingCol && obj.sortingCol.trim()) {
+    params.append('sortingCol', obj.sortingCol.trim());
+  }
+
+  // Boolean parameter
+  const paginationDisable = obj.paginationDisable === true;
+  params.append('paginationDisable', paginationDisable);
 
   return dispatch => {
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactList?name=${name}&email=${email}&contactType=${contactType}&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`,
+      url: `/rest/contact/getContactList?${params.toString()}`,
     };
 
     return authApi(data)
       .then(res => {
-        if (!obj.paginationDisable) {
+        if (!paginationDisable) {
           dispatch({
             type: CONTACT.CONTACT_LIST,
             payload: res.data,

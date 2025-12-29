@@ -37,6 +37,19 @@ SimpleAccounts-UAE/
 
 ## Quick Start
 
+### Option 1: DevPod (Recommended)
+
+Zero-config development with pre-configured containers:
+
+```bash
+# One command to start coding
+devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide vscode
+```
+
+See [DevPod Setup Guide](docs/DEVPOD_SETUP.md) for details.
+
+### Option 2: Manual Setup
+
 ```bash
 # Install dependencies
 npm install
@@ -51,6 +64,8 @@ npm run backend:run
 npm run frontend:build
 npm run backend:build
 ```
+
+See [Manual Setup Guide](SETUP.md) for prerequisites and detailed instructions.
 
 ## Key Features
 

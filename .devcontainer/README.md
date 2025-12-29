@@ -2,93 +2,184 @@
 
 This directory contains the development container configuration for SimpleAccounts UAE.
 
-## Architecture Overview
+## Quick Start
+
+### Single User (Local Development)
+
+```bash
+# Open in VS Code with Dev Containers extension
+code .
+# Then: Cmd+Shift+P > "Dev Containers: Reopen in Container"
+```
+
+### Multi-User (Shared Dev Server)
+
+```bash
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=<dev-server>
+
+# Container auto-connects to Traefik proxy for shareable URLs
+```
+
+---
+
+## Choose Your Setup
+
+| Setup | Best For | Access URLs |
+|-------|----------|-------------|
+| **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
+| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
+
+---
+
+## Single-User Setup (Default)
+
+Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
+
+### Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Shared Network Namespace                  │
-│                   (hostname: simpleaccounts-dev)             │
+│                    Internal Docker Network                   │
+│                   (user-specific isolation)                  │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
 │  │ devcontainer │  │      db      │  │    redis     │       │
 │  │              │  │  (postgres)  │  │              │       │
-│  │ localhost:   │  │ localhost:   │  │ localhost:   │       │
-│  │   5432 ─────────► 5432        │  │   6379 ◄─────────────│
-│  │   6379 ◄────────────────────────────► 6379      │       │
+│  │   db:5432 ──────► :5432       │  │              │       │
+│  │   redis:6379 ───────────────────────► :6379     │       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-## Network Mode: Shared Namespace
-
-All services use `network_mode: service:db`, which means they share the PostgreSQL container's network namespace.
-
-### What This Means
-
-| Aspect          | Behavior                                               |
-| --------------- | ------------------------------------------------------ |
-| **Hostname**    | All containers share the hostname `simpleaccounts-dev` |
-| **IP Address**  | All containers share the same network interfaces       |
-| **Port Access** | Services communicate via `localhost`                   |
 
 ### Service Connectivity
 
 | Service    | Access From DevContainer |
 | ---------- | ------------------------ |
-| PostgreSQL | `localhost:5432`         |
-| Redis      | `localhost:6379`         |
+| PostgreSQL | `db:5432`                |
+| Redis      | `redis:6379`             |
+| Frontend   | `localhost:3000`         |
+| Backend    | `localhost:8080`         |
 
-### Why This Design?
+### Why Internal Network?
 
-1. **Simplicity**: No DNS resolution or service discovery needed
-2. **Localhost Access**: Applications connect to `localhost` just like local development
-3. **Consistency**: Same connection strings work locally and in the container
-4. **Performance**: No network overlay overhead
+1. **Multi-user Isolation**: Each user gets their own network namespace
+2. **Traefik Compatible**: Devcontainer can join Traefik network for external routing
+3. **Simple Hostnames**: Services use predictable hostnames (`db`, `redis`)
+4. **Consistent**: Same connection strings work for single and multi-user setups
 
-### Trade-offs
+---
 
-| Benefit                      | Consideration                              |
-| ---------------------------- | ------------------------------------------ |
-| Simple `localhost` access    | All containers share one hostname          |
-| No DNS configuration         | Cannot run multiple instances of same port |
-| Familiar development pattern | Debugging network issues can be confusing  |
+## Multi-User Setup (Shared Server)
+
+Uses `.devcontainer/proxy/` with Traefik reverse proxy.
+
+### Architecture
+
+```
+                              Dev Server
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  ┌─────────────────┐                                         │
+│  │  Traefik Proxy  │  ← Port 80 (shared)                     │
+│  │   (dev-proxy)   │                                         │
+│  └────────┬────────┘                                         │
+│           │                                                  │
+│     ┌─────┴─────┬─────────────┐                              │
+│     │           │             │                              │
+│     ▼           ▼             ▼                              │
+│  ┌──────┐   ┌──────┐     ┌──────┐                            │
+│  │alice │   │ bob  │     │carol │  ← Isolated containers     │
+│  │ :3000│   │ :3000│     │ :3000│                            │
+│  │ :8080│   │ :8080│     │ :8080│                            │
+│  └──┬───┘   └──┬───┘     └──┬───┘                            │
+│     │          │            │                                │
+│  ┌──┴───┐   ┌──┴───┐     ┌──┴───┐                            │
+│  │ DB   │   │ DB   │     │ DB   │  ← Isolated databases      │
+│  │Redis │   │Redis │     │Redis │                            │
+│  └──────┘   └──────┘     └──────┘                            │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Features
+
+- **Isolated environments**: Each user has their own DB, Redis, and container
+- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
+- **No port conflicts**: Traefik routes by hostname, not port
+- **Zero DNS config**: Uses nip.io for automatic DNS resolution
+
+### Usage
+
+```bash
+# Launch via DevPod (from your local machine)
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=dev-server
+
+# Container auto-registers with Traefik. Access URLs shown at startup:
+#   Frontend: http://<username>.192-168-1-100.nip.io
+#   Backend:  http://<username>-api.192-168-1-100.nip.io
+```
+
+### User Management
+
+```bash
+# List active user containers
+docker ps --filter "name=simpleaccounts" --format "table {{.Names}}\t{{.Status}}"
+
+# Stop user environment (via DevPod)
+devpod stop simpleaccounts-uae
+
+# Delete user environment (via DevPod)
+devpod delete simpleaccounts-uae
+```
+
+See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
+
+---
 
 ## Files
 
 | File                          | Purpose                                                  |
 | ----------------------------- | -------------------------------------------------------- |
 | `devcontainer.json`           | VS Code devcontainer configuration                       |
-| `docker-compose.yml`          | Container orchestration and networking                   |
+| `docker-compose.yml`          | Single-user container orchestration                      |
 | `docker-compose.override.yml` | Local overrides (secrets, custom config) - not committed |
 | `Dockerfile`                  | Container image definition                               |
 | `init-db.sql`                 | PostgreSQL initialization script                         |
+| `proxy/`                      | Multi-user setup with Traefik proxy                      |
 
 ## Volumes
 
-### Persistent Data
+### Persistent Data (Named Volumes)
 
-- `postgres-data` - PostgreSQL database files
-- `redis-data` - Redis persistence
+Named Docker volumes (user-specific to avoid conflicts):
 
-### Developer Tool Caches (Survives Rebuilds)
+- `${USER}-postgres-data` - PostgreSQL database files
+- `${USER}-redis-data` - Redis persistence
+- `${USER}-vscode-extensions` - VS Code extensions
+- `${USER}-maven-cache` - Maven dependencies (~/.m2)
+- `${USER}-npm-cache` - npm cache (~/.npm)
 
-- `devcontainer-vscode-extensions` - VS Code extensions
-- `devcontainer-maven-cache` - Maven dependencies (~/.m2)
-- `devcontainer-npm-cache` - npm cache (~/.npm)
+### Credentials & Configuration (Host Bind Mounts)
 
-### Credentials & Configuration (Survives Rebuilds)
+Persisted to host directory `~/.devpod-mount/` for portability:
 
-- `devcontainer-claude-config` - Claude CLI credentials (~/.claude)
-- `devcontainer-gemini-config` - Gemini CLI config (~/.gemini)
-- `devcontainer-codex-config` - Codex CLI config (~/.codex)
-- `devcontainer-gh-config` - GitHub CLI auth (~/.config/gh)
-- `devcontainer-ssh` - SSH keys (~/.ssh)
-- `devcontainer-docker` - Docker config (~/.docker)
-- `devcontainer-kube` - Kubernetes config (~/.kube)
-- `devcontainer-aws` - AWS credentials (~/.aws)
-- `devcontainer-azure` - Azure credentials (~/.azure)
-- `devcontainer-gitconfig` - Git configuration (~/.gitconfig)
-- `devcontainer-bash-history` - Bash history
+- `~/.devpod-mount/claude` → ~/.claude (Claude CLI)
+- `~/.devpod-mount/gemini` → ~/.gemini (Gemini CLI)
+- `~/.devpod-mount/codex` → ~/.codex (Codex CLI)
+- `~/.devpod-mount/gh` → ~/.config/gh (GitHub CLI)
+- `~/.devpod-mount/ssh` → ~/.ssh (SSH keys)
+- `~/.devpod-mount/docker` → ~/.docker (Docker config)
+- `~/.devpod-mount/kube` → ~/.kube (Kubernetes config)
+- `~/.devpod-mount/aws` → ~/.aws (AWS credentials)
+- `~/.devpod-mount/azure` → ~/.azure (Azure credentials)
+- `~/.devpod-mount/gitconfig` → ~/.gitconfig_dir (Git config)
+- `~/.devpod-mount/bash-history` → ~/.bash_history_dir (Bash history)
+- `~/.devpod-mount/code-server` → ~/.config/code-server (Web IDE config)
 
 ## Local Overrides
 
@@ -118,21 +209,14 @@ docker compose down
 docker compose up -d
 ```
 
-### Check Hostname
-
-```bash
-hostname
-# Output: simpleaccounts-dev
-```
-
 ### Verify Network Connectivity
 
 ```bash
-# PostgreSQL
-pg_isready -h localhost -p 5432
+# PostgreSQL (uses internal hostname 'db')
+pg_isready -h db -p 5432
 
-# Redis
-redis-cli ping
+# Redis (uses internal hostname 'redis')
+redis-cli -h redis ping
 ```
 
 ### View Container Logs
@@ -144,7 +228,7 @@ docker compose logs -f redis
 
 ## Troubleshooting
 
-### "Connection refused" to localhost:5432
+### "Connection refused" to db:5432
 
 The db container may not be ready. Check health:
 
@@ -153,19 +237,22 @@ docker compose ps
 docker compose logs db
 ```
 
-### Hostname shows random ID instead of simpleaccounts-dev
-
-The container needs to be rebuilt to pick up the hostname change:
-
-```bash
-docker compose down
-docker compose up -d
-```
-
 ### Credentials lost after rebuild
 
 Credentials are stored in named volumes and should persist. Check volume exists:
 
 ```bash
-docker volume ls | grep devcontainer-claude-config
+docker volume ls | grep "$(whoami)-"
+```
+
+### Multi-user: URL not accessible
+
+Check Traefik is running and routing correctly:
+
+```bash
+# Check proxy is running
+docker ps | grep dev-proxy
+
+# Check your container is registered
+docker logs dev-proxy 2>&1 | grep <your-username>
 ```

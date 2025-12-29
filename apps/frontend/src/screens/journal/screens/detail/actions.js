@@ -7,13 +7,7 @@ export const getJournalById = id => {
       url: `/rest/journal/getById?id=${id}`,
     };
 
-    return authApi(data)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        throw err;
-      });
+    return authApi(data);
   };
 };
 
@@ -24,13 +18,7 @@ export const updateJournal = obj => {
       url: '/rest/journal/update',
       data: obj,
     };
-    return authApi(data)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        throw err;
-      });
+    return authApi(data);
   };
 };
 
@@ -41,12 +29,6 @@ export const deleteJournal = id => {
       url: `/rest/journal/delete?id=${id}`,
     };
 
-    return authApi(data)
-      .then(res => {
-        return res;
-      })
-      .catch(err => {
-        throw err;
-      });
+    return authApi(data);
   };
 };

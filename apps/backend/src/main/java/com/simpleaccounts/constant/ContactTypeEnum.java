@@ -46,7 +46,8 @@ public enum ContactTypeEnum {
 	}
 
 	public static String getContactTypeByValue(Integer value) {
-		return map().get(value).getDesc();
+		ContactTypeEnum contactType = map().get(value);
+		return contactType != null ? contactType.getDesc() : null;
 	}
 
 }
