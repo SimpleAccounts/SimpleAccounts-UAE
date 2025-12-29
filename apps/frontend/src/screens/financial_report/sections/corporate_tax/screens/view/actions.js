@@ -1,4 +1,4 @@
-import { authApi, authFileUploadApi } from 'utils';
+import { authFileUploadApi } from 'utils';
 
 export const getCTView = postObj => {
   let id = postObj?.id ? postObj.id : '';

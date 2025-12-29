@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody } from 'components/migration';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import './style.scss';
@@ -19,7 +19,7 @@ const chartOptions = {
       backgroundColor: '#1e3a5f',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#1e6eff',
+      borderColor: '#2064d8',
       borderWidth: 1,
       cornerRadius: 8,
       padding: 12,
@@ -103,7 +103,7 @@ const ProfitAndLossReport = props => {
       })
       .catch(err => {
         // Surface error for debugging but avoid crashing the dashboard.
-        // eslint-disable-next-line no-console
+
         console.error('Failed to load profit/loss chart', err);
       });
   };
@@ -122,8 +122,8 @@ const ProfitAndLossReport = props => {
         {
           type: 'bar',
           label: 'Income',
-          backgroundColor: '#1e6eff',
-          borderColor: '#1e6eff',
+          backgroundColor: '#2064d8',
+          borderColor: '#2064d8',
           borderRadius: 4,
           data: data.income.incomeData || [],
           order: 2,
@@ -167,7 +167,7 @@ const ProfitAndLossReport = props => {
               style={{
                 fontSize: '1.125rem',
                 fontWeight: 700,
-                color: '#1e6eff',
+                color: '#2064d8',
                 margin: 0,
                 textTransform: 'uppercase',
               }}

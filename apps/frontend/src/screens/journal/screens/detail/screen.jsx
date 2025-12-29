@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,12 +16,12 @@ import {
   Input,
   Label,
   Badge,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectStyles } from 'utils';
+import { selectCurrencyFactory } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalDetailActions from './actions';
 import { Loader, LeavePage, ConfirmDeleteModal, Currency } from 'components';
@@ -55,10 +55,10 @@ const mapDispatchToProps = dispatch => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

@@ -6,18 +6,7 @@ import './style.scss';
 import { data } from 'screens/Language';
 import LocalizedStrings from 'react-localization';
 import { ReportsColumnList } from 'utils';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  Col,
-  Table,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import { Table, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'components/migration';
 import { MoreVertical } from 'lucide-react';
 
 const mapStateToProps = state => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Button,
   Row,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
@@ -20,7 +20,6 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent from '../filterComponent';
 import logo from 'assets/images/brand/logo.png';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
@@ -416,7 +415,7 @@ class BalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['currentAssets']).map(item =>
                                     item === 'Petty Cash' ? (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right">
@@ -485,7 +484,7 @@ class BalanceSheet extends React.Component {
                                     <td></td>
                                   </tr>
                                   {Object.keys(this.state.data['bank']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
                                       <td className="pt-0 pb-0 text-right">
                                         {this.state.data['bank'] ? (
@@ -618,7 +617,7 @@ class BalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['currentAssets']).map(item =>
                                     item !== 'Petty Cash' ? (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right">
@@ -684,7 +683,7 @@ class BalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentAssets']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right">
@@ -753,7 +752,7 @@ class BalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['fixedAssets']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right">
@@ -934,7 +933,7 @@ class BalanceSheet extends React.Component {
                                     </td>
                                   </tr>
                                   {Object.keys(this.state.data['otherLiability']).map(item => (
-                                    <tr>
+                                    <tr key={item}>
                                       <td className="pt-0 pb-0">{item}</td>
 
                                       <td className="pt-0 pb-0 text-right">
@@ -1004,7 +1003,7 @@ class BalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['otherCurrentLiability']).map(
                                     item => (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
 
                                         <td className="pt-0 pb-0 text-right">
@@ -1129,7 +1128,7 @@ class BalanceSheet extends React.Component {
                                   </tr>
                                   {Object.keys(this.state.data['equities']).map(item =>
                                     this.state.data['equities'][`${item}`] !== 0 ? (
-                                      <tr>
+                                      <tr key={item}>
                                         <td className="pt-0 pb-0">{item}</td>
                                         <td className="pt-0 pb-0 text-right">
                                           {this.state.data['equities'] ? (

@@ -6,19 +6,16 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
-  Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
-import FilterComponent2 from '../filterComponet2';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../Language/index';

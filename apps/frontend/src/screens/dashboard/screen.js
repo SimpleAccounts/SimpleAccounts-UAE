@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Row, Col } from 'reactstrap';
+import { Row, Col } from 'components/migration';
 import {
   LayoutDashboard,
   TrendingUp,
@@ -104,7 +104,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #2064d8)' }} />
               </div>
               <span>Dashboard Overview</span>
             </div>
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <FileText size={24} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+                <FileText size={24} style={{ color: 'var(--neu-primary, #2064d8)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Total Invoices</span>
@@ -141,7 +141,7 @@ class Dashboard extends React.Component {
                     '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
                 }}
               >
-                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #00c896)' }} />
+                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Income</span>
@@ -204,7 +204,7 @@ class Dashboard extends React.Component {
               marginRight: '12px',
             }}
           >
-            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #00c896)' }} />
+            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
           </div>
           <h2 className="section-title">Key Performance Indicators</h2>
         </div>
@@ -230,7 +230,7 @@ class Dashboard extends React.Component {
               marginRight: '12px',
             }}
           >
-            <Landmark size={20} style={{ color: 'var(--neu-primary, #1e6eff)' }} />
+            <Landmark size={20} style={{ color: 'var(--neu-primary, #2064d8)' }} />
           </div>
           <h2 className="section-title">Financial Overview</h2>
         </div>

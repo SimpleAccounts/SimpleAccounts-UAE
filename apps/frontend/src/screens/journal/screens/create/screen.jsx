@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -15,13 +14,11 @@ import {
   FormGroup,
   Input,
   Label,
-  Badge,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Currency, LeavePage, Loader } from 'components';
+import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectStyles } from 'utils';
 import * as JournalActions from '../../actions';
 import * as JournalCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';

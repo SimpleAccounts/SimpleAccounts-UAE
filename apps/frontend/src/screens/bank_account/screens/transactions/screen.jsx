@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -14,20 +14,14 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, ChevronUp, Landmark, Pencil, Plus, Trash2, Upload } from 'lucide-react';
-import Select from 'react-select';
-import { selectOptionsFactory } from 'utils';
-import DatePicker from 'react-datepicker';
 import { Loader, ConfirmDeleteModal } from 'components';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as TransactionsActions from './actions';
-import * as detailBankAccountActions from './../detail/actions';
 import { CommonActions } from 'services/global';
-import { ExplainTrasactionDetail } from './sections';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as transactionDetailActions from '../transactions/screens/detail/actions';
-import Getbyid from './sections/transactiondetails';
 
 const ZERO = 0.0;
 let strings = new LocalizedStrings(data);
@@ -446,20 +440,20 @@ function BankTransactions() {
             {dialog}
             {loading ? (
               <div className="grid grid-cols-12 gap-4">
-                <div lg={12}>
+                <div className="col-span-12">
                   <Loader />
                 </div>
               </div>
             ) : (
               <div className="grid grid-cols-12 gap-4">
-                <div lg={12}>
+                <div className="col-span-12">
                   <div className="mb-4 status-panel p-3">
                     <div className="grid grid-cols-12 gap-4">
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.AccountName}</h5>
                         <h3>{accounName}</h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.CurrentBankBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -474,7 +468,7 @@ function BankTransactions() {
                               })}
                         </h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.LedgerBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -489,7 +483,7 @@ function BankTransactions() {
                               })}
                         </h3>
                       </div>
-                      <div lg={3}>
+                      <div className="col-span-3">
                         <h5>{strings.OpeningBalance}</h5>
                         <h3>
                           {bankAccountCurrencyIsoCode} &nbsp;
@@ -565,8 +559,8 @@ function BankTransactions() {
                   </div>
                   <div className="py-3">
                     <div className="grid grid-cols-12 gap-4">
-                      <div lg={3} className="mb-1"></div>
-                      <div lg={2} className="pl-0 pr-0"></div>
+                      <div className="col-span-3 mb-1"></div>
+                      <div className="col-span-2 pl-0 pr-0"></div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center mb-4">

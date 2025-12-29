@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody } from 'components/migration';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 
@@ -71,7 +71,7 @@ const data4MultipleOptions = {
       backgroundColor: '#1e3a5f',
       titleColor: '#ffffff',
       bodyColor: '#ffffff',
-      borderColor: '#1e6eff',
+      borderColor: '#2064d8',
       borderWidth: 1,
       cornerRadius: 8,
       padding: 12,
@@ -112,14 +112,14 @@ const PaidInvoices = props => {
             return gradient;
           },
           borderWidth: 3,
-          borderColor: '#1e6eff',
-          pointBorderColor: '#1e6eff',
+          borderColor: '#2064d8',
+          pointBorderColor: '#2064d8',
           pointBackgroundColor: '#ffffff',
           pointBorderWidth: 2,
           pointHoverRadius: 6,
           pointHoverBorderWidth: 2,
           pointRadius: 4,
-          pointHoverBackgroundColor: '#1e6eff',
+          pointHoverBackgroundColor: '#2064d8',
           pointHoverBorderColor: '#ffffff',
           data: paidCustomerData.data || [],
           datalabels: {
@@ -192,7 +192,7 @@ const PaidInvoices = props => {
               style={{
                 fontSize: '1.125rem',
                 fontWeight: 700,
-                color: '#1e6eff',
+                color: '#2064d8',
                 margin: 0,
                 textTransform: 'uppercase',
               }}

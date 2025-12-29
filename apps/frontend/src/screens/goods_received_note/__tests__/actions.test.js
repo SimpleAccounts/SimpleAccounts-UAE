@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import configureMockStore from 'redux-mock-store';
-import { thunk } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import * as actions from '../actions';
 import { GOODS_RECEVED_NOTE } from 'constants/types';
 import { authApi } from 'utils';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -89,8 +89,8 @@ export function Sidebar({
   // Theme colors (matching the neumorphic theme)
   const theme = {
     bg: '#e8eef5',
-    primary: '#1e6eff',
-    secondary: '#00c896',
+    primary: '#2064d8',
+    secondary: '#21d8aa',
     warning: '#f59e0b',
     textPrimary: '#1e3a5f',
     textSecondary: '#3d5a80',
@@ -109,7 +109,7 @@ export function Sidebar({
   };
 
   const gradients = {
-    primary: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+    primary: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
   };
 
   if (!Array.isArray(items) || items.length === 0) {

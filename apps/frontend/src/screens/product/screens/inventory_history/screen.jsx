@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col } from 'reactstrap';
+import { Card, CardHeader, CardBody, Row, Col } from 'components/migration';
 
 import './style.scss';
 
@@ -9,7 +9,7 @@ import * as ProductActions from '../../actions';
 
 import { WareHouseModal } from '../../sections';
 
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';

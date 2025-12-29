@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,8 +15,8 @@ import {
   Label,
   Row,
   Col,
-} from 'reactstrap';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+} from 'components/migration';
+import { Loader, ConfirmDeleteModal } from 'components';
 import CheckboxTree from 'react-checkbox-tree';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import { CommonActions } from 'services/global';

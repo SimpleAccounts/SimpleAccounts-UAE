@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Plus, Coins, Download, Trash2, X } from 'lucide-react';
+import { Plus, Coins, Download, X } from 'lucide-react';
 import Select from 'react-select';
 
 import { DataTable } from '@/components/ui/data-table';
 import { Label } from '@/components/ui/label';
 
 import { Loader } from 'components';
-import { selectStyles } from 'utils';
 
 import * as currenciesActions from './actions';
 
@@ -17,9 +16,9 @@ import './style.scss';
 // Neumorphic theme constants
 const theme = {
   bg: '#e8eef5',
-  primary: '#1e6eff',
-  primaryDark: '#0052cc',
-  secondary: '#00c896',
+  primary: '#2064d8',
+  primaryDark: '#1a4fa8',
+  secondary: '#21d8aa',
   warning: '#f59e0b',
   danger: '#ff4d6a',
   textPrimary: '#1e3a5f',

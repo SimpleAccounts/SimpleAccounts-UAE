@@ -12,7 +12,7 @@ import {
   Nav,
   NavItem,
   NavLink,
-} from 'reactstrap';
+} from 'components/migration';
 
 import { ExpenseReport, CustomerReport, AccountBalances } from './sections';
 

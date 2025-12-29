@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ExplainTrasactionDetail from './explain_transaction_detail';
 
 const Getbyid = ({
@@ -22,6 +22,7 @@ const Getbyid = ({
           responsedata.data?.map((i, inx) => {
             return (
               <ExplainTrasactionDetail
+                key={inx}
                 closeExplainTransactionModal={e => {
                   closeExplainTransactionModal(e);
                 }}

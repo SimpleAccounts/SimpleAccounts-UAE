@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Button,
   Row,
@@ -11,12 +10,10 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
 import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
@@ -29,31 +26,10 @@ const emailSchema = z.object({
 });
 
 const EmailModal = props => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [contentState, setContentState] = useState({});
-  const [viewEditor, setViewEditor] = useState(false);
-  const [message, setMessage] = useState('');
-
-  const content = {
-    entityMap: {},
-    blocks: [
-      {
-        key: '637gr',
-        text: message,
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {},
-      },
-    ],
-  };
-
   const {
     control,
     handleSubmit,
-    formState: { errors },
-    reset,
+    formState: { errors: _errors },
   } = useForm({
     resolver: zodResolver(emailSchema),
     defaultValues: {
@@ -65,12 +41,7 @@ const EmailModal = props => {
     },
   });
 
-  const onContentStateChange = newContentState => {
-    setContentState(newContentState);
-    setMessage(newContentState.blocks[0].text);
-  };
-
-  const onSubmit = formData => {
+  const onSubmit = _formData => {
     props.sendEmail(props.id);
   };
 
@@ -129,14 +100,18 @@ const EmailModal = props => {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label htmlFor="text-input">Content</Label>
-                  <Editor
-                    initialContentState={content}
-                    editorContent={contentState}
-                    toolbarClassName="editor-toolbar"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="massage-editor"
-                    onContentStateChange={onContentStateChange}
+                  <Label htmlFor="invoiceMailingBody">Content</Label>
+                  <Controller
+                    name="invoiceMailingBody"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="textarea"
+                        id="invoiceMailingBody"
+                        placeholder="Write your message"
+                      />
+                    )}
                   />
                 </FormGroup>
               </Col>

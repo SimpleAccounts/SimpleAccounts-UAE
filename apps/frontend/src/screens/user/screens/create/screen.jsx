@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -31,7 +31,6 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { upperFirst } from 'lodash-es';
-import eye from 'assets/images/settings/eye.png';
 import { Users, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);

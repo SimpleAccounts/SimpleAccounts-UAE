@@ -1,4 +1,4 @@
-import { EMPLOYEE, USER } from 'constants/types';
+import { USER } from 'constants/types';
 import { authFileUploadApi, authApi } from 'utils';
 
 export const createUser = obj => {

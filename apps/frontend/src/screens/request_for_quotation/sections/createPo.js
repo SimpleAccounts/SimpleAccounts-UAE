@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   Button,
@@ -14,11 +14,10 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-} from 'reactstrap';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+} from 'components/migration';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 import { CommonActions } from 'services/global';
@@ -33,10 +32,10 @@ const strings = new LocalizedStrings(data);
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

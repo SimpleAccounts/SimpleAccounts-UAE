@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,15 +15,14 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import dayjs from '@/utils/date';
 
 import { Loader, ConfirmDeleteModal } from 'components';
 
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
+import { selectCurrencyFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeDetailActions from './actions';
 

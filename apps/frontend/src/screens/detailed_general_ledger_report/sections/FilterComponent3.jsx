@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup, Label, Form } from 'reactstrap';
+import { useState, useCallback } from 'react';
+import { Button, Row, Col, FormGroup, Label, Form } from 'components/migration';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,16 +8,16 @@ import Select from 'react-select';
 import './style.scss';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { optionFactory, selectOptionsFactory } from 'utils';
+import { selectOptionsFactory } from 'utils';
 import { CircleDot, Ban } from 'lucide-react';
 
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

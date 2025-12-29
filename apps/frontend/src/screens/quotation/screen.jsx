@@ -1,26 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  ButtonGroup,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup } from 'components/migration';
 import Select from 'react-select';
 import { DataTable } from '@/components/ui/data-table';
 import EmailModal from '../customer_invoice/sections/email_template';
-import { Loader, ConfirmDeleteModal, SentInvoice, ActionDropdownButtons } from 'components';
+import { Loader, SentInvoice, ActionDropdownButtons } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as QuotationAction from './actions';
 import * as CustomerInvoiceActions from './../customer_invoice/actions';
-import { CommonActions } from 'services/global';
 import { selectOptionsFactory, StatusActionList } from 'utils';
 import './style.scss';
 import { data as languageData } from '../Language/index';

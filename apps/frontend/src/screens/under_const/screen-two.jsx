@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
@@ -123,7 +122,7 @@ function LogIn() {
                   Forgot password?
                 </a>
                 <a href="#" className="text-primary hover:underline">
-                  Don't have an account? Sign Up
+                  Don&apos;t have an account? Sign Up
                 </a>
               </div>
             </form>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Switch } from '@/components/ui/switch';
@@ -35,19 +35,11 @@ import {
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  renderList,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { renderList, selectOptionsFactory, DropdownLists, Lists, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import invoiceimage from 'assets/images/invoice/invoice.png';
 import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {

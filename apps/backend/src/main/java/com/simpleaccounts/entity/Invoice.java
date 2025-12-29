@@ -189,7 +189,6 @@ public class Invoice implements Serializable {
 	private DocumentTemplate documentTemplate;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "invoice")
-	@org.hibernate.annotations.ForeignKey(name = "none")
 	private Collection<InvoiceLineItem> invoiceLineItems;
 
 	@Column(name = "TOTAL_AMOUNT")

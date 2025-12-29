@@ -75,27 +75,31 @@ public class ContactController {
 	@GetMapping(value = "/getContactList")
 	public ResponseEntity<PaginationResponseModel> getContactList(ContactRequestFilterModel filterModel,
 			HttpServletRequest request) {
-		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
-		User user = userService.findByPK(userId);
-
 		try {
+			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			User user = userService.findByPK(userId);
 			Map<ContactFilterEnum, Object> filterDataMap = new EnumMap<>(ContactFilterEnum.class);
-			if (user.getRole().getRoleCode() != 1) {
+			if(user.getRole().getRoleCode()!=1) {
 				filterDataMap.put(ContactFilterEnum.USER_ID, userId);
 			}
 			filterDataMap.put(ContactFilterEnum.CONTACT_TYPE, filterModel.getContactType());
 			filterDataMap.put(ContactFilterEnum.NAME, filterModel.getName());
 			filterDataMap.put(ContactFilterEnum.EMAIL, filterModel.getEmail());
 			filterDataMap.put(ContactFilterEnum.DELETE_FLAG, false);
-
 			filterDataMap.put(ContactFilterEnum.ORDER_BY, ORDERBYENUM.DESC);
 
 			PaginationResponseModel response = contactService.getContactList(filterDataMap, filterModel);
+			List<ContactListModel> modelList = new ArrayList<>();
 			if (response == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			if (response.getData() != null) {
-				response.setData(contactHelper.getModelList(response.getData()));
+			} else {
+				if (response.getData() != null) {
+					for (Contact contact : (List<Contact>) response.getData()) {
+						ContactListModel model = contactHelper.getModel(contact);
+						modelList.add(model);
+					}
+					response.setData(modelList);
+				}
 			}
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {

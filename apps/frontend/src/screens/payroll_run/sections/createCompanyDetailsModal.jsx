@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,7 @@ import {
   ModalFooter,
   UncontrolledTooltip,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 
 import { CommonActions } from 'services/global';
 import * as PayrollRun from '../actions';

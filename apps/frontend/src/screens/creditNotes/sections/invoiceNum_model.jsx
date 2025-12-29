@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -13,7 +13,7 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import * as CustomerInvoiceActions from '../../customer_invoice/actions';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -39,7 +39,7 @@ const InvoiceNumberModel = ({
 }) => {
   const [disabled, setDisabled] = useState(false);
   const regEx = /^[0-9]+$/;
-  const regExAlpha = /^[a-zA-Z0-9 -/\"]+$/;
+  const regExAlpha = /^[a-zA-Z0-9 -/"]+$/;
 
   const {
     control,

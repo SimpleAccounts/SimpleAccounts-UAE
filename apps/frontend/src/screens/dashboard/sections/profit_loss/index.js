@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Currency } from 'components';
-// import { HorizontalBar } from 'react-chartjs-2'
-// import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
-import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'reactstrap';
+import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'components/migration';
 import './style.scss';
 // Use import instead of require for Vite compatibility
 import minusIcon from 'assets/images/dashboard/minus.png';
@@ -35,7 +33,6 @@ class ProfitAndLoss extends Component {
       this.props.DashboardActions.getTaxes(range),
     ];
     return Promise.all(requests).catch(err => {
-      // eslint-disable-next-line no-console
       console.error('Failed to load profit & loss summary', err);
     });
   };

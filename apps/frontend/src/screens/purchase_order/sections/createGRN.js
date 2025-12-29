@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   ModalBody,
   ModalFooter,
   Table,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

@@ -1,10 +1,10 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
-import { thunk } from 'redux-thunk';
+import * as thunkModule from 'redux-thunk';
+const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 import ReconcileTransaction from './screen';
 
 const middlewares = [thunk];

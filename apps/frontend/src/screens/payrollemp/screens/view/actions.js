@@ -1,4 +1,3 @@
-import { sendMail } from 'screens/customer_invoice/actions';
 import { authApi } from 'utils';
 
 export const getEmployeeById = _id => {

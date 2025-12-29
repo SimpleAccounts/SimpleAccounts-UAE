@@ -1,5 +1,5 @@
 # ------------------------------------------------------
-# Build Stage - Node.js build
+# Build Stage - Node.js build with BuildKit cache mounts
 # ------------------------------------------------------
 FROM node:20-alpine AS builder
 WORKDIR /app
@@ -7,8 +7,12 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci --legacy-peer-deps
+# Install dependencies with BuildKit cache mounts
+# Using separate caches for npm registry and node_modules
+# This significantly reduces network bandwidth on subsequent builds
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/app/node_modules \
+    npm ci --legacy-peer-deps --prefer-offline --no-audit --no-fund
 
 # Copy source code
 COPY . .

@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription,
 } from '@/components/ui/dialog';
 
 class ConfirmDeleteModal extends React.Component {

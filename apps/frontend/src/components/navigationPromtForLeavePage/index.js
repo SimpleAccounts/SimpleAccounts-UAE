@@ -1,7 +1,7 @@
 import React from 'react';
 
 import NavigationPrompt from 'react-router-navigation-prompt';
-import { ConfirmDeleteModal, ConfirmLeavePageModal, Loader } from 'components';
+import { ConfirmLeavePageModal } from 'components';
 import './style.scss';
 
 class LeavePage extends React.Component {

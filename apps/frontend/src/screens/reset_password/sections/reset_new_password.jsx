@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,7 +13,7 @@ import {
   FormGroup,
   Label,
   Row,
-} from 'reactstrap';
+} from 'components/migration';
 import { api } from 'utils';
 import { Message } from 'components';
 import PasswordChecklist from 'react-password-checklist';

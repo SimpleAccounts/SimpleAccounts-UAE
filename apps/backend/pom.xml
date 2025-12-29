@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.1</version>
+		<version>4.0.1</version>
 		<relativePath />
 	</parent>
 	<properties>
@@ -25,8 +25,7 @@
 		<frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
 		<node.version>v12.16.3</node.version>
 		<yarn.version>v1.22.4</yarn.version>
-		<junit.jupiter.version>5.11.3</junit.jupiter.version>
-		<junit.platform.version>1.11.3</junit.platform.version>
+		<!-- JUnit versions managed by Spring Boot 4 parent -->
 		<mockito.version>5.21.0</mockito.version>
 		<testcontainers.version>1.21.4</testcontainers.version>
 		<bytebuddy.version>1.18.3</bytebuddy.version>
@@ -70,6 +69,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Spring Boot 4 modular test starters -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- spring boot cache dependency. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -112,12 +122,12 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
-			<version>0.12.6</version>
+			<version>0.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.6</version>
+			<version>0.13.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -134,18 +144,18 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20250517</version>
+			<version>20251224</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.34</version>
+			<version>1.18.42</version>
 		</dependency>
 		<!-- Apache HttpClient 5.x -->
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5</artifactId>
-			<version>5.4.4</version>
+			<version>5.6</version>
 		</dependency>
 		<!-- Spring Boot Mail Starter (includes Jakarta Mail) -->
 		<dependency>
@@ -182,36 +192,7 @@
 			<version>3.0.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-params</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>${junit.jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- JUnit dependencies managed by Spring Boot 4 through spring-boot-starter-test -->
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -233,7 +214,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
-			<version>1.12.0</version>
+			<version>1.14.1</version>
 		</dependency>
 
 		<dependency>
@@ -264,12 +245,12 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>5.3.0</version>
+			<version>5.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>5.3.0</version>
+			<version>5.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -277,11 +258,10 @@
 			<version>4.5.0-M2</version>
 		</dependency>
 		<!-- read excel -->
-		<!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+		<!-- Liquibase for database migrations - Spring Boot 4 requires the starter -->
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-			<version>5.0.1</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-liquibase</artifactId>
 		</dependency>
 		<!-- iText 8.x for PDF generation (iText 7 successor) -->
 		<dependency>
@@ -324,7 +304,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
+				<version>3.14.1</version>
 				<configuration>
 					<source>21</source>
 					<target>21</target>
@@ -332,7 +312,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
-							<version>1.18.34</version>
+							<version>1.18.42</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -417,7 +397,7 @@
 			<plugin>
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
-				<version>1.15.3</version>
+				<version>1.22.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.pitest</groupId>
@@ -501,7 +481,7 @@
 					<plugin>
 						<groupId>io.gatling</groupId>
 						<artifactId>gatling-maven-plugin</artifactId>
-						<version>4.20.14</version>
+						<version>4.20.16</version>
 						<configuration>
 							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
 							<resultsFolder>target/gatling</resultsFolder>
@@ -529,7 +509,7 @@
 					<plugin>
 						<groupId>org.owasp</groupId>
 						<artifactId>dependency-check-maven</artifactId>
-						<version>11.1.1</version>
+						<version>12.1.9</version>
 						<configuration>
 							<failBuildOnCVSS>7</failBuildOnCVSS>
 							<formats>

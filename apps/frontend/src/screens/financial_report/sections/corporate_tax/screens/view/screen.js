@@ -12,24 +12,21 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
 import { ExcelExport as XLSX } from 'utils';
-import { CSVLink } from '@/components/ui/csv-link';
-import { Loader, Currency } from 'components';
+import { Currency } from 'components';
 import * as CTActions from './actions';
 import * as CTReportActions from '../../actions';
 import * as FinancialReportActions from '../../../../actions';
-import FilterComponent from '../../../filterComponent';
 import FilterComponent2 from '../../../filterComponet2';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
 import { data } from '../../../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Settings, Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -401,7 +398,7 @@ class ViewCorporateTax extends React.Component {
                                 this.state.data['nonOperatingIncome'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -422,7 +419,7 @@ class ViewCorporateTax extends React.Component {
                                 this.state.data['operatingIncome'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -479,7 +476,7 @@ class ViewCorporateTax extends React.Component {
                                 this.state.data['costOfGoodsSold'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     <td className="pt-0 pb-0 text-right">
                                       <Currency
@@ -563,7 +560,7 @@ class ViewCorporateTax extends React.Component {
                                 this.state.data['operatingExpense'][`${item}`] === 0 ? (
                                   ''
                                 ) : (
-                                  <tr>
+                                  <tr key={item}>
                                     <td className="pt-0 pb-0">{item}</td>
                                     {/* <td className="pt-0 pb-0"></td> */}
                                     <td className="pt-0 pb-0 text-right">

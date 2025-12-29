@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import { Switch } from '@/components/ui/switch';
@@ -1186,7 +1186,7 @@ const DetailCreditNote = ({
                                       setTaxType(newTaxType);
                                       updateAmount(data);
                                     }}
-                                    onColor="#2064d8"
+                                    onColor="#1e6eff"
                                     onHandleColor="#2693e6"
                                     handleDiameter={25}
                                     uncheckedIcon={false}

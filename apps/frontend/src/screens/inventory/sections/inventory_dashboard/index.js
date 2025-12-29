@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Row, Card, CardBody, CardGroup } from 'reactstrap';
+import { Row, Card, CardBody, CardGroup } from 'components/migration';
 
 import dayjs from '@/utils/date';
 import * as FileSaver from 'file-saver';
@@ -593,7 +593,7 @@ class InventoryDashboard extends React.Component {
               >
                 <div
                   className="d-flex justify-content-between"
-                  style={{ color: '#2064d8', backgroundColor: '#edf2f9', height: '13.8%' }}
+                  style={{ color: '#1e6eff', backgroundColor: '#edf2f9', height: '13.8%' }}
                 >
                   <h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
                     {strings.TopsellingProduct}
@@ -636,7 +636,7 @@ class InventoryDashboard extends React.Component {
               >
                 <div
                   className="d-flex justify-content-between"
-                  style={{ color: '#2064d8', backgroundColor: '#edf2f9', height: '13.8%' }}
+                  style={{ color: '#1e6eff', backgroundColor: '#edf2f9', height: '13.8%' }}
                 >
                   <h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
                     {strings.lowsellingProduct}
@@ -682,7 +682,7 @@ class InventoryDashboard extends React.Component {
 								width: "50%",
 
 							}}>
-									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
+									<div className="d-flex justify-content-between" style={{ color: "#1e6eff", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 									{strings.TotalRevenuegenerated}
 									</h6>
@@ -722,7 +722,7 @@ class InventoryDashboard extends React.Component {
 							<Card className="ml-2" style={{
 								width: "50%",
 							}}>
-									<div className="d-flex justify-content-between" style={{ color: "#2064d8", backgroundColor: "#edf2f9", height: "13.8%" }}>
+									<div className="d-flex justify-content-between" style={{ color: "#1e6eff", backgroundColor: "#edf2f9", height: "13.8%" }}>
 									<h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
 									{strings.Totalprofitgenerated}
 								</h6>
@@ -762,7 +762,7 @@ class InventoryDashboard extends React.Component {
               <Card style={{}}>
                 <div
                   className="d-flex justify-content-between"
-                  style={{ color: '#2064d8', backgroundColor: '#edf2f9' }}
+                  style={{ color: '#1e6eff', backgroundColor: '#edf2f9' }}
                 >
                   <h6 className="text-uppercase font-weight-bold pt-3 text-black ml-4">
                     {strings.Totalprofitgenerated}

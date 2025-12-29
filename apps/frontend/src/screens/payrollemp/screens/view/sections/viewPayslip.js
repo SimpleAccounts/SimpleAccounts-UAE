@@ -1,7 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import logo from 'assets/images/brand/datainnLogo.png';
-import { Button, Row, Col, Modal, ModalBody, ModalFooter, CardBody, Table } from 'reactstrap';
+import {
+  Button,
+  Row,
+  Col,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  CardBody,
+  Table,
+} from 'components/migration';
 import { toast } from 'sonner';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -20,7 +29,7 @@ const mapStateToProps = state => {
 };
 
 let strings = new LocalizedStrings(data);
-const toWords = new ToWords({
+const _toWords = new ToWords({
   localeCode: 'en-IN',
   converterOptions: {
     //   currency: true,
@@ -108,13 +117,13 @@ class PaySlipModal extends React.Component {
     const {
       openModal,
       closeModal,
-      id,
+      id: _id,
       companyData,
       empData,
       bankDetails,
       salaryDate,
-      currencyData,
-      transactionList,
+      currencyData: _currencyData,
+      transactionList: _transactionList,
     } = this.props;
     const { generateSif } = this.props.company_details;
     const { selectedData } = this.state;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
@@ -15,7 +15,7 @@ import {
   FormGroup,
   Input,
   Label,
-} from 'reactstrap';
+} from 'components/migration';
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
 import * as EmployeeActions from '../../actions';

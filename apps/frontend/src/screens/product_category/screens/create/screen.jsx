@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,7 @@ import {
   Row,
   Col,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
 import './style.scss';

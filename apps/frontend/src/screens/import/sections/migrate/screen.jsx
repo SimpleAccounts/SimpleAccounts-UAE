@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup } from 'reactstrap';
+import { useState, useEffect, useMemo } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { Card, CardHeader, CardBody, Button, Row, Col, FormGroup } from 'components/migration';
 import * as ImportActions from '../../actions';
-import { CommonActions } from 'services/global';
 import './style.scss';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';

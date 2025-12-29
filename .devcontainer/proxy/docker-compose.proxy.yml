@@ -1,0 +1,68 @@
+# =============================================================================
+# Reverse Proxy for Multi-User Development Environment
+# =============================================================================
+# This proxy enables multiple developers to share their dev environments.
+#
+# Installation (one-time, admin only):
+#   sudo ./install-traefik-service.sh
+#
+# User environments are created automatically via DevPod.
+# Each user's devcontainer auto-connects to this proxy on startup.
+#
+# URL Format (nip.io - no DNS config needed):
+#   - Frontend: http://<username>.<server-ip>.nip.io
+#   - Backend:  http://<username>-api.<server-ip>.nip.io
+#   - Web IDE:  http://<username>-ide.<server-ip>.nip.io
+#   - Dashboard: http://proxy.<server-ip>.nip.io:8090
+#
+# Example for user 'alice' on server 65.108.51.136:
+#   - http://alice.65-108-51-136.nip.io
+#   - http://alice-api.65-108-51-136.nip.io
+#   - http://alice-ide.65-108-51-136.nip.io
+#
+# =============================================================================
+
+services:
+  traefik:
+    image: traefik:v2.11
+    container_name: dev-proxy
+    restart: unless-stopped
+    environment:
+      - DOCKER_API_VERSION=1.44
+    command:
+      # API and Dashboard
+      - '--api.dashboard=true'
+      - '--api.insecure=true'
+      # Docker provider
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--providers.docker.network=dev-proxy-network'
+      # Entrypoints
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      # Logs
+      - '--log.level=INFO'
+      - '--accesslog=true'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8090:8080' # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - dev-proxy-network
+    labels:
+      - 'traefik.enable=true'
+      # Dashboard routing via nip.io (no DNS config needed)
+      - 'traefik.http.routers.dashboard.rule=HostRegexp(`proxy.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.dashboard.entrypoints=web'
+      - 'traefik.http.routers.dashboard.service=api@internal'
+      # Dashboard routing via local domain (requires /etc/hosts or local DNS)
+      - 'traefik.http.routers.dashboard-local.rule=Host(`proxy.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.dashboard-local.entrypoints=web'
+      - 'traefik.http.routers.dashboard-local.service=api@internal'
+
+networks:
+  dev-proxy-network:
+    name: dev-proxy-network
+    driver: bridge

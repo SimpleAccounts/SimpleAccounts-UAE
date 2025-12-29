@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -6,13 +6,12 @@ import {
   Col,
   Form,
   FormGroup,
-  Input,
   Label,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -15,13 +15,12 @@ import {
   Button,
   UncontrolledTooltip,
   FormGroup,
-} from 'reactstrap';
+} from 'components/migration';
 import * as EmployeeViewActions from './actions';
 import { ConfirmDeleteModal, Currency } from 'components';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { ViewPaySlip } from './sections';
-import { CommonActions } from 'services/global';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';

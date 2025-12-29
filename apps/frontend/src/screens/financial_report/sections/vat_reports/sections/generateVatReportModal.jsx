@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
@@ -13,13 +13,12 @@ import {
   ModalFooter,
   CardBody,
   ModalHeader,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
 import { bindActionCreators } from 'redux';
 import { CommonActions } from 'services/global';
-import { toast } from 'sonner';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import '../style.scss';

@@ -8,12 +8,12 @@ Complete guide to set up SimpleAccounts-UAE development environment on a new mac
 
 ### System Requirements
 
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| CPU | 4 cores | 8 cores |
-| RAM | 8 GB | 16 GB |
-| Disk | 20 GB free | 50 GB free |
-| OS | macOS 12+, Ubuntu 20.04+, Windows 10+ (WSL2) | macOS 14, Ubuntu 22.04 |
+| Component | Minimum                                      | Recommended            |
+| --------- | -------------------------------------------- | ---------------------- |
+| CPU       | 4 cores                                      | 8 cores                |
+| RAM       | 8 GB                                         | 16 GB                  |
+| Disk      | 20 GB free                                   | 50 GB free             |
+| OS        | macOS 12+, Ubuntu 20.04+, Windows 10+ (WSL2) | macOS 14, Ubuntu 22.04 |
 
 ---
 
@@ -344,25 +344,25 @@ git push -u origin feature/my-feature
 
 ### Backend (`apps/backend/.env`)
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `SIMPLEACCOUNTS_DB_HOST` | Database host | `localhost` |
-| `SIMPLEACCOUNTS_DB_PORT` | Database port | `5432` |
-| `SIMPLEACCOUNTS_DB` | Database name | `simpleaccounts_db` |
-| `SIMPLEACCOUNTS_DB_USER` | Database user | `simpleaccounts_db_user` |
-| `SIMPLEACCOUNTS_DB_PASSWORD` | Database password | (required) |
-| `SIMPLEACCOUNTS_HOST` | Backend URL | `http://localhost:8080` |
-| `JWT_SECRET` | JWT signing key | `simpleaccounts` |
-| `SIMPLEACCOUNTS_SMTP_*` | Email configuration | (optional) |
+| Variable                     | Description         | Default                  |
+| ---------------------------- | ------------------- | ------------------------ |
+| `SIMPLEACCOUNTS_DB_HOST`     | Database host       | `localhost`              |
+| `SIMPLEACCOUNTS_DB_PORT`     | Database port       | `5432`                   |
+| `SIMPLEACCOUNTS_DB`          | Database name       | `simpleaccounts_db`      |
+| `SIMPLEACCOUNTS_DB_USER`     | Database user       | `simpleaccounts_db_user` |
+| `SIMPLEACCOUNTS_DB_PASSWORD` | Database password   | (required)               |
+| `SIMPLEACCOUNTS_HOST`        | Backend URL         | `http://localhost:8080`  |
+| `JWT_SECRET`                 | JWT signing key     | `simpleaccounts`         |
+| `SIMPLEACCOUNTS_SMTP_*`      | Email configuration | (optional)               |
 
 ### Frontend (`apps/frontend/.env`)
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Dev server port | `3000` |
-| `SIMPLEACCOUNTS_HOST` | Backend API URL | `http://localhost:8080` |
-| `SIMPLEACCOUNTS_RELEASE` | Version string | `local-dev` |
-| `SIMPLE_SERVICES_HOST` | External services | (optional) |
+| Variable                 | Description       | Default                 |
+| ------------------------ | ----------------- | ----------------------- |
+| `PORT`                   | Dev server port   | `3000`                  |
+| `SIMPLEACCOUNTS_HOST`    | Backend API URL   | `http://localhost:8080` |
+| `SIMPLEACCOUNTS_RELEASE` | Version string    | `local-dev`             |
+| `SIMPLE_SERVICES_HOST`   | External services | (optional)              |
 
 ---
 
@@ -370,34 +370,34 @@ git push -u origin feature/my-feature
 
 ### Java Issues
 
-| Problem | Solution |
-|---------|----------|
-| Wrong Java version | `sdk use java 8.0.422-zulu` |
-| JAVA_HOME not set | `export JAVA_HOME=$(sdk home java 8.0.422-zulu)` |
-| Maven not found | `./mvnw` uses wrapper, no install needed |
+| Problem            | Solution                                         |
+| ------------------ | ------------------------------------------------ |
+| Wrong Java version | `sdk use java 8.0.422-zulu`                      |
+| JAVA_HOME not set  | `export JAVA_HOME=$(sdk home java 8.0.422-zulu)` |
+| Maven not found    | `./mvnw` uses wrapper, no install needed         |
 
 ### Node Issues
 
-| Problem | Solution |
-|---------|----------|
-| Wrong Node version | `nvm use 20` |
-| npm install fails | `npm config set legacy-peer-deps true` |
-| Permission errors | Don't use `sudo` with npm |
+| Problem            | Solution                               |
+| ------------------ | -------------------------------------- |
+| Wrong Node version | `nvm use 20`                           |
+| npm install fails  | `npm config set legacy-peer-deps true` |
+| Permission errors  | Don't use `sudo` with npm              |
 
 ### Database Issues
 
-| Problem | Solution |
-|---------|----------|
-| Connection refused | `brew services start postgresql@15` or `sudo systemctl start postgresql` |
-| Auth failed | Verify password in `.env` matches database user |
-| Database doesn't exist | Run database setup steps again |
+| Problem                | Solution                                                                 |
+| ---------------------- | ------------------------------------------------------------------------ |
+| Connection refused     | `brew services start postgresql@15` or `sudo systemctl start postgresql` |
+| Auth failed            | Verify password in `.env` matches database user                          |
+| Database doesn't exist | Run database setup steps again                                           |
 
 ### Port Conflicts
 
-| Problem | Solution |
-|---------|----------|
-| Port 8080 in use | `lsof -i :8080` then `kill <PID>` |
-| Port 3000 in use | `lsof -i :3000` then `kill <PID>` |
+| Problem          | Solution                            |
+| ---------------- | ----------------------------------- |
+| Port 8080 in use | `lsof -i :8080` then `kill <PID>`   |
+| Port 3000 in use | `lsof -i :3000` then `kill <PID>`   |
 | Port 5432 in use | Another PostgreSQL instance running |
 
 ---
@@ -430,4 +430,4 @@ code --install-extension ms-vscode.vscode-typescript-next
 
 ---
 
-*Last Updated: December 2025*
+_Last Updated: December 2025_

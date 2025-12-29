@@ -6,10 +6,21 @@ This guide explains how to set up your development environment using [DevPod](ht
 
 DevPod creates reproducible development environments using containers. Benefits:
 
-- **Zero configuration** - Everything is pre-configured (Java 21, Node 20, PostgreSQL, Redis)
+- **Zero configuration** - Everything is pre-configured (Java 21, Node 20, PostgreSQL 18, Redis 7)
 - **Fast setup** - Prebuilt images mean you're coding in under a minute
 - **Consistent** - Same environment for all developers
 - **IDE agnostic** - Works with VS Code, JetBrains IDEs, Cursor, or SSH
+- **Zombie-free** - Uses tini init system to prevent zombie processes
+- **Shareable URLs** - Auto-connects to Traefik for team collaboration
+
+## Choose Your Setup
+
+| Setup              | Best For                           | Access Method                        |
+| ------------------ | ---------------------------------- | ------------------------------------ |
+| **Local DevPod**   | Local development, solo work       | `localhost:3000` via port forwarding |
+| **Remote DevPod**  | Team collaboration, shared server  | `username.server-ip.nip.io` via Traefik |
+
+Both setups use the same DevPod workflow - the only difference is where containers run.
 
 ## Prerequisites
 
@@ -36,7 +47,7 @@ DevPod creates reproducible development environments using containers. Benefits:
 
 3. **Install your preferred IDE** (VS Code, Cursor, IntelliJ, etc.)
 
-## Quick Start
+## Quick Start (Local)
 
 ### One Command Setup
 
@@ -64,15 +75,92 @@ devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide cursor
 # IntelliJ IDEA
 devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide intellij
 
-# WebStorm
-devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide webstorm
-
-# PyCharm
-devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide pycharm
-
 # SSH only (no IDE)
 devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide none
 ```
+
+## Remote Server Setup (Team Collaboration)
+
+For teams sharing a dev server with shareable URLs.
+
+### 1. Configure SSH (one-time)
+
+Add to `~/.ssh/config`:
+
+```
+Host dev-server
+    HostName <server-ip>
+    User <your-username>
+    IdentityFile ~/.ssh/id_ed25519
+```
+
+### 2. Add SSH Provider (one-time)
+
+```bash
+devpod provider add ssh
+```
+
+### 3. Launch Workspace
+
+```bash
+devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
+  --provider ssh \
+  --provider-option HOST=dev-server \
+  --ide vscode
+```
+
+### What Happens
+
+1. DevPod clones repo to your home directory on dev-server
+2. Starts isolated containers: `dev-<username>`, `db-<username>`, `redis-<username>`
+3. Auto-connects to Traefik network (if available)
+4. Opens VS Code connected to the container
+5. Prints shareable URLs
+
+### Shareable URLs
+
+After startup, you get shareable URLs (if Traefik is running):
+
+| Service   | URL                                        |
+| --------- | ------------------------------------------ |
+| Frontend  | `http://<username>.<server-ip>.nip.io`     |
+| Backend   | `http://<username>-api.<server-ip>.nip.io` |
+| Web IDE   | `http://<username>-ide.<server-ip>.nip.io` |
+
+**Example for user `alice` on server `65.108.51.136`:**
+- Frontend: `http://alice.65-108-51-136.nip.io`
+- Backend: `http://alice-api.65-108-51-136.nip.io`
+- Web IDE: `http://alice-ide.65-108-51-136.nip.io`
+
+### Web IDE Password
+
+The Web IDE (code-server) is password protected. On first launch, a random password is generated and displayed in the terminal.
+
+**View your password:**
+```bash
+cat ~/.config/code-server/config.yaml
+```
+
+**Change your password:**
+```bash
+nano ~/.config/code-server/config.yaml
+# Edit the 'password:' line, save, then restart:
+pkill code-server && code-server /workspaces/SimpleAccounts-UAE &
+```
+
+Your password is stored in your home directory and persists across container restarts.
+
+### Admin: Install Traefik (one-time)
+
+Before team members can get shareable URLs, an admin must install Traefik:
+
+```bash
+ssh dev-server
+cd /path/to/SimpleAccounts-UAE/.devcontainer/proxy
+sudo ./install-traefik-service.sh
+```
+
+See [Multi-User Setup](./../.devcontainer/proxy/README.md) for details.
 
 ## Running the Application
 
@@ -85,7 +173,7 @@ cd apps/frontend
 npm run dev
 ```
 
-Frontend runs at: http://localhost:3000
+Frontend runs at: http://localhost:3000 (or shareable URL on remote)
 
 ### Terminal 2: Backend
 
@@ -94,9 +182,11 @@ cd apps/backend
 ./mvnw spring-boot:run
 ```
 
-Backend runs at: http://localhost:8080
+Backend runs at: http://localhost:8080 (or shareable URL on remote)
 
 ## Services
+
+**From your local machine (via port forwarding):**
 
 | Service               | URL/Port              | Credentials                                                                            |
 | --------------------- | --------------------- | -------------------------------------------------------------------------------------- |
@@ -104,6 +194,15 @@ Backend runs at: http://localhost:8080
 | Backend (Spring Boot) | http://localhost:8080 | -                                                                                      |
 | PostgreSQL            | localhost:5432        | User: `simpleaccounts`<br>Password: `simpleaccounts_dev`<br>Database: `simpleaccounts` |
 | Redis                 | localhost:6379        | -                                                                                      |
+
+**Inside the container (internal network):**
+
+| Service    | Hostname | Port |
+| ---------- | -------- | ---- |
+| PostgreSQL | `db`     | 5432 |
+| Redis      | `redis`  | 6379 |
+
+The application is pre-configured with environment variables to use the internal hostnames (`db`, `redis`).
 
 ## Common Commands
 
@@ -148,14 +247,14 @@ devpod up https://github.com/YOUR-USERNAME/SimpleAccounts-UAE --ide vscode
 ### Using psql (inside container)
 
 ```bash
-psql -h localhost -U simpleaccounts -d simpleaccounts
+psql -h db -U simpleaccounts -d simpleaccounts
 ```
 
 ### Using VS Code Extension
 
 The PostgreSQL extension is pre-installed. Connect with:
 
-- Host: `localhost`
+- Host: `db` (internal hostname)
 - Port: `5432`
 - User: `simpleaccounts`
 - Password: `simpleaccounts_dev`
@@ -171,11 +270,11 @@ The dev container includes:
 | Node.js                   | 20          |
 | npm                       | Latest      |
 | Maven                     | Via wrapper |
-| PostgreSQL Client         | Latest      |
-| Redis CLI                 | Latest      |
+| PostgreSQL                | 18          |
+| Redis                     | 7           |
 | Git                       | Latest      |
 | GitHub CLI                | Latest      |
-| Docker-in-Docker          | Latest      |
+| Docker CLI                | Latest      |
 | Chromium (for Playwright) | Latest      |
 
 ## VS Code Extensions
@@ -208,6 +307,18 @@ These extensions are automatically installed:
 - GitHub Copilot
 - Error Lens
 - Path Intellisense
+
+## Container Naming
+
+Containers are automatically named based on your username:
+
+| Container       | Name Pattern       |
+| --------------- | ------------------ |
+| Devcontainer    | `dev-<username>`   |
+| PostgreSQL      | `db-<username>`    |
+| Redis           | `redis-<username>` |
+
+This ensures no conflicts when multiple developers use the same server.
 
 ## Troubleshooting
 
@@ -243,6 +354,19 @@ devpod delete simpleaccounts-uae --force
 devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide vscode
 ```
 
+### Container Not Getting Traefik URLs (Remote)
+
+```bash
+# Check if Traefik is running
+docker ps | grep dev-proxy
+
+# Manually connect to Traefik network
+docker network connect dev-proxy-network dev-<username>
+
+# Verify routing
+curl http://localhost:8090/api/http/routers | grep <username>
+```
+
 ### Container Build Issues
 
 If the prebuilt image fails, you can build locally:
@@ -252,36 +376,10 @@ If the prebuilt image fails, you can build locally:
 3. Uncomment the `build:` section
 4. Run `devpod up simpleaccounts-uae --recreate`
 
-## Using a Remote Server (Optional)
-
-If you have access to a remote development server:
-
-### 1. Configure SSH
-
-Add to `~/.ssh/config`:
-
-```
-Host dev-server
-    HostName <server-ip>
-    User <your-username>
-    IdentityFile ~/.ssh/id_ed25519
-```
-
-### 2. Add SSH Provider
-
-```bash
-devpod provider add ssh --option HOST=dev-server
-```
-
-### 3. Create Workspace on Server
-
-```bash
-devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --provider ssh --ide vscode
-```
-
 ## Resources
 
 - [DevPod Documentation](https://devpod.sh/docs)
 - [Dev Container Specification](https://containers.dev/)
+- [Multi-User Setup Guide](../.devcontainer/proxy/README.md)
 - [SimpleAccounts Contributing Guide](../CONTRIBUTING.md)
 - [Project Setup Guide](../SETUP.md)

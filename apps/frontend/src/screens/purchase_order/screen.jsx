@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -12,7 +12,7 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { DataTable } from '@/components/ui/data-table';
 import { Loader, ConfirmDeleteModal } from 'components';
@@ -20,7 +20,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as PurchaseOrderAction from '../purchase_order/actions';
 import * as PurchaseOrderDetailsAction from './screens/detail/actions';
 import * as GoodsReceivedNoteCreateAction from '../goods_received_note/screens/create/actions';
-import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import './style.scss';
 import CreateGoodsReceivedNote from './sections/createGRN';

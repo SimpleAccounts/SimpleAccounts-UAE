@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup, Input } from 'reactstrap';
+import { Card, CardHeader, CardBody, Button, Row, Col, Input } from 'components/migration';
 import Select from 'react-select';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 import * as UserActions from './actions';
-import { CommonActions } from 'services/global';
-import { selectOptionsFactory, selectStyles } from 'utils';
+import { selectStyles } from 'utils';
 import dayjs from '@/utils/date';
 import './style.scss';
 import { data as languageData } from '../Language/index';

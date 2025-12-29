@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Button,
   Row,
@@ -11,13 +10,12 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import DatePicker from 'react-datepicker';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import dayjs from '@/utils/date';
 import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema

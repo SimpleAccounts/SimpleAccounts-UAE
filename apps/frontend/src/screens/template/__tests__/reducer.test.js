@@ -1,5 +1,4 @@
 import TemplateReducer from '../reducer';
-import { TEMPLATE } from 'constants/types';
 
 describe('Template Reducer', () => {
   const initialState = {};

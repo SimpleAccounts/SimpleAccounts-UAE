@@ -66,7 +66,6 @@ public class Product implements Serializable {
 	private Boolean vatIncluded = Boolean.FALSE;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
-	@org.hibernate.annotations.ForeignKey(name = "none")
 	private List<ProductLineItem> lineItemList;
 
 	@Enumerated(EnumType.STRING)

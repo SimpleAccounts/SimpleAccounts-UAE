@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { Button, FormGroup, Form, ButtonGroup } from 'reactstrap';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, FormGroup, Form, ButtonGroup } from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import * as FileSaver from 'file-saver';
-import { ExcelExport as XLSX } from 'utils';
 import { Loader } from 'components';
 import * as ProductActions from '../../../product/actions';
 import * as InventoryActions from '../../actions';
@@ -18,7 +15,7 @@ import { DataTable } from '@/components/ui/data-table';
 import './style.scss';
 import { toast } from 'sonner';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { History } from 'lucide-react';
+import { History, Download } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

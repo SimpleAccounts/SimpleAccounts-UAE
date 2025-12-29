@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -330,7 +330,7 @@ const LogIn = () => {
 
               {companyCount < 1 && (
                 <div className="text-center pt-2">
-                  <p className="text-sm text-muted-foreground mb-2">Don't have an account?</p>
+                  <p className="text-sm text-muted-foreground mb-2">Don&apos;t have an account?</p>
                   <Button
                     type="button"
                     variant="outline"

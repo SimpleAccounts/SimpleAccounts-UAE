@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,7 @@ import {
   Input,
   Label,
   UncontrolledTooltip,
-} from 'reactstrap';
+} from 'components/migration';
 import Select from 'react-select';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import { Loader, LeavePage, ConfirmDeleteModal } from 'components';

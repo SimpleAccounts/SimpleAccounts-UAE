@@ -124,8 +124,6 @@ jobs:
       - name: Run E2E Tests - ${{ matrix.browser }}
         working-directory: apps/frontend
         run: npx playwright test --project=${{ matrix.browser }}
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
 
       - name: Upload E2E Results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
@@ -167,8 +165,6 @@ jobs:
         working-directory: apps/frontend
         run: npx playwright test visual-regression.spec.ts --project=chromium
         continue-on-error: true
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
 
       - name: Upload Visual Diff Results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
@@ -352,8 +348,6 @@ jobs:
         working-directory: apps/frontend
         run: npx playwright test accessibility.spec.ts --project=chromium
         continue-on-error: true
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
 
       - name: Upload Accessibility Results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4

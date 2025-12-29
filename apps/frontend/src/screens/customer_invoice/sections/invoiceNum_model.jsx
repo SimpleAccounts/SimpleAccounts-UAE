@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -13,7 +13,7 @@ import {
   CardHeader,
   ModalBody,
   ModalFooter,
-} from 'reactstrap';
+} from 'components/migration';
 import * as CustomerInvoiceActions from '../../customer_invoice/actions';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,10 +25,10 @@ import { IdCard, CircleDot, Ban } from 'lucide-react';
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };
@@ -53,7 +53,7 @@ const InvoiceNumberModel = props => {
 
   const regEx = /^[0-9]+$/;
   const regExBoth = /[a-zA-Z0-9 ]+$/;
-  const regExAlpha = /^[a-zA-Z0-9 -/\"]+$/;
+  const regExAlpha = /^[a-zA-Z0-9 -/"]+$/;
 
   const {
     control,

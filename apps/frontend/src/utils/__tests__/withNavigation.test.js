@@ -33,7 +33,6 @@ class TestComponent extends React.Component {
   };
 
   render() {
-    // eslint-disable-next-line no-unused-vars
     const { match, location, history } = this.props;
     return (
       <div>

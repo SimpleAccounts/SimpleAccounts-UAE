@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
-import { Loader, ConfirmDeleteModal, Currency } from 'components';
+import { Loader, Currency } from 'components';
 
 import * as JournalActions from './actions';
 import { CommonActions } from 'services/global';

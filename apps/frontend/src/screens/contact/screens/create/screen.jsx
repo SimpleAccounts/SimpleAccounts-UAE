@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
   Form,
-  FormGroup,
-  Input,
-  Label,
-  UncontrolledTooltip,
-} from 'reactstrap';
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormControl,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
@@ -203,7 +205,7 @@ const CreateContact = ({
       })
       .catch(err => {
         setDisabled(false);
-        commonActions.tostifyAlert('error', err.data ? err.data.message : 'ERROR');
+        commonActions.tostifyAlert('error', err?.data?.message || err?.message || 'ERROR');
       });
   }, []);
 
@@ -377,7 +379,7 @@ const CreateContact = ({
         }
       })
       .catch(err => {
-        console.log(err);
+        // Error handled by error boundary or user notification
         setDisabled(false);
         setLoading(false);
         commonActions.tostifyAlert(
@@ -468,731 +470,816 @@ const CreateContact = ({
     return <Loader loadingMsg={loadingMsg} />;
   }
 
+  // Neumorphic theme constants
+  const theme = {
+    bg: '#e8eef5',
+    shadowDark: '#c4c9cf',
+    shadowLight: '#ffffff',
+  };
+
+  const shadows = {
+    raised: {
+      lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
+    },
+    pressed: {
+      sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
+    },
+  };
+
   return (
-    <div>
-      <div className="create-contact-screen">
-        <div className="animated fadeIn">
-          <Row>
-            <Col lg={12} className="mx-auto">
-              <Card>
-                <CardHeader>
-                  <Row>
-                    <Col lg={12}>
-                      <div className="h4 mb-0 d-flex align-items-center">
-                        <IdCard className="h-4 w-4" />
-                        <span className="ml-2">{strings.CreateContact}</span>
+    <div
+      className="create-contact-screen"
+      style={{ background: theme.bg, minHeight: '100vh', padding: '24px' }}
+    >
+      <div className="animated fadeIn max-w-7xl mx-auto">
+        <Card
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: theme.bg,
+            boxShadow: shadows.raised.lg,
+          }}
+        >
+          <CardHeader className="border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+            <CardTitle className="flex items-center gap-2">
+              <IdCard className="h-5 w-5" style={{ color: '#1e6eff' }} />
+              <span>{strings.CreateContact}</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Status Radio Group */}
+                {!(isParentComponentPresent && isParentComponentPresent === true) && (
+                  <div className="mb-6">
+                    <FormLabel className="text-base font-semibold mb-3 block">
+                      <span className="text-red-500">* </span>
+                      {strings.Status}
+                    </FormLabel>
+                    <RadioGroup
+                      value={selectedStatus ? 'true' : 'false'}
+                      onValueChange={value => {
+                        const boolValue = value === 'true';
+                        setSelectedStatus(boolValue);
+                        setIsActive(boolValue);
+                      }}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="true" id="inline-radio1" />
+                        <label
+                          htmlFor="inline-radio1"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {strings.Active}
+                        </label>
                       </div>
-                    </Col>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                    <Col lg={12}>
-                      <Form onSubmit={handleSubmit(onSubmit)}>
-                        <Row>
-                          <Col>
-                            {!(isParentComponentPresent && isParentComponentPresent === true) && (
-                              <FormGroup className="mb-3">
-                                <Label htmlFor="active">
-                                  <span className="text-danger">* </span>
-                                  {strings.Status}
-                                </Label>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <FormGroup check inline>
-                                  <div className="custom-radio custom-control">
-                                    <input
-                                      className="custom-control-input"
-                                      type="radio"
-                                      id="inline-radio1"
-                                      name="active"
-                                      checked={selectedStatus}
-                                      value={true}
-                                      onChange={e => {
-                                        if (e.target.value === 'true') {
-                                          setSelectedStatus(true);
-                                          setIsActive(true);
-                                        }
-                                      }}
-                                    />
-                                    <label className="custom-control-label" htmlFor="inline-radio1">
-                                      {strings.Active}
-                                    </label>
-                                  </div>
-                                </FormGroup>
-                                <FormGroup check inline>
-                                  <div className="custom-radio custom-control">
-                                    <input
-                                      className="custom-control-input"
-                                      type="radio"
-                                      id="inline-radio2"
-                                      name="active"
-                                      value={false}
-                                      checked={!selectedStatus}
-                                      onChange={e => {
-                                        if (e.target.value === 'false') {
-                                          setSelectedStatus(false);
-                                          setIsActive(false);
-                                        }
-                                      }}
-                                    />
-                                    <label className="custom-control-label" htmlFor="inline-radio2">
-                                      {strings.Inactive}
-                                    </label>
-                                  </div>
-                                </FormGroup>
-                              </FormGroup>
-                            )}
-                          </Col>
-                        </Row>
-                        <h4 className="mb-4">{strings.ContactName}</h4>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="false" id="inline-radio2" />
+                        <label
+                          htmlFor="inline-radio2"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {strings.Inactive}
+                        </label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
 
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="firstName">
-                                <span className="text-danger">* </span>
-                                {strings.FirstName}
-                              </Label>
-                              <Controller
-                                name="firstName"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    maxLength="100"
-                                    id="firstName"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.FirstName}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExAlpha.test(value)) {
-                                        field.onChange(upperFirst(value));
-                                      }
-                                    }}
-                                    className={
-                                      errors.firstName && touchedFields.firstName
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.firstName && touchedFields.firstName && (
-                                <div className="invalid-feedback">{errors.firstName.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="middleName">{strings.MiddleName}</Label>
-                              <Controller
-                                name="middleName"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    maxLength="100"
-                                    id="middleName"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.MiddleName}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExAlpha.test(value)) {
-                                        field.onChange(upperFirst(value));
-                                      }
-                                    }}
-                                    className={
-                                      errors.middleName && touchedFields.middleName
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.middleName && touchedFields.middleName && (
-                                <div className="invalid-feedback">{errors.middleName.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="lastName">
-                                <span className="text-danger">* </span>
-                                {strings.LastName}
-                              </Label>
-                              <Controller
-                                name="lastName"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    maxLength="100"
-                                    id="lastName"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.LastName}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExAlpha.test(value)) {
-                                        field.onChange(upperFirst(value));
-                                      }
-                                    }}
-                                    className={
-                                      errors.lastName && touchedFields.lastName ? 'is-invalid' : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.lastName && touchedFields.lastName && (
-                                <div className="invalid-feedback">{errors.lastName.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <hr />
-                        <h4 className="mb-4">{strings.ContactDetails}</h4>
+                {/* Contact Name Section */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold mb-4">{strings.ContactName}</h4>
 
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="contactType">
-                                <span className="text-danger">* </span>
-                                {strings.ContactType}
-                                <HelpCircle id="Contacttyprtip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="Contacttyprtip">
-                                  The contact type cannot be changed once a document has been
-                                  created for this contact.
-                                </UncontrolledTooltip>
-                              </Label>
-                              <Controller
-                                name="contactType"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    options={
-                                      contact_type_list
-                                        ? selectOptionsFactory.renderOptions(
-                                            'label',
-                                            'value',
-                                            contact_type_list,
-                                            'Contact '
-                                          )
-                                        : []
-                                    }
-                                    isDisabled={contactType ? true : false}
-                                    placeholder={strings.Select + strings.ContactType}
-                                    id="contactType"
-                                    styles={selectStyles}
-                                    className={
-                                      errors.contactType && touchedFields.contactType
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.contactType && touchedFields.contactType && (
-                                <div className="invalid-feedback">{errors.contactType.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="organization">{strings.OrganizationName}</Label>
-                              <Controller
-                                name="organization"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    maxLength="100"
-                                    id="organization"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.OrganizationName}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExAddress.test(value)) {
-                                        field.onChange(upperFirst(value));
-                                      }
-                                    }}
-                                    className={
-                                      errors.organization && touchedFields.organization
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.organization && touchedFields.organization && (
-                                <div className="invalid-feedback">
-                                  {errors.organization.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="email">
-                                <span className="text-danger">* </span>
-                                {strings.Email}
-                              </Label>
-                              <Controller
-                                name="email"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="email"
-                                    maxLength="80"
-                                    id="email"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.EmailAddres}
-                                    {...field}
-                                    onChange={e => {
-                                      field.onChange(e);
-                                      emailvalidationCheck(e.target.value);
-                                    }}
-                                    className={
-                                      errors.email && touchedFields.email ? 'is-invalid' : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.email && touchedFields.email && (
-                                <div className="invalid-feedback">{errors.email.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="row-wrapper">
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="currencyCode">
-                                <span className="text-danger">* </span>
-                                {strings.Currency}
-                                <HelpCircle id="Currencytip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="Currencytip">
-                                  You cannot change the currency once a document is created for this
-                                  contact.
-                                </UncontrolledTooltip>
-                              </Label>
-                              <Controller
-                                name="currencyCode"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    options={currency_list_dropdown}
-                                    placeholder={strings.Select + strings.Currency}
-                                    id="currencyCode"
-                                    styles={selectStyles}
-                                    className={
-                                      errors.currencyCode && touchedFields.currencyCode
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.currencyCode && touchedFields.currencyCode && (
-                                <div className="invalid-feedback">
-                                  {errors.currencyCode.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="telephone">{strings.Telephone}</Label>
-                              <Controller
-                                name="telephone"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    maxLength="15"
-                                    type="text"
-                                    id="telephone"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.TelephoneNumber}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExTelephone.test(value)) {
-                                        field.onChange(e);
-                                      }
-                                    }}
-                                    className={
-                                      errors.telephone && touchedFields.telephone
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.telephone && touchedFields.telephone && (
-                                <div className="invalid-feedback">{errors.telephone.message}</div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="mobileNumber">
-                                <span className="text-danger"> </span>
-                                {strings.MobileNumber}
-                              </Label>
-                              <Controller
-                                name="mobileNumber"
-                                control={control}
-                                render={({ field }) => (
-                                  <div
-                                    className={
-                                      errors.mobileNumber && touchedFields.mobileNumber
-                                        ? ' is-invalidMobile '
-                                        : ''
-                                    }
-                                  >
-                                    <PhoneInput
-                                      enableSearch={true}
-                                      id="mobileNumber"
-                                      country={'ae'}
-                                      value={field.value}
-                                      placeholder={strings.Enter + strings.MobileNumber}
-                                      onChange={value => {
-                                        field.onChange(value);
-                                        setCheckmobileNumberParam(value.length !== 12);
-                                      }}
-                                      isValid
-                                    />
-                                  </div>
-                                )}
-                              />
-                              {errors.mobileNumber && touchedFields.mobileNumber && (
-                                <div className="invalid-feedback">
-                                  {errors.mobileNumber.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-
-                          <Col md="4">
-                            <FormGroup>
-                              <Label htmlFor="website">{strings.Website}</Label>
-                              <Controller
-                                name="website"
-                                control={control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="text"
-                                    id="website"
-                                    maxLength="100"
-                                    autoComplete="Off"
-                                    placeholder={strings.Enter + strings.Website}
-                                    {...field}
-                                    onChange={e => {
-                                      const value = e.target.value;
-                                      if (value === '' || regExAddress.test(value)) {
-                                        field.onChange(e);
-                                      }
-                                    }}
-                                    className={
-                                      errors.website && touchedFields.website ? 'is-invalid' : ''
-                                    }
-                                  />
-                                )}
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="taxTreatmentId">
-                                <span className="text-danger">* </span>
-                                {strings.TaxTreatment}
-                                <HelpCircle id="TaxTreatmenttip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="TaxTreatmenttip">
-                                  Once any document has been created for this contact, you cannot
-                                  change the Tax treatment.
-                                </UncontrolledTooltip>
-                              </Label>
-                              <Controller
-                                name="taxTreatmentId"
-                                control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    options={
-                                      taxTreatmentList
-                                        ? selectOptionsFactory.renderOptions(
-                                            'name',
-                                            'id',
-                                            taxTreatmentList,
-                                            'VAT'
-                                          )
-                                        : []
-                                    }
-                                    id="taxTreatmentId"
-                                    placeholder={strings.Select + strings.TaxTreatment}
-                                    styles={selectStyles}
-                                    onChange={option => {
-                                      field.onChange(option);
-                                      if (option && option.value) {
-                                        resetCountryList(option.value);
-                                        if (
-                                          option.value === 1 ||
-                                          option.value === 3 ||
-                                          option.value === 5
-                                        ) {
-                                          setIsRegisteredForVat(true);
-                                        } else {
-                                          setIsRegisteredForVat(false);
-                                        }
-                                        if (
-                                          option.value === 1 ||
-                                          option.value === 2 ||
-                                          option.value === 3 ||
-                                          option.value === 4
-                                        ) {
-                                          setDisableCountry(true);
-                                        } else {
-                                          setDisableCountry(false);
-                                        }
-                                      } else {
-                                        setDisableCountry(false);
-                                      }
-                                      setValue('vatRegistrationNumber', '');
-                                    }}
-                                    className={
-                                      errors.taxTreatmentId && touchedFields.taxTreatmentId
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
-                              />
-                              {errors.taxTreatmentId && touchedFields.taxTreatmentId && (
-                                <div className="invalid-feedback">
-                                  {errors.taxTreatmentId.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          {watchedValues.taxTreatmentId && watchedValues.taxTreatmentId.value && (
-                            <Col
-                              md="4"
-                              style={{
-                                display:
-                                  watchedValues.taxTreatmentId.value === 1 ||
-                                  watchedValues.taxTreatmentId.value === 3 ||
-                                  watchedValues.taxTreatmentId.value === 5
-                                    ? ''
-                                    : 'none',
-                              }}
-                            >
-                              <FormGroup>
-                                <Label htmlFor="vatRegistrationNumber">
-                                  <span className="text-danger">* </span>
-                                  {strings.TaxRegistrationNumber}
-                                </Label>
-                                <Controller
-                                  name="vatRegistrationNumber"
-                                  control={control}
-                                  render={({ field }) => (
-                                    <Input
-                                      type="text"
-                                      minLength="15"
-                                      maxLength="15"
-                                      id="vatRegistrationNumber"
-                                      autoComplete="Off"
-                                      placeholder={strings.Enter + strings.TaxRegistrationNumber}
-                                      {...field}
-                                      onChange={e => {
-                                        const value = e.target.value;
-                                        if (value === '' || regEx.test(value)) {
-                                          field.onChange(e);
-                                          validationCheck(value);
-                                        }
-                                      }}
-                                      className={
-                                        errors.vatRegistrationNumber &&
-                                        touchedFields.vatRegistrationNumber
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
-                                  )}
-                                />
-                                {errors.vatRegistrationNumber &&
-                                  touchedFields.vatRegistrationNumber && (
-                                    <div className="invalid-feedback">
-                                      {errors.vatRegistrationNumber.message}
-                                    </div>
-                                  )}
-                                <div className="VerifyTRN">
-                                  <br />
-                                  <b>
-                                    <a
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      href="https://tax.gov.ae/en/default.aspx"
-                                      style={{ color: '#2266d8' }}
-                                    >
-                                      {strings.VerifyTRN}
-                                    </a>
-                                  </b>
-                                </div>
-                              </FormGroup>
-                            </Col>
-                          )}
-                        </Row>
-                        <hr />
-                        <h2 className="mb-3 mt-3">{strings.ContactAddressDetails}</h2>
-                        <h5 className="mb-3 mt-3">{strings.BillingDetails}</h5>
-                        <Row className="row-wrapper">
-                          <AddressComponent
-                            values={watchedValues.billingAddress}
-                            errors={errors.billingAddress}
-                            touched={touchedFields.billingAddress || touchedFields.shippingAddress}
-                            onChange={(field, value) => {
-                              setValue(`billingAddress.${field}`, value);
-                              setIsSame(false);
-                            }}
-                            country_list={countryList}
-                            addressType={strings.Billing}
-                            disabled={{
-                              email: false,
-                              city: false,
-                              countryId: disableCountry,
-                              address: false,
-                              postZipCode: false,
-                              stateId: false,
-                              telephone: false,
-                              fax: false,
-                            }}
-                          />
-                        </Row>
-                        <hr />
-                        <h5 className="mb-3 mt-3">{strings.ShippingDetails}</h5>
-                        <Row>
-                          <Col lg={12}>
-                            <FormGroup check inline className="mb-3">
-                              <div>
-                                <Input
-                                  onChange={() => {
-                                    if (!isSame) {
-                                      setValue('shippingAddress', watchedValues.billingAddress);
-                                    } else {
-                                      setValue('shippingAddress', Lists.Address);
-                                      if (disableCountry) {
-                                        setValue('shippingAddress.countryId', 229);
-                                      }
-                                    }
-                                    setIsSame(!isSame);
-                                  }}
-                                  type="checkbox"
-                                  id="inline-radio1"
-                                  name="SMTP-auth"
-                                  checked={isSame}
-                                />
-                                <label>{strings.ShippingAddressIsSameAsBillingAddress}</label>
-                              </div>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="row-wrapper">
-                          <AddressComponent
-                            values={watchedValues.shippingAddress || {}}
-                            errors={errors.shippingAddress || {}}
-                            touched={touchedFields.shippingAddress}
-                            onChange={(field, value) => {
-                              setValue(`shippingAddress.${field}`, value);
-                              setIsSame(false);
-                            }}
-                            country_list={countryList}
-                            addressType={strings.Shipping}
-                            disabled={{
-                              email: false,
-                              city: false,
-                              countryId: disableCountry,
-                              address: false,
-                              postZipCode: false,
-                              stateId: false,
-                              telephone: false,
-                              fax: false,
-                            }}
-                          />
-                        </Row>
-
-                        <Row>
-                          <Col lg={12} className="mt-5">
-                            <FormGroup className="text-right">
-                              <Button
-                                type="button"
-                                color="primary"
-                                className="btn-square mr-3"
-                                disabled={disabled}
-                                onClick={() => {
-                                  trigger().then(isValid => {
-                                    if (!isValid || Object.keys(errors).length !== 0) {
-                                      commonActions.fillManDatoryDetails();
-                                    }
-                                  });
-                                  setCreateMore(false);
-                                  handleSubmit(onSubmit)();
-                                }}
-                              >
-                                <CircleDot className="h-4 w-4" />{' '}
-                                {disabled ? 'Creating...' : strings.Create}
-                              </Button>
-                              {!(isParentComponentPresent && isParentComponentPresent === true) && (
-                                <Button
-                                  name="button"
-                                  color="primary"
-                                  className="btn-square mr-3"
-                                  disabled={disabled}
-                                  onClick={() => {
-                                    trigger().then(isValid => {
-                                      if (!isValid || Object.keys(errors).length !== 0) {
-                                        commonActions.fillManDatoryDetails();
-                                      }
-                                    });
-                                    setCreateMore(true);
-                                    setIsSame(false);
-                                    handleSubmit(onSubmit)();
-                                  }}
-                                >
-                                  <RefreshCw className="h-4 w-4" />{' '}
-                                  {disabled ? 'Creating...' : strings.CreateandMore}
-                                </Button>
-                              )}
-                              <Button
-                                color="secondary"
-                                className="btn-square"
-                                onClick={() => {
-                                  if (
-                                    isParentComponentPresent &&
-                                    isParentComponentPresent === true
-                                  ) {
-                                    confirmCancel(true);
-                                  } else {
-                                    history.push('/admin/master/contact');
+                  {/* First Name, Middle Name, Last Name */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="firstName"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <span className="text-red-500">* </span>
+                              {strings.FirstName}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                maxLength={100}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.FirstName}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExAlpha.test(value)) {
+                                    field.onChange(upperFirst(value));
                                   }
                                 }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="middleName"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>{strings.MiddleName}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                maxLength={100}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.MiddleName}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExAlpha.test(value)) {
+                                    field.onChange(upperFirst(value));
+                                  }
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="lastName"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <span className="text-red-500">* </span>
+                              {strings.LastName}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                maxLength={100}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.LastName}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExAlpha.test(value)) {
+                                    field.onChange(upperFirst(value));
+                                  }
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Details Section */}
+                <div
+                  className="space-y-4 border-t pt-6"
+                  style={{ borderColor: `${theme.shadowDark}40` }}
+                >
+                  <h4 className="text-lg font-semibold mb-4">{strings.ContactDetails}</h4>
+
+                  {/* Contact Type, Organization, Email */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="contactType"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <span className="text-red-500">* </span>
+                              {strings.ContactType}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <HelpCircle className="h-4 w-4 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      The contact type cannot be changed once a document has been
+                                      created for this contact.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                {...field}
+                                options={
+                                  contact_type_list
+                                    ? selectOptionsFactory.renderOptions(
+                                        'label',
+                                        'value',
+                                        contact_type_list,
+                                        'Contact '
+                                      )
+                                    : []
+                                }
+                                isDisabled={contactType ? true : false}
+                                placeholder={strings.Select + strings.ContactType}
+                                styles={{
+                                  ...selectStyles,
+                                  control: (base, state) => ({
+                                    ...selectStyles.control(base, state),
+                                    borderRadius: '12px',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
+                                    boxShadow: shadows.pressed.sm,
+                                    backgroundColor: theme.bg,
+                                  }),
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="organization"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>{strings.OrganizationName}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                maxLength={100}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.OrganizationName}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExAddress.test(value)) {
+                                    field.onChange(upperFirst(value));
+                                  }
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="email"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <span className="text-red-500">* </span>
+                              {strings.Email}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="email"
+                                maxLength={80}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.EmailAddres}`}
+                                onChange={e => {
+                                  field.onChange(e);
+                                  emailvalidationCheck(e.target.value);
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {/* Currency, Telephone, Mobile Number, Website */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="currencyCode"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <span className="text-red-500">* </span>
+                              {strings.Currency}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <HelpCircle className="h-4 w-4 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      You cannot change the currency once a document is created for
+                                      this contact.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                {...field}
+                                options={currency_list_dropdown}
+                                placeholder={strings.Select + strings.Currency}
+                                styles={{
+                                  ...selectStyles,
+                                  control: (base, state) => ({
+                                    ...selectStyles.control(base, state),
+                                    borderRadius: '12px',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
+                                    boxShadow: shadows.pressed.sm,
+                                    backgroundColor: theme.bg,
+                                  }),
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="telephone"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>{strings.Telephone}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                maxLength={15}
+                                type="text"
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.TelephoneNumber}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExTelephone.test(value)) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="mobileNumber"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>{strings.MobileNumber}</FormLabel>
+                            <FormControl>
+                              <div
+                                className={cn(fieldState.error && 'border-red-500 rounded-xl p-1')}
                               >
-                                <Ban className="h-4 w-4" /> {strings.Cancel}
-                              </Button>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </div>
+                                <PhoneInput
+                                  enableSearch={true}
+                                  country={'ae'}
+                                  value={field.value || ''}
+                                  placeholder={`${strings.Enter} ${strings.MobileNumber}`}
+                                  onChange={value => {
+                                    field.onChange(value);
+                                    setCheckmobileNumberParam(value.length !== 12);
+                                  }}
+                                />
+                              </div>
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="website"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel>{strings.Website}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                maxLength={100}
+                                autoComplete="off"
+                                placeholder={`${strings.Enter} ${strings.Website}`}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (value === '' || regExAddress.test(value)) {
+                                    field.onChange(e);
+                                  }
+                                }}
+                                className={cn(
+                                  'rounded-xl border-0',
+                                  fieldState?.error && 'border-red-500',
+                                  shadows.pressed.sm
+                                )}
+                                style={{
+                                  background: theme.bg,
+                                  boxShadow: shadows.pressed.sm,
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  {/* Tax Treatment and VAT Registration Number */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="col-span-1 md:col-span-4">
+                      <FormField
+                        name="taxTreatmentId"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <span className="text-red-500">* </span>
+                              {strings.TaxTreatment}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <HelpCircle className="h-4 w-4 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Once any document has been created for this contact, you
+                                      cannot change the Tax treatment.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                {...field}
+                                options={
+                                  taxTreatmentList
+                                    ? selectOptionsFactory.renderOptions(
+                                        'name',
+                                        'id',
+                                        taxTreatmentList,
+                                        'VAT'
+                                      )
+                                    : []
+                                }
+                                placeholder={strings.Select + strings.TaxTreatment}
+                                onChange={option => {
+                                  field.onChange(option);
+                                  if (option && option.value) {
+                                    resetCountryList(option.value);
+                                    if (
+                                      option.value === 1 ||
+                                      option.value === 3 ||
+                                      option.value === 5
+                                    ) {
+                                      setIsRegisteredForVat(true);
+                                    } else {
+                                      setIsRegisteredForVat(false);
+                                    }
+                                    if (
+                                      option.value === 1 ||
+                                      option.value === 2 ||
+                                      option.value === 3 ||
+                                      option.value === 4
+                                    ) {
+                                      setDisableCountry(true);
+                                    } else {
+                                      setDisableCountry(false);
+                                    }
+                                  } else {
+                                    setDisableCountry(false);
+                                  }
+                                  setValue('vatRegistrationNumber', '');
+                                }}
+                                styles={{
+                                  ...selectStyles,
+                                  control: (base, state) => ({
+                                    ...selectStyles.control(base, state),
+                                    borderRadius: '12px',
+                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
+                                    boxShadow: shadows.pressed.sm,
+                                    backgroundColor: theme.bg,
+                                  }),
+                                }}
+                              />
+                            </FormControl>
+                            {fieldState?.error && (
+                              <FormMessage>{fieldState.error.message}</FormMessage>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    {watchedValues?.taxTreatmentId && watchedValues.taxTreatmentId.value && (
+                      <div
+                        className={cn(
+                          'col-span-1 md:col-span-4',
+                          !(
+                            watchedValues.taxTreatmentId.value === 1 ||
+                            watchedValues.taxTreatmentId.value === 3 ||
+                            watchedValues.taxTreatmentId.value === 5
+                          ) && 'hidden'
+                        )}
+                      >
+                        <FormField
+                          name="vatRegistrationNumber"
+                          control={control}
+                          render={({ field, fieldState }) => (
+                            <FormItem>
+                              <FormLabel>
+                                <span className="text-red-500">* </span>
+                                {strings.TaxRegistrationNumber}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type="text"
+                                  minLength={15}
+                                  maxLength={15}
+                                  autoComplete="off"
+                                  placeholder={`${strings.Enter} ${strings.TaxRegistrationNumber}`}
+                                  onChange={e => {
+                                    const value = e.target.value;
+                                    if (value === '' || regEx.test(value)) {
+                                      field.onChange(e);
+                                      validationCheck(value);
+                                    }
+                                  }}
+                                  className={cn(
+                                    'rounded-xl border-0',
+                                    fieldState.error && 'border-red-500',
+                                    shadows.pressed.sm
+                                  )}
+                                  style={{
+                                    background: theme.bg,
+                                    boxShadow: shadows.pressed.sm,
+                                  }}
+                                />
+                              </FormControl>
+                              {fieldState.error && (
+                                <FormMessage>{fieldState.error.message}</FormMessage>
+                              )}
+                              <div className="mt-2">
+                                <a
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  href="https://tax.gov.ae/en/default.aspx"
+                                  className="text-blue-600 hover:underline font-semibold"
+                                >
+                                  {strings.VerifyTRN}
+                                </a>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Contact Address Details Section */}
+                <div
+                  className="space-y-4 border-t pt-6"
+                  style={{ borderColor: `${theme.shadowDark}40` }}
+                >
+                  <h2 className="text-xl font-semibold mb-4">{strings.ContactAddressDetails}</h2>
+
+                  {/* Billing Address */}
+                  <div className="space-y-4">
+                    <h5 className="text-lg font-medium mb-4">{strings.BillingDetails}</h5>
+                    <AddressComponent
+                      addressPrefix="billingAddress"
+                      addressType={strings.Billing}
+                      country_list={countryList}
+                      disabled={{
+                        email: false,
+                        city: false,
+                        countryId: disableCountry,
+                        address: false,
+                        postZipCode: false,
+                        stateId: false,
+                        telephone: false,
+                        fax: false,
+                      }}
+                    />
+                  </div>
+
+                  {/* Shipping Address */}
+                  <div
+                    className="space-y-4 border-t pt-6"
+                    style={{ borderColor: `${theme.shadowDark}40` }}
+                  >
+                    <h5 className="text-lg font-medium mb-4">{strings.ShippingDetails}</h5>
+                    <div className="mb-4">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="shipping-same-as-billing"
+                          checked={isSame}
+                          onCheckedChange={checked => {
+                            const checkedValue = checked === true;
+                            if (!checkedValue) {
+                              setValue('shippingAddress', watchedValues.billingAddress);
+                            } else {
+                              setValue('shippingAddress', Lists.Address);
+                              if (disableCountry) {
+                                setValue('shippingAddress.countryId', 229);
+                              }
+                            }
+                            setIsSame(checkedValue);
+                          }}
+                        />
+                        <label
+                          htmlFor="shipping-same-as-billing"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {strings.ShippingAddressIsSameAsBillingAddress}
+                        </label>
+                      </div>
+                    </div>
+                    {!isSame && (
+                      <AddressComponent
+                        addressPrefix="shippingAddress"
+                        addressType={strings.Shipping}
+                        country_list={countryList}
+                        disabled={{
+                          email: false,
+                          city: false,
+                          countryId: disableCountry,
+                          address: false,
+                          postZipCode: false,
+                          stateId: false,
+                          telephone: false,
+                          fax: false,
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div
+                  className="flex justify-end gap-3 mt-8 pt-6 border-t"
+                  style={{ borderColor: `${theme.shadowDark}40` }}
+                >
+                  <Button
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => {
+                      trigger().then(isValid => {
+                        if (!isValid || Object.keys(errors).length !== 0) {
+                          commonActions.fillManDatoryDetails();
+                        }
+                      });
+                      setCreateMore(false);
+                      handleSubmit(onSubmit)();
+                    }}
+                    className="rounded-xl"
+                    style={{
+                      background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
+                      boxShadow: shadows.raised.lg,
+                    }}
+                  >
+                    <CircleDot className="h-4 w-4" />
+                    {disabled ? 'Creating...' : strings.Create}
+                  </Button>
+                  {!(isParentComponentPresent && isParentComponentPresent === true) && (
+                    <Button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        trigger().then(isValid => {
+                          if (!isValid || Object.keys(errors).length !== 0) {
+                            commonActions.fillManDatoryDetails();
+                          }
+                        });
+                        setCreateMore(true);
+                        setIsSame(false);
+                        handleSubmit(onSubmit)();
+                      }}
+                      className="rounded-xl"
+                      style={{
+                        background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
+                        boxShadow: shadows.raised.lg,
+                      }}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      {disabled ? 'Creating...' : strings.CreateandMore}
+                    </Button>
+                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-xl"
+                    onClick={() => {
+                      if (isParentComponentPresent && isParentComponentPresent === true) {
+                        confirmCancel(true);
+                      } else {
+                        history.push('/admin/master/contact');
+                      }
+                    }}
+                    style={{
+                      boxShadow: shadows.raised.sm,
+                    }}
+                  >
+                    <Ban className="h-4 w-4" />
+                    {strings.Cancel}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
       {!disableLeavePage && <LeavePage />}
     </div>
