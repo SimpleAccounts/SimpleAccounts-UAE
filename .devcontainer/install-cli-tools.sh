@@ -60,6 +60,8 @@ else
 fi
 GEMINI_VERSION=$(gemini --version 2>/dev/null || echo 'installed')
 log_success "Gemini CLI: $GEMINI_VERSION"
+<<<<<<< HEAD
+=======
 
 # ============================================
 # Create/Update Symlinks in /usr/local/bin
@@ -79,6 +81,7 @@ if [ -n "$NVM_BIN" ] && [ -d "$NVM_BIN" ]; then
 else
     log_info "Could not determine npm bin location, skipping symlinks"
 fi
+>>>>>>> origin/develop
 
 # OpenAI CLI (Python-based, npm package is just the SDK)
 log_info "Checking OpenAI CLI..."
