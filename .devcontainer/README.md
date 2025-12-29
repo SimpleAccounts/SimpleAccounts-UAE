@@ -30,7 +30,7 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
 | Setup | Best For | Access URLs |
 |-------|----------|-------------|
 | **Single User** | Local development, one developer | `localhost:3000`, `localhost:8080` |
-| **Multi-User** | Shared dev server, team collaboration | `https://alice.dev.simpleaccounts.io` |
+| **Multi-User** | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io` |
 
 ---
 
@@ -107,9 +107,9 @@ Uses `.devcontainer/proxy/` with Traefik reverse proxy.
 ### Features
 
 - **Isolated environments**: Each user has their own DB, Redis, and container
-- **Shareable URLs**: Share `https://alice.dev.simpleaccounts.io` with teammates
-- **Valid SSL Certificates**: Wildcard Let's Encrypt certificate via Cloudflare DNS
+- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
 - **No port conflicts**: Traefik routes by hostname, not port
+- **Zero DNS config**: Uses nip.io for automatic DNS resolution
 
 ### Usage
 
@@ -120,9 +120,8 @@ devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
   --provider-option HOST=dev-server
 
 # Container auto-registers with Traefik. Access URLs shown at startup:
-#   Frontend: https://<username>.dev.simpleaccounts.io
-#   Backend:  https://<username>-api.dev.simpleaccounts.io
-#   Web IDE:  https://<username>-ide.dev.simpleaccounts.io
+#   Frontend: http://<username>.192-168-1-100.nip.io
+#   Backend:  http://<username>-api.192-168-1-100.nip.io
 ```
 
 ### User Management
@@ -157,15 +156,13 @@ See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
 
 ### Persistent Data (Named Volumes)
 
-Named Docker volumes (user-specific for isolation on shared hosts):
+Named Docker volumes (user-specific to avoid conflicts):
 
 - `${USER}-postgres-data` - PostgreSQL database files
 - `${USER}-redis-data` - Redis persistence
 - `${USER}-vscode-extensions` - VS Code extensions
 - `${USER}-maven-cache` - Maven dependencies (~/.m2)
 - `${USER}-npm-cache` - npm cache (~/.npm)
-
-> **Note**: Volume names include the username prefix via Docker Compose's `name:` property, ensuring isolation between users on shared Docker hosts.
 
 ### Credentials & Configuration (Host Bind Mounts)
 

@@ -32,11 +32,11 @@ After the container starts, you'll see URLs printed:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HTTPS URLs (Valid SSL Certificate)
+Option 1: nip.io URLs (No DNS config needed!)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Frontend: https://alice.dev.simpleaccounts.io
-  Backend:  https://alice-api.dev.simpleaccounts.io
-  Web IDE:  https://alice-ide.dev.simpleaccounts.io
+  Frontend: http://alice.192-168-1-100.nip.io
+  Backend:  http://alice-api.192-168-1-100.nip.io
+  Dashboard: http://proxy.192-168-1-100.nip.io:8090
 ```
 
 ### Connect VS Code
@@ -48,7 +48,7 @@ DevPod automatically opens VS Code when the workspace is ready. Alternatively:
 devpod up simpleaccounts-uae --ide vscode
 
 # Or use the Web IDE
-# https://<username>-ide.dev.simpleaccounts.io
+# http://<username>-ide.<server-ip>.nip.io
 ```
 
 ### Share Your Environment
@@ -56,10 +56,10 @@ devpod up simpleaccounts-uae --ide vscode
 Share your URLs with teammates for code review or pair programming:
 
 ```
-https://alice.dev.simpleaccounts.io
+http://alice.192-168-1-100.nip.io
 ```
 
-Anyone can access your running application with a valid SSL certificate!
+Anyone on the same network can access your running application!
 
 ### Architecture
 
@@ -251,7 +251,7 @@ sudo chown -R 1000:1000 /home/<username>/.devpod-mount/
 │  └──────────────────┘                                         │
 └──────────────────────────────────────────────────────────────┘
          ▲
-         │ HTTPS (dev.simpleaccounts.io)
+         │ HTTP (nip.io URLs)
          │
 ┌────────┴────────┐
 │  Your Browser   │

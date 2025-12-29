@@ -53,8 +53,14 @@ services:
       - dev-proxy-network
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.dashboard.rule=Host(`proxy.dev.simpleaccounts.local`)'
+      # Dashboard routing via nip.io (no DNS config needed)
+      - 'traefik.http.routers.dashboard.rule=HostRegexp(`proxy.{ip:[0-9-]+}.nip.io`)'
+      - 'traefik.http.routers.dashboard.entrypoints=web'
       - 'traefik.http.routers.dashboard.service=api@internal'
+      # Dashboard routing via local domain (requires /etc/hosts or local DNS)
+      - 'traefik.http.routers.dashboard-local.rule=Host(`proxy.dev.simpleaccounts.local`)'
+      - 'traefik.http.routers.dashboard-local.entrypoints=web'
+      - 'traefik.http.routers.dashboard-local.service=api@internal'
 
 networks:
   dev-proxy-network:
