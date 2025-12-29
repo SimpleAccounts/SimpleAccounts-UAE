@@ -5,8 +5,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
-  Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -15,7 +13,6 @@ import {
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExcelExport as XLSX } from 'utils';
-import FilterComponent from './sections/filterComponent';
 import { Loader } from 'components';
 import * as ReceivbaleInvoiceDetailsActions from './actions';
 import { ReportTables } from 'screens/financial_report/sections';

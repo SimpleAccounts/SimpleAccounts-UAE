@@ -9,7 +9,7 @@
  * to a v6-compatible navigation prompt solution.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 /**

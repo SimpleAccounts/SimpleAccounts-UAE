@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Button, Row, Col, FormGroup, ButtonGroup, Form, Input } from 'components/migration';
 import { DateRangePicker2 } from 'components';

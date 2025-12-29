@@ -9,7 +9,6 @@ import * as RequestForQuotationViewAction from '../view/actions';
 import ReactToPrint from 'react-to-print';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import { CommonActions } from 'services/global';
 
 import './style.scss';
 import { PDFExport } from '@progress/kendo-react-pdf';
@@ -21,7 +20,7 @@ import dayjs from '@/utils/date';
 // import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Pencil, FileText, Printer } from 'lucide-react';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -204,7 +203,7 @@ class ViewRequestForQuotation extends React.Component {
           <Card>
             <div style={{ display: this.state.PoDataList.length === 0 ? 'none' : '' }}>
               <Table>
-                <thead style={{ backgroundColor: '#2064d8', color: 'white' }}>
+                <thead style={{ backgroundColor: '#1e6eff', color: 'white' }}>
                   <tr>
                     <th className="center" style={{ padding: '0.5rem' }}>
                       #

@@ -20,7 +20,7 @@ import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
 import './style.scss';
 import { CommonActions } from 'services/global';
-import { Printer, FileText } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

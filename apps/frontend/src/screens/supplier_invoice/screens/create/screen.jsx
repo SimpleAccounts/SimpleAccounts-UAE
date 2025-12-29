@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -22,7 +22,6 @@ import * as SupplierInvoiceActions from '../../actions';
 import * as ProductActions from '../../../product/actions';
 import { CustomerModal, ProductModal } from 'screens/customer_invoice/sections'; // Reusing modals for now
 import {
-  LeavePage,
   Loader,
   CurrencyExchangeRate,
   ProductTable,
@@ -33,20 +32,12 @@ import {
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  renderList,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { renderList, selectOptionsFactory, DropdownLists, Lists, selectStyles } from 'utils';
 import { Switch } from '@/components/ui/switch';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { AddressComponent } from 'screens/contact/sections';
 import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {

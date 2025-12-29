@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import dayjs from '@/utils/date';
 import { selectOptionsFactory, selectStyles } from 'utils';
 

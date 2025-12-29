@@ -72,7 +72,6 @@ public class Journal implements Serializable {
 	private BigDecimal subTotalCreditAmount;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "journal")
-	@org.hibernate.annotations.ForeignKey(name = "none")
 	private Collection<JournalLineItem> journalLineItems;
 
 	@Column(name = "CREATED_BY")

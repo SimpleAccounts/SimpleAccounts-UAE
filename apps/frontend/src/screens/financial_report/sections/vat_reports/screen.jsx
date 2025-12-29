@@ -1,33 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import {
-  Button,
-  Col,
-  FormGroup,
-  Card,
-  CardHeader,
-  CardBody,
-  Row,
-  DropdownMenu,
-  DropdownItem,
-  ButtonDropdown,
-  DropdownToggle,
-} from 'components/migration';
-import { AuthActions, CommonActions } from 'services/global';
+import { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Col, FormGroup, Card, CardHeader, CardBody, Row } from 'components/migration';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import * as Vatreport from './actions';
-import { upperFirst } from 'lodash-es';
 import dayjs from '@/utils/date';
-import download from 'downloadjs';
 import {
   DeleteModal,
   FileTaxReturnModal,
   GenerateVatReportModal,
   VatSettingModal,
 } from './sections';
-import { ConfirmDeleteModal, Currency, Loader } from 'components';
+import { Currency, Loader } from 'components';
 import { data as languageData } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
@@ -39,17 +23,7 @@ import {
   DropdownMenuContent as ShadcnDropdownMenuContent,
   DropdownMenuItem as ShadcnDropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import {
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  History,
-  Landmark,
-  Link,
-  Plus,
-  Trash2,
-  Unlink,
-} from 'lucide-react';
+import { ChevronDown, Eye, History, Landmark, Link, Plus, Trash2, Unlink } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

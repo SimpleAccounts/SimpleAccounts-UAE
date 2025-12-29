@@ -5,8 +5,6 @@ import {
   Users,
   Settings,
   BarChart3,
-  Mail,
-  Calendar,
   Folder,
   Bell,
   LogOut,
@@ -17,72 +15,40 @@ import {
   Menu,
   X,
   Check,
-  AlertCircle,
   AlertTriangle,
   Info,
   CheckCircle,
   XCircle,
   Search,
-  Filter,
   Plus,
-  Minus,
   Edit,
   Trash2,
   Eye,
-  EyeOff,
   Download,
   Upload,
-  Share2,
   Copy,
   Heart,
   Star,
-  Bookmark,
-  Send,
-  MoreHorizontal,
-  MoreVertical,
-  ExternalLink,
-  ArrowRight,
   ArrowLeft,
-  ArrowUp,
   ArrowDown,
   RefreshCw,
   Loader,
   Clock,
-  MapPin,
-  Phone,
   Globe,
   User,
   Lock,
   CreditCard,
   ShoppingCart,
   Package,
-  Truck,
   DollarSign,
   TrendingUp,
-  TrendingDown,
   PieChart,
   Activity,
   Zap,
   Award,
   Gift,
-  Camera,
-  Image,
-  File,
   FileText,
-  Paperclip,
-  Link,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
   Maximize,
-  Minimize,
-  Sun,
-  Moon,
-  Cloud,
-  Droplet,
-  Wind,
-  Thermometer,
   Calculator,
   Receipt,
   Landmark,
@@ -96,13 +62,8 @@ import {
   Percent,
   ChevronsRight,
   ArrowUpRight,
-  Box,
-  Type,
-  Quote,
   Terminal,
-  ListOrdered,
   Book,
-  Code2,
   Palette,
 } from 'lucide-react';
 import {
@@ -218,15 +179,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 import { StepWizard } from '@/components/ui/step-wizard';
 import { SocialLoginButtons } from '@/components/ui/social-login-buttons';
 
-import {
-  Aside,
-  Header,
-  Footer,
-  Message,
-  DateRangePicker2,
-  Currency,
-  Loader as AppLoader,
-} from '@/components';
+import { Currency, Loader as AppLoader } from '@/components';
 
 /*
  * SIMPLE ACCOUNTS - NEUMORPHISM UI COMPONENT LIBRARY
@@ -236,9 +189,9 @@ const theme = {
   bg: '#e8eef5',
   shadowDark: '#c4c9cf',
   shadowLight: '#ffffff',
-  primary: '#1e6eff',
-  primaryDark: '#0052cc',
-  secondary: '#00c896',
+  primary: '#2064d8',
+  primaryDark: '#1a4fa8',
+  secondary: '#21d8aa',
   secondaryDark: '#00a67a',
   textPrimary: '#1e3a5f',
   textSecondary: '#3d5a80',
@@ -878,9 +831,9 @@ const theme = {
   bg: '#e8eef5',           // Main background
   shadowDark: '#c4c9cf',   // Dark shadow color
   shadowLight: '#ffffff',  // Light shadow color
-  primary: '#1e6eff',      // Primary brand color
-  primaryDark: '#0052cc',  // Primary gradient end
-  secondary: '#00c896',    // Success/secondary
+  primary: '#2064d8',      // Primary brand color
+  primaryDark: '#1a4fa8',  // Primary gradient end
+  secondary: '#21d8aa',    // Success/secondary
   danger: '#ff4d6a',       // Error/danger
   warning: '#ffb020',      // Warning
   textPrimary: '#1e3a5f',  // Main text
@@ -1132,7 +1085,7 @@ function NeuInput({ ...props }) {
 <button
   className="px-5 py-2.5 rounded-xl font-medium text-white transition-all hover:scale-105"
   style={{
-    background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+    background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
     boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
   }}
 >
@@ -1193,7 +1146,7 @@ function NeuInput({ ...props }) {
   style={{
     background: '#e8eef5',
     boxShadow: 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
-    color: '#1e6eff',
+    color: '#2064d8',
   }}
 >
   Pressed
@@ -1748,7 +1701,7 @@ const [isActive, setIsActive] = useState(false);
     className="w-6 h-6 rounded-lg flex items-center justify-center transition-all"
     style={checked
       ? {
-          background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+          background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
           boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
         }
       : {
@@ -1801,7 +1754,7 @@ const [isActive, setIsActive] = useState(false);
       ? {
           background: '#e8eef5',
           boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
-          border: '2px solid #1e6eff',
+          border: '2px solid #2064d8',
         }
       : {
           background: '#e8eef5',
@@ -1812,7 +1765,7 @@ const [isActive, setIsActive] = useState(false);
     {radioValue === 'option1' && (
       <div
         className="w-3 h-3 rounded-full"
-        style={{ background: 'linear-gradient(145deg, #1e6eff, #0052cc)' }}
+        style={{ background: 'linear-gradient(145deg, #2064d8, #1a4fa8)' }}
       />
     )}
   </div>
@@ -1860,7 +1813,7 @@ const [isActive, setIsActive] = useState(false);
     className="w-14 h-8 rounded-full p-1 transition-all duration-300"
     style={{
       background: toggle
-        ? 'linear-gradient(145deg, #1e6eff, #0052cc)'
+        ? 'linear-gradient(145deg, #2064d8, #1a4fa8)'
         : '#e8eef5',
       boxShadow: toggle
         ? '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
@@ -1914,7 +1867,7 @@ const [isActive, setIsActive] = useState(false);
     <label className="text-sm font-medium" style={{ color: '#3d5a80' }}>
       Volume
     </label>
-    <span className="text-sm font-medium" style={{ color: '#1e6eff' }}>
+    <span className="text-sm font-medium" style={{ color: '#2064d8' }}>
       {sliderValue}%
     </span>
   </div>
@@ -1929,7 +1882,7 @@ const [isActive, setIsActive] = useState(false);
     <div
       className="absolute h-full rounded-full"
       style={{
-        background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+        background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
         width: \`\${sliderValue}%\`
       }}
     />
@@ -1949,7 +1902,7 @@ const [isActive, setIsActive] = useState(false);
         background: '#e8eef5',
         boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
         left: \`\${sliderValue}%\`,
-        border: '2px solid #1e6eff',
+        border: '2px solid #2064d8',
       }}
     />
   </div>
@@ -2164,7 +2117,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
     <div
       className="w-10 h-10 rounded-lg flex items-center justify-center"
       style={{
-        background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+        background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
         boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
       }}
     >
@@ -2173,7 +2126,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
     {/* Trend indicator */}
     <span
       className="text-xs font-medium"
-      style={{ color: '#00c896' }} // Green for positive, red for negative
+      style={{ color: '#21d8aa' }} // Green for positive, red for negative
     >
       +12%
     </span>
@@ -2267,7 +2220,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
   <div
     className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white"
     style={{
-      background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+      background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
       boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff'
     }}
   >
@@ -2284,7 +2237,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
     <button
       className="px-4 py-2 rounded-lg text-sm font-medium text-white"
       style={{
-        background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+        background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
         boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
       }}
     >
@@ -2492,15 +2445,15 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
   style={{
     background: '#e8eef5',
     boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
-    borderLeft: '4px solid #1e6eff', // primary=blue, secondary=green, warning=yellow, danger=red
+    borderLeft: '4px solid #2064d8', // primary=blue, secondary=green, warning=yellow, danger=red
   }}
 >
   {/* Icon container with transparent background */}
   <div
     className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-    style={{ background: '#1e6eff20' }} // 20% opacity of the color
+    style={{ background: '#2064d820' }} // 20% opacity of the color
   >
-    <Info className="w-5 h-5" style={{ color: '#1e6eff' }} />
+    <Info className="w-5 h-5" style={{ color: '#2064d8' }} />
   </div>
   <div className="flex-1">
     <h4 className="font-semibold mb-1" style={{ color: '#1e3a5f' }}>
@@ -2517,8 +2470,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 </div>
 
 // Alert variants:
-// Info: borderLeft: '4px solid #1e6eff', icon color: '#1e6eff'
-// Success: borderLeft: '4px solid #00c896', icon color: '#00c896'
+// Info: borderLeft: '4px solid #2064d8', icon color: '#2064d8'
+// Success: borderLeft: '4px solid #21d8aa', icon color: '#21d8aa'
 // Warning: borderLeft: '4px solid #ffb020', icon color: '#ffb020'
 // Error: borderLeft: '4px solid #ff4d6a', icon color: '#ff4d6a'`}
               >
@@ -2596,7 +2549,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 >
   <div
     className="w-8 h-8 rounded-full flex items-center justify-center"
-    style={{ background: 'linear-gradient(145deg, #00c896, #00a67a)' }}
+    style={{ background: 'linear-gradient(145deg, #21d8aa, #00a67a)' }}
   >
     <Check className="w-4 h-4 text-white" />
   </div>
@@ -2734,7 +2687,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
                 code={`// Solid Gradient Badge
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold text-white"
-  style={{ background: 'linear-gradient(145deg, #1e6eff, #0052cc)' }}
+  style={{ background: 'linear-gradient(145deg, #2064d8, #1a4fa8)' }}
 >
   Primary
 </span>
@@ -2742,7 +2695,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 // Success Badge
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold text-white"
-  style={{ background: 'linear-gradient(145deg, #00c896, #00a67a)' }}
+  style={{ background: 'linear-gradient(145deg, #21d8aa, #00a67a)' }}
 >
   Success
 </span>
@@ -2804,8 +2757,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold"
   style={{
-    background: '#1e6eff20', // 20% opacity of primary color
-    color: '#1e6eff',
+    background: '#2064d820', // 20% opacity of primary color
+    color: '#2064d8',
   }}
 >
   Primary
@@ -2815,8 +2768,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold"
   style={{
-    background: '#00c89620',
-    color: '#00c896',
+    background: '#21d8aa20',
+    color: '#21d8aa',
   }}
 >
   Success
@@ -3069,7 +3022,7 @@ const tabs = ['Overview', 'Analytics', 'Reports', 'Settings'];
       className="px-4 py-2.5 rounded-xl font-medium text-sm transition-all"
       style={activeTab === i
         ? {
-            background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+            background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
             boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
             color: 'white',
           }
@@ -3118,11 +3071,11 @@ const tabs = ['Overview', 'Analytics', 'Reports', 'Settings'];
                 description="Simple navigation breadcrumbs with links separated by chevron icons."
                 code={`// Breadcrumb Navigation
 <nav className="flex items-center gap-2 text-sm">
-  <a href="/home" style={{ color: '#1e6eff' }}>
+  <a href="/home" style={{ color: '#2064d8' }}>
     Home
   </a>
   <ChevronRight className="w-4 h-4" style={{ color: '#98afc2' }} />
-  <a href="/products" style={{ color: '#1e6eff' }}>
+  <a href="/products" style={{ color: '#2064d8' }}>
     Products
   </a>
   <ChevronRight className="w-4 h-4" style={{ color: '#98afc2' }} />
@@ -3170,7 +3123,7 @@ const pages = [1, 2, 3, '...', 10];
       className="w-10 h-10 rounded-xl flex items-center justify-center font-medium text-sm"
       style={page === currentPage
         ? {
-            background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+            background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
             boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
             color: 'white',
           }
@@ -3383,8 +3336,8 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
             <span
               className="px-2 py-1 rounded-full text-xs font-medium"
               style={{
-                background: row.status === 'Active' ? '#00c89620' : '#ff4d6a20',
-                color: row.status === 'Active' ? '#00c896' : '#ff4d6a',
+                background: row.status === 'Active' ? '#21d8aa20' : '#ff4d6a20',
+                color: row.status === 'Active' ? '#21d8aa' : '#ff4d6a',
               }}
             >
               {row.status}
@@ -3398,7 +3351,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
                 boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
               }}
             >
-              <Edit className="w-4 h-4" style={{ color: '#1e6eff' }} />
+              <Edit className="w-4 h-4" style={{ color: '#2064d8' }} />
             </button>
           </td>
         </tr>
@@ -3693,7 +3646,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
     <span className="text-sm font-medium" style={{ color: '#3d5a80' }}>
       Progress
     </span>
-    <span className="text-sm" style={{ color: '#1e6eff' }}>
+    <span className="text-sm" style={{ color: '#2064d8' }}>
       60%
     </span>
   </div>
@@ -3709,7 +3662,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
     <div
       className="h-full rounded-full"
       style={{
-        background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+        background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
         width: '60%'
       }}
     />
@@ -3717,8 +3670,8 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
 </div>
 
 // Variants:
-// Primary: linear-gradient(145deg, #1e6eff, #0052cc)
-// Success: linear-gradient(145deg, #00c896, #00a67a)
+// Primary: linear-gradient(145deg, #2064d8, #1a4fa8)
+// Success: linear-gradient(145deg, #21d8aa, #00a67a)
 // Warning: linear-gradient(145deg, #ffb020, #e69500)`}
               >
                 <div className="space-y-6">
@@ -3938,7 +3891,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 <div
   className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
   style={{
-    background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+    background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
     boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
   }}
 >
@@ -3950,7 +3903,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
   <div
     className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
     style={{
-      background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+      background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
       boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
     }}
   >
@@ -3960,7 +3913,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
   <div
     className="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2"
     style={{
-      background: '#00c896', // online=green, away=yellow, busy=red
+      background: '#21d8aa', // online=green, away=yellow, busy=red
       borderColor: '#e8eef5'
     }}
   />
@@ -3973,7 +3926,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
       key={i}
       className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white border-2"
       style={{
-        background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+        background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
         borderColor: '#e8eef5',
         boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
       }}
@@ -4547,7 +4500,7 @@ import { toast } from 'sonner';
         <button
           className="px-4 py-2 rounded-xl font-medium text-white"
           style={{
-            background: 'linear-gradient(145deg, #1e6eff, #0052cc)',
+            background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
             boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
           }}
         >
@@ -4684,7 +4637,7 @@ import { Sheet, ... } from '@/components/ui/sheet';
                       <DialogHeader>
                         <DialogTitle>Edit profile</DialogTitle>
                         <DialogDescription>
-                          Make changes to your profile here. Click save when you're done.
+                          Make changes to your profile here. Click save when you&apos;re done.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
@@ -4728,7 +4681,7 @@ import { Sheet, ... } from '@/components/ui/sheet';
                       <SheetHeader>
                         <SheetTitle>Edit profile</SheetTitle>
                         <SheetDescription>
-                          Make changes to your profile here. Click save when you're done.
+                          Make changes to your profile here. Click save when you&apos;re done.
                         </SheetDescription>
                       </SheetHeader>
                       <div className="grid gap-4 py-4">

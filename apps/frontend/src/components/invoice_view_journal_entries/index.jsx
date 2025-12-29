@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardHeader, CardBody, Row, Col } from 'components/migration';
 import { Currency } from 'components';
 import * as JournalActions from './actions';

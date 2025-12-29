@@ -1,34 +1,18 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Row,
-  Col,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  UncontrolledTooltip,
-} from 'components/migration';
-import Select from 'react-select';
-import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import { Button, Row, Col, FormGroup, Input, Label } from 'components/migration';
+import { Loader, ConfirmDeleteModal } from 'components';
 import './style.scss';
 import * as ProductActions from '../../actions';
-import { WareHouseModal } from '../../sections';
-import { selectOptionsFactory, selectStyles } from 'utils';
 import * as DetailProductActions from './actions';
 import { CommonActions } from 'services/global';
 import * as SupplierInvoiceActions from '../../../supplier_invoice/actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { InventoryHistoryModal } from './sections';
 import config from 'constants/config';
 import { DataTable } from '@/components/ui/data-table';
 import { Check, History } from 'lucide-react';
@@ -251,9 +235,9 @@ const DetailProduct = ({
   const [productNameExist, setProductNameExist] = useState(false);
 
   const regEx = /^[0-9]+$/;
-  const regExBoth = /[a-zA-Z0-9-.\/\\|]+$/;
+  const regExBoth = /[a-zA-Z0-9-./\\|]+$/;
   const regDecimal5 = /^\d{0,10}$/;
-  const regExAlpha = /[ +a-zA-Z0-9-.\/\\|!@#$%^&*()_<>,]+$/;
+  const regExAlpha = /[ +a-zA-Z0-9-./\\|!@#$%^&*()_<>,]+$/;
   const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 
   const form = useForm({

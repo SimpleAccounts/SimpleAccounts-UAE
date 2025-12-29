@@ -24,8 +24,6 @@ import { CommonActions } from 'services/global';
 import { selectOptionsFactory } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as CreatePayrollActions from './actions';
-import * as CreatePayrollEmployeeActions from '../../../payrollemp/screens/create/actions';
-import * as PayrollEmployeeActions from '../../../payrollemp/actions';
 import { DataTable } from '@/components/ui/data-table';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
@@ -41,10 +39,10 @@ const strings = new LocalizedStrings(languageData);
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };
@@ -214,7 +212,6 @@ const CreatePayrollList = () => {
       if (response.status === 200) {
         employeePayPeriodlList = response.data;
         let date = startDate;
-        endDate = endDate;
         let month = dayjs(date).format('MMMM');
         dispatch(CreatePayrollActions.getAllPayrollEmployee(dayjs(date).format('DD/MM/YYYY'))).then(
           res => {

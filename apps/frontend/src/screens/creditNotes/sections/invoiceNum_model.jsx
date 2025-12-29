@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -39,7 +39,7 @@ const InvoiceNumberModel = ({
 }) => {
   const [disabled, setDisabled] = useState(false);
   const regEx = /^[0-9]+$/;
-  const regExAlpha = /^[a-zA-Z0-9 -/\"]+$/;
+  const regExAlpha = /^[a-zA-Z0-9 -/"]+$/;
 
   const {
     control,

@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useState, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardHeader, CardBody, Button, Row, Col, ButtonGroup } from 'components/migration';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 import * as SalaryStructureAction from './actions';
-import { CommonActions } from 'services/global';
 import './style.scss';
 import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';

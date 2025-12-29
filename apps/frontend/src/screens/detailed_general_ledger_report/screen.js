@@ -5,9 +5,7 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Row,
   Col,
-  Table,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
@@ -17,8 +15,7 @@ import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ReportTables } from 'screens/financial_report/sections';
 import { ExcelExport as XLSX } from 'utils';
-import FilterComponent from './sections/filterComponent.jsx';
-import { Loader, Currency } from 'components';
+import { Loader } from 'components';
 import * as DetailGeneralLedgerActions from './actions';
 import './style.scss';
 import logo from 'assets/images/brand/logo.png';
@@ -26,7 +23,7 @@ import { CommonActions } from 'services/global';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import FilterComponent3 from './sections/FilterComponent3';
-import { Settings, Printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

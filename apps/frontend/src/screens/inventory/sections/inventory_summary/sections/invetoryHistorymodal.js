@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Button,
   Row,
@@ -20,7 +19,7 @@ import { PDFExport } from '@progress/kendo-react-pdf';
 import { Currency } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { History, Ban } from 'lucide-react';
+import { History, Ban, Download } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,6 @@ import {
   Label,
 } from 'components/migration';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import * as CustomerInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as CustomerInvoiceActions from '../../actions';
@@ -26,21 +25,11 @@ import { CustomerModal, ProductModal } from '../../sections';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  optionFactory,
-  selectCurrencyFactory,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { selectOptionsFactory, InputValidation, Lists, selectStyles } from 'utils';
 import './style.scss';
-import { AddressComponent } from 'screens/contact/sections';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Switch } from '@/components/ui/switch';
 import { FileText, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
@@ -145,7 +134,7 @@ const regEx = /^[0-9\b]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 const regDec1 = /^\d{1,2}\.\d{1,2}$|^\d{1,2}$/;
-const regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/\"]+$/;
+const regExAlpha = /^[a-zA-Z0-9!@#$&()-\\`.+,/"]+$/;
 const regExTelephone = /^[0-9-]+$/;
 const regExAddress = /^[a-zA-Z0-9\s\D,'-/]+$/;
 const regExCity = /^[a-zA-Z ]+$/;
@@ -780,10 +769,12 @@ const DetailCustomerInvoice = ({
       const vat = index !== '' && index >= 0 ? vatList[`${index}`].vat : 0;
 
       // Exclusive case
+      let discount;
+      let vat_amount;
       if (taxType === false) {
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = +net_value / 2;
@@ -797,10 +788,10 @@ const DetailCustomerInvoice = ({
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = +net_value / 2;
@@ -814,45 +805,41 @@ const DetailCustomerInvoice = ({
           } else {
             obj.exciseAmount = 0;
           }
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         }
       }
       // Inclusive case
       else {
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
 
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = net_value / 3;
-              net_value = net_value;
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
               const value = net_value / 2;
               obj.exciseAmount = parseFloat(value);
-              net_value = net_value;
             }
           } else {
             obj.exciseAmount = 0;
           }
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
 
           if (obj.exciseTaxId != 0) {
             if (obj.exciseTaxId === 1) {
               const value = net_value / 3;
-              net_value = net_value;
               obj.exciseAmount = parseFloat(value);
             } else if (obj.exciseTaxId === 2) {
               const value = net_value / 2;
               obj.exciseAmount = parseFloat(value);
-              net_value = net_value;
             }
           } else {
             obj.exciseAmount = 0;

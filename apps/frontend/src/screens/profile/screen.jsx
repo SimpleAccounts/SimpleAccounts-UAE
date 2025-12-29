@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import PhoneInput from 'react-phone-input-2';
 import PasswordChecklist from 'react-password-checklist';
-import { upperFirst } from 'lodash-es';
 import { User, Building2, Lock, Eye, EyeOff, Save, Loader2 } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Checkbox } from '@/components/ui/checkbox';
 
 import { Loader, ImageUploader } from 'components';
 import { selectOptionsFactory, cryptoService, selectCurrencyFactory } from 'utils';

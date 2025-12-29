@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Currency } from 'components';
 import { Nav, NavItem, NavLink, TabContent, TabPane, Card, CardBody } from 'components/migration';
 import './style.scss';
@@ -33,7 +33,6 @@ class ProfitAndLoss extends Component {
       this.props.DashboardActions.getTaxes(range),
     ];
     return Promise.all(requests).catch(err => {
-      // eslint-disable-next-line no-console
       console.error('Failed to load profit & loss summary', err);
     });
   };

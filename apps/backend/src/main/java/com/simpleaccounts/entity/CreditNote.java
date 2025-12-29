@@ -129,6 +129,5 @@ public class CreditNote implements Serializable {
     private Boolean isReverseChargeEnabled = false;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "creditNote")
-    @org.hibernate.annotations.ForeignKey(name = "none")
     private Collection<CreditNoteLineItem> creditNoteLineItems;
 }

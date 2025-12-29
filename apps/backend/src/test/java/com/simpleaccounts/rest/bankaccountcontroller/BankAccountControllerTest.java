@@ -50,10 +50,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.http.converter.autoconfigure.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
@@ -65,7 +70,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BankAccountController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import({MessageConfiguration.class, MessageUtil.class})
+@ImportAutoConfiguration({CacheAutoConfiguration.class, JacksonAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class})
+@TestPropertySource(properties = {"spring.cache.type=none"})
+@Import({MessageConfiguration.class, MessageUtil.class, BankAccountControllerTest.TestConfig.class})
 @DisplayName("BankAccountController Tests")
 class BankAccountControllerTest {
 
@@ -75,43 +82,43 @@ class BankAccountControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private BankAccountService bankAccountService;
-    @MockBean
+    @MockitoBean
     private JournalService journalService;
-    @MockBean
+    @MockitoBean
     private CoacTransactionCategoryService coacTransactionCategoryService;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryClosingBalanceService transactionCategoryClosingBalanceService;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryBalanceService transactionCategoryBalanceService;
-    @MockBean
+    @MockitoBean
     private BankAccountStatusService bankAccountStatusService;
-    @MockBean
+    @MockitoBean
     private CurrencyService currencyService;
-    @MockBean
+    @MockitoBean
     private BankAccountTypeService bankAccountTypeService;
-    @MockBean
+    @MockitoBean
     private CountryService countryService;
-    @MockBean
+    @MockitoBean
     private BankAccountRestHelper bankAccountRestHelper;
-    @MockBean
+    @MockitoBean
     private TransactionCategoryService transactionCategoryService;
-    @MockBean
+    @MockitoBean
     private ExpenseService expenseService;
-    @MockBean
+    @MockitoBean
     private JwtTokenUtil jwtTokenUtil;
-    @MockBean
+    @MockitoBean
     private TransactionService transactionService;
-    @MockBean
+    @MockitoBean
     private CurrencyExchangeService currencyExchangeService;
-    @MockBean
+    @MockitoBean
     private UserService userService;
-    @MockBean
+    @MockitoBean
     private OSValidator osValidator;
-    @MockBean
+    @MockitoBean
     private JournalLineItemRepository journalLineItemRepository;
-    @MockBean
+    @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
     @TestConfiguration
@@ -119,6 +126,13 @@ class BankAccountControllerTest {
         @Bean
         String basePath() {
             return "/tmp";
+        }
+
+        @Bean
+        ObjectMapper objectMapper() {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            return mapper;
         }
     }
 
@@ -420,7 +434,7 @@ class BankAccountControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.isErrorMessage").value(false));
+                    .andExpect(jsonPath("$.errorMessage").value(false));
 
             verify(bankAccountService).deleteByIds(any());
         }

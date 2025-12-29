@@ -141,7 +141,6 @@ public class Purchase implements Serializable {
     private Integer paymentMode;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "purchase", orphanRemoval = true)
-    @org.hibernate.annotations.ForeignKey(name = "none")
     private Collection<PurchaseLineItem> purchaseLineItems;
 
     public void addPurchaseItem( final PurchaseLineItem purchaseLineItem) {

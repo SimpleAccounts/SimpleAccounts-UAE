@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -8,7 +8,6 @@ import {
   Row,
   Col,
   ButtonGroup,
-  Input,
   ButtonDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -18,7 +17,6 @@ import { Loader, ConfirmDeleteModal } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import * as PayrollEmployeeActions from './actions';
 import * as EmployeeActions from '../employee/actions';
-import { CommonActions } from 'services/global';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data as languageData } from '../Language/index';

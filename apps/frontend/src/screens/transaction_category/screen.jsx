@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {
   Card,
   CardHeader,
@@ -15,12 +14,11 @@ import {
   ButtonGroup,
   Col,
 } from 'components/migration';
-import { toast } from 'sonner';
 import { Loader } from 'components';
 import * as TransactionActions from './actions';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { Plus, Download, Trash2 } from 'lucide-react';
 
 const TransactionCategory = () => {
   const dispatch = useDispatch();

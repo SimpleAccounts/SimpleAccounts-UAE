@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
 import { Loader, LeavePage } from 'components';
-import { AuthActions, CommonActions } from 'services/global';
+import { CommonActions } from 'services/global';
 import * as NotesSettingsAction from './actions';
 import config from 'constants/config';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,11 +16,8 @@ import {
   Input,
   Label,
 } from 'components/migration';
-import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { ImageUploader } from 'components';
 import { CommonActions } from 'services/global';
-import { selectCurrencyFactory, selectOptionsFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeCreateActions from './actions';
 

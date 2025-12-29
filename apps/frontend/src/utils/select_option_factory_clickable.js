@@ -1,4 +1,3 @@
-import React from 'react';
 export const renderOptions = (label_key, value_key, data, placeholder, clickableValue, onClick) => {
   const result = [{ value: '', label: `Select ${placeholder}` }];
   data.map(item => {

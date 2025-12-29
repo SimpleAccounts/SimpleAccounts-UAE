@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { FormGroup, Form, Badge, Row, Col, Input, Button, ButtonGroup } from 'components/migration';
 import Select from 'react-select';
 import * as customerReportData from '../../actions';

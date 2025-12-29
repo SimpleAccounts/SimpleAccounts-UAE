@@ -1,5 +1,3 @@
-import { AUTH } from 'constants/types';
-
 describe('Register Reducer', () => {
   const initialState = {
     registering: false,

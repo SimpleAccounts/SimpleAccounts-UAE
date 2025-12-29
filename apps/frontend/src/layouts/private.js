@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 
 // Routes that should be accessible to all authenticated users without permission check

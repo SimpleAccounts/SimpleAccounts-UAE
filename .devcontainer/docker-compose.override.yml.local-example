@@ -1,0 +1,36 @@
+# =============================================================================
+# Local Docker Override - Mount credentials from host home directory
+# =============================================================================
+#
+# Copy this file to docker-compose.override.yml for local Docker development.
+# This mounts your actual ~/.claude, ~/.ssh, etc. into the container.
+#
+# Usage:
+#   cp docker-compose.override.yml.local-example docker-compose.override.yml
+#   devpod up . --provider docker
+#
+# Note: docker-compose.override.yml is gitignored
+# =============================================================================
+
+services:
+  devcontainer:
+    volumes:
+      # Override credential mounts to use actual host home folders
+      # AI/LLM CLI tools
+      - ${HOME}/.claude:/home/vscode/.claude
+      - ${HOME}/.gemini:/home/vscode/.gemini
+      - ${HOME}/.codex:/home/vscode/.codex
+      # Development tools
+      - ${HOME}/.config/gh:/home/vscode/.config/gh
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro
+      - ${HOME}/.gitconfig:/home/vscode/.gitconfig:ro
+      - ${HOME}/.docker:/home/vscode/.docker:ro
+      # Cloud credentials (uncomment as needed)
+      # - ${HOME}/.kube:/home/vscode/.kube:ro
+      # - ${HOME}/.aws:/home/vscode/.aws:ro
+      # - ${HOME}/.azure:/home/vscode/.azure:ro
+      # IDE settings (for code-server web IDE)
+      - ${HOME}/.config/code-server:/home/vscode/.config/code-server
+      # Cursor/VS Code settings (optional - uncomment to sync settings)
+      # - ${HOME}/.cursor:/home/vscode/.cursor:ro
+      # - ${HOME}/.vscode:/home/vscode/.vscode:ro

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -10,12 +10,10 @@ import {
   Plus,
   Search,
   RefreshCw,
-  FileText,
   Eye,
   Edit,
   Copy,
   FileCheck,
-  Send,
   University,
   CreditCard,
   File,
@@ -29,7 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';
 
-import { Loader, ConfirmDeleteModal, Currency, SentInvoice } from 'components';
+import { Loader, ConfirmDeleteModal } from 'components';
 import { selectOptionsFactory } from 'utils';
 
 import * as SupplierInvoiceActions from './actions';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,7 +17,6 @@ import {
   Label,
 } from 'components/migration';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as ProductActions from '../../../product/actions';
 import * as SupplierInvoiceActions from '../../actions';
@@ -29,22 +28,13 @@ import {
   ConfirmDeleteModal,
   CurrencyExchangeRate,
   ProductTable,
-  ProductTableCalculation,
   InvoiceAdditionaNotesInformation,
   TotalCalculation,
   TermDateInput,
 } from 'components';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
-import {
-  optionFactory,
-  selectCurrencyFactory,
-  selectOptionsFactory,
-  InputValidation,
-  DropdownLists,
-  Lists,
-  selectStyles,
-} from 'utils';
+import { selectOptionsFactory, DropdownLists, Lists, selectStyles } from 'utils';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
@@ -568,31 +558,33 @@ const DetailSupplierInvoice = ({
       const vat = index !== '' && index >= 0 ? vatList[`${index}`].vat : 0;
 
       // Logic similar to create/customer invoice
+      let discount;
+      let vat_amount;
       if (taxType === false) {
         // Exclusive
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           obj.exciseAmount = 0; // Simplified
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
+          discount = unitprice * obj.quantity - net_value;
           obj.exciseAmount = 0; // Simplified
-          var vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
+          vat_amount = vat === 0 ? 0 : (+net_value * vat) / 100;
         }
       } else {
         // Inclusive
         if (obj.discountType === 'PERCENTAGE') {
           net_value = (+unitprice - +(unitprice * obj.discount) / 100) * obj.quantity;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
           obj.exciseAmount = 0; // Simplified
         } else {
           net_value = unitprice * obj.quantity - obj.discount;
-          var discount = unitprice * obj.quantity - net_value;
-          var vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
+          discount = unitprice * obj.quantity - net_value;
+          vat_amount = vat === 0 ? 0 : (+net_value * ((vat / (100 + vat)) * 100)) / 100;
           net_value = net_value - vat_amount;
           obj.exciseAmount = 0;
         }

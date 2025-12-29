@@ -3,6 +3,10 @@
 
 set -e
 
+# Temporarily unset NODE_OPTIONS to avoid issues during setup
+unset NODE_OPTIONS
+
+
 echo "🚀 Setting up SimpleAccounts-UAE development environment..."
 
 # Determine the target user home directory
@@ -49,6 +53,13 @@ ensure_dir "$TARGET_HOME/.m2/wrapper/dists"
 
 # Also ensure npm cache directory is writable
 ensure_dir "$TARGET_HOME/.npm"
+n# ============================================
+# Fix volume permissions (run early to ensure tools work)
+# ============================================
+echo "🔧 Fixing volume permissions..."
+for dir in "$TARGET_HOME/.claude" "$TARGET_HOME/.gemini" "$TARGET_HOME/.codex" "$TARGET_HOME/.config/gh" "$TARGET_HOME/.bash_history_dir" "$TARGET_HOME/.gitconfig_dir" "$TARGET_HOME/.ssh" "$TARGET_HOME/.docker" "$TARGET_HOME/.kube" "$TARGET_HOME/.aws" "$TARGET_HOME/.azure"; do
+    [ -d "$dir" ] && fix_ownership "$dir"
+done
 
 # ============================================
 # Install npm dependencies
@@ -124,7 +135,7 @@ fi
 
 if [ ! -f "apps/backend/src/main/resources/application-local.properties" ]; then
     echo "📝 Creating backend application-local.properties..."
-    cat > apps/backend/src/main/resources/application-local.properties << 'EOF'
+    cat > apps/backend/src/main/resources/application-local.properties << 'BACKENDEOF'
 # Local development configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/simpleaccounts
 spring.datasource.username=simpleaccounts
@@ -132,7 +143,7 @@ spring.datasource.password=simpleaccounts_dev
 spring.jpa.hibernate.ddl-auto=update
 spring.redis.host=localhost
 spring.redis.port=6379
-EOF
+BACKENDEOF
 fi
 
 echo "✅ Development environment setup complete!"

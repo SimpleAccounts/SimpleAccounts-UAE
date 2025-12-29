@@ -13,7 +13,7 @@ import Select from 'react-select';
 import { DataTable } from '@/components/ui/data-table';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Loader, ConfirmDeleteModal } from 'components';
+import { Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { CommonActions } from 'services/global';
@@ -52,10 +52,10 @@ const mapDispatchToProps = dispatch => {
 const customStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+    borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     boxShadow: state.isFocused ? null : null,
     '&:hover': {
-      borderColor: state.isFocused ? '#2064d8' : '#c7c7c7',
+      borderColor: state.isFocused ? '#1e6eff' : '#c7c7c7',
     },
   }),
 };

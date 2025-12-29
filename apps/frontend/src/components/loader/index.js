@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { motion } from 'framer-motion';
 // Use import instead of require for Vite compatibility
 // import loaderImage from 'assets/images/brand/loader-gif.gif';
@@ -77,7 +75,7 @@ export default function Loader({ loadingMsg, NextloadingMsg }) {
           }}
         />
       </div>
-      <div className="text-center mt-5" style={{ color: '#2064d8' }}>
+      <div className="text-center mt-5" style={{ color: '#1e6eff' }}>
         <b>
           {loadingMsg ? loadingMsg : 'Loading...'}
           <br />

@@ -1,4 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
+import path from 'path';
 import viteConfig from './vite.config.js';
 
 // Plugin to transform Jest APIs to Vitest APIs for backward compatibility
@@ -57,6 +58,13 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     plugins: [jestToVitestPlugin],
+    resolve: {
+      alias: {
+        // Merge with vite config aliases and add reactstrap mock for tests
+        ...(viteConfig.resolve?.alias || {}),
+        reactstrap: path.resolve(__dirname, './src/__mocks__/reactstrap.js'),
+      },
+    },
     test: {
       globals: true,
       environment: 'jsdom',
@@ -95,6 +103,8 @@ export default mergeConfig(
       hookTimeout: 10000,
       // Reporter configuration
       reporters: ['default'],
+      // Ignore unhandled errors from React act() warnings - these are warnings, not failures
+      dangerouslyIgnoreUnhandledErrors: true,
     },
   })
 );

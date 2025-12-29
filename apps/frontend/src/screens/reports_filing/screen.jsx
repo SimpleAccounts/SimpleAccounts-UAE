@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import {
   Card,
@@ -17,7 +17,7 @@ import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
 import { DataTable } from '@/components/ui/data-table';
 import './style.scss';
-import { Search } from 'lucide-react';
+import { Search, Download } from 'lucide-react';
 
 const vatOptions = [
   { value: 'input', label: 'Input' },

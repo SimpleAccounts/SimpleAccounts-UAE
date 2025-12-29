@@ -90,6 +90,13 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
+<<<<<<< HEAD
+=======
+# Install code-server for web-based IDE access
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local \
+    && echo "Code-server installed successfully"
+
+>>>>>>> origin/develop
 # Install AI CLI tools (Claude, Codex, OpenAI, Gemini)
 # These are pre-installed but will be updated on container start via install-cli-tools.sh
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
@@ -97,6 +104,18 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
     npm install -g @openai/codex 2>/dev/null || true && \
     npm install -g openai 2>/dev/null || true && \
     npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
+<<<<<<< HEAD
+=======
+
+# Create symlinks in /usr/local/bin for npm global packages
+# This ensures CLI tools are in PATH regardless of NVM sourcing
+RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm prefix -g)/bin") && \
+    for tool in claude codex gemini openai; do \
+        if [ -x "$NVM_BIN/$tool" ]; then \
+            ln -sf "$NVM_BIN/$tool" /usr/local/bin/$tool; \
+        fi; \
+    done
+>>>>>>> origin/develop
 
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
@@ -138,7 +157,13 @@ RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts
 USER root
 RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
 
+# Pre-create user directories to avoid permission issues in post-create
+USER vscode
+RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
+    && chmod -R 755 ~/.m2 ~/.npm ~/.cache
+
 # Reset working directory
+USER root
 WORKDIR /workspaces
 
 # Default command

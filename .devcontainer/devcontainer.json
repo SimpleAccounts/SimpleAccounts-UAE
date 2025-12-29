@@ -78,7 +78,16 @@
   // Environment variables
   "containerEnv": {
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD": "1",
-    "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH": "/usr/bin/chromium"
+    "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH": "/usr/bin/chromium",
+    // JVM Performance Optimizations
+    "MAVEN_OPTS": "-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
+    "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
+    // Node.js Memory Optimization
+    "NODE_OPTIONS": "--max-old-space-size=4096",
+    // Bash history persistence
+    "HISTFILE": "/home/vscode/.bash_history_dir/bash_history",
+    // Git config persistence
+    "GIT_CONFIG_GLOBAL": "/home/vscode/.gitconfig_dir/gitconfig"
   },
 
   // Run as non-root user

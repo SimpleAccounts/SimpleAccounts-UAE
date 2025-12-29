@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 import { Loader, LeavePage } from 'components';
-import { AuthActions, CommonActions } from 'services/global';
+import { CommonActions } from 'services/global';
 import * as PayrollActions from './actions';
 import config from 'constants/config';
 

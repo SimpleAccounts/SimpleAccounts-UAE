@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, FormGroup, Row, Col, Label, Alert } from 'components/migration';
@@ -133,7 +133,7 @@ const ExplainDiv = props => {
     let amount = 0;
     list.map(obj => {
       for (let item in categoryList) {
-        if (categoryList.hasOwnProperty(item)) {
+        if (Object.prototype.hasOwnProperty.call(categoryList, item)) {
           let tempAmount;
           if (item === obj['categoryLabel']) {
             temp = categoryList[`${obj['categoryLabel']}`].filter(
@@ -229,8 +229,8 @@ const ExplainDiv = props => {
   if (selectedData !== '') {
     return (
       <div className="explain-modal-screen">
-        <div isOpen={openExplainTransactionModal} className="modal-primary">
-          <div toggle={() => {}} className="mb-2">
+        <div data-isopen={openExplainTransactionModal} className="modal-primary">
+          <div className="mb-2">
             <div className="header text">
               <h2>Explain AED {`${selectedData.withdrawalAmount}`}</h2>
             </div>

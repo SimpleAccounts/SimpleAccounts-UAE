@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 /**
  * Spring Security 6 Configuration
@@ -40,8 +40,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(customUserDetailsService);
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(customUserDetailsService);
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
 	}
@@ -57,9 +56,9 @@ public class WebSecurityConfig {
 			.csrf(csrf -> csrf
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.ignoringRequestMatchers(
-					new AntPathRequestMatcher("/rest/**"),
-					new AntPathRequestMatcher("/public/**"),
-					new AntPathRequestMatcher("/auth/**")
+					PathPatternRequestMatcher.withDefaults().matcher("/rest/**"),
+					PathPatternRequestMatcher.withDefaults().matcher("/public/**"),
+					PathPatternRequestMatcher.withDefaults().matcher("/auth/**")
 				)
 			)
 			.authorizeHttpRequests(auth -> auth

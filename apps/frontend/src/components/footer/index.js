@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './style.scss';
@@ -26,8 +25,8 @@ class Footer extends Component {
       <React.Fragment>
         <div className="d-flex align-items-center justify-content-between w-100">
           <img src={logo} className="m-2 footer-logo" alt="logo" />
-          <div className="pull-right" style={{ borderBlockColor: '#2064d8' }}>
-            {/* <select style={{ borderBlockColor: '#2064d8' }}
+          <div className="pull-right" style={{ borderBlockColor: '#1e6eff' }}>
+            {/* <select style={{ borderBlockColor: '#1e6eff' }}
 						onChange={this.renderHandleLanguageChange}>
 						<option value="en">En- English</option>
 						<option value="it">Fr- French</option>

@@ -1,5 +1,4 @@
 import { EMPLOYEEPAYROLL } from 'constants/types';
-import { objectOf } from 'prop-types';
 import { authApi } from 'utils';
 
 export const addMultipleEmployees = (payrollId, employeeListIds) => {
