@@ -1,5 +1,4 @@
 // Mock reactstrap components for testing
-import React from 'react';
 
 export const Row = ({ children, ...props }) => (
   <div className="row" {...props}>
