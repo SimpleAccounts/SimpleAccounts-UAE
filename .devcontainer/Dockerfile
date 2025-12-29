@@ -7,44 +7,11 @@ FROM mcr.microsoft.com/devcontainers/java:21-bookworm
 ARG NODE_VERSION="20"
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"
 
-<<<<<<< HEAD
 # ============================================
 # INSTALL TOOLS (baked in for faster startup)
 # ============================================
-
-# Install Docker CLI and Docker Compose
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        gnupg \
-        lsb-release \
-    && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list \
-    && apt-get update \
-    && apt-get -y install --no-install-recommends docker-ce-cli docker-compose-plugin \
-    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
-
-# Install GitHub CLI
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
-    && apt-get update \
-    && apt-get -y install --no-install-recommends gh \
-    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
-
-# ============================================
-# INSTALL SYSTEM DEPENDENCIES
-# ============================================
-
-=======
-# ============================================ 
-# INSTALL TOOLS (baked in for faster startup)
-# ============================================ 
 
 # Install Docker CLI, Docker Compose, GitHub CLI, and System Dependencies
->>>>>>> origin/develop
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         apt-transport-https \
@@ -123,16 +90,10 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-<<<<<<< HEAD
-# Set working directory
-=======
-<<<<<<< HEAD
-=======
 # Install code-server for web-based IDE access
 RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local \
     && echo "Code-server installed successfully"
 
->>>>>>> origin/develop
 # Install AI CLI tools (Claude, Codex, OpenAI, Gemini)
 # These are pre-installed but will be updated on container start via install-cli-tools.sh
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
@@ -140,8 +101,6 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
     npm install -g @openai/codex 2>/dev/null || true && \
     npm install -g openai 2>/dev/null || true && \
     npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
-<<<<<<< HEAD
-=======
 
 # Create symlinks in /usr/local/bin for npm global packages
 # This ensures CLI tools are in PATH regardless of NVM sourcing
@@ -151,7 +110,6 @@ RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm pr
             ln -sf "$NVM_BIN/$tool" /usr/local/bin/$tool; \
         fi; \
     done
->>>>>>> origin/develop
 
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
@@ -175,14 +133,9 @@ COPY --chown=vscode:vscode apps/backend/.mvn .mvn
 # Download dependencies to ~/.m2/repository
 # Uses Maven wrapper since Maven is not pre-installed in the base image
 # Note: Uses dependency:resolve instead of go-offline to avoid HTTP repository blocking issues
-<<<<<<< HEAD
-# Allow partial caching if some dependencies fail (|| true)
-RUN chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
-=======
 # Create wrapper dist directory first (older wrapper versions don't create parent dirs)
 # Allow partial caching if some dependencies fail (|| true)
 RUN mkdir -p ~/.m2/wrapper/dists && chmod +x mvnw && ./mvnw dependency:resolve -B -q || true
->>>>>>> origin/develop
 
 # Pre-cache NPM dependencies
 # Note: Using npm install with fallback to allow partial caching if lockfiles are out of sync
@@ -205,7 +158,6 @@ RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright 
 
 # Reset working directory
 USER root
->>>>>>> origin/develop
 WORKDIR /workspaces
 
 # Default command

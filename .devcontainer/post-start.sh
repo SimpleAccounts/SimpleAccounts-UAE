@@ -211,10 +211,6 @@ echo ""
 echo "CLI Tools:"
 echo "  claude    - Anthropic Claude Code CLI"
 echo "  codex     - OpenAI Codex CLI"
-<<<<<<< HEAD
-echo "  openai    - OpenAI CLI"
-=======
->>>>>>> origin/develop
 echo "  gemini    - Google Gemini CLI"
 echo "  cursor    - Cursor CLI"
 echo "  cursor-agent - Cursor agent CLI shim"
