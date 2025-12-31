@@ -33,17 +33,19 @@ services:
       - devcontainer-maven-cache:/home/vscode/.m2
       - devcontainer-npm-cache:/home/vscode/.npm
       # User config/credentials (persist in host home directory)
-      - ${HOME}/.devpod-mount/claude:/home/vscode/.claude
-      - ${HOME}/.devpod-mount/gemini:/home/vscode/.gemini
-      - ${HOME}/.devpod-mount/codex:/home/vscode/.codex
-      - ${HOME}/.devpod-mount/gh:/home/vscode/.config/gh
-      - ${HOME}/.devpod-mount/bash-history:/home/vscode/.bash_history_dir
-      - ${HOME}/.devpod-mount/gitconfig:/home/vscode/.gitconfig_dir
-      - ${HOME}/.devpod-mount/ssh:/home/vscode/.ssh
-      - ${HOME}/.devpod-mount/docker:/home/vscode/.docker
-      - ${HOME}/.devpod-mount/kube:/home/vscode/.kube
-      - ${HOME}/.devpod-mount/aws:/home/vscode/.aws
-      - ${HOME}/.devpod-mount/azure:/home/vscode/.azure
+      # For Coder: uses /home/coder/.coder-mount/${USERNAME}/
+      # For local: uses ${HOME}/.devcontainer-mount/
+      - ${HOME}/.devcontainer-mount/claude:/home/vscode/.claude
+      - ${HOME}/.devcontainer-mount/gemini:/home/vscode/.gemini
+      - ${HOME}/.devcontainer-mount/codex:/home/vscode/.codex
+      - ${HOME}/.devcontainer-mount/gh:/home/vscode/.config/gh
+      - ${HOME}/.devcontainer-mount/bash-history:/home/vscode/.bash_history_dir
+      - ${HOME}/.devcontainer-mount/gitconfig:/home/vscode/.gitconfig_dir
+      - ${HOME}/.devcontainer-mount/ssh:/home/vscode/.ssh
+      - ${HOME}/.devcontainer-mount/docker:/home/vscode/.docker
+      - ${HOME}/.devcontainer-mount/kube:/home/vscode/.kube
+      - ${HOME}/.devcontainer-mount/aws:/home/vscode/.aws
+      - ${HOME}/.devcontainer-mount/azure:/home/vscode/.azure
     command: sleep infinity
     # Share network namespace with db container for localhost access to all services
     network_mode: service:db
@@ -52,7 +54,7 @@ services:
       - redis
 
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     # Hostname is shared by all containers using network_mode: service:db
     # This sets the hostname for devcontainer and redis as well
     hostname: simpleaccounts-dev
@@ -61,9 +63,9 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
-      POSTGRES_USER: simpleaccounts
-      POSTGRES_PASSWORD: simpleaccounts_dev
-      POSTGRES_DB: simpleaccounts
+      POSTGRES_USER: ${POSTGRES_USER:-simpleaccounts}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-simpleaccounts_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-simpleaccounts}
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
       interval: 10s

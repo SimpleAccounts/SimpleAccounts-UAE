@@ -7,7 +7,7 @@
 #
 # Usage:
 #   cp docker-compose.override.yml.local-example docker-compose.override.yml
-#   devpod up . --provider docker
+#   For local development with VS Code Dev Containers
 #
 # Note: docker-compose.override.yml is gitignored
 # =============================================================================
