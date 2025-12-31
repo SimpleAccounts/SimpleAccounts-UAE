@@ -10,7 +10,7 @@ set -e
 
 # Configuration
 CODER_URL="${CODER_URL:-https://coder.dev.simpleaccounts.io}"
-CODER_SESSION_TOKEN="${CODER_SESSION_TOKEN:-cGmYiyiZV1-qE8akRLOW8cx8fIywwnKGv}"
+CODER_SESSION_TOKEN="${CODER_SESSION_TOKEN:-}"
 TEMPLATE_NAME="simpleaccounts-uae"
 TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -74,6 +74,14 @@ log_info "Checking prerequisites..."
 if ! command -v coder &> /dev/null; then
     log_error "Coder CLI not found. Install it first:"
     echo "  curl -fsSL https://coder.com/install.sh | sh"
+    exit 1
+fi
+
+if [ -z "$CODER_SESSION_TOKEN" ]; then
+    log_error "CODER_SESSION_TOKEN not set. Export it first:"
+    echo "  export CODER_SESSION_TOKEN=\"your-api-token-here\""
+    echo ""
+    echo "Get your token from: $CODER_URL → Account → Tokens"
     exit 1
 fi
 

@@ -5,7 +5,7 @@ Quick guide to deploy the SimpleAccounts-UAE template to your Coder instance.
 ## Prerequisites
 
 - ✅ Coder running at: https://coder.dev.simpleaccounts.io
-- ✅ API key: `cGmYiyiZV1-qE8akRLOW8cx8fIywwnKGv`
+- ✅ API key (get from Coder dashboard: Account → Tokens)
 - ✅ GitHub OAuth configured
 - ✅ Docker access on server
 - ✅ Traefik proxy running (optional, for custom domains)
@@ -40,7 +40,7 @@ curl -fsSL https://coder.com/install.sh | sh
 
 # Login to Coder
 export CODER_URL="https://coder.dev.simpleaccounts.io"
-export CODER_SESSION_TOKEN="cGmYiyiZV1-qE8akRLOW8cx8fIywwnKGv"
+export CODER_SESSION_TOKEN="your-api-token-here"
 coder login $CODER_URL
 
 # Create template

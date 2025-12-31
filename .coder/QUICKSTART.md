@@ -122,7 +122,7 @@ cd .coder && ./deploy.sh
 ```bash
 # Check Coder connection
 export CODER_URL="https://coder.dev.simpleaccounts.io"
-export CODER_SESSION_TOKEN="cGmYiyiZV1-qE8akRLOW8cx8fIywwnKGv"
+export CODER_SESSION_TOKEN="your-api-token-here"
 coder whoami
 
 # Validate template
