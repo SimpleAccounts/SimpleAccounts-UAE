@@ -145,7 +145,6 @@ if [ "$TEMPLATE_EXISTS" = true ] || [ "$UPDATE_MODE" = true ]; then
 
     coder templates push "$TEMPLATE_NAME" \
         --directory "." \
-        --name "SimpleAccounts UAE" \
         --message "Updated from deploy.sh at $(date)" \
         --yes
 
@@ -156,7 +155,6 @@ else
 
     coder templates create "$TEMPLATE_NAME" \
         --directory "." \
-        --name "SimpleAccounts UAE" \
         --message "Initial deployment" \
         --yes
 
