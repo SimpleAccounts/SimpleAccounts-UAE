@@ -53,16 +53,15 @@ code .
 
 ## Files
 
-| File                          | Purpose                                           |
-| ----------------------------- | ------------------------------------------------- |
-| `devcontainer.json`           | VS Code devcontainer configuration                |
-| `docker-compose.yml`          | Container orchestration                           |
-| `docker-compose.override.yml` | Local overrides (secrets) - not committed         |
-| `Dockerfile`                  | Container image definition                        |
-| `init-db.sql`                 | PostgreSQL initialization script                  |
-| `post-create.sh`              | Runs once on container creation                   |
-| `post-start.sh`               | Runs on every container start                     |
-| `proxy/`                      | Traefik reverse proxy for multi-user environments |
+| File                          | Purpose                                   |
+| ----------------------------- | ----------------------------------------- |
+| `devcontainer.json`           | VS Code devcontainer configuration        |
+| `docker-compose.yml`          | Container orchestration                   |
+| `docker-compose.override.yml` | Local overrides (secrets) - not committed |
+| `Dockerfile`                  | Container image definition                |
+| `init-db.sql`                 | PostgreSQL initialization script          |
+| `post-create.sh`              | Runs once on container creation           |
+| `post-start.sh`               | Runs on every container start             |
 
 ## Volumes
 
