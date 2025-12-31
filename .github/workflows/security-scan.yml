@@ -84,6 +84,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           exit-code: '1' # Fail on CRITICAL/HIGH vulnerabilities
           ignore-unfixed: true # Only fail on fixable issues
+          timeout: '15m0s' # Allow more time for image scanning
 
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -99,6 +100,7 @@ jobs:
           image-ref: 'simpleaccounts-devcontainer:scan'
           format: 'table'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          timeout: '15m0s' # Allow more time for image scanning
 
   scan-dependencies:
     name: Scan Dependencies
@@ -117,6 +119,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           exit-code: '0' # Don't fail, just report
           skip-dirs: 'node_modules,target,.git'
+          timeout: '15m0s' # Allow more time for Maven dependency resolution
 
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -134,6 +137,7 @@ jobs:
           format: 'table'
           severity: 'CRITICAL,HIGH,MEDIUM'
           skip-dirs: 'node_modules,target,.git'
+          timeout: '15m0s' # Allow more time for Maven dependency resolution
 
   scan-published-image:
     name: Scan Published Image
