@@ -136,3 +136,4 @@ scripts/README-clear-database.md
 scripts/pre-pull-docker-images.sh
 apps/backend/.dockerignore
 apps/frontend/.dockerignore
+.coder/.terraform/

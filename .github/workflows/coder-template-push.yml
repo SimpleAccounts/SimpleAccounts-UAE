@@ -1,0 +1,77 @@
+name: Deploy Coder Template
+
+on:
+  push:
+    branches: [develop, main, master]
+    paths:
+      - '.coder/template.tf'
+      - '.coder/build.yaml'
+      - '.coder/.terraform.lock.hcl'
+      - '.github/workflows/coder-template-push.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-template:
+    name: Push Template to Coder
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Coder CLI
+        run: |
+          curl -fsSL https://coder.com/install.sh | sh
+          sudo mv ./coder /usr/local/bin/coder
+          coder version
+
+      - name: Login to Coder
+        env:
+          CODER_URL: https://coder.dev.simpleaccounts.io
+          CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
+        run: |
+          coder login --token "$CODER_SESSION_TOKEN" "$CODER_URL"
+          echo "✅ Logged in to Coder"
+
+      - name: Initialize Terraform
+        working-directory: .coder
+        run: |
+          terraform init
+          echo "✅ Terraform initialized"
+
+      - name: Push Template
+        working-directory: .coder
+        env:
+          CODER_URL: https://coder.dev.simpleaccounts.io
+          CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
+        run: |
+          # Clear provisioner tags to avoid conflicts
+          coder templates push simpleaccounts-uae \
+            --provisioner-tag="-" \
+            --message "Automated deploy from commit ${{ github.sha }}" \
+            --yes
+
+          echo "✅ Template pushed successfully"
+
+      - name: Verify Template
+        env:
+          CODER_URL: https://coder.dev.simpleaccounts.io
+          CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
+        run: |
+          coder templates list | grep simpleaccounts-uae
+          echo "✅ Template verified"
+
+      - name: Comment on commit (if PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Coder template updated successfully!\n\n**Template**: `simpleaccounts-uae`\n**Commit**: `${{ github.sha }}`\n\nView template: https://coder.dev.simpleaccounts.io/templates/simpleaccounts-uae'
+            })
