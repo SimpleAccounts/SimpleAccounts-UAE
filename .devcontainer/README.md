@@ -4,7 +4,19 @@ This directory contains the development container configuration for SimpleAccoun
 
 ## Quick Start
 
-### Single User (Local Development)
+### Coder Workspaces (Recommended)
+
+For team development with cloud workspaces:
+
+1. **Login**: https://coder.dev.simpleaccounts.io
+2. **Create Workspace**: Select "SimpleAccounts UAE" template
+3. **Start Coding**: Automatically provisions PostgreSQL, Redis, and dev tools
+
+See [../.coder/README.md](../.coder/README.md) for complete Coder guide.
+
+### Local Development (VS Code)
+
+For local development on your machine:
 
 ```bash
 # Open in VS Code with Dev Containers extension
@@ -12,33 +24,9 @@ code .
 # Then: Cmd+Shift+P > "Dev Containers: Reopen in Container"
 ```
 
-### Multi-User (Shared Dev Server)
-
-```bash
-# Launch via DevPod (from your local machine)
-devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
-  --provider ssh \
-  --provider-option HOST=<dev-server>
-
-# Container auto-connects to Traefik proxy for shareable URLs
-```
-
 ---
 
-## Choose Your Setup
-
-| Setup           | Best For                              | Access URLs                        |
-| --------------- | ------------------------------------- | ---------------------------------- |
-| **Single User** | Local development, one developer      | `localhost:3000`, `localhost:8080` |
-| **Multi-User**  | Shared dev server, team collaboration | `alice.192-168-1-100.nip.io`       |
-
----
-
-## Single-User Setup (Default)
-
-Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
-
-### Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -54,103 +42,27 @@ Uses `.devcontainer/docker-compose.yml` and `devcontainer.json`.
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Service Connectivity
+## Service Connectivity
 
-| Service    | Access From DevContainer |
-| ---------- | ------------------------ |
-| PostgreSQL | `db:5432`                |
-| Redis      | `redis:6379`             |
-| Frontend   | `localhost:3000`         |
-| Backend    | `localhost:8080`         |
-
-### Why Internal Network?
-
-1. **Multi-user Isolation**: Each user gets their own network namespace
-2. **Traefik Compatible**: Devcontainer can join Traefik network for external routing
-3. **Simple Hostnames**: Services use predictable hostnames (`db`, `redis`)
-4. **Consistent**: Same connection strings work for single and multi-user setups
-
----
-
-## Multi-User Setup (Shared Server)
-
-Uses `.devcontainer/proxy/` with Traefik reverse proxy.
-
-### Architecture
-
-```
-                              Dev Server
-┌──────────────────────────────────────────────────────────────┐
-│                                                              │
-│  ┌─────────────────┐                                         │
-│  │  Traefik Proxy  │  ← Port 80 (shared)                     │
-│  │   (dev-proxy)   │                                         │
-│  └────────┬────────┘                                         │
-│           │                                                  │
-│     ┌─────┴─────┬─────────────┐                              │
-│     │           │             │                              │
-│     ▼           ▼             ▼                              │
-│  ┌──────┐   ┌──────┐     ┌──────┐                            │
-│  │alice │   │ bob  │     │carol │  ← Isolated containers     │
-│  │ :3000│   │ :3000│     │ :3000│                            │
-│  │ :8080│   │ :8080│     │ :8080│                            │
-│  └──┬───┘   └──┬───┘     └──┬───┘                            │
-│     │          │            │                                │
-│  ┌──┴───┐   ┌──┴───┐     ┌──┴───┐                            │
-│  │ DB   │   │ DB   │     │ DB   │  ← Isolated databases      │
-│  │Redis │   │Redis │     │Redis │                            │
-│  └──────┘   └──────┘     └──────┘                            │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
-```
-
-### Features
-
-- **Isolated environments**: Each user has their own DB, Redis, and container
-- **Shareable URLs**: Share `http://alice.192-168-1-100.nip.io` with teammates
-- **No port conflicts**: Traefik routes by hostname, not port
-- **Zero DNS config**: Uses nip.io for automatic DNS resolution
-
-### Usage
-
-```bash
-# Launch via DevPod (from your local machine)
-devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
-  --provider ssh \
-  --provider-option HOST=dev-server
-
-# Container auto-registers with Traefik. Access URLs shown at startup:
-#   Frontend: http://<username>.192-168-1-100.nip.io
-#   Backend:  http://<username>-api.192-168-1-100.nip.io
-```
-
-### User Management
-
-```bash
-# List active user containers
-docker ps --filter "name=simpleaccounts" --format "table {{.Names}}\t{{.Status}}"
-
-# Stop user environment (via DevPod)
-devpod stop simpleaccounts-uae
-
-# Delete user environment (via DevPod)
-devpod delete simpleaccounts-uae
-```
-
-See [proxy/README.md](proxy/README.md) for Traefik proxy documentation.
-
----
+| Service    | Access From Container |
+| ---------- | --------------------- |
+| PostgreSQL | `db:5432`             |
+| Redis      | `redis:6379`          |
+| Frontend   | `localhost:3000`      |
+| Backend    | `localhost:8080`      |
 
 ## Files
 
-| File                          | Purpose                                                  |
-| ----------------------------- | -------------------------------------------------------- |
-| `devcontainer.json`           | VS Code devcontainer configuration                       |
-| `docker-compose.yml`          | Single-user container orchestration                      |
-| `docker-compose.override.yml` | Local overrides (secrets, custom config) - not committed |
-| `Dockerfile`                  | Container image definition                               |
-| `init-db.sql`                 | PostgreSQL initialization script                         |
-| `proxy/`                      | Multi-user setup with Traefik proxy                      |
+| File                          | Purpose                                           |
+| ----------------------------- | ------------------------------------------------- |
+| `devcontainer.json`           | VS Code devcontainer configuration                |
+| `docker-compose.yml`          | Container orchestration                           |
+| `docker-compose.override.yml` | Local overrides (secrets) - not committed         |
+| `Dockerfile`                  | Container image definition                        |
+| `init-db.sql`                 | PostgreSQL initialization script                  |
+| `post-create.sh`              | Runs once on container creation                   |
+| `post-start.sh`               | Runs on every container start                     |
+| `proxy/`                      | Traefik reverse proxy for multi-user environments |
 
 ## Volumes
 
@@ -166,35 +78,15 @@ Named Docker volumes (user-specific to avoid conflicts):
 
 ### Credentials & Configuration (Host Bind Mounts)
 
-Persisted to host directory `~/.devpod-mount/` for portability:
+For Coder workspaces, persisted to `/home/coder/.coder-mount/`:
 
-- `~/.devpod-mount/claude` → ~/.claude (Claude CLI)
-- `~/.devpod-mount/gemini` → ~/.gemini (Gemini CLI)
-- `~/.devpod-mount/codex` → ~/.codex (Codex CLI)
-- `~/.devpod-mount/gh` → ~/.config/gh (GitHub CLI)
-- `~/.devpod-mount/ssh` → ~/.ssh (SSH keys)
-- `~/.devpod-mount/docker` → ~/.docker (Docker config)
-- `~/.devpod-mount/kube` → ~/.kube (Kubernetes config)
-- `~/.devpod-mount/aws` → ~/.aws (AWS credentials)
-- `~/.devpod-mount/azure` → ~/.azure (Azure credentials)
-- `~/.devpod-mount/gitconfig` → ~/.gitconfig_dir (Git config)
-- `~/.devpod-mount/bash-history` → ~/.bash_history_dir (Bash history)
-- `~/.devpod-mount/code-server` → ~/.config/code-server (Web IDE config)
-
-## Local Overrides
-
-For secrets and local customization, create `docker-compose.override.yml`:
-
-```yaml
-services:
-  devcontainer:
-    environment:
-      - MY_SECRET_KEY=xxx
-    volumes:
-      - /path/to/local/secrets:/secrets:ro
-```
-
-This file is gitignored and won't be committed.
+- `claude` → ~/.claude (Claude CLI)
+- `gemini` → ~/.gemini (Gemini CLI)
+- `gh` → ~/.config/gh (GitHub CLI)
+- `ssh` → ~/.ssh (SSH keys)
+- `docker` → ~/.docker (Docker config)
+- `gitconfig` → ~/.gitconfig_dir (Git config)
+- `bash-history` → ~/.bash_history_dir (Bash history)
 
 ## Common Tasks
 
@@ -245,14 +137,17 @@ Credentials are stored in named volumes and should persist. Check volume exists:
 docker volume ls | grep "$(whoami)-"
 ```
 
-### Multi-user: URL not accessible
+## For Team Development
 
-Check Traefik is running and routing correctly:
+This devcontainer configuration is used by **Coder** to provision cloud workspaces for the team.
 
-```bash
-# Check proxy is running
-docker ps | grep dev-proxy
+**Coder Advantages:**
 
-# Check your container is registered
-docker logs dev-proxy 2>&1 | grep <your-username>
-```
+- ✅ One-click workspace creation
+- ✅ GitHub OAuth (no manual setup)
+- ✅ Custom domains: `*.dev.simpleaccounts.io`
+- ✅ Auto-stop after inactivity
+- ✅ Resource quotas and monitoring
+- ✅ Multi-IDE support (VS Code, Cursor, SSH)
+
+See [../.coder/README.md](../.coder/README.md) for complete guide.
