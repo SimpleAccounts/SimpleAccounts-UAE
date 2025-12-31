@@ -25,7 +25,6 @@ jobs:
       - name: Install Coder CLI
         run: |
           curl -fsSL https://coder.com/install.sh | sh
-          sudo mv ./coder /usr/local/bin/coder
           coder version
 
       - name: Login to Coder
