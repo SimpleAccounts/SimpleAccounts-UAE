@@ -8,6 +8,10 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "~> 3.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 }
 
@@ -39,6 +43,12 @@ data "coder_parameter" "git_clone_url" {
 # Docker provider configuration
 provider "docker" {
   host = "unix:///var/run/docker.sock"
+}
+
+# Random password for PostgreSQL (generated once per workspace)
+resource "random_password" "postgres" {
+  length  = 32
+  special = false # Avoid special chars that might cause shell escaping issues
 }
 
 # Persistent volumes
@@ -76,7 +86,7 @@ resource "docker_container" "postgres" {
 
   env = [
     "POSTGRES_USER=simpleaccounts",
-    "POSTGRES_PASSWORD=simpleaccounts_dev",
+    "POSTGRES_PASSWORD=${random_password.postgres.result}",
     "POSTGRES_DB=simpleaccounts"
   ]
 
@@ -252,6 +262,13 @@ resource "docker_container" "workspace" {
   env = [
     "CODER_AGENT_TOKEN=${coder_agent.main.token}",
     "CODER_AGENT_URL=${data.coder_workspace.me.access_url}",
+    # Database credentials (auto-generated per workspace)
+    "POSTGRES_USER=simpleaccounts",
+    "POSTGRES_PASSWORD=${random_password.postgres.result}",
+    "POSTGRES_DB=simpleaccounts",
+    "POSTGRES_HOST=db",
+    "POSTGRES_PORT=5432",
+    # Application settings
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
     "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium",
     "MAVEN_OPTS=-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
@@ -378,6 +395,9 @@ resource "docker_container" "workspace" {
     docker_container.postgres,
     docker_container.redis
   ]
+
+  # Auto-restart on failure
+  restart = "unless-stopped"
 
   command = ["sh", "-c", coder_agent.main.init_script]
 }

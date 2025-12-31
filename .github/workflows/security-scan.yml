@@ -1,0 +1,223 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [develop, main, master]
+    paths:
+      - '.devcontainer/Dockerfile'
+      - '.devcontainer/docker-compose.yml'
+      - '.github/workflows/security-scan.yml'
+  pull_request:
+    paths:
+      - '.devcontainer/Dockerfile'
+      - '.devcontainer/docker-compose.yml'
+      - '.github/workflows/security-scan.yml'
+  schedule:
+    # Run weekly on Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write # For GitHub Security tab
+
+jobs:
+  scan-dockerfile:
+    name: Scan Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner on Dockerfile
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.devcontainer/Dockerfile'
+          format: 'sarif'
+          output: 'trivy-dockerfile-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          exit-code: '0' # Don't fail on findings, just report
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-dockerfile-results.sarif'
+          category: 'dockerfile'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.devcontainer/Dockerfile'
+          format: 'table'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+  scan-docker-image:
+    name: Scan Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image for scanning
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          push: false
+          load: true
+          tags: simpleaccounts-devcontainer:scan
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run Trivy vulnerability scanner on image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'simpleaccounts-devcontainer:scan'
+          format: 'sarif'
+          output: 'trivy-image-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1' # Fail on CRITICAL/HIGH vulnerabilities
+          ignore-unfixed: true # Only fail on fixable issues
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-image-results.sarif'
+          category: 'docker-image'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        if: always()
+        with:
+          image-ref: 'simpleaccounts-devcontainer:scan'
+          format: 'table'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+  scan-dependencies:
+    name: Scan Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner on filesystem
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0' # Don't fail, just report
+          skip-dirs: 'node_modules,target,.git'
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          category: 'dependencies'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        if: always()
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          skip-dirs: 'node_modules,target,.git'
+
+  scan-published-image:
+    name: Scan Published Image
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Run Trivy vulnerability scanner on published image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest'
+          format: 'sarif'
+          output: 'trivy-published-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0' # Don't fail scheduled scans
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-published-results.sarif'
+          category: 'published-image'
+
+      - name: Run Trivy vulnerability scanner (table output)
+        uses: aquasecurity/trivy-action@master
+        if: always()
+        with:
+          image-ref: 'ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest'
+          format: 'table'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+      - name: Create issue if vulnerabilities found
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔒 Security Alert: Vulnerabilities in Published DevContainer Image';
+            const body = `
+            ## Security Scan Failed
+
+            Trivy detected CRITICAL or HIGH vulnerabilities in the published DevContainer image.
+
+            **Image:** \`ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest\`
+            **Scan Date:** ${new Date().toISOString()}
+            **Workflow:** [View Run](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+            ### Next Steps
+
+            1. Review the scan results in the workflow logs
+            2. Update base images or dependencies
+            3. Rebuild and push the updated image
+            4. Re-run this workflow to verify the fix
+
+            ### View Results
+
+            - [Security Tab](${context.payload.repository.html_url}/security)
+            - [Workflow Run](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+            ---
+            *This issue was automatically created by the Security Scan workflow.*
+            `;
+
+            // Check if an issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['security', 'trivy']
+            });
+
+            const existingIssue = issues.data.find(issue => issue.title === title);
+
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'trivy', 'high-priority']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `🔄 **Update:** Vulnerabilities still present in latest scan.\n\n${body}`
+              });
+            }

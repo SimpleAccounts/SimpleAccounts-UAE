@@ -63,9 +63,9 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
-      POSTGRES_USER: simpleaccounts
-      POSTGRES_PASSWORD: simpleaccounts_dev
-      POSTGRES_DB: simpleaccounts
+      POSTGRES_USER: ${POSTGRES_USER:-simpleaccounts}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-simpleaccounts_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-simpleaccounts}
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
       interval: 10s

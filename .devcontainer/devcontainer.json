@@ -82,8 +82,8 @@
     // JVM Performance Optimizations
     "MAVEN_OPTS": "-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
     "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
-    // Node.js Memory Optimization
-    "NODE_OPTIONS": "--max-old-space-size=4096",
+    // Node.js Memory Optimization (2GB for 4GB RAM container)
+    "NODE_OPTIONS": "--max-old-space-size=2048",
     // Bash history persistence
     "HISTFILE": "/home/vscode/.bash_history_dir/bash_history",
     // Git config persistence
