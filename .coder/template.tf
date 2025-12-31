@@ -95,6 +95,13 @@ resource "docker_container" "postgres" {
     container_path = "/var/lib/postgresql/data"
   }
 
+  # Database initialization script (creates extensions and test database)
+  volumes {
+    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sql"
+    container_path = "/docker-entrypoint-initdb.d/init.sql"
+    read_only      = true
+  }
+
   networks_advanced {
     name    = docker_network.workspace.name
     aliases = ["db", "postgres"]
