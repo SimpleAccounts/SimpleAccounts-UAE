@@ -1,290 +1,235 @@
 # New User Onboarding
 
-Welcome to SimpleAccounts UAE development! Choose your setup based on your environment.
+Welcome to SimpleAccounts UAE development! This guide will help you get started with your development environment.
 
-## Choose Your Setup
+## Quick Start with Coder (Recommended)
 
-| Setup                        | Best For                              | Command                        |
-| ---------------------------- | ------------------------------------- | ------------------------------ |
-| **Multi-User (Recommended)** | Shared dev server, team collaboration | `devpod up ... --provider ssh` |
-| **Single User**              | Local development, solo work          | `devpod up simpleaccounts-uae` |
+Coder provides a one-click cloud development environment with everything pre-configured.
 
----
+### Step 1: Access Coder (2 minutes)
 
-## Option 1: Multi-User Setup (Shared Dev Server)
+1. **Open**: https://coder.dev.simpleaccounts.io
+2. **Sign in with GitHub**: Click "Sign in with GitHub"
+3. **Authorize**: Grant access to SimpleAccounts organization
 
-Best for teams sharing a development server. Each developer gets isolated containers with shareable URLs.
+### Step 2: Create Your Workspace (3 minutes)
 
-### Quick Start
+1. Click **"Create Workspace"** button
+2. **Select Template**: "SimpleAccounts UAE"
+3. **Configure**:
+   - **Workspace Name**: `dev` (or any name you prefer)
+   - **Dotfiles** (optional): Your personal dotfiles repo URL
+   - **Repository**: Keep default (SimpleAccounts-UAE)
+4. Click **"Create Workspace"**
 
-```bash
-# From your local machine, launch via DevPod
-devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git \
-  --provider ssh \
-  --provider-option HOST=<dev-server-ip>
+Wait ~1-2 minutes for automatic provisioning...
 
-# Container auto-connects to Traefik proxy for shareable URLs
-```
+### Step 3: Start Coding (Instant!)
 
-### What You Get
+Choose your preferred IDE:
 
-After the container starts, you'll see URLs printed:
+#### Option A: VS Code Web (Browser)
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Option 1: nip.io URLs (No DNS config needed!)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Frontend: http://alice.192-168-1-100.nip.io
-  Backend:  http://alice-api.192-168-1-100.nip.io
-  Dashboard: http://proxy.192-168-1-100.nip.io:8090
-```
+- Click **"Open in Browser"** in Coder dashboard
+- No installation needed - code directly in your browser
 
-### Connect VS Code
+#### Option B: VS Code Desktop
 
-DevPod automatically opens VS Code when the workspace is ready. Alternatively:
+- Click **"Open in VS Code"** in Coder dashboard
+- VS Code automatically connects to your workspace
+- Extensions sync automatically
 
-```bash
-# Open in VS Code
-devpod up simpleaccounts-uae --ide vscode
+#### Option C: Cursor IDE
 
-# Or use the Web IDE
-# http://<username>-ide.<server-ip>.nip.io
-```
+1. In Coder dashboard, click **"SSH"** → **"Configure"**
+2. Copy SSH config to `~/.ssh/config`
+3. In Cursor: **File** → **Remote-SSH** → **Connect to Host** → `coder.your-workspace`
 
-### Share Your Environment
-
-Share your URLs with teammates for code review or pair programming:
-
-```
-http://alice.192-168-1-100.nip.io
-```
-
-Anyone on the same network can access your running application!
-
-### Architecture
-
-```
-                              Dev Server
-┌──────────────────────────────────────────────────────────────┐
-│  ┌─────────────────┐                                         │
-│  │  Traefik Proxy  │  ← Shared reverse proxy                 │
-│  └────────┬────────┘                                         │
-│           │                                                  │
-│     ┌─────┴─────┬─────────────┐                              │
-│     ▼           ▼             ▼                              │
-│  ┌──────┐   ┌──────┐     ┌──────┐                            │
-│  │alice │   │ bob  │     │carol │  ← Isolated per user       │
-│  │ + DB │   │ + DB │     │ + DB │                            │
-│  └──────┘   └──────┘     └──────┘                            │
-└──────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Option 2: Single User Setup (DevPod)
-
-Best for local development or when you have your own machine.
-
-### One-Click Setup (Recommended)
-
-#### For Admin: Add New User
-
-1. Get the user's **public SSH key** (ask them to run `cat ~/.ssh/id_ed25519.pub`)
-
-2. On the server, run:
-
-   ```bash
-   sudo ./scripts/admin-add-user.sh <username> "<public-ssh-key>"
-   ```
-
-3. Send the user the generated one-liner command
-
-#### For User: Start Coding
-
-Run the one-liner provided by your admin:
+### Step 4: Verify Environment (2 minutes)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/SimpleAccounts/SimpleAccounts-UAE/develop/scripts/user-quick-setup.sh | bash -s -- <username> <server>
+# Check PostgreSQL
+pg_isready -h db -p 5432 -U simpleaccounts
+
+# Check Redis
+redis-cli -h redis ping
+
+# Check repository
+git status
+
+# Start frontend (in terminal)
+cd apps/frontend
+npm run dev
+
+# Start backend (in new terminal)
+cd apps/backend
+./mvnw spring-boot:run
 ```
 
-That's it! Then open VS Code:
+### Your Workspace URLs
+
+```
+Frontend:  https://<your-username>-dev.dev.simpleaccounts.io
+Backend:   https://<your-username>-dev-api.dev.simpleaccounts.io
+```
+
+## What's Included
+
+### Pre-Installed Services
+
+- **PostgreSQL 16**: Database server (accessible at `db:5432`)
+- **Redis 7**: Cache and session storage (accessible at `redis:6379`)
+- **All Dev Tools**: Java 21, Node 20, Maven, npm, Docker CLI, GitHub CLI
+
+### Database Connection
 
 ```bash
-devpod up simpleaccounts-uae --ide vscode
+# From inside workspace
+psql -h db -p 5432 -U simpleaccounts -d simpleaccounts
+
+# Credentials
+User: simpleaccounts
+Password: simpleaccounts_dev
+Database: simpleaccounts
 ```
 
-### Alternative: Full Self-Service Setup
-
-If you need to set up everything yourself:
+### Common Commands
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/SimpleAccounts/SimpleAccounts-UAE/develop/scripts/devpod-setup.sh | bash
+# Install dependencies (if not done automatically)
+npm install
+cd apps/frontend && npm install
+cd apps/backend && ./mvnw compile
+
+# Start development servers
+npm run frontend        # Frontend (Vite)
+npm run backend:run     # Backend (Spring Boot)
+
+# Run tests
+npm run frontend:test
+npm run backend:test
+
+# Build for production
+npm run frontend:build
+npm run backend:build
 ```
 
-This will:
+## Workspace Features
 
-1. Install DevPod (if needed)
-2. Generate SSH key
-3. Copy key to server (requires password)
-4. Configure SSH
-5. Add DevPod provider
-6. Create workspace
+### Auto-Stop
 
----
+- Workspaces automatically stop after **30 minutes of inactivity**
+- Restart anytime from Coder dashboard (takes ~10 seconds)
 
-## Quick Reference
+### Persistent Data
 
-### Multi-User Commands
+Your workspace persists:
 
-| Task                  | Command                                                        |
-| --------------------- | -------------------------------------------------------------- |
-| Setup environment     | `devpod up ... --provider ssh --provider-option HOST=<server>` |
-| List active users     | `docker ps --filter "name=simpleaccounts"`                     |
-| Stop your environment | `devpod stop simpleaccounts-uae`                               |
-| View your logs        | `devpod logs simpleaccounts-uae`                               |
-| Open VS Code          | `devpod up simpleaccounts-uae --ide vscode`                    |
+- ✅ Git repository and all code changes
+- ✅ Database data
+- ✅ Redis data
+- ✅ npm and Maven caches
+- ✅ SSH keys and credentials
+- ✅ Git configuration
+- ✅ Bash history
 
-### Single-User (DevPod) Commands
+### Resource Limits
 
-| Task               | Command                                     |
-| ------------------ | ------------------------------------------- |
-| Open in VS Code    | `devpod up simpleaccounts-uae --ide vscode` |
-| SSH into workspace | `ssh simpleaccounts-uae.devpod`             |
-| Web IDE (browser)  | `http://localhost:8443` (after SSH)         |
-| Stop workspace     | `devpod stop simpleaccounts-uae`            |
-| Start workspace    | `devpod up simpleaccounts-uae`              |
-| Delete workspace   | `devpod delete simpleaccounts-uae`          |
-| View logs          | `devpod logs simpleaccounts-uae`            |
+Each workspace has:
 
----
+- **CPU**: 2 cores
+- **RAM**: 4GB
+- **Disk**: Shared from server
 
-## First-Time Auth (Inside Workspace)
+## Alternative: Local Development
 
-After your workspace is running, authenticate these services:
+If you prefer local development on your machine:
+
+### Prerequisites
+
+- **Node.js** >= 20.x
+- **Java** 21
+- **Maven** 3.6+
+- **PostgreSQL** 16+
+- **Redis** 7+
+- **Docker** (for VS Code DevContainers)
+
+### VS Code DevContainer (Local)
+
+1. Install [VS Code](https://code.visualstudio.com/)
+2. Install [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Open repository in VS Code
+4. Click "Reopen in Container" when prompted
+
+### Manual Setup (Local)
 
 ```bash
-# Authenticate GitHub
-gh auth login
+# Clone repository
+git clone https://github.com/SimpleAccounts/SimpleAccounts-UAE.git
+cd SimpleAccounts-UAE
 
-# Authenticate Claude (optional)
-claude
+# Install dependencies
+npm install
+
+# Start PostgreSQL and Redis (via Docker)
+docker run -d --name postgres -p 5432:5432 \
+  -e POSTGRES_USER=simpleaccounts \
+  -e POSTGRES_PASSWORD=simpleaccounts_dev \
+  -e POSTGRES_DB=simpleaccounts \
+  postgres:16-alpine
+
+docker run -d --name redis -p 6379:6379 redis:7-alpine
+
+# Start frontend
+cd apps/frontend
+npm run dev
+
+# Start backend (in new terminal)
+cd apps/backend
+./mvnw spring-boot:run
 ```
 
----
+## Getting Help
 
-## Troubleshooting
+### Documentation
 
-### Multi-User Setup
+- **Coder Guide**: [.coder/README.md](../.coder/README.md)
+- **DevContainer Guide**: [.devcontainer/README.md](README.md)
+- **Project README**: [../README.md](../README.md)
 
-#### URL not accessible
+### Support Channels
+
+- **GitHub Issues**: https://github.com/SimpleAccounts/SimpleAccounts-UAE/issues
+- **GitHub Discussions**: https://github.com/SimpleAccounts/SimpleAccounts-UAE/discussions
+- **Coder Dashboard**: https://coder.dev.simpleaccounts.io
+
+### Common Issues
+
+#### Can't access workspace
+
+- Check Coder dashboard for workspace status
+- Try restarting workspace
+- Contact your Coder admin
+
+#### Database connection failed
 
 ```bash
-# Check proxy is running
-docker ps | grep dev-proxy
-
-# Check your container is running
-docker ps | grep simpleaccounts
-
-# View proxy logs
-docker logs dev-proxy
+# Wait for PostgreSQL to be ready
+until pg_isready -h db -p 5432 -U simpleaccounts -q; do sleep 1; done
 ```
 
-#### Container won't start
+#### Frontend/Backend not loading
 
-```bash
-# Check DevPod logs
-devpod logs simpleaccounts-uae
+- Ensure you're using the correct ports (3000 for frontend, 8080 for backend)
+- Check if processes are running: `ps aux | grep node` or `ps aux | grep java`
+- Restart the dev server
 
-# Check container logs directly
-docker logs $(docker ps -q --filter "name=simpleaccounts")
-```
+## Next Steps
 
-### Single-User (DevPod) Setup
+1. ✅ **Create your first workspace**
+2. ✅ **Familiarize yourself with the codebase**
+3. ✅ **Read the project documentation**
+4. ✅ **Make your first commit**
+5. ✅ **Join team discussions**
 
-#### SSH Connection Failed
-
-```bash
-# Test SSH directly
-ssh <username>-devpod
-
-# Check your key is on server
-ssh <username>@<server> 'cat ~/.ssh/authorized_keys'
-```
-
-#### Workspace Won't Start
-
-```bash
-# Check status
-devpod status simpleaccounts-uae
-
-# View logs
-devpod logs simpleaccounts-uae
-
-# Recreate if needed
-devpod delete simpleaccounts-uae
-devpod up git@github.com:SimpleAccounts/SimpleAccounts-UAE.git --provider <username>-ssh --id simpleaccounts-uae
-```
-
-#### Permission Denied in Container
-
-```bash
-# On server, fix ownership
-sudo chown -R 1000:1000 /home/<username>/.devpod-mount/
-```
-
----
-
-## Architecture Comparison
-
-### Multi-User (Shared Server)
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Dev Server                                                   │
-│  ┌─────────────────┐                                          │
-│  │  Traefik Proxy  │ ← Routes by hostname                     │
-│  └────────┬────────┘                                          │
-│           │                                                   │
-│  ┌────────┴────────┐                                          │
-│  │  User Containers │ ← Each user isolated                    │
-│  │  (alice, bob...) │                                         │
-│  └──────────────────┘                                         │
-└──────────────────────────────────────────────────────────────┘
-         ▲
-         │ HTTP (nip.io URLs)
-         │
-┌────────┴────────┐
-│  Your Browser   │
-└─────────────────┘
-```
-
-### Single-User (DevPod)
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Your Machine                                                 │
-│  ┌────────────────┐                                          │
-│  │ DevPod Client  │ ──SSH──►  Dev Server                     │
-│  │ VS Code        │           ┌──────────────────────────┐   │
-│  └────────────────┘           │ Docker Container         │   │
-│                               │ ├─ PostgreSQL :5432      │   │
-│                               │ ├─ Redis      :6379      │   │
-│                               │ ├─ Frontend   :3000      │   │
-│                               │ ├─ Backend    :8080      │   │
-│                               │ └─ Code-Server:8443      │   │
-│                               └──────────────────────────┘   │
-└──────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Scripts Reference
-
-| Script                       | Location               | Purpose                             |
-| ---------------------------- | ---------------------- | ----------------------------------- |
-| `install-traefik-service.sh` | `.devcontainer/proxy/` | Install Traefik proxy (admin)       |
-| `post-create.sh`             | `.devcontainer/`       | Initial container setup             |
-| `post-start.sh`              | `.devcontainer/`       | Container startup (Traefik connect) |
-| `admin-add-user.sh`          | `scripts/`             | Admin adds new DevPod user          |
-| `user-quick-setup.sh`        | `scripts/`             | User one-click DevPod setup         |
-| `devpod-setup.sh`            | `scripts/`             | Full self-service DevPod setup      |
+Welcome to the team! 🎉

@@ -37,16 +37,15 @@ SimpleAccounts-UAE/
 
 ## Quick Start
 
-### Option 1: DevPod (Recommended)
+### Option 1: Coder (Recommended)
 
-Zero-config development with pre-configured containers:
+Zero-config development with cloud workspaces:
 
-```bash
-# One command to start coding
-devpod up https://github.com/SimpleAccounts/SimpleAccounts-UAE --ide vscode
-```
+1. **Login**: https://coder.dev.simpleaccounts.io
+2. **Create Workspace**: Select "SimpleAccounts UAE" template
+3. **Start Coding**: Opens in ~1 minute with full dev environment
 
-See [DevPod Setup Guide](docs/DEVPOD_SETUP.md) for details.
+See [Coder Guide](.coder/README.md) for details.
 
 ### Option 2: Manual Setup
 

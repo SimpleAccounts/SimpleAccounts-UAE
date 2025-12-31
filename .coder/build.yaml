@@ -1,0 +1,37 @@
+---
+# Coder template build configuration
+version: 0.2
+metadata:
+  name: simpleaccounts-uae
+  display_name: 'SimpleAccounts UAE'
+  description: 'Full-stack development environment for SimpleAccounts UAE with PostgreSQL, Redis, and all dev tools'
+  icon: '/icon/docker.svg'
+
+# Template parameters that are configurable during workspace creation
+parameters:
+  - name: dotfiles_url
+    display_name: 'Dotfiles Repository (Optional)'
+    description: 'Personalize your workspace with your dotfiles'
+    type: string
+    required: false
+    mutable: true
+
+  - name: git_clone_url
+    display_name: 'Repository URL'
+    description: 'Git repository to clone (defaults to SimpleAccounts-UAE)'
+    type: string
+    default: 'https://github.com/SimpleAccounts/SimpleAccounts-UAE.git'
+    required: false
+    mutable: false
+
+# Resource requirements
+resources:
+  cpu: 2
+  memory_gb: 4
+  disk_gb: 20
+
+# Auto-stop configuration
+autostart: false
+autostop_requirement:
+  days_of_week: 'daily'
+  duration: '30m' # Stop after 30 minutes idle
