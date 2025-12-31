@@ -54,7 +54,7 @@ services:
       - redis
 
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     # Hostname is shared by all containers using network_mode: service:db
     # This sets the hostname for devcontainer and redis as well
     hostname: simpleaccounts-dev

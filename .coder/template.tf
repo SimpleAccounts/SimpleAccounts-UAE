@@ -79,7 +79,7 @@ resource "docker_network" "workspace" {
 
 # PostgreSQL container
 resource "docker_container" "postgres" {
-  image = "postgres:16-alpine"
+  image = "postgres:18-alpine"
   name  = "coder-${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-db"
 
   hostname = "db"
