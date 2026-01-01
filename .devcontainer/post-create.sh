@@ -81,6 +81,8 @@ ensure_dir "$TARGET_HOME/.vscode-server/extensions"
 echo "📦 Installing root npm dependencies..."
 # Try npm ci first (faster, uses lock file exactly)
 # Fall back to npm install if lock file is out of sync
+# Clean node_modules first to ensure npm ci succeeds
+rm -rf node_modules
 if ! npm ci --prefer-offline 2>/dev/null; then
     echo "  ⚠️  npm ci failed, falling back to npm install..."
     npm install
@@ -88,6 +90,8 @@ fi
 
 echo "📦 Installing frontend dependencies..."
 cd apps/frontend
+# Clean node_modules first to ensure npm ci succeeds
+rm -rf node_modules
 if ! npm ci --legacy-peer-deps --prefer-offline 2>/dev/null; then
     echo "  ⚠️  npm ci failed, falling back to npm install..."
     npm install --legacy-peer-deps
