@@ -52,9 +52,9 @@ jobs:
           CODER_URL: https://coder.dev.simpleaccounts.io
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
         run: |
-          # Clear provisioner tags to avoid conflicts
+          # Push template to Coder
           coder templates push simpleaccounts-uae \
-            --provisioner-tag="-" \
+            --directory "." \
             --message "Automated deploy from commit ${{ github.sha }}" \
             --yes
 
