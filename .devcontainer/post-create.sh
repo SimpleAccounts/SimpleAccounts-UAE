@@ -54,6 +54,14 @@ ensure_dir "$TARGET_HOME/.m2/wrapper/dists"
 # Also ensure npm cache directory is writable
 ensure_dir "$TARGET_HOME/.npm"
 
+# Copy Maven settings.xml if it doesn't exist (fixes 403 Forbidden errors)
+if [ ! -f "$TARGET_HOME/.m2/settings.xml" ] && [ -f ".devcontainer/maven-settings.xml" ]; then
+    echo "📝 Installing Maven settings.xml..."
+    cp .devcontainer/maven-settings.xml "$TARGET_HOME/.m2/settings.xml"
+    fix_ownership "$TARGET_HOME/.m2/settings.xml"
+    echo "  ✅ Maven settings installed"
+fi
+
 # ============================================
 # Fix volume permissions (run early to ensure tools work)
 # ============================================
