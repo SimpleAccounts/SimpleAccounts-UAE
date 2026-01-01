@@ -145,7 +145,7 @@ resource "docker_container" "redis" {
 
 # Coder agent (runs inside the main container)
 resource "coder_agent" "main" {
-  arch = "amd64"
+  arch = "arm64"
   os   = "linux"
   dir  = "/workspaces/SimpleAccounts-UAE"
 
