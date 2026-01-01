@@ -29,10 +29,9 @@
 		<mockito.version>5.21.0</mockito.version>
 		<testcontainers.version>1.21.4</testcontainers.version>
 		<bytebuddy.version>1.18.3</bytebuddy.version>
-			<!-- SonarQube Configuration (Self-hosted) -->
-			<sonar.host.url>https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io</sonar.host.url>
-		</properties>
-
+		<!-- SonarQube Configuration (Self-hosted) -->
+		<sonar.host.url>https://sonarqube.datainn.io</sonar.host.url>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -433,6 +432,11 @@
 					<timeoutConstant>5000</timeoutConstant>
 					<failWhenNoMutations>false</failWhenNoMutations>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>5.5.0.6356</version>
 			</plugin>
 		</plugins>
 	</build>

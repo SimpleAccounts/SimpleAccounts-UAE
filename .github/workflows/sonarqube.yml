@@ -27,7 +27,7 @@ env:
   # SonarQube Community Build 25.x requires the scanner to run on Java 17+
   JAVA_VERSION: '21'
   NODE_VERSION: '18.x'
-  SONAR_HOST_URL: 'https://sonar-r0w40gg48okc00wkc08oowo4.46.62.252.63.sslip.io'
+  SONAR_HOST_URL: 'https://sonarqube.datainn.io'
 
 jobs:
   sonarqube:

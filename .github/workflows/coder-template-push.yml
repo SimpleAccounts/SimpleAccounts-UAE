@@ -27,6 +27,11 @@ jobs:
           curl -fsSL https://coder.com/install.sh | sh
           coder version
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '~> 1.9'
+
       - name: Login to Coder
         env:
           CODER_URL: https://coder.dev.simpleaccounts.io
