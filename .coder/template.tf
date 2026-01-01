@@ -263,7 +263,7 @@ resource "docker_container" "workspace" {
 
   # Resource limits: 2 CPU, 4GB RAM
   memory  = 4096  # 4GB
-  cpus    = "2.0" # 2 CPUs (string format required by Docker provider)
+  cpus    = 2.0   # 2 CPUs
 
   # Environment variables
   env = [
