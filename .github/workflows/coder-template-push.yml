@@ -52,13 +52,17 @@ jobs:
           CODER_URL: https://coder.dev.simpleaccounts.io
           CODER_SESSION_TOKEN: ${{ secrets.CODER_SESSION_TOKEN }}
         run: |
-          # Push template to Coder
+          # Push template to Coder with unique version name
+          VERSION_NAME="v$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA:0:7}"
+
           coder templates push simpleaccounts-uae \
             --directory "." \
+            --name "$VERSION_NAME" \
             --message "Automated deploy from commit ${{ github.sha }}" \
+            --activate \
             --yes
 
-          echo "✅ Template pushed successfully"
+          echo "✅ Template pushed successfully as version: $VERSION_NAME"
 
       - name: Verify Template
         env:
