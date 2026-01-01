@@ -152,13 +152,16 @@ get_server_ip() {
     echo "${IP:-localhost}"
 }
 
-# Try to connect to Traefik
+# Try to connect to Traefik (skip in Coder - uses its own networking)
 TRAEFIK_ENABLED=false
-if connect_to_traefik; then
-    TRAEFIK_ENABLED=true
-    SERVER_IP=$(get_server_ip)
-    NIP_IP=$(echo "$SERVER_IP" | tr '.' '-')
-    DEV_USER="${DEV_USER:-devuser}"
+if [ -z "$CODER_AGENT_TOKEN" ]; then
+    # Only try Traefik connection in local devcontainer (not Coder)
+    if connect_to_traefik; then
+        TRAEFIK_ENABLED=true
+        SERVER_IP=$(get_server_ip)
+        NIP_IP=$(echo "$SERVER_IP" | tr '.' '-')
+        DEV_USER="${DEV_USER:-devuser}"
+    fi
 fi
 
 # =============================================================================
