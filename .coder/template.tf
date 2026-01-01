@@ -75,6 +75,10 @@ resource "docker_volume" "vscode_extensions" {
 # Isolated network for this workspace
 resource "docker_network" "workspace" {
   name = "coder-${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
+
+  lifecycle {
+    create_before_destroy = false
+  }
 }
 
 # PostgreSQL container
@@ -141,10 +145,9 @@ resource "docker_container" "redis" {
 
 # Coder agent (runs inside the main container)
 resource "coder_agent" "main" {
-  arch           = "amd64"
-  os             = "linux"
-  dir            = "/workspaces/SimpleAccounts-UAE"
-  startup_script_timeout = 600  # 10 minutes for initial setup
+  arch = "amd64"
+  os   = "linux"
+  dir  = "/workspaces/SimpleAccounts-UAE"
 
   # Startup script
   startup_script = <<-EOT
