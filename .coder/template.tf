@@ -156,6 +156,15 @@ resource "coder_agent" "main" {
 
     echo "🚀 Starting SimpleAccounts-UAE workspace..."
 
+    # Fix workspace directory ownership for vscode user (runs as root first)
+    # This ensures npm, git, and IDE tools work correctly
+    echo "🔧 Fixing workspace permissions..."
+    if [ -d /workspaces/SimpleAccounts-UAE ]; then
+      chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+      # Configure git to trust this directory (prevents dubious ownership warning)
+      su vscode -c "git config --global --add safe.directory /workspaces/SimpleAccounts-UAE" 2>/dev/null || true
+    fi
+
     # Wait for PostgreSQL
     echo "⏳ Waiting for PostgreSQL..."
     timeout 60 bash -c 'until pg_isready -h db -p 5432 -U simpleaccounts -q; do sleep 1; done' || echo "⚠️  PostgreSQL timeout"
@@ -171,6 +180,7 @@ resource "coder_agent" "main" {
       echo "📦 Cloning repository..."
       git clone ${data.coder_parameter.git_clone_url.value} /workspaces/SimpleAccounts-UAE || echo "⚠️  Clone failed, may already exist"
       cd /workspaces/SimpleAccounts-UAE
+      chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
     else
       echo "✅ Repository already cloned"
       cd /workspaces/SimpleAccounts-UAE
@@ -263,10 +273,6 @@ resource "docker_container" "workspace" {
   name  = "coder-${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
 
   hostname = "simpleaccounts-dev"
-
-  # Run as vscode user (UID 1000, GID 1000) to match devcontainer.json remoteUser setting
-  # This ensures VS Code/Cursor can create .vscode-server directories without permission issues
-  user = "vscode:vscode"
 
   # Resource limits: 2 CPU, 4GB RAM
   memory  = 4096  # 4GB
