@@ -3,11 +3,24 @@
 
 echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
+# Auto-detect PostgreSQL and Redis hostnames
+# Coder uses 'db' and 'redis' on Docker network
+# Devcontainer uses 'localhost' via shared network namespace
+if [ -n "$CODER_AGENT_TOKEN" ]; then
+    # Running in Coder
+    POSTGRES_HOST="${POSTGRES_HOST:-db}"
+    REDIS_HOST="redis"
+else
+    # Running in devcontainer
+    POSTGRES_HOST="localhost"
+    REDIS_HOST="localhost"
+fi
+
 # Wait for PostgreSQL to be ready (with timeout)
 echo "⏳ Waiting for PostgreSQL..."
 TIMEOUT=60
 ELAPSED=0
-until pg_isready -h db -p 5432 -U simpleaccounts -q; do
+until pg_isready -h "$POSTGRES_HOST" -p 5432 -U simpleaccounts -q; do
     sleep 1
     ELAPSED=$((ELAPSED + 1))
     if [ $ELAPSED -ge $TIMEOUT ]; then
@@ -22,7 +35,7 @@ fi
 # Wait for Redis to be ready (with timeout)
 echo "⏳ Waiting for Redis..."
 ELAPSED=0
-until redis-cli -h redis ping > /dev/null 2>&1; do
+until redis-cli -h "$REDIS_HOST" ping > /dev/null 2>&1; do
     sleep 1
     ELAPSED=$((ELAPSED + 1))
     if [ $ELAPSED -ge $TIMEOUT ]; then
@@ -156,15 +169,19 @@ echo "🎉 Development environment is ready!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Database connection:"
-echo "  Host: db (internal network hostname)"
+echo "  Host: $POSTGRES_HOST"
 echo "  Port: 5432"
 echo "  User: simpleaccounts"
-echo "  Pass: simpleaccounts_dev"
+if [ -n "$CODER_AGENT_TOKEN" ]; then
+    echo "  Pass: (auto-generated for this workspace)"
+else
+    echo "  Pass: simpleaccounts_dev"
+fi
 echo "  DB:   simpleaccounts"
-echo "  URL:  jdbc:postgresql://db:5432/simpleaccounts"
+echo "  URL:  jdbc:postgresql://$POSTGRES_HOST:5432/simpleaccounts"
 echo ""
 echo "Redis connection:"
-echo "  Host: redis (internal network hostname)"
+echo "  Host: $REDIS_HOST"
 echo "  Port: 6379"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 

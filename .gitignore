@@ -137,3 +137,6 @@ scripts/pre-pull-docker-images.sh
 apps/backend/.dockerignore
 apps/frontend/.dockerignore
 .coder/.terraform/
+
+# Auto Claude data directory
+.auto-claude/

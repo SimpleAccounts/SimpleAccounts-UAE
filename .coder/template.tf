@@ -145,7 +145,7 @@ resource "docker_container" "redis" {
 
 # Coder agent (runs inside the main container)
 resource "coder_agent" "main" {
-  arch = "amd64"
+  arch = "arm64"
   os   = "linux"
   dir  = "/workspaces/SimpleAccounts-UAE"
 
@@ -263,6 +263,10 @@ resource "docker_container" "workspace" {
   name  = "coder-${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
 
   hostname = "simpleaccounts-dev"
+
+  # Run as vscode user (UID 1000, GID 1000) to match devcontainer.json remoteUser setting
+  # This ensures VS Code/Cursor can create .vscode-server directories without permission issues
+  user = "vscode:vscode"
 
   # Resource limits: 2 CPU, 4GB RAM
   memory  = 4096  # 4GB
@@ -409,7 +413,10 @@ resource "docker_container" "workspace" {
   # Auto-restart on failure
   restart = "unless-stopped"
 
-  command = ["sh", "-c", coder_agent.main.init_script]
+  # Disable Coder's automatic devcontainer detection to prevent "exit status 127" error
+  # The template already creates all containers directly, so nested devcontainer management is not needed
+  # See: https://github.com/coder/coder/issues/19345
+  command = ["sh", "-c", "export CODER_AGENT_DEVCONTAINERS_ENABLE=0; ${coder_agent.main.init_script}"]
 }
 
 # Workspace metadata
