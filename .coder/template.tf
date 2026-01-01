@@ -294,8 +294,8 @@ resource "docker_container" "workspace" {
     "MAVEN_OPTS=-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
     "JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     "NODE_OPTIONS=--max-old-space-size=2048",
-    "HISTFILE=/home/vscode/.bash_history_dir/bash_history",
-    "GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/gitconfig"
+    "HISTFILE=/root/.bash_history_dir/bash_history",
+    "GIT_CONFIG_GLOBAL=/root/.gitconfig_dir/gitconfig"
   ]
 
   # Workspace directory (persistent Git repository)
@@ -322,43 +322,48 @@ resource "docker_container" "workspace" {
 
   # User credentials (persistent across host)
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude"
-    container_path = "/home/vscode/.claude"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude"
+    container_path = "/root/.claude"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gemini"
-    container_path = "/home/vscode/.gemini"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/claude.json"
+    container_path = "/root/.claude.json"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gh"
-    container_path = "/home/vscode/.config/gh"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gemini/.gemini"
+    container_path = "/root/.gemini"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/bash-history"
-    container_path = "/home/vscode/.bash_history_dir"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/.config/gh"
+    container_path = "/root/.config/gh"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gitconfig"
-    container_path = "/home/vscode/.gitconfig_dir"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/bash-history/.bash_history"
+    container_path = "/root/.bash_history_dir"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/ssh"
-    container_path = "/home/vscode/.ssh"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gitconfig/.gitconfig"
+    container_path = "/root/.gitconfig_dir"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/docker"
-    container_path = "/home/vscode/.docker"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/ssh/.ssh"
+    container_path = "/root/.ssh"
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/kube"
-    container_path = "/home/vscode/.kube"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/docker/.docker"
+    container_path = "/root/.docker"
+  }
+
+  volumes {
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/kube/.kube"
+    container_path = "/root/.kube"
   }
 
   # Docker socket for Docker-in-Docker
