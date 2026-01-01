@@ -47,12 +47,6 @@ if [ $ELAPSED -lt $TIMEOUT ]; then
     echo "✅ Redis is ready"
 fi
 
-# Symlink Claude settings from persistent mount
-if [ -f /home/vscode/.claude/claude.json ] && [ ! -L /home/vscode/.claude.json ]; then
-    ln -sf /home/vscode/.claude/claude.json /home/vscode/.claude.json
-    echo "✅ Claude settings symlinked"
-fi
-
 # Update CLI tools to latest versions (runs in background to not block startup)
 echo "🔧 Updating CLI tools in background..."
 if [ -f /usr/local/bin/install-cli-tools ]; then
