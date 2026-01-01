@@ -58,9 +58,14 @@ ensure_dir "$TARGET_HOME/.npm"
 # Fix volume permissions (run early to ensure tools work)
 # ============================================
 echo "🔧 Fixing volume permissions..."
-for dir in "$TARGET_HOME/.claude" "$TARGET_HOME/.gemini" "$TARGET_HOME/.codex" "$TARGET_HOME/.config/gh" "$TARGET_HOME/.bash_history_dir" "$TARGET_HOME/.gitconfig_dir" "$TARGET_HOME/.ssh" "$TARGET_HOME/.docker" "$TARGET_HOME/.kube" "$TARGET_HOME/.aws" "$TARGET_HOME/.azure"; do
+for dir in "$TARGET_HOME/.claude" "$TARGET_HOME/.gemini" "$TARGET_HOME/.codex" "$TARGET_HOME/.config/gh" "$TARGET_HOME/.bash_history_dir" "$TARGET_HOME/.gitconfig_dir" "$TARGET_HOME/.ssh" "$TARGET_HOME/.docker" "$TARGET_HOME/.kube" "$TARGET_HOME/.aws" "$TARGET_HOME/.azure" "$TARGET_HOME/.vscode-server"; do
     [ -d "$dir" ] && fix_ownership "$dir"
 done
+
+# Ensure VS Code server directories exist with correct permissions
+ensure_dir "$TARGET_HOME/.vscode-server"
+ensure_dir "$TARGET_HOME/.vscode-server/bin"
+ensure_dir "$TARGET_HOME/.vscode-server/extensions"
 
 # ============================================
 # Install npm dependencies
