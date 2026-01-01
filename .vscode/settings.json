@@ -1,0 +1,15 @@
+{
+  // Disable devcontainer features when connecting to Coder workspace
+  // The Coder workspace already has all tools configured
+  "remote.containers.defaultExtensions": [],
+
+  // Don't automatically reopen in container
+  "dev.containers.executeInWSL": false,
+
+  // Workspace-specific settings
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnSave": true,
+
+  // Help developers understand the setup
+  "workbench.startupEditor": "readme"
+}

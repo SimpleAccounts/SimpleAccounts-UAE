@@ -15,6 +15,7 @@ target/
 .idea/
 *.iml
 .vscode/
+!.vscode/settings.json
 
 # Claude Code local settings
 .claude/
