@@ -409,7 +409,10 @@ resource "docker_container" "workspace" {
   # Auto-restart on failure
   restart = "unless-stopped"
 
-  command = ["sh", "-c", coder_agent.main.init_script]
+  # Disable Coder's automatic devcontainer detection to prevent "exit status 127" error
+  # The template already creates all containers directly, so nested devcontainer management is not needed
+  # See: https://github.com/coder/coder/issues/19345
+  command = ["sh", "-c", "export CODER_AGENT_DEVCONTAINERS_ENABLE=0; ${coder_agent.main.init_script}"]
 }
 
 # Workspace metadata
