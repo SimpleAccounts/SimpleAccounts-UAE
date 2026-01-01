@@ -326,6 +326,7 @@ resource "docker_container" "workspace" {
     container_path = "/root/.claude"
   }
 
+  # Claude configuration file (must be pre-created as a file on host)
   volumes {
     host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/claude.json"
     container_path = "/root/.claude.json"
