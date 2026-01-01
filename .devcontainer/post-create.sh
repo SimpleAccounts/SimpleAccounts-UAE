@@ -126,6 +126,13 @@ npm run prepare 2>/dev/null || true
 # ============================================
 # Create local environment files
 # ============================================
+# Create .devcontainer/.env if it doesn't exist
+if [ ! -f ".devcontainer/.env" ]; then
+    echo "📝 Creating .devcontainer/.env from example..."
+    cp .devcontainer/.env.example .devcontainer/.env
+    echo "  ✅ Created .devcontainer/.env"
+fi
+
 if [ ! -f "apps/frontend/.env.local" ]; then
     echo "📝 Creating frontend .env.local..."
     cat > apps/frontend/.env.local << 'EOF'

@@ -7,7 +7,7 @@ echo "🔄 Starting SimpleAccounts-UAE development environment..."
 echo "⏳ Waiting for PostgreSQL..."
 TIMEOUT=60
 ELAPSED=0
-until pg_isready -h db -p 5432 -U simpleaccounts -q; do
+until pg_isready -h localhost -p 5432 -U simpleaccounts -q; do
     sleep 1
     ELAPSED=$((ELAPSED + 1))
     if [ $ELAPSED -ge $TIMEOUT ]; then
@@ -22,7 +22,7 @@ fi
 # Wait for Redis to be ready (with timeout)
 echo "⏳ Waiting for Redis..."
 ELAPSED=0
-until redis-cli -h redis ping > /dev/null 2>&1; do
+until redis-cli -h localhost ping > /dev/null 2>&1; do
     sleep 1
     ELAPSED=$((ELAPSED + 1))
     if [ $ELAPSED -ge $TIMEOUT ]; then
@@ -156,15 +156,15 @@ echo "🎉 Development environment is ready!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Database connection:"
-echo "  Host: db (internal network hostname)"
+echo "  Host: localhost (shared network namespace)"
 echo "  Port: 5432"
 echo "  User: simpleaccounts"
 echo "  Pass: simpleaccounts_dev"
 echo "  DB:   simpleaccounts"
-echo "  URL:  jdbc:postgresql://db:5432/simpleaccounts"
+echo "  URL:  jdbc:postgresql://localhost:5432/simpleaccounts"
 echo ""
 echo "Redis connection:"
-echo "  Host: redis (internal network hostname)"
+echo "  Host: localhost (shared network namespace)"
 echo "  Port: 6379"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
