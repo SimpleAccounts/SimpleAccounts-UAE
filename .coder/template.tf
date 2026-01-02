@@ -45,19 +45,8 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-# Create .claude.json file using Terraform (ensures it exists before Docker mounts)
-resource "local_file" "claude_config" {
-  filename = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude.json"
-  content  = "{}"
-
-  # Only create if doesn't exist, don't overwrite user's config
-  lifecycle {
-    ignore_changes = [content]
-  }
-
-  # Ensure parent directory exists first
-  depends_on = [null_resource.host_directories]
-}
+# NOTE: .claude.json file is created by the host_directories provisioner script below
+# This ensures it's created on the host before Docker tries to mount it
 
 # Create host directories for bind mounts before container starts
 resource "null_resource" "host_directories" {
@@ -85,8 +74,11 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/bash_history"
       mkdir -p "$BASE_DIR/gitconfig"
 
-      # NOTE: .claude.json is now created by Terraform local_file resource
-      # This ensures it exists before Docker tries to mount it
+      # Create .claude.json file if it doesn't exist (for file mount)
+      if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
+        echo '{}' > "$BASE_DIR/claude/.claude.json"
+        echo "✅ Created empty .claude.json file"
+      fi
 
       # Create .gemini/config.json if it doesn't exist
       if [ ! -f "$BASE_DIR/gemini/.gemini/config.json" ]; then
@@ -522,8 +514,7 @@ resource "docker_container" "workspace" {
   depends_on = [
     docker_container.postgres,
     docker_container.redis,
-    null_resource.host_directories,
-    local_file.claude_config  # Ensure .claude.json exists before mounting
+    null_resource.host_directories  # Ensures .claude.json is created before mounting
   ]
 
   # Auto-restart on failure
