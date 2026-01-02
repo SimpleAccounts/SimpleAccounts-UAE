@@ -156,13 +156,9 @@ USER vscode
 RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
     && chmod -R 755 ~/.m2 ~/.npm ~/.cache
 
-# Reset working directory and user
+# Reset working directory
 USER root
 WORKDIR /workspaces
-
-# Set default user to vscode (non-root)
-# This ensures container starts as vscode user even without devcontainer.json
-USER vscode
 
 # Default command
 CMD ["sleep", "infinity"]
