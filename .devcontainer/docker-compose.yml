@@ -25,8 +25,22 @@ services:
     #   context: ..
     #   dockerfile: .devcontainer/Dockerfile
     env_file:
+      # Database and application configuration (REQUIRED)
       - path: .env
+        required: true
+      # Credential mounts configuration (OPTIONAL - for local dev only)
+      - path: .env.credentials
         required: false
+      # User overrides (OPTIONAL - git-ignored, create locally if needed)
+      - path: .env.local
+        required: false
+    environment:
+      # Ensure critical environment variables are set (fail fast if missing)
+      - SIMPLEACCOUNTS_DB_HOST
+      - SIMPLEACCOUNTS_DB_PORT
+      - SIMPLEACCOUNTS_DB
+      - SIMPLEACCOUNTS_DB_USER
+      - SIMPLEACCOUNTS_DB_PASSWORD
     volumes:
       - ../:/workspaces/SimpleAccounts-UAE:cached
       # Cache volumes (can be rebuilt, use Docker named volumes)
@@ -60,15 +74,24 @@ services:
     # This sets the hostname for devcontainer and redis as well
     hostname: simpleaccounts-dev
     restart: unless-stopped
+    env_file:
+      # Load database configuration from .env file
+      - path: .env
+        required: true
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      # Use shell script instead of SQL for dynamic environment variable support
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-simpleaccounts}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-simpleaccounts_dev}
-      POSTGRES_DB: ${POSTGRES_DB:-simpleaccounts}
+      # PostgreSQL initialization variables (required for container startup)
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      # Additional variables for init script
+      SIMPLEACCOUNTS_DB_USER: ${SIMPLEACCOUNTS_DB_USER}
+      SIMPLEACCOUNTS_DB_PASSWORD: ${SIMPLEACCOUNTS_DB_PASSWORD}
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U simpleaccounts']
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-simpleaccounts}']
       interval: 10s
       timeout: 5s
       retries: 5

@@ -58,15 +58,50 @@ This means all services (devcontainer, postgres, redis) are accessible via `loca
 
 ## Files
 
-| File                          | Purpose                                   |
-| ----------------------------- | ----------------------------------------- |
-| `devcontainer.json`           | VS Code devcontainer configuration        |
-| `docker-compose.yml`          | Container orchestration                   |
-| `docker-compose.override.yml` | Local overrides (secrets) - not committed |
-| `Dockerfile`                  | Container image definition                |
-| `init-db.sql`                 | PostgreSQL initialization script          |
-| `post-create.sh`              | Runs once on container creation           |
-| `post-start.sh`               | Runs on every container start             |
+| File                   | Purpose                                         |
+| ---------------------- | ----------------------------------------------- |
+| `devcontainer.json`    | VS Code devcontainer configuration              |
+| `docker-compose.yml`   | Container orchestration                         |
+| `Dockerfile`           | Container image definition                      |
+| **Environment Files**  |                                                 |
+| `.env.example`         | Template for .env (committed to git)            |
+| `.env`                 | Database config (auto-generated, git-ignored)   |
+| `.env.credentials`     | Credential mounts (auto-generated, git-ignored) |
+| `.env.local`           | User overrides (optional, git-ignored)          |
+| **Scripts**            |                                                 |
+| `setup-env.sh`         | Auto-generates .env files if missing            |
+| `validate-database.sh` | Validates database setup                        |
+| `init-db.sql`          | PostgreSQL initialization script                |
+| `post-create.sh`       | Runs once on container creation                 |
+| `post-start.sh`        | Runs on every container start                   |
+| **Documentation**      |                                                 |
+| `README.md`            | This file - DevContainer overview               |
+| `DATABASE_SETUP.md`    | Detailed database setup and troubleshooting     |
+
+## Automatic Environment Setup
+
+The devcontainer automatically configures your environment on first start:
+
+1. **Environment Generation** (`setup-env.sh`):
+   - Checks if `.env` exists
+   - Creates it from `.env.example` if missing
+   - Creates `.env.credentials` for credential mounts
+   - Validates all required variables are set
+
+2. **Database Initialization** (`init-db.sql`):
+   - Creates `simpleaccounts` user and databases
+   - Grants privileges and enables extensions
+   - Runs automatically on first PostgreSQL start
+
+3. **Validation** (`validate-database.sh`):
+   - Verifies PostgreSQL is accepting connections
+   - Checks databases and users exist
+   - Validates application can connect
+   - Runs automatically on every container start
+
+**No manual configuration needed!** Just open in VS Code and start coding.
+
+For detailed database documentation, see [DATABASE_SETUP.md](./DATABASE_SETUP.md)
 
 ## Volumes
 
