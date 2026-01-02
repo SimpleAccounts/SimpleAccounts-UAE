@@ -50,6 +50,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Copy Maven settings
+        if: matrix.language == 'java'
+        run: |
+          mkdir -p ~/.m2
+          cp .devcontainer/maven-settings.xml ~/.m2/settings.xml
+          echo "✅ Maven settings configured"
+
       - name: Build Java
         if: matrix.language == 'java'
         working-directory: apps/backend

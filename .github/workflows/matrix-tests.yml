@@ -51,6 +51,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Copy Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cp .devcontainer/maven-settings.xml ~/.m2/settings.xml
+          echo "✅ Maven settings configured"
+
       - name: Run backend tests
         working-directory: apps/backend
         # Use env SPRING_PROFILES_ACTIVE for cross-platform compatibility (PowerShell can split -D args).
