@@ -43,6 +43,7 @@ lerna-debug.log*
 .env
 .env.local
 .mcp.env
+.envrc
 
 # DevContainer secrets
 .devcontainer/.env

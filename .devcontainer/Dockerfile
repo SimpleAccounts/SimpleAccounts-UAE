@@ -34,6 +34,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && echo "deb [signed-by=/usr/share/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" > /etc/apt/sources.list.d/kubernetes.list \
     && apt-get update \
     && apt-get -y install --no-install-recommends \
+        direnv \
         docker-ce-cli \
         docker-compose-plugin \
         gh \
