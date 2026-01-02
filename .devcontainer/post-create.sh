@@ -147,6 +147,52 @@ else
 fi
 
 # ============================================
+# Setup direnv for automatic .env loading
+# ============================================
+echo "🔧 Setting up direnv..."
+
+# Add direnv hook to bashrc if not already present
+if ! grep -q "direnv hook bash" "$TARGET_HOME/.bashrc" 2>/dev/null; then
+    echo '' >> "$TARGET_HOME/.bashrc"
+    echo '# direnv hook for automatic .env loading' >> "$TARGET_HOME/.bashrc"
+    echo 'eval "$(direnv hook bash)"' >> "$TARGET_HOME/.bashrc"
+    echo "  ✅ Added direnv hook to .bashrc"
+fi
+
+# Create .envrc file if it doesn't exist
+if [ ! -f ".envrc" ]; then
+    cat > .envrc << 'ENVRCEOF'
+# direnv configuration for SimpleAccounts-UAE
+# This file loads environment variables from .env files
+
+# Load main devcontainer environment variables
+if [ -f .devcontainer/.env ]; then
+  dotenv .devcontainer/.env
+fi
+
+# Load local overrides (not committed to git)
+if [ -f .devcontainer/.env.local ]; then
+  dotenv .devcontainer/.env.local
+fi
+
+# Load root .env if it exists (not committed to git)
+if [ -f .env ]; then
+  dotenv .env
+fi
+
+# Load root .env.local if it exists (not committed to git)
+if [ -f .env.local ]; then
+  dotenv .env.local
+fi
+ENVRCEOF
+    echo "  ✅ Created .envrc file"
+fi
+
+# Allow direnv for this directory
+direnv allow . 2>/dev/null || true
+echo "  ✅ direnv configured"
+
+# ============================================
 # Create local environment files
 # ============================================
 # Create .devcontainer/.env if it doesn't exist
