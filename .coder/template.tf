@@ -72,6 +72,11 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/gitconfig"
 
       # Create .claude.json if it doesn't exist
+      # Remove if it exists as a directory (bug fix)
+      if [ -d "$BASE_DIR/claude/.claude.json" ]; then
+        rm -rf "$BASE_DIR/claude/.claude.json"
+        echo "⚠️  Removed .claude.json directory (was incorrectly created as directory)"
+      fi
       if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
         echo '{}' > "$BASE_DIR/claude/.claude.json"
         echo "✅ Created empty .claude.json file"
