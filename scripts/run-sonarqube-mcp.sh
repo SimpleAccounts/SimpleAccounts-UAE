@@ -5,7 +5,8 @@
 find_java21() {
     # Check JAVA_HOME first
     if [ -n "$JAVA_HOME" ]; then
-        JAVA_VERSION=$("$JAVA_HOME/bin/java" -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+        # Filter out JAVA_TOOL_OPTIONS message and get version from "openjdk version" or "java version" line
+        JAVA_VERSION=$("$JAVA_HOME/bin/java" -version 2>&1 | grep -E '(openjdk|java) version' | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
         if [ "$JAVA_VERSION" -ge 21 ] 2>/dev/null; then
             echo "$JAVA_HOME/bin/java"
             return 0

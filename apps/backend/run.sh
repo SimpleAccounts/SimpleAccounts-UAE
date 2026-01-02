@@ -7,7 +7,8 @@ REQUIRED_JAVA_VERSION="${REQUIRED_JAVA_VERSION:-21}"
 ensure_java() {
     if command -v java &> /dev/null; then
         local java_version
-        java_version=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+        # Filter out JAVA_TOOL_OPTIONS message and get version from "openjdk version" or "java version" line
+        java_version=$(java -version 2>&1 | grep -E '(openjdk|java) version' | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
         if [ "$java_version" -ge "$REQUIRED_JAVA_VERSION" ] 2>/dev/null; then
             return 0
         fi
@@ -15,7 +16,8 @@ ensure_java() {
 
     if [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/java" ]; then
         local java_version
-        java_version=$("$JAVA_HOME/bin/java" -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+        # Filter out JAVA_TOOL_OPTIONS message and get version from "openjdk version" or "java version" line
+        java_version=$("$JAVA_HOME/bin/java" -version 2>&1 | grep -E '(openjdk|java) version' | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
         if [ "$java_version" -ge "$REQUIRED_JAVA_VERSION" ] 2>/dev/null; then
             export PATH="$JAVA_HOME/bin:$PATH"
             return 0
