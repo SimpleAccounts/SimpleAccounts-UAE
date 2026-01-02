@@ -270,6 +270,9 @@ resource "docker_container" "workspace" {
 
   hostname = "simpleaccounts-dev"
 
+  # Run as vscode user (non-root)
+  user = "vscode"
+
   # Resource limits: 2 CPU, 4GB RAM
   memory  = 4096  # 4GB
   # cpus = 2.0 # DISABLED: Causes provider panic (interface conversion: interface {} is string, not float32) in kreuzwerker/docker v3.6.2
