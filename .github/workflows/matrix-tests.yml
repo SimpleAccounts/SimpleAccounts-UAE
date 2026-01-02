@@ -52,6 +52,7 @@ jobs:
           cache: maven
 
       - name: Copy Maven settings
+        shell: bash
         run: |
           mkdir -p ~/.m2
           cp .devcontainer/maven-settings.xml ~/.m2/settings.xml
