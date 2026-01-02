@@ -177,6 +177,47 @@ spring.redis.port=6379
 BACKENDEOF
 fi
 
+# ============================================
+# Validate permissions on critical directories
+# ============================================
+echo "🔍 Validating permissions..."
+
+PERMISSION_ERRORS=0
+
+# Function to test write access
+test_write_access() {
+    local dir="$1"
+    local name="$2"
+
+    if [ -d "$dir" ]; then
+        if touch "$dir/.write-test" 2>/dev/null; then
+            rm "$dir/.write-test"
+            echo "  ✓ $name is writable"
+        else
+            echo "  ❌ WARNING: Cannot write to $name - permission issue detected!"
+            PERMISSION_ERRORS=$((PERMISSION_ERRORS + 1))
+        fi
+    else
+        echo "  ⚠ $name does not exist (will be created on first use)"
+    fi
+}
+
+# Test critical directories
+test_write_access "$TARGET_HOME/.m2" "Maven cache"
+test_write_access "$TARGET_HOME/.npm" "NPM cache"
+test_write_access "$TARGET_HOME/.bash_history_dir" "Bash history"
+test_write_access "$TARGET_HOME/.gitconfig_dir" "Git config"
+test_write_access "$TARGET_HOME/.claude" "Claude CLI config"
+test_write_access "$TARGET_HOME/.ssh" "SSH directory"
+test_write_access "/workspaces/SimpleAccounts-UAE" "Workspace"
+
+if [ $PERMISSION_ERRORS -gt 0 ]; then
+    echo ""
+    echo "⚠️  $PERMISSION_ERRORS permission issue(s) detected!"
+    echo "   This may cause problems. Run: bash .devcontainer/setup-host-dirs.sh"
+    echo ""
+fi
+
 echo "✅ Development environment setup complete!"
 echo ""
 echo "Quick start commands:"
