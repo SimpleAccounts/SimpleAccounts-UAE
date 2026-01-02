@@ -91,5 +91,9 @@
   },
 
   // Run as non-root user
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+
+  // Automatically update container user UID to match host user UID
+  // This prevents permission issues with mounted volumes on macOS/Linux
+  "updateRemoteUserUID": true
 }
