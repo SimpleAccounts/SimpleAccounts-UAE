@@ -156,10 +156,27 @@ resource "coder_agent" "main" {
 
     echo "🚀 Starting SimpleAccounts-UAE workspace..."
 
-    # Fix ownership of workspace directory (needed when switching from root to vscode user)
+    # Fix ownership of workspace and config directories (needed when switching from root to vscode user)
     echo "🔧 Fixing workspace permissions..."
     if [ -d /workspaces/SimpleAccounts-UAE ]; then
       sudo chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+    fi
+
+    # Fix ownership of bind-mounted config directories
+    for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.config/gh \
+               /home/vscode/.bash_history_dir /home/vscode/.gitconfig_dir \
+               /home/vscode/.ssh /home/vscode/.docker /home/vscode/.kube; do
+      if [ -d "$dir" ]; then
+        sudo chown -R vscode:vscode "$dir" 2>/dev/null || true
+      fi
+    done
+
+    # Ensure SSH directory has correct permissions if it exists
+    if [ -d /home/vscode/.ssh ]; then
+      sudo chmod 700 /home/vscode/.ssh 2>/dev/null || true
+      # Fix key permissions if any exist
+      find /home/vscode/.ssh -type f -name "id_*" ! -name "*.pub" -exec sudo chmod 600 {} \; 2>/dev/null || true
+      find /home/vscode/.ssh -type f -name "*.pub" -exec sudo chmod 644 {} \; 2>/dev/null || true
     fi
 
     # Configure git to trust workspace directory (prevents dubious ownership warning)
