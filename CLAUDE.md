@@ -367,15 +367,62 @@ apps/frontend/src/
 
 ## Development Commands
 
+### DevContainer (Recommended)
+
+When using the devcontainer, PostgreSQL and Redis are automatically started and configured.
+Environment variables are pre-configured in `.devcontainer/.env`.
+
 ```bash
-# Start frontend dev server
-cd apps/frontend && npm run dev
+# From apps/frontend directory
+npm start                    # Start frontend dev server (port 3000)
 
-# Start backend
-cd apps/backend && ./mvnw spring-boot:run
+# From apps/backend directory
+./mvnw spring-boot:run       # Start backend server (port 8080)
 
-# Run tests
+# Or from repo root (recommended)
+npm run frontend             # Start frontend dev server
+npm run backend:run          # Start backend server
+```
+
+### Running Frontend and Backend Together
+
+```bash
+# Terminal 1 - Frontend
+npm run frontend
+
+# Terminal 2 - Backend
+npm run backend:run
+```
+
+### Available URLs
+
+| Service     | URL                                   |
+| ----------- | ------------------------------------- |
+| Frontend    | http://localhost:3000                 |
+| Backend API | http://localhost:8080                 |
+| Swagger UI  | http://localhost:8080/swagger-ui.html |
+
+### Database Connection (DevContainer)
+
+The devcontainer automatically configures PostgreSQL with these settings:
+
+- **Host**: localhost (shared network namespace)
+- **Port**: 5432
+- **Database**: simpleaccounts
+- **User**: simpleaccounts
+- **Password**: simpleaccounts_dev
+
+### Testing
+
+```bash
+# Frontend tests
 cd apps/frontend && npm test
+
+# Backend tests
+cd apps/backend && ./mvnw test
+
+# E2E tests (Playwright)
+cd apps/frontend && npm run test:frontend:e2e
 ```
 
 ## Git Workflow

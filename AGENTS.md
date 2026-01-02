@@ -4,7 +4,17 @@
 
 For complete setup instructions including prerequisites, database setup, environment configuration, and running the application, see **[SETUP.md](./SETUP.md)**.
 
-**Quick Start:**
+**Quick Start (DevContainer - Recommended):**
+
+The devcontainer automatically sets up PostgreSQL, Redis, and all environment variables.
+
+```bash
+# From repo root - run in separate terminals
+npm run frontend      # Terminal 1 - starts Vite dev server (port 3000)
+npm run backend:run   # Terminal 2 - starts Spring Boot (port 8080)
+```
+
+**Quick Start (Manual Setup):**
 
 ```bash
 # Prerequisites: Node 20+, Java 21, PostgreSQL 14+
@@ -15,8 +25,15 @@ npm install
 # 2. Setup database and create apps/backend/.env (see SETUP.md)
 
 # 3. Run application
-npm run backend:run   # Terminal 1
-npm run frontend      # Terminal 2
+npm run frontend      # Terminal 1 - starts Vite dev server (port 3000)
+npm run backend:run   # Terminal 2 - starts Spring Boot (port 8080)
+```
+
+**Alternative commands (from app directories):**
+
+```bash
+cd apps/frontend && npm start           # Frontend dev server
+cd apps/backend && ./mvnw spring-boot:run  # Backend server
 ```
 
 ---

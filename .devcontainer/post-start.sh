@@ -3,21 +3,25 @@
 
 echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
-# Auto-detect PostgreSQL and Redis hostnames
-# Coder uses 'db' and 'redis' on Docker network
-# Devcontainer uses 'localhost' via shared network namespace
+# =============================================================================
+# Detect environment and set hostnames
+# - Coder: Uses separate containers with 'db' and 'redis' hostnames
+# - Local DevContainer: Uses network_mode: service:db (shared localhost)
+# =============================================================================
 if [ -n "$CODER_AGENT_TOKEN" ]; then
-    # Running in Coder
+    # Running in Coder - use container hostnames
     POSTGRES_HOST="${POSTGRES_HOST:-db}"
     REDIS_HOST="redis"
+    echo "📦 Detected Coder environment (using db/redis hostnames)"
 else
-    # Running in devcontainer
+    # Running in local devcontainer - use localhost (network_mode: service:db)
     POSTGRES_HOST="localhost"
     REDIS_HOST="localhost"
+    echo "📦 Detected local devcontainer (using localhost)"
 fi
 
 # Wait for PostgreSQL to be ready (with timeout)
-echo "⏳ Waiting for PostgreSQL..."
+echo "⏳ Waiting for PostgreSQL at ${POSTGRES_HOST}:5432..."
 TIMEOUT=60
 ELAPSED=0
 until pg_isready -h "$POSTGRES_HOST" -p 5432 -U simpleaccounts -q; do
@@ -33,7 +37,7 @@ if [ $ELAPSED -lt $TIMEOUT ]; then
 fi
 
 # Wait for Redis to be ready (with timeout)
-echo "⏳ Waiting for Redis..."
+echo "⏳ Waiting for Redis at ${REDIS_HOST}:6379..."
 ELAPSED=0
 until redis-cli -h "$REDIS_HOST" ping > /dev/null 2>&1; do
     sleep 1

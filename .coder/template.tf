@@ -297,7 +297,11 @@ resource "coder_agent" "main" {
     echo "✅ Workspace ready!"
     echo ""
     echo "Quick start commands:"
-    echo "  Frontend: cd apps/frontend && npm run dev"
+    echo "  Frontend: npm run frontend"
+    echo "  Backend:  npm run backend:run"
+    echo ""
+    echo "Or from app directories:"
+    echo "  Frontend: cd apps/frontend && npm start"
     echo "  Backend:  cd apps/backend && ./mvnw spring-boot:run"
   EOT
 
@@ -371,12 +375,26 @@ resource "docker_container" "workspace" {
   env = [
     "CODER_AGENT_TOKEN=${coder_agent.main.token}",
     "CODER_AGENT_URL=${data.coder_workspace.me.access_url}",
-    # Database credentials (auto-generated per workspace)
+    # Database credentials for PostgreSQL container
     "POSTGRES_USER=simpleaccounts",
     "POSTGRES_PASSWORD=${random_password.postgres.result}",
     "POSTGRES_DB=simpleaccounts",
     "POSTGRES_HOST=db",
     "POSTGRES_PORT=5432",
+    # Backend Spring Boot configuration (uses 'db' hostname in Coder network)
+    "SIMPLEACCOUNTS_DB_HOST=db",
+    "SIMPLEACCOUNTS_DB_PORT=5432",
+    "SIMPLEACCOUNTS_DB=simpleaccounts",
+    "SIMPLEACCOUNTS_DB_USER=simpleaccounts",
+    "SIMPLEACCOUNTS_DB_PASSWORD=${random_password.postgres.result}",
+    "SIMPLEACCOUNTS_DB_SSL=false",
+    "SIMPLEACCOUNTS_DB_SSLMODE=disable",
+    "SIMPLEACCOUNTS_DB_SSLROOTCERT=",
+    # Redis configuration
+    "SPRING_REDIS_HOST=redis",
+    "SPRING_REDIS_PORT=6379",
+    # Application host
+    "SIMPLEACCOUNTS_HOST=http://localhost:8080",
     # Application settings
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
     "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium",

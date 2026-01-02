@@ -28,16 +28,21 @@ code .
 
 ## Architecture
 
+All services share the same network namespace via `network_mode: service:db`.
+This means all services (devcontainer, postgres, redis) are accessible via `localhost`.
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Internal Docker Network                   │
-│                   (user-specific isolation)                  │
+│              Shared Network Namespace (localhost)            │
+│                   (network_mode: service:db)                 │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
-│  │ devcontainer │  │      db      │  │    redis     │       │
-│  │              │  │  (postgres)  │  │              │       │
-│  │   db:5432 ──────► :5432       │  │              │       │
-│  │   redis:6379 ───────────────────────► :6379     │       │
+│  │ devcontainer │  │  PostgreSQL  │  │    Redis     │       │
+│  │              │  │              │  │              │       │
+│  │ localhost:3000 (frontend)                        │       │
+│  │ localhost:8080 (backend)                         │       │
+│  │              │  │ localhost:5432                 │       │
+│  │              │  │              │  │ localhost:6379       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -46,8 +51,8 @@ code .
 
 | Service    | Access From Container |
 | ---------- | --------------------- |
-| PostgreSQL | `db:5432`             |
-| Redis      | `redis:6379`          |
+| PostgreSQL | `localhost:5432`      |
+| Redis      | `localhost:6379`      |
 | Frontend   | `localhost:3000`      |
 | Backend    | `localhost:8080`      |
 
@@ -103,11 +108,11 @@ docker compose up -d
 ### Verify Network Connectivity
 
 ```bash
-# PostgreSQL (uses internal hostname 'db')
-pg_isready -h db -p 5432
+# PostgreSQL (all services share localhost via network_mode: service:db)
+pg_isready -h localhost -p 5432
 
-# Redis (uses internal hostname 'redis')
-redis-cli -h redis ping
+# Redis (all services share localhost via network_mode: service:db)
+redis-cli -h localhost ping
 ```
 
 ### View Container Logs

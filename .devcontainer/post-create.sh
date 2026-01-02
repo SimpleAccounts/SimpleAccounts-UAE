@@ -168,12 +168,19 @@ if [ ! -f "apps/backend/src/main/resources/application-local.properties" ]; then
     echo "📝 Creating backend application-local.properties..."
     cat > apps/backend/src/main/resources/application-local.properties << 'BACKENDEOF'
 # Local development configuration
+# Uses localhost because all services share network via network_mode: service:db
 spring.datasource.url=jdbc:postgresql://localhost:5432/simpleaccounts
 spring.datasource.username=simpleaccounts
 spring.datasource.password=simpleaccounts_dev
 spring.jpa.hibernate.ddl-auto=update
-spring.redis.host=localhost
-spring.redis.port=6379
+
+# Redis configuration
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+
+# Disable Liquibase in local dev (use ddl-auto=update instead)
+# Uncomment if you want to use Liquibase migrations
+# spring.liquibase.enabled=true
 BACKENDEOF
 fi
 
@@ -221,5 +228,9 @@ fi
 echo "✅ Development environment setup complete!"
 echo ""
 echo "Quick start commands:"
-echo "  Frontend: cd apps/frontend && npm run dev"
+echo "  Frontend: cd apps/frontend && npm start"
 echo "  Backend:  cd apps/backend && ./mvnw spring-boot:run"
+echo ""
+echo "Or from repo root:"
+echo "  Frontend: npm run frontend"
+echo "  Backend:  npm run backend:run"
