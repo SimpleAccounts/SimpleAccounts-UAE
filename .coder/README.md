@@ -11,7 +11,7 @@ This Coder template provides a complete development environment for SimpleAccoun
 - ✅ **Persistent Git**: Your code changes are saved
 - ✅ **Custom domains**: `username-workspace.dev.simpleaccounts.io`
 - ✅ **Multi-IDE support**: VS Code Web, VS Code Desktop, Cursor, SSH
-- ✅ **Full stack**: Java 21, Node 20, PostgreSQL 16, Redis 7
+- ✅ **Full stack**: Java 21, Node 20, PostgreSQL 18, Redis 7
 
 ## Quick Start
 
@@ -53,7 +53,7 @@ Example for user `john` with workspace `dev`:
 
 | Service               | Version | Access       |
 | --------------------- | ------- | ------------ |
-| PostgreSQL            | 16      | `db:5432`    |
+| PostgreSQL            | 18      | `db:5432`    |
 | Redis                 | 7       | `redis:6379` |
 | Frontend (Vite)       | -       | Port 3000    |
 | Backend (Spring Boot) | -       | Port 8080    |
@@ -67,11 +67,25 @@ psql -h db -p 5432 -U simpleaccounts -d simpleaccounts
 # Connection string for backend
 jdbc:postgresql://db:5432/simpleaccounts
 
-# Credentials
+# Credentials (automatically configured)
 User: simpleaccounts
-Password: simpleaccounts_dev
+Password: <randomly generated per workspace>
 Database: simpleaccounts
 ```
+
+**Note**: The database password is randomly generated for each workspace and automatically configured in your environment variables. Your backend application connects automatically using the `SIMPLEACCOUNTS_DB_PASSWORD` environment variable. No manual password configuration needed!
+
+### Automatic Database Initialization
+
+When your workspace first starts, the database is automatically configured with:
+
+- ✅ **User creation**: `simpleaccounts` user with secure random password
+- ✅ **Database creation**: `simpleaccounts` (main) and `simpleaccounts_test` databases
+- ✅ **Extensions enabled**: `uuid-ossp`, `pgcrypto`, `pg_trgm`
+- ✅ **Privileges granted**: Full access to all databases
+- ✅ **Schema migration**: Liquibase runs automatically on backend startup
+
+This happens via the `init-db.sh` script which reads the randomly generated password from environment variables, ensuring security and consistency across all services.
 
 ### Development Tools
 
