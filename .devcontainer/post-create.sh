@@ -138,7 +138,13 @@ cd ../..
 # Setup git hooks
 # ============================================
 echo "🪝 Setting up git hooks..."
-npm run prepare 2>/dev/null || true
+# Only run husky if we're in a git repository
+if [ -d ".git" ]; then
+    npm run prepare 2>/dev/null || true
+    echo "  ✅ Git hooks installed"
+else
+    echo "  ⚠️  Not in a git repository, skipping git hooks"
+fi
 
 # ============================================
 # Create local environment files
