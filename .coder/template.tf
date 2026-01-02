@@ -71,15 +71,23 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/bash_history"
       mkdir -p "$BASE_DIR/gitconfig"
 
-      # Create .claude.json if it doesn't exist
-      # Remove if it exists as a directory (bug fix)
+      # Create .claude.json as a file (not directory) - CRITICAL FIX
+      # Docker creates missing mount paths as directories, so we must ensure this exists as a file first
       if [ -d "$BASE_DIR/claude/.claude.json" ]; then
         rm -rf "$BASE_DIR/claude/.claude.json"
         echo "⚠️  Removed .claude.json directory (was incorrectly created as directory)"
       fi
+      # Always ensure it's a file, not a directory
       if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
+        touch "$BASE_DIR/claude/.claude.json"
         echo '{}' > "$BASE_DIR/claude/.claude.json"
-        echo "✅ Created empty .claude.json file"
+        chmod 644 "$BASE_DIR/claude/.claude.json"
+        echo "✅ Created .claude.json as file with proper permissions"
+      fi
+      # Verify it's a file (safety check)
+      if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
+        echo "❌ ERROR: .claude.json could not be created as file!"
+        exit 1
       fi
 
       # Create .gemini/config.json if it doesn't exist
@@ -388,8 +396,8 @@ resource "docker_container" "workspace" {
     "MAVEN_OPTS=-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
     "JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     "NODE_OPTIONS=--max-old-space-size=2048",
-    "HISTFILE=/home/vscode/.bash_history_dir/bash_history",
-    "GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/gitconfig"
+    "HISTFILE=/home/vscode/.bash_history_dir/.bash_history",
+    "GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/.gitconfig"
   ]
 
   # Workspace directory (persistent Git repository)
@@ -439,7 +447,7 @@ resource "docker_container" "workspace" {
   }
 
   volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/bash-history/.bash_history"
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/bash_history/.bash_history"
     container_path = "/home/vscode/.bash_history_dir"
   }
 
