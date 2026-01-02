@@ -156,13 +156,10 @@ resource "coder_agent" "main" {
 
     echo "🚀 Starting SimpleAccounts-UAE workspace..."
 
-    # Fix workspace directory ownership for vscode user (runs as root first)
-    # This ensures npm, git, and IDE tools work correctly
-    echo "🔧 Fixing workspace permissions..."
+    # Configure git to trust workspace directory (prevents dubious ownership warning)
+    echo "🔧 Configuring git safe directory..."
     if [ -d /workspaces/SimpleAccounts-UAE ]; then
-      chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
-      # Configure git to trust this directory (prevents dubious ownership warning)
-      su vscode -c "git config --global --add safe.directory /workspaces/SimpleAccounts-UAE" 2>/dev/null || true
+      git config --global --add safe.directory /workspaces/SimpleAccounts-UAE 2>/dev/null || true
     fi
 
     # Wait for PostgreSQL
@@ -180,7 +177,6 @@ resource "coder_agent" "main" {
       echo "📦 Cloning repository..."
       git clone ${data.coder_parameter.git_clone_url.value} /workspaces/SimpleAccounts-UAE || echo "⚠️  Clone failed, may already exist"
       cd /workspaces/SimpleAccounts-UAE
-      chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
     else
       echo "✅ Repository already cloned"
       cd /workspaces/SimpleAccounts-UAE
@@ -307,17 +303,17 @@ resource "docker_container" "workspace" {
   # Cache volumes (rebuilds are OK)
   volumes {
     volume_name    = docker_volume.vscode_extensions.name
-    container_path = "/home/vscode/.vscode-server/extensions"
+    container_path = "/root/.vscode-server/extensions"
   }
 
   volumes {
     volume_name    = docker_volume.maven_cache.name
-    container_path = "/home/vscode/.m2"
+    container_path = "/root/.m2"
   }
 
   volumes {
     volume_name    = docker_volume.npm_cache.name
-    container_path = "/home/vscode/.npm"
+    container_path = "/root/.npm"
   }
 
   # User credentials (persistent across host)
