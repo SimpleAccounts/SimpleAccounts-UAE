@@ -45,8 +45,8 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-# NOTE: .claude.json file is created by the host_directories provisioner script below
-# This ensures it's created on the host before Docker tries to mount it
+# NOTE: .claude.json is created inside .claude/ directory using CLAUDE_CONFIG_DIR env var
+# This avoids Docker file mount issues by keeping everything in one directory mount
 
 # Create host directories for bind mounts before container starts
 resource "null_resource" "host_directories" {
@@ -74,15 +74,8 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/bash_history"
       mkdir -p "$BASE_DIR/gitconfig"
 
-      # Create .claude.json file (remove directory if it exists from previous workspace)
-      if [ -d "$BASE_DIR/claude/.claude.json" ]; then
-        rm -rf "$BASE_DIR/claude/.claude.json"
-        echo "🗑️  Removed .claude.json directory"
-      fi
-      if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
-        echo '{}' > "$BASE_DIR/claude/.claude.json"
-        echo "✅ Created .claude.json file"
-      fi
+      # NOTE: .claude.json will be auto-created by Claude Code inside .claude/ directory
+      # via CLAUDE_CONFIG_DIR environment variable
 
       # Create .gemini/config.json if it doesn't exist
       if [ ! -f "$BASE_DIR/gemini/.gemini/config.json" ]; then
@@ -237,7 +230,7 @@ resource "coder_agent" "main" {
     fi
 
     # Fix ownership of bind-mounted config files and directories
-    for path in /home/vscode/.claude.json /home/vscode/.claude /home/vscode/.gemini \
+    for path in /home/vscode/.claude /home/vscode/.gemini \
                 /home/vscode/.config/gh /home/vscode/.bash_history_dir /home/vscode/.gitconfig_dir \
                 /home/vscode/.ssh /home/vscode/.docker /home/vscode/.kube; do
       if [ -e "$path" ]; then
@@ -391,7 +384,9 @@ resource "docker_container" "workspace" {
     "JAVA_TOOL_OPTIONS=-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
     "NODE_OPTIONS=--max-old-space-size=2048",
     "HISTFILE=/home/vscode/.bash_history_dir/.bash_history",
-    "GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/.gitconfig"
+    "GIT_CONFIG_GLOBAL=/home/vscode/.gitconfig_dir/.gitconfig",
+    # Claude Code configuration directory (puts .claude.json inside .claude/ directory)
+    "CLAUDE_CONFIG_DIR=/home/vscode/.claude"
   ]
 
   # Workspace directory (persistent Git repository)
@@ -416,14 +411,9 @@ resource "docker_container" "workspace" {
     container_path = "/home/vscode/.npm"
   }
 
-  # User credentials (persistent across host) - mount both file and directory
-  # Claude config file
-  volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude.json"
-    container_path = "/home/vscode/.claude.json"
-  }
-
-  # Claude data directory (for cache, sessions, etc.)
+  # User credentials (persistent across host)
+  # Claude directory (contains .claude.json, settings.json, and cache)
+  # CLAUDE_CONFIG_DIR env var tells Claude to look for .claude.json here
   volumes {
     host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude"
     container_path = "/home/vscode/.claude"
@@ -518,7 +508,7 @@ resource "docker_container" "workspace" {
   depends_on = [
     docker_container.postgres,
     docker_container.redis,
-    null_resource.host_directories  # Ensures .claude.json is created before mounting
+    null_resource.host_directories
   ]
 
   # Auto-restart on failure

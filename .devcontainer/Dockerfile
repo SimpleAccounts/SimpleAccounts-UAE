@@ -151,13 +151,10 @@ RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts
 USER root
 RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
 
-# Pre-create user directories and files to avoid permission issues in post-create
+# Pre-create user directories to avoid permission issues in post-create
 USER vscode
 RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
-    && chmod -R 755 ~/.m2 ~/.npm ~/.cache \
-    # Create .claude.json file to ensure it exists before volume mount
-    && echo '{}' > ~/.claude.json \
-    && echo "Created .claude.json file in container image"
+    && chmod -R 755 ~/.m2 ~/.npm ~/.cache
 
 # Reset working directory and user
 USER root
