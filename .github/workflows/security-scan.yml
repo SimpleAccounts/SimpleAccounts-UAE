@@ -40,7 +40,7 @@ jobs:
           exit-code: '0' # Don't fail on findings, just report
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-dockerfile-results.sarif'
@@ -97,7 +97,7 @@ jobs:
           timeout: '15m0s' # Allow more time for image scanning
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-image-results.sarif'
@@ -132,7 +132,7 @@ jobs:
           timeout: '15m0s' # Allow more time for Maven dependency resolution
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-fs-results.sarif'
@@ -164,7 +164,7 @@ jobs:
           exit-code: '0' # Don't fail scheduled scans
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: 'trivy-published-results.sarif'
