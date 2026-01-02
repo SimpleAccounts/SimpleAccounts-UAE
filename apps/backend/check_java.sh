@@ -4,7 +4,8 @@ echo "Checking Java installation..."
 # Check if java command works
 if command -v java &> /dev/null; then
     echo "✓ Java found in PATH"
-    java -version 2>&1 | head -1
+    # Filter out JAVA_TOOL_OPTIONS message and show actual version line
+    java -version 2>&1 | grep -E '(openjdk|java) version' | head -1
 else
     echo "✗ Java not in PATH"
 fi
@@ -14,7 +15,8 @@ if [ -n "$JAVA_HOME" ]; then
     echo "✓ JAVA_HOME is set: $JAVA_HOME"
     if [ -x "$JAVA_HOME/bin/java" ]; then
         echo "✓ Java executable found at JAVA_HOME"
-        "$JAVA_HOME/bin/java" -version 2>&1 | head -1
+        # Filter out JAVA_TOOL_OPTIONS message and show actual version line
+        "$JAVA_HOME/bin/java" -version 2>&1 | grep -E '(openjdk|java) version' | head -1
     else
         echo "✗ Java executable not found at JAVA_HOME"
     fi

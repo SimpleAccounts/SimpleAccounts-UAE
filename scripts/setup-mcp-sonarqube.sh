@@ -14,7 +14,8 @@ echo "Setting up SonarQube MCP Server for Claude Code..."
 # Check for Java 21+
 check_java() {
     if command -v java &> /dev/null; then
-        JAVA_VERSION=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+        # Filter out JAVA_TOOL_OPTIONS message and get version from "openjdk version" or "java version" line
+        JAVA_VERSION=$(java -version 2>&1 | grep -E '(openjdk|java) version' | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
         if [ "$JAVA_VERSION" -ge "$REQUIRED_JAVA_VERSION" ] 2>/dev/null; then
             echo "Found Java $JAVA_VERSION"
             return 0
@@ -23,7 +24,8 @@ check_java() {
 
     # Check for JAVA_HOME with JDK 21+
     if [ -n "$JAVA_HOME" ]; then
-        JAVA_VERSION=$("$JAVA_HOME/bin/java" -version 2>&1 | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
+        # Filter out JAVA_TOOL_OPTIONS message and get version from "openjdk version" or "java version" line
+        JAVA_VERSION=$("$JAVA_HOME/bin/java" -version 2>&1 | grep -E '(openjdk|java) version' | head -1 | cut -d'"' -f2 | cut -d'.' -f1)
         if [ "$JAVA_VERSION" -ge "$REQUIRED_JAVA_VERSION" ] 2>/dev/null; then
             echo "Found Java $JAVA_VERSION at JAVA_HOME"
             return 0
