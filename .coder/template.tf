@@ -113,6 +113,12 @@ EOF
 }
 
 # Random password for PostgreSQL (generated once per workspace)
+# NOTE: This password persists in Terraform state across workspace stop/start cycles.
+# However, if Terraform state is reset while the volume persists, password mismatch occurs.
+#
+# The sync-db-password.sh script in post-start attempts to fix this by updating
+# the password in the database to match the environment variable.
+# If that fails, the user needs to rebuild with: coder restart --build
 resource "random_password" "postgres" {
   length  = 32
   special = false # Avoid special chars that might cause shell escaping issues
@@ -159,7 +165,7 @@ resource "docker_container" "postgres" {
     "POSTGRES_USER=simpleaccounts",
     "POSTGRES_PASSWORD=${random_password.postgres.result}",
     "POSTGRES_DB=simpleaccounts",
-    # Application database user credentials (used by init-db.sh)
+    # Application database user credentials (used by init-db.sh and password sync)
     "SIMPLEACCOUNTS_DB_USER=simpleaccounts",
     "SIMPLEACCOUNTS_DB_PASSWORD=${random_password.postgres.result}"
   ]
@@ -176,6 +182,13 @@ resource "docker_container" "postgres" {
     read_only      = true
   }
 
+  # Password sync hook (runs on every startup to fix password mismatch)
+  volumes {
+    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/postgres-startup-hook.sh"
+    container_path = "/usr/local/bin/password-sync.sh"
+    read_only      = true
+  }
+
   networks_advanced {
     name    = docker_network.workspace.name
     aliases = ["db", "postgres"]
@@ -187,6 +200,13 @@ resource "docker_container" "postgres" {
     timeout  = "5s"
     retries  = 5
   }
+
+  # Custom command: start postgres normally, then run password sync in background
+  # This ensures passwords are synchronized on EVERY container start, not just first init
+  command = [
+    "bash", "-c",
+    "docker-entrypoint.sh postgres & PG_PID=$!; sleep 5; chmod +x /usr/local/bin/password-sync.sh && /usr/local/bin/password-sync.sh || true; wait $PG_PID"
+  ]
 
   restart = "unless-stopped"
 }

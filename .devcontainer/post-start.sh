@@ -52,6 +52,15 @@ done
 if [ $ELAPSED -lt $TIMEOUT ]; then
     echo "✅ PostgreSQL is ready"
 
+    # Synchronize database password (fixes mismatch after workspace rebuild)
+    echo ""
+    echo "🔄 Synchronizing database password..."
+    if bash /workspaces/SimpleAccounts-UAE/.devcontainer/sync-db-password.sh; then
+        echo "✅ Database password synchronized"
+    else
+        echo "⚠️  Database password sync failed - may need manual intervention"
+    fi
+
     # Validate database configuration
     echo ""
     echo "🔍 Validating database setup..."
