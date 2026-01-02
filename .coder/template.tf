@@ -156,6 +156,12 @@ resource "coder_agent" "main" {
 
     echo "🚀 Starting SimpleAccounts-UAE workspace..."
 
+    # Fix ownership of workspace directory (needed when switching from root to vscode user)
+    echo "🔧 Fixing workspace permissions..."
+    if [ -d /workspaces/SimpleAccounts-UAE ]; then
+      sudo chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+    fi
+
     # Configure git to trust workspace directory (prevents dubious ownership warning)
     echo "🔧 Configuring git safe directory..."
     if [ -d /workspaces/SimpleAccounts-UAE ]; then
