@@ -158,7 +158,10 @@ resource "docker_container" "postgres" {
   env = [
     "POSTGRES_USER=simpleaccounts",
     "POSTGRES_PASSWORD=${random_password.postgres.result}",
-    "POSTGRES_DB=simpleaccounts"
+    "POSTGRES_DB=simpleaccounts",
+    # Application database user credentials (used by init-db.sh)
+    "SIMPLEACCOUNTS_DB_USER=simpleaccounts",
+    "SIMPLEACCOUNTS_DB_PASSWORD=${random_password.postgres.result}"
   ]
 
   volumes {
@@ -168,8 +171,8 @@ resource "docker_container" "postgres" {
 
   # Database initialization script (creates extensions and test database)
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sql"
-    container_path = "/docker-entrypoint-initdb.d/init.sql"
+    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sh"
+    container_path = "/docker-entrypoint-initdb.d/init-db.sh"
     read_only      = true
   }
 
@@ -390,9 +393,9 @@ resource "docker_container" "workspace" {
     "SIMPLEACCOUNTS_DB_SSL=false",
     "SIMPLEACCOUNTS_DB_SSLMODE=disable",
     "SIMPLEACCOUNTS_DB_SSLROOTCERT=",
-    # Redis configuration
-    "SPRING_REDIS_HOST=redis",
-    "SPRING_REDIS_PORT=6379",
+    # Redis configuration (Spring Boot 3.x naming convention)
+    "SPRING_DATA_REDIS_HOST=redis",
+    "SPRING_DATA_REDIS_PORT=6379",
     # Application host
     "SIMPLEACCOUNTS_HOST=http://localhost:8080",
     # Application settings
