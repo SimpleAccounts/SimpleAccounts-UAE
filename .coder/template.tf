@@ -45,6 +45,73 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
+# Create host directories for bind mounts before container starts
+resource "null_resource" "host_directories" {
+  # Re-run when workspace is rebuilt
+  triggers = {
+    workspace_id = data.coder_workspace.me.id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      #!/bin/bash
+      set -e
+
+      # Create base directory structure
+      BASE_DIR="/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}"
+
+      # Create directories for config files
+      mkdir -p "$BASE_DIR/claude"
+      mkdir -p "$BASE_DIR/claude/.claude"  # Claude data directory
+      mkdir -p "$BASE_DIR/gemini/.gemini"  # Gemini data directory
+      mkdir -p "$BASE_DIR/.config/gh"
+      mkdir -p "$BASE_DIR/.ssh"
+      mkdir -p "$BASE_DIR/.docker"
+      mkdir -p "$BASE_DIR/.kube"
+      mkdir -p "$BASE_DIR/bash_history"
+      mkdir -p "$BASE_DIR/gitconfig"
+
+      # Create .claude.json if it doesn't exist
+      if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
+        echo '{}' > "$BASE_DIR/claude/.claude.json"
+        echo "✅ Created empty .claude.json file"
+      fi
+
+      # Create .gemini/config.json if it doesn't exist
+      if [ ! -f "$BASE_DIR/gemini/.gemini/config.json" ]; then
+        echo '{}' > "$BASE_DIR/gemini/.gemini/config.json"
+        echo "✅ Created empty gemini config.json file"
+      fi
+
+      # Create .bash_history if it doesn't exist
+      if [ ! -f "$BASE_DIR/bash_history/.bash_history" ]; then
+        touch "$BASE_DIR/bash_history/.bash_history"
+        echo "✅ Created .bash_history file"
+      fi
+
+      # Create .gitconfig if it doesn't exist
+      if [ ! -f "$BASE_DIR/gitconfig/.gitconfig" ]; then
+        cat > "$BASE_DIR/gitconfig/.gitconfig" << 'EOF'
+[user]
+	name = ${data.coder_workspace_owner.me.name}
+	email = ${data.coder_workspace_owner.me.email}
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+EOF
+        echo "✅ Created .gitconfig file"
+      fi
+
+      # Ensure proper permissions (coder user should own these)
+      chown -R coder:coder "$BASE_DIR" 2>/dev/null || true
+
+      echo "✅ Host directories prepared for user: ${data.coder_workspace_owner.me.name}"
+    EOT
+    interpreter = ["bash", "-c"]
+  }
+}
+
 # Random password for PostgreSQL (generated once per workspace)
 resource "random_password" "postgres" {
   length  = 32
@@ -162,12 +229,12 @@ resource "coder_agent" "main" {
       sudo chown -R vscode:vscode /workspaces/SimpleAccounts-UAE 2>/dev/null || true
     fi
 
-    # Fix ownership of bind-mounted config directories
-    for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.config/gh \
-               /home/vscode/.bash_history_dir /home/vscode/.gitconfig_dir \
-               /home/vscode/.ssh /home/vscode/.docker /home/vscode/.kube; do
-      if [ -d "$dir" ]; then
-        sudo chown -R vscode:vscode "$dir" 2>/dev/null || true
+    # Fix ownership of bind-mounted config files and directories
+    for path in /home/vscode/.claude.json /home/vscode/.claude /home/vscode/.gemini \
+                /home/vscode/.config/gh /home/vscode/.bash_history_dir /home/vscode/.gitconfig_dir \
+                /home/vscode/.ssh /home/vscode/.docker /home/vscode/.kube; do
+      if [ -e "$path" ]; then
+        sudo chown -R vscode:vscode "$path" 2>/dev/null || true
       fi
     done
 
@@ -342,12 +409,20 @@ resource "docker_container" "workspace" {
     container_path = "/home/vscode/.npm"
   }
 
-  # User credentials (persistent across host)
+  # User credentials (persistent across host) - mount both file and directory
+  # Claude config file
+  volumes {
+    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude.json"
+    container_path = "/home/vscode/.claude.json"
+  }
+
+  # Claude data directory (for cache, sessions, etc.)
   volumes {
     host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude"
     container_path = "/home/vscode/.claude"
   }
 
+  # Gemini directory (contains config.json and other data)
   volumes {
     host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/gemini/.gemini"
     container_path = "/home/vscode/.gemini"
@@ -432,10 +507,11 @@ resource "docker_container" "workspace" {
     value = "8080"
   }
 
-  # Depend on database containers
+  # Depend on database containers and host directory setup
   depends_on = [
     docker_container.postgres,
-    docker_container.redis
+    docker_container.redis,
+    null_resource.host_directories
   ]
 
   # Auto-restart on failure
