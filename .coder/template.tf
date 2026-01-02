@@ -65,9 +65,9 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/claude/.claude"  # Claude data directory
       mkdir -p "$BASE_DIR/gemini/.gemini"  # Gemini data directory
       mkdir -p "$BASE_DIR/.config/gh"
-      mkdir -p "$BASE_DIR/.ssh"
-      mkdir -p "$BASE_DIR/.docker"
-      mkdir -p "$BASE_DIR/.kube"
+      mkdir -p "$BASE_DIR/ssh/.ssh"        # SSH config and keys
+      mkdir -p "$BASE_DIR/docker/.docker"  # Docker credentials
+      mkdir -p "$BASE_DIR/kube/.kube"      # Kubernetes config
       mkdir -p "$BASE_DIR/bash_history"
       mkdir -p "$BASE_DIR/gitconfig"
 
