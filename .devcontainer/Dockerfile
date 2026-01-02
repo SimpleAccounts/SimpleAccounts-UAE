@@ -160,9 +160,14 @@ RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright 
 USER root
 WORKDIR /workspaces
 
-# Set default user to vscode (non-root)
-# This ensures container starts as vscode user even without devcontainer.json
-USER vscode
+# Copy and set up entrypoint script (runs as root to fix permissions)
+COPY --chown=root:root .devcontainer/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Default command
+# Keep container running as root by default
+# The entrypoint will fix permissions then switch to vscode user
+# This ensures automated permission fixing on every container start
+
+# Set entrypoint and default command
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["sleep", "infinity"]

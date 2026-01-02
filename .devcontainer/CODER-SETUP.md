@@ -1,27 +1,19 @@
 # Coder Workspace Setup
 
-## One-Time Permission Fix
+## ✅ Fully Automated - Zero Manual Steps Required
 
-When creating a new Coder workspace, run this once to fix directory permissions:
+This devcontainer is now **fully automated**. When you create a Coder workspace:
 
-```bash
-# Fix ownership of workspace and config directories
-sudo chown -R 1000:1000 /workspaces/SimpleAccounts-UAE
-sudo chown -R 1000:1000 $HOME/.devcontainer-mount
+1. Container starts as root
+2. Entrypoint script automatically fixes all permissions
+3. Container switches to vscode user
+4. Everything works immediately
 
-# Set SSH directory permissions
-sudo chmod 700 $HOME/.ssh 2>/dev/null || true
-```
+**No manual commands needed!**
 
-Or use the automated script:
+## Verify Permissions (Optional)
 
-```bash
-sudo bash .devcontainer/fix-dev-server-permissions.sh
-```
-
-## Verify Permissions
-
-After starting the devcontainer:
+To verify everything is working correctly:
 
 ```bash
 bash .devcontainer/verify-permissions.sh
@@ -31,17 +23,51 @@ All tests should pass with ✅ marks.
 
 ## CI/CD: Building the Prebuilt Image
 
-The Dockerfile already sets `USER vscode` as the final user (line 165).
 Ensure your CI/CD pipeline builds and pushes to:
 
 ```
 ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
 ```
 
+Example:
+
+```bash
+docker build -f .devcontainer/Dockerfile \
+  -t ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest .
+docker push ghcr.io/simpleaccounts/simpleaccounts-uae-devcontainer:latest
+```
+
+## How It Works
+
+1. **Container starts as root** (Dockerfile)
+2. **Entrypoint runs** (`/usr/local/bin/entrypoint.sh`)
+   - Fixes workspace ownership → `vscode:vscode`
+   - Fixes config directory ownership → `vscode:vscode`
+   - Sets SSH permissions → `700` for `.ssh`, `600` for keys
+3. **Switches to vscode user** and executes command
+4. **VS Code connects as vscode** (`remoteUser: vscode`)
+
 ## Key Configuration
 
-- **remoteUser**: `vscode` (UID 1000)
+- **Container startup**: `root` (for permission fixing)
+- **Runtime user**: `vscode` (UID 1000) - switched by entrypoint
+- **VS Code user**: `vscode` - specified in devcontainer.json
 - **updateRemoteUserUID**: `true` (syncs container UID with host)
-- **Dockerfile**: Sets `USER vscode` as default
+- **ENTRYPOINT**: Automated permission fixer
 
-This ensures the container runs as non-root with proper permissions.
+## What Gets Fixed Automatically
+
+✅ Workspace directory (`/workspaces/SimpleAccounts-UAE`)
+✅ Claude CLI config (`~/.claude`)
+✅ Gemini CLI config (`~/.gemini`)
+✅ Codex CLI config (`~/.codex`)
+✅ GitHub CLI config (`~/.config/gh`)
+✅ Bash history (`~/.bash_history_dir`)
+✅ Git config (`~/.gitconfig_dir`)
+✅ SSH directory (`~/.ssh`) with proper mode 700
+✅ Docker config (`~/.docker`)
+✅ Kubernetes config (`~/.kube`)
+✅ AWS config (`~/.aws`)
+✅ Azure config (`~/.azure`)
+
+All automatically owned by `vscode:vscode` (UID 1000) on every container start.
