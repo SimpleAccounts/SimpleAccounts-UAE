@@ -4,6 +4,23 @@
 echo "🔄 Starting SimpleAccounts-UAE development environment..."
 
 # =============================================================================
+# Ensure direnv is installed (handles containers built before direnv was added)
+# =============================================================================
+if ! command -v direnv &> /dev/null; then
+    echo "📦 Installing direnv..."
+    sudo apt-get update -qq && sudo apt-get install -y -qq direnv > /dev/null 2>&1
+    if command -v direnv &> /dev/null; then
+        echo "✅ direnv installed"
+        # Allow .envrc if it exists
+        if [ -f "/workspaces/SimpleAccounts-UAE/.envrc" ]; then
+            direnv allow /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+        fi
+    else
+        echo "⚠️  Failed to install direnv"
+    fi
+fi
+
+# =============================================================================
 # Detect environment and set hostnames
 # - Coder: Uses separate containers with 'db' and 'redis' hostnames
 # - Local DevContainer: Uses network_mode: service:db (shared localhost)
