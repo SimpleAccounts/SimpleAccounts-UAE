@@ -74,10 +74,14 @@ resource "null_resource" "host_directories" {
       mkdir -p "$BASE_DIR/bash_history"
       mkdir -p "$BASE_DIR/gitconfig"
 
-      # Create .claude.json file if it doesn't exist (for file mount)
+      # Create .claude.json file (remove directory if it exists from previous workspace)
+      if [ -d "$BASE_DIR/claude/.claude.json" ]; then
+        rm -rf "$BASE_DIR/claude/.claude.json"
+        echo "🗑️  Removed .claude.json directory"
+      fi
       if [ ! -f "$BASE_DIR/claude/.claude.json" ]; then
         echo '{}' > "$BASE_DIR/claude/.claude.json"
-        echo "✅ Created empty .claude.json file"
+        echo "✅ Created .claude.json file"
       fi
 
       # Create .gemini/config.json if it doesn't exist
