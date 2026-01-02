@@ -45,19 +45,8 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-# Create .claude.json file inside the .claude directory (avoids Docker file mount issues)
-resource "local_file" "claude_config" {
-  filename = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude/config.json"
-  content  = "{}"
-
-  # Only create if doesn't exist, don't overwrite user's config
-  lifecycle {
-    ignore_changes = [content]
-  }
-
-  # Ensure parent directory exists first
-  depends_on = [null_resource.host_directories]
-}
+# NOTE: .claude/config.json is now created by the container startup script
+# This ensures it's created inside the mounted .claude directory where it's accessible
 
 # Create host directories for bind mounts before container starts
 resource "null_resource" "host_directories" {
@@ -236,7 +225,14 @@ resource "coder_agent" "main" {
 
     # Create .claude.json symlink to .claude/config.json (avoids Docker file mount issues)
     echo "🔧 Setting up Claude config..."
-    if [ -f /home/vscode/.claude/config.json ] && [ ! -e /home/vscode/.claude.json ]; then
+    # Create config.json if it doesn't exist
+    if [ ! -f /home/vscode/.claude/config.json ]; then
+      echo '{}' > /home/vscode/.claude/config.json
+      echo "✓ Created config.json"
+    fi
+
+    # Create symlink if it doesn't exist
+    if [ ! -e /home/vscode/.claude.json ]; then
       ln -s /home/vscode/.claude/config.json /home/vscode/.claude.json
       echo "✓ Created .claude.json symlink"
     elif [ -d /home/vscode/.claude.json ]; then
@@ -529,8 +525,7 @@ resource "docker_container" "workspace" {
   depends_on = [
     docker_container.postgres,
     docker_container.redis,
-    null_resource.host_directories,
-    local_file.claude_config  # Ensure .claude.json exists before mounting
+    null_resource.host_directories
   ]
 
   # Auto-restart on failure
