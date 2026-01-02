@@ -101,6 +101,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Copy Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cp .devcontainer/maven-settings.xml ~/.m2/settings.xml
+          echo "✅ Maven settings configured"
+
       - name: Run Backend Tests with Coverage
         working-directory: apps/backend
         run: mvn clean test -Dspring.profiles.active=test
@@ -229,6 +235,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
+      - name: Copy Maven settings
+        run: |
+          mkdir -p ~/.m2
+          cp .devcontainer/maven-settings.xml ~/.m2/settings.xml
+          echo "✅ Maven settings configured"
 
       - name: Build with Maven
         working-directory: apps/backend
