@@ -45,9 +45,9 @@ provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
 
-# Create .claude.json file using Terraform (ensures it exists before Docker mounts)
+# Create .claude.json file inside the .claude directory (avoids Docker file mount issues)
 resource "local_file" "claude_config" {
-  filename = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude.json"
+  filename = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude/config.json"
   content  = "{}"
 
   # Only create if doesn't exist, don't overwrite user's config
@@ -234,6 +234,18 @@ resource "coder_agent" "main" {
 
     echo "🚀 Starting SimpleAccounts-UAE workspace..."
 
+    # Create .claude.json symlink to .claude/config.json (avoids Docker file mount issues)
+    echo "🔧 Setting up Claude config..."
+    if [ -f /home/vscode/.claude/config.json ] && [ ! -e /home/vscode/.claude.json ]; then
+      ln -s /home/vscode/.claude/config.json /home/vscode/.claude.json
+      echo "✓ Created .claude.json symlink"
+    elif [ -d /home/vscode/.claude.json ]; then
+      # If .claude.json was created as a directory by Docker, remove it and create symlink
+      sudo rm -rf /home/vscode/.claude.json
+      ln -s /home/vscode/.claude/config.json /home/vscode/.claude.json
+      echo "✓ Replaced .claude.json directory with symlink"
+    fi
+
     # Fix ownership of workspace and config directories (needed when switching from root to vscode user)
     echo "🔧 Fixing workspace permissions..."
     if [ -d /workspaces/SimpleAccounts-UAE ]; then
@@ -241,7 +253,7 @@ resource "coder_agent" "main" {
     fi
 
     # Fix ownership of bind-mounted config files and directories
-    for path in /home/vscode/.claude.json /home/vscode/.claude /home/vscode/.gemini \
+    for path in /home/vscode/.claude /home/vscode/.gemini \
                 /home/vscode/.config/gh /home/vscode/.bash_history_dir /home/vscode/.gitconfig_dir \
                 /home/vscode/.ssh /home/vscode/.docker /home/vscode/.kube; do
       if [ -e "$path" ]; then
@@ -420,14 +432,9 @@ resource "docker_container" "workspace" {
     container_path = "/home/vscode/.npm"
   }
 
-  # User credentials (persistent across host) - mount both file and directory
-  # Claude config file
-  volumes {
-    host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude.json"
-    container_path = "/home/vscode/.claude.json"
-  }
-
-  # Claude data directory (for cache, sessions, etc.)
+  # User credentials (persistent across host)
+  # Claude data directory (contains config.json and other data)
+  # NOTE: .claude.json is created as a symlink to .claude/config.json in the startup script
   volumes {
     host_path      = "/home/coder/.coder-mount/${data.coder_workspace_owner.me.name}/claude/.claude"
     container_path = "/home/vscode/.claude"
