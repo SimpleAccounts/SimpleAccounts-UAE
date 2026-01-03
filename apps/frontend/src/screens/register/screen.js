@@ -6,7 +6,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
-import { Eye, EyeOff, Building2, MapPin, User, CheckCircle2, ArrowLeft } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  Building2,
+  MapPin,
+  User,
+  CheckCircle2,
+  ArrowLeft,
+  Landmark,
+  FileCheck,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import PhoneInput from 'react-phone-input-2';
 import { upperFirst } from 'lodash-es';
@@ -16,7 +26,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { StepWizard, StepContent, StepNavigation } from '@/components/ui/step-wizard';
@@ -539,7 +548,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="companyName" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyName}
@@ -554,7 +563,7 @@ const Register = () => {
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -567,7 +576,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyBusinessType}
@@ -590,7 +599,7 @@ const Register = () => {
                             placeholder="Select Business Type"
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -605,7 +614,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="companyAddress1" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyAddressLine1}
@@ -620,7 +629,7 @@ const Register = () => {
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -752,7 +761,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.Emirate}
@@ -780,7 +789,7 @@ const Register = () => {
                             placeholder="Select Emirate"
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -794,7 +803,7 @@ const Register = () => {
                     render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="font-bold ml-1">
-                          <span className="text-destructive" aria-hidden="true">
+                          <span className="text-primary" aria-hidden="true">
                             *{' '}
                           </span>
                           {strings.MobileNumber}
@@ -817,15 +826,16 @@ const Register = () => {
                           searchClass="search-box"
                         />
                         {fieldState.error && (
-                          <FormMessage role="alert" className="ml-1">
+                          <FormMessage role="alert" className="ml-1 text-red-500">
                             {fieldState.error.message}
                           </FormMessage>
                         )}
                       </FormItem>
                     )}
                   />
-                  <div className="space-y-6 pt-4">
-                    <Label className="block font-bold ml-1">Company Location Type</Label>
+                  {/* Company Location Type Section */}
+                  <div className="space-y-4 pt-4">
+                    <Label className="font-bold text-foreground ml-1">Company Location Type</Label>
                     <FormField
                       control={form.control}
                       name="isDesignatedZone"
@@ -833,46 +843,125 @@ const Register = () => {
                         <RadioGroup
                           value={field.value ? 'freezone' : 'mainland'}
                           onValueChange={value => field.onChange(value === 'freezone')}
-                          className="flex flex-wrap gap-6"
+                          className="grid grid-cols-2 gap-4"
                         >
-                          <div className="flex items-center space-x-3">
-                            <RadioGroupItem
-                              value="mainland"
-                              id="mainland"
-                              className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:text-primary"
-                            />
-                            <Label htmlFor="mainland" className="font-medium cursor-pointer">
+                          {/* Mainland Option */}
+                          <Label
+                            htmlFor="mainland"
+                            className={`relative flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                              !field.value
+                                ? 'shadow-neu-in dark:shadow-neu-in-dark'
+                                : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                            }`}
+                          >
+                            <RadioGroupItem value="mainland" id="mainland" className="sr-only" />
+                            <div
+                              className={`p-3 rounded-xl transition-all duration-200 ${
+                                !field.value
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'bg-muted/50 text-muted-foreground'
+                              }`}
+                            >
+                              <Building2 className="h-6 w-6" />
+                            </div>
+                            <span
+                              className={`font-semibold text-sm ${
+                                !field.value ? 'text-primary' : 'text-foreground'
+                              }`}
+                            >
                               {strings.Mainland}
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-3">
-                            <RadioGroupItem
-                              value="freezone"
-                              id="freezone"
-                              className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:text-primary"
-                            />
-                            <Label htmlFor="freezone" className="font-medium cursor-pointer">
+                            </span>
+                            {!field.value && (
+                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-primary" />
+                            )}
+                          </Label>
+
+                          {/* Freezone Option */}
+                          <Label
+                            htmlFor="freezone"
+                            className={`relative flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                              field.value
+                                ? 'shadow-neu-in dark:shadow-neu-in-dark'
+                                : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                            }`}
+                          >
+                            <RadioGroupItem value="freezone" id="freezone" className="sr-only" />
+                            <div
+                              className={`p-3 rounded-xl transition-all duration-200 ${
+                                field.value
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'bg-muted/50 text-muted-foreground'
+                              }`}
+                            >
+                              <Landmark className="h-6 w-6" />
+                            </div>
+                            <span
+                              className={`font-semibold text-sm ${
+                                field.value ? 'text-primary' : 'text-foreground'
+                              }`}
+                            >
                               {strings.Freezone}
-                            </Label>
-                          </div>
+                            </span>
+                            {field.value && (
+                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-primary" />
+                            )}
+                          </Label>
                         </RadioGroup>
                       )}
                     />
+                  </div>
+
+                  {/* VAT Registration Section */}
+                  <div className="space-y-4 pt-2">
                     <FormField
                       control={form.control}
                       name="IsRegistered"
                       render={({ field }) => (
-                        <div className="flex items-center space-x-3 pt-2">
-                          <Checkbox
-                            id="IsRegistered"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            aria-label="Is VAT registered"
-                            className="border-none shadow-neu-out dark:shadow-neu-out-dark data-[state=checked]:shadow-neu-in dark:data-[state=checked]:shadow-neu-in-dark data-[state=checked]:bg-primary text-white"
-                          />
-                          <Label htmlFor="IsRegistered" className="font-medium cursor-pointer">
-                            Is VAT Registered?
-                          </Label>
+                        <div
+                          className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                            field.value
+                              ? 'shadow-neu-in dark:shadow-neu-in-dark'
+                              : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                          }`}
+                          onClick={() => field.onChange(!field.value)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`p-2.5 rounded-xl transition-all duration-200 ${
+                                field.value
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'bg-muted/50 text-muted-foreground'
+                              }`}
+                            >
+                              <FileCheck className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <span className="font-semibold text-foreground block">
+                                VAT Registered
+                              </span>
+                              <p className="text-xs text-muted-foreground mt-0.5">
+                                Is your company registered for VAT?
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={field.value}
+                            onClick={e => {
+                              e.stopPropagation();
+                              field.onChange(!field.value);
+                            }}
+                            className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${
+                              field.value ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                                field.value ? 'translate-x-5' : 'translate-x-0.5'
+                              } mt-0.5`}
+                            />
+                          </button>
                         </div>
                       )}
                     />
@@ -885,7 +974,7 @@ const Register = () => {
                         render={({ field, fieldState }) => (
                           <FormItem>
                             <FormLabel htmlFor="trn" className="font-bold ml-1">
-                              <span className="text-destructive" aria-hidden="true">
+                              <span className="text-primary" aria-hidden="true">
                                 *{' '}
                               </span>
                               {strings.TaxRegistrationNumber}
@@ -905,7 +994,7 @@ const Register = () => {
                               }}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert" className="ml-1">
+                              <FormMessage role="alert" className="ml-1 text-red-500">
                                 {fieldState.error.message}
                               </FormMessage>
                             )}
@@ -926,7 +1015,7 @@ const Register = () => {
                         render={({ field, fieldState }) => (
                           <FormItem>
                             <FormLabel className="font-bold ml-1">
-                              <span className="text-destructive" aria-hidden="true">
+                              <span className="text-primary" aria-hidden="true">
                                 *{' '}
                               </span>
                               VAT Registered On
@@ -945,7 +1034,7 @@ const Register = () => {
                               className={`flex h-11 w-full rounded-xl border-none bg-neu-bg dark:bg-neu-bg-dark px-3 py-2 text-sm shadow-neu-in dark:shadow-neu-in-dark focus:outline-none transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive' : ''}`}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert" className="ml-1">
+                              <FormMessage role="alert" className="ml-1 text-red-500">
                                 {fieldState.error.message}
                               </FormMessage>
                             )}
@@ -984,7 +1073,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="firstName" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.FirstName}
@@ -1007,7 +1096,7 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('firstName', fieldState) && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1020,7 +1109,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="lastName" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.LastName}
@@ -1043,7 +1132,7 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('lastName', fieldState) && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1057,7 +1146,7 @@ const Register = () => {
                     render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel htmlFor="email" className="font-bold ml-1">
-                          <span className="text-destructive" aria-hidden="true">
+                          <span className="text-primary" aria-hidden="true">
                             *{' '}
                           </span>
                           {strings.EmailAddress}
@@ -1078,7 +1167,7 @@ const Register = () => {
                           }}
                         />
                         {shouldShowStep3Error('email', fieldState) && (
-                          <FormMessage role="alert" className="ml-1">
+                          <FormMessage role="alert" className="ml-1 text-red-500">
                             {fieldState.error.message}
                           </FormMessage>
                         )}
@@ -1092,7 +1181,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="reg-password" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             Password
@@ -1130,7 +1219,7 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('password', fieldState) && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1146,7 +1235,7 @@ const Register = () => {
                       render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel htmlFor="confirmPassword" className="font-bold ml-1">
-                            <span className="text-destructive" aria-hidden="true">
+                            <span className="text-primary" aria-hidden="true">
                               *{' '}
                             </span>
                             Confirm Password
@@ -1185,7 +1274,7 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('confirmPassword', fieldState) && (
-                            <FormMessage role="alert" className="ml-1">
+                            <FormMessage role="alert" className="ml-1 text-red-500">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
