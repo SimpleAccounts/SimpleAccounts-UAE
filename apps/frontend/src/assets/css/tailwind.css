@@ -124,6 +124,12 @@
   * {
     border-color: hsl(var(--border));
   }
+
+  /* Ensure all primary background elements have white text */
+  .bg-primary {
+    color: #ffffff !important;
+  }
+
   html,
   body {
     font-family:
