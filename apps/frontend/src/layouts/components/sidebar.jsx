@@ -157,7 +157,7 @@ export function Sidebar({
           <img
             src={minimized ? logoShort : logo}
             alt="SimpleAccounts Logo"
-            className={`drop-shadow-sm transition-all duration-200 ${minimized ? 'h-10 w-auto' : 'h-12 w-auto'}`}
+            className={`drop-shadow-sm transition-all duration-200 ${minimized ? 'h-14 w-auto' : 'h-20 w-auto'}`}
           />
         </div>
       </div>
