@@ -103,6 +103,15 @@ RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && \
     npm install -g openai 2>/dev/null || true && \
     npm install -g @google/gemini-cli 2>/dev/null || true" 2>&1
 
+# Install SonarQube MCP Server for code quality integration
+# Pin version for reproducibility - update version to get newer releases
+ARG SONARQUBE_MCP_VERSION="1.5.0.1706"
+RUN mkdir -p /home/vscode/.local/share/mcp-servers/storage \
+    && curl -fsSL -o /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.jar \
+       "https://github.com/SonarSource/sonarqube-mcp-server/releases/download/${SONARQUBE_MCP_VERSION}/sonarqube-mcp-server-${SONARQUBE_MCP_VERSION}.jar" \
+    && chown -R vscode:vscode /home/vscode/.local/share/mcp-servers \
+    && echo "${SONARQUBE_MCP_VERSION}" > /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.version
+
 # Create symlinks in /usr/local/bin for npm global packages
 # This ensures CLI tools are in PATH regardless of NVM sourcing
 RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm prefix -g)/bin") && \
