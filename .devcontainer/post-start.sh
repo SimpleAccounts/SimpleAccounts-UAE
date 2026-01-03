@@ -95,6 +95,41 @@ if [ -f /usr/local/bin/install-cli-tools ]; then
     echo "   (Check /tmp/cli-tools-update.log for details)"
 fi
 
+# Check for MCP server updates in background
+echo "🔧 Checking MCP servers for updates..."
+(
+    MCP_DIR="/home/vscode/.local/share/mcp-servers"
+    VERSION_FILE="$MCP_DIR/sonarqube-mcp-server.version"
+
+    # Ensure directory exists
+    mkdir -p "$MCP_DIR/storage"
+
+    # Get current installed version
+    CURRENT_VERSION=""
+    if [ -f "$VERSION_FILE" ]; then
+        CURRENT_VERSION=$(cat "$VERSION_FILE")
+    fi
+
+    # Get latest version from GitHub API
+    LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/SonarSource/sonarqube-mcp-server/releases/latest" 2>/dev/null | grep -o '"tag_name": "[^"]*"' | cut -d'"' -f4)
+
+    if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+        echo "Updating SonarQube MCP Server: $CURRENT_VERSION -> $LATEST_VERSION"
+        if curl -fsSL -o "$MCP_DIR/sonarqube-mcp-server.jar.new" \
+           "https://github.com/SonarSource/sonarqube-mcp-server/releases/download/${LATEST_VERSION}/sonarqube-mcp-server-${LATEST_VERSION}.jar" 2>/dev/null; then
+            mv "$MCP_DIR/sonarqube-mcp-server.jar.new" "$MCP_DIR/sonarqube-mcp-server.jar"
+            echo "$LATEST_VERSION" > "$VERSION_FILE"
+            echo "✅ SonarQube MCP Server updated to $LATEST_VERSION"
+        else
+            rm -f "$MCP_DIR/sonarqube-mcp-server.jar.new"
+            echo "⚠️ Failed to download SonarQube MCP Server update"
+        fi
+    elif [ -n "$CURRENT_VERSION" ]; then
+        echo "✅ SonarQube MCP Server is up to date ($CURRENT_VERSION)"
+    fi
+) > /tmp/mcp-update.log 2>&1 &
+echo "   (Check /tmp/mcp-update.log for details)"
+
 # Start code-server if installed and not running
 if command -v code-server &> /dev/null; then
     CODE_SERVER_CONFIG="$HOME/.config/code-server/config.yaml"
@@ -271,4 +306,7 @@ echo "  cursor    - Cursor CLI"
 echo "  cursor-agent - Cursor agent CLI shim"
 echo "  gh        - GitHub CLI"
 echo "  psql      - PostgreSQL Client"
+echo ""
+echo "MCP Servers (pre-installed):"
+echo "  SonarQube - Code quality analysis (~/.local/share/mcp-servers/)"
 echo ""
