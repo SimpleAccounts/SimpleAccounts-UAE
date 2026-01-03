@@ -113,6 +113,12 @@ EOF
 }
 
 # Random password for PostgreSQL (generated once per workspace)
+# NOTE: This password persists in Terraform state across workspace stop/start cycles.
+# However, if Terraform state is reset while the volume persists, password mismatch occurs.
+#
+# The sync-db-password.sh script in post-start attempts to fix this by updating
+# the password in the database to match the environment variable.
+# If that fails, the user needs to rebuild with: coder restart --build
 resource "random_password" "postgres" {
   length  = 32
   special = false # Avoid special chars that might cause shell escaping issues
@@ -158,7 +164,10 @@ resource "docker_container" "postgres" {
   env = [
     "POSTGRES_USER=simpleaccounts",
     "POSTGRES_PASSWORD=${random_password.postgres.result}",
-    "POSTGRES_DB=simpleaccounts"
+    "POSTGRES_DB=simpleaccounts",
+    # Application database user credentials (used by init-db.sh and password sync)
+    "SIMPLEACCOUNTS_DB_USER=simpleaccounts",
+    "SIMPLEACCOUNTS_DB_PASSWORD=${random_password.postgres.result}"
   ]
 
   volumes {
@@ -168,8 +177,15 @@ resource "docker_container" "postgres" {
 
   # Database initialization script (creates extensions and test database)
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sql"
-    container_path = "/docker-entrypoint-initdb.d/init.sql"
+    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sh"
+    container_path = "/docker-entrypoint-initdb.d/init-db.sh"
+    read_only      = true
+  }
+
+  # Password sync hook (runs on every startup to fix password mismatch)
+  volumes {
+    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/postgres-startup-hook.sh"
+    container_path = "/usr/local/bin/password-sync.sh"
     read_only      = true
   }
 
@@ -184,6 +200,13 @@ resource "docker_container" "postgres" {
     timeout  = "5s"
     retries  = 5
   }
+
+  # Custom command: start postgres normally, then run password sync in background
+  # This ensures passwords are synchronized on EVERY container start, not just first init
+  command = [
+    "bash", "-c",
+    "docker-entrypoint.sh postgres & PG_PID=$!; sleep 5; chmod +x /usr/local/bin/password-sync.sh && /usr/local/bin/password-sync.sh || true; wait $PG_PID"
+  ]
 
   restart = "unless-stopped"
 }
@@ -390,9 +413,9 @@ resource "docker_container" "workspace" {
     "SIMPLEACCOUNTS_DB_SSL=false",
     "SIMPLEACCOUNTS_DB_SSLMODE=disable",
     "SIMPLEACCOUNTS_DB_SSLROOTCERT=",
-    # Redis configuration
-    "SPRING_REDIS_HOST=redis",
-    "SPRING_REDIS_PORT=6379",
+    # Redis configuration (Spring Boot 3.x naming convention)
+    "SPRING_DATA_REDIS_HOST=redis",
+    "SPRING_DATA_REDIS_PORT=6379",
     # Application host
     "SIMPLEACCOUNTS_HOST=http://localhost:8080",
     # Application settings

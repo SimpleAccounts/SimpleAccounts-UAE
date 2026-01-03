@@ -51,6 +51,26 @@ until pg_isready -h "$POSTGRES_HOST" -p 5432 -U simpleaccounts -q; do
 done
 if [ $ELAPSED -lt $TIMEOUT ]; then
     echo "✅ PostgreSQL is ready"
+
+    # Synchronize database password (fixes mismatch after workspace rebuild)
+    echo ""
+    echo "🔄 Synchronizing database password..."
+    if bash /workspaces/SimpleAccounts-UAE/.devcontainer/sync-db-password.sh; then
+        echo "✅ Database password synchronized"
+    else
+        echo "⚠️  Database password sync failed - may need manual intervention"
+    fi
+
+    # Validate database configuration
+    echo ""
+    echo "🔍 Validating database setup..."
+    if bash /workspaces/SimpleAccounts-UAE/.devcontainer/validate-database.sh; then
+        echo "✅ Database validation passed"
+    else
+        echo "⚠️  Database validation failed - some checks did not pass"
+        echo "   See above for details. You may need to rebuild containers."
+    fi
+    echo ""
 fi
 
 # Wait for Redis to be ready (with timeout)
