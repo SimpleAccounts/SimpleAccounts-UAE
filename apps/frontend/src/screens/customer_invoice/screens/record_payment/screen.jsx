@@ -30,7 +30,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
-import { BookUser, Upload, X, CircleDot, Ban } from '@/components/icons';
+import { BookUser, Upload, X, CircleDot, Ban } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

@@ -29,7 +29,7 @@ import './style.scss';
 import { data as languageData } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { UserCircle, HelpCircle, UserX, Ban, FileText, Target } from '@/components/icons';
+import { UserCircle, HelpCircle, UserX, Ban, FileText, Target } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

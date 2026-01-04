@@ -23,7 +23,7 @@ import * as EmploymentCreateActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { UserCircle, CircleDot, RefreshCw, Ban } from '@/components/icons';
+import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 // Zod validation schema
 const createEmploymentSchema = z.object({

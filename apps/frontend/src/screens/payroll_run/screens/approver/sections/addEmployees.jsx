@@ -10,7 +10,7 @@ import { data as languageData } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import '../style.scss';
-import { UserCircle, CheckCheck, Ban } from '@/components/icons';
+import { UserCircle, CheckCheck, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

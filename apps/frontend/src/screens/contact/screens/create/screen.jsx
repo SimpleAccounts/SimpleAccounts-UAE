@@ -32,7 +32,7 @@ import * as ContactActions from '../../actions';
 import * as CreateContactActions from './actions';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { Ban, CircleDot, HelpCircle, IdCard, RefreshCw } from '@/components/icons';
+import { Ban, CircleDot, HelpCircle, IdCard, RefreshCw } from 'lucide-react';
 
 const mapStateToProps = state => {
   const currencyList = state.common.currency_convert_list;

@@ -32,7 +32,7 @@ import LocalizedStrings from 'react-localization';
 import dayjs from '@/utils/date';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { Ban, CheckCheck, CircleDot, HelpCircle, Plus, Wallet } from '@/components/icons';
+import { Ban, CheckCheck, CircleDot, HelpCircle, Plus, Wallet } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

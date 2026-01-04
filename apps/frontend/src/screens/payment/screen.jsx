@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Search, RefreshCw, Receipt } from '@/components/icons';
+import { Search, RefreshCw, Receipt } from 'lucide-react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 

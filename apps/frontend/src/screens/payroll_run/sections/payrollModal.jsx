@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { CircleDot, Ban } from '@/components/icons';
+import { CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 

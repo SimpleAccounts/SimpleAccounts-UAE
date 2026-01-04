@@ -16,7 +16,7 @@ import './style.scss';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { LayoutGrid, Plus, Search, RefreshCw } from '@/components/icons';
+import { LayoutGrid, Plus, Search, RefreshCw } from 'lucide-react';
 
 const Employment = () => {
   const dispatch = useDispatch();

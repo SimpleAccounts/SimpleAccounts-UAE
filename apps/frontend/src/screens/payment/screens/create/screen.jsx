@@ -30,7 +30,7 @@ import LocalizedStrings from 'react-localization';
 import { LeavePage, Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
-import { Wallet } from '@/components/icons';
+import { Wallet } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

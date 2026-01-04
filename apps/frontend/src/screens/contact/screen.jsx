@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, Users, Edit } from '@/components/icons';
+import { Plus, Search, RefreshCw, Users, Edit } from 'lucide-react';
 
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableRowActions } from '@/components/ui/data-table-actions';

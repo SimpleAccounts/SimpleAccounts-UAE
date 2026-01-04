@@ -15,7 +15,7 @@ import LocalizedStrings from 'react-localization';
 import { Loader } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, BookUser } from '@/components/icons';
+import { Trash2, BookUser } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 
