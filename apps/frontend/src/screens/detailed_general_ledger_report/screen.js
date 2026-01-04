@@ -14,7 +14,7 @@ import {
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
 import { ReportTables } from 'screens/financial_report/sections';
-import { ExcelExport as XLSX } from 'utils';
+import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as DetailGeneralLedgerActions from './actions';
 import './style.scss';

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, Users, Download } from 'lucide-react';
+import { Plus, Search, RefreshCw, Users, Download } from '@/components/icons';
 import { CSVLink } from '@/components/ui/csv-link';
 
 import { DataTable } from '@/components/ui/data-table';

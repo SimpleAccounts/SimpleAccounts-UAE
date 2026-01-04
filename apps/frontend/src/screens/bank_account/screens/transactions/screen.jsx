@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown, ChevronUp, Landmark, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { Loader, ConfirmDeleteModal } from 'components';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// NOTE: Removed redundant 'bootstrap/dist/css/bootstrap.min.css' import - already included in main style.scss
 import * as TransactionsActions from './actions';
 import { CommonActions } from 'services/global';
 import './style.scss';

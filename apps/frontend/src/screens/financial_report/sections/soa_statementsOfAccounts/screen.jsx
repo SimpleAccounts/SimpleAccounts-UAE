@@ -21,7 +21,7 @@ import Select from 'react-select';
 import './style.scss';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import { ExcelExport as XLSX } from 'utils';
+import XLSX from 'utils/excelExport';
 import { Loader, Currency } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import * as FinancialReportActions from '../../actions';

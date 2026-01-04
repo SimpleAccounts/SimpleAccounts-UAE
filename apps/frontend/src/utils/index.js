@@ -15,7 +15,8 @@ import * as DropdownLists from './dropdown_lists';
 import * as Lists from './lists';
 import * as renderList from './render_lists';
 import * as StatusActionList from './status_action_list';
-import ExcelExport from './excelExport';
+// NOTE: ExcelExport removed from barrel export to enable lazy loading
+// Import directly from 'utils/excelExport' when needed to avoid loading 1.4MB exceljs on initial page load
 //import * as InvoiceList from './invoice_list';
 
 // Custom styles for react-select to match shadcn/ui
@@ -72,6 +73,5 @@ export {
   Lists,
   renderList,
   StatusActionList,
-  ExcelExport,
   selectStyles,
 };

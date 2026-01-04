@@ -1,0 +1,99 @@
+/* Loader animations - CSS replacement for framer-motion */
+
+/* Logo rotation animation */
+.loader-logo-container {
+  animation: logoRotate 2s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes logoRotate {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(360deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+/* Ring base styles */
+.loader-ring {
+  position: absolute;
+  border-radius: 25%;
+  border-style: solid;
+  border-color: rgba(32, 100, 216, 0.24);
+}
+
+/* Inner ring */
+.loader-ring-inner {
+  width: 100px;
+  height: 100px;
+  border-width: 3px;
+  animation: ringInner 3.2s linear infinite;
+}
+
+@keyframes ringInner {
+  0% {
+    transform: scale(1.2) rotate(270deg);
+    opacity: 0.25;
+    border-radius: 25%;
+  }
+  25% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    border-radius: 25%;
+  }
+  50% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    border-radius: 50%;
+  }
+  75% {
+    transform: scale(1.2) rotate(270deg);
+    opacity: 1;
+    border-radius: 50%;
+  }
+  100% {
+    transform: scale(1.2) rotate(270deg);
+    opacity: 0.25;
+    border-radius: 25%;
+  }
+}
+
+/* Outer ring */
+.loader-ring-outer {
+  width: 120px;
+  height: 120px;
+  border-width: 8px;
+  animation: ringOuter 3.2s linear infinite;
+}
+
+@keyframes ringOuter {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    border-radius: 25%;
+  }
+  25% {
+    transform: scale(1.2) rotate(270deg);
+    opacity: 0.25;
+    border-radius: 25%;
+  }
+  50% {
+    transform: scale(1.2) rotate(270deg);
+    opacity: 0.25;
+    border-radius: 50%;
+  }
+  75% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.25;
+    border-radius: 50%;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    border-radius: 25%;
+  }
+}

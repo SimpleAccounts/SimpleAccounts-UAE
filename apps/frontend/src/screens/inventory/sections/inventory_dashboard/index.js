@@ -5,7 +5,7 @@ import { Row, Card, CardBody, CardGroup } from 'components/migration';
 
 import dayjs from '@/utils/date';
 import * as FileSaver from 'file-saver';
-import { ExcelExport as XLSX } from 'utils';
+import XLSX from 'utils/excelExport';
 import { Currency } from 'components';
 import * as InventoryActions from '../../actions';
 import './style.scss';

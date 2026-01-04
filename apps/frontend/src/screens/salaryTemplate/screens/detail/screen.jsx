@@ -25,7 +25,7 @@ import * as SalarayTemplateDetailActions from './actions';
 import * as SalaryTemplateActions from './../../actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
+import { UserCircle, Trash2, CircleDot, Ban } from '@/components/icons';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 

@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Button as ShadcnButton } from '@/components/ui/button';
-import { Ban, ChevronUp, CircleDot, IdCard } from 'lucide-react';
+import { Ban, ChevronUp, CircleDot, IdCard } from '@/components/icons';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 

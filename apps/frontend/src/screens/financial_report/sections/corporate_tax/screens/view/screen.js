@@ -16,7 +16,7 @@ import {
 
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import { ExcelExport as XLSX } from 'utils';
+import XLSX from 'utils/excelExport';
 import { Currency } from 'components';
 import * as CTActions from './actions';
 import * as CTReportActions from '../../actions';

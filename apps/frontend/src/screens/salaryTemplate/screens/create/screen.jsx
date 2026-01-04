@@ -23,7 +23,7 @@ import * as EmployeeCreateActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { selectOptionsFactory, selectStyles } from 'utils';
-import { UserCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
+import { UserCircle, CircleDot, RefreshCw, Ban } from '@/components/icons';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 

@@ -46,7 +46,7 @@ import {
   FileText,
   Search,
   RefreshCw,
-} from 'lucide-react';
+} from '@/components/icons';
 
 const toWords = new ToWords({
   localeCode: 'en-IN',

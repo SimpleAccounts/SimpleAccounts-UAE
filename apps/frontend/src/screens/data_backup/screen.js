@@ -5,7 +5,7 @@ import { Card, CardHeader, CardBody, Button, Row, Col, Table } from 'components/
 import { Loader } from 'components';
 
 import './style.scss';
-import { HardDrive } from 'lucide-react';
+import { HardDrive } from '@/components/icons';
 
 const mapStateToProps = state => {
   return {};

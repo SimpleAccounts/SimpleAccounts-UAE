@@ -19,7 +19,7 @@ import {
   University,
   CreditCard,
   File,
-} from 'lucide-react';
+} from '@/components/icons';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

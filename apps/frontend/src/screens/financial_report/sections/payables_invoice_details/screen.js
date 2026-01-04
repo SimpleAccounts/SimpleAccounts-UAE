@@ -12,7 +12,7 @@ import {
 } from 'components/migration';
 import dayjs from '@/utils/date';
 import { PDFExport } from '@progress/kendo-react-pdf';
-import { ExcelExport as XLSX } from 'utils';
+import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as ReceivbaleInvoiceDetailsActions from './actions';
 import { ReportTables } from 'screens/financial_report/sections';

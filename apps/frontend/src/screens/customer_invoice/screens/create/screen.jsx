@@ -48,7 +48,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { AddressComponent } from 'screens/contact/sections';
-import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
+import { FileText, Plus, CircleDot, RefreshCw, Ban } from '@/components/icons';
 
 const mapStateToProps = state => {
   const contact_list = state.customer_invoice.customer_list;

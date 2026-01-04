@@ -9,7 +9,7 @@ import LocalizedStrings from 'react-localization';
 import { DataTable } from '@/components/ui/data-table';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { LayoutGrid, Plus } from 'lucide-react';
+import { LayoutGrid, Plus } from '@/components/icons';
 
 const strings = new LocalizedStrings(languageData);
 

@@ -14,7 +14,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { IdCard, CircleDot, Ban } from 'lucide-react';
+import { IdCard, CircleDot, Ban } from '@/components/icons';
 
 // Zod validation schema
 const emailSchema = z.object({

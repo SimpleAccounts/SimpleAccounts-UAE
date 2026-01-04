@@ -23,7 +23,7 @@ import * as DetailProductCategoryAction from './actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as ProductCategoryActions from '../../actions';
-import { Package, Trash2, CircleDot, Ban } from 'lucide-react';
+import { Package, Trash2, CircleDot, Ban } from '@/components/icons';
 
 const strings = new LocalizedStrings(data);
 

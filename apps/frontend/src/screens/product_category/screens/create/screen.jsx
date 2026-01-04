@@ -24,7 +24,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as CreateProductCategoryActions from './actions';
 import * as ProductCategoryActions from '../../actions';
-import { Package, HelpCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
+import { Package, HelpCircle, CircleDot, RefreshCw, Ban } from '@/components/icons';
 
 const strings = new LocalizedStrings(data);
 

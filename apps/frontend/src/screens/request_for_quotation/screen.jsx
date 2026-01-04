@@ -14,7 +14,7 @@ import {
   XCircle,
   Copy,
   ShoppingCart,
-} from 'lucide-react';
+} from '@/components/icons';
 import Select from 'react-select';
 import { ToWords } from 'to-words';
 import { upperCase } from 'lodash-es';

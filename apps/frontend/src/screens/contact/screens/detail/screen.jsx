@@ -22,7 +22,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Ban, CircleDot, HelpCircle, IdCard, Trash2 } from 'lucide-react';
+import { Ban, CircleDot, HelpCircle, IdCard, Trash2 } from '@/components/icons';
 
 const mapStateToProps = state => {
   const currencyList = state.common.currency_convert_list;

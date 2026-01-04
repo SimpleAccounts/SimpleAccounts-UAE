@@ -28,7 +28,7 @@ import * as EmployeeDetailActions from './actions';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
+import { UserCircle, Trash2, CircleDot, Ban } from '@/components/icons';
 
 // Zod validation schema
 const detailEmploymentSchema = z

@@ -27,7 +27,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Ban, CircleDot, HelpCircle, RefreshCw, UserCircle } from 'lucide-react';
+import { Ban, CircleDot, HelpCircle, RefreshCw, UserCircle } from '@/components/icons';
 
 const strings = new LocalizedStrings(data);
 

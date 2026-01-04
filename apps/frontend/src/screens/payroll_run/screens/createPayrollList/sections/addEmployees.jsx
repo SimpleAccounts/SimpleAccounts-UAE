@@ -10,7 +10,7 @@ import { data as languageData } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { UserCircle, CheckCheck, Ban } from 'lucide-react';
+import { UserCircle, CheckCheck, Ban } from '@/components/icons';
 
 const strings = new LocalizedStrings(languageData);
 

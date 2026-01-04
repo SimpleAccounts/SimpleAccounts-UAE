@@ -56,8 +56,8 @@ export default defineConfig({
       'react-router-dom', // Ensure React Router is properly bundled
       'to-words', // CJS module that needs pre-bundling
       'dayjs', // Pre-bundle dayjs to avoid initialization issues
-      'bootstrap', // Pre-bundle bootstrap to ensure jQuery is loaded first
       '@emotion/react', // Pre-bundle emotion to ensure React is available
+      // NOTE: Removed 'bootstrap' - using TailwindCSS instead
     ],
     // Exclude large dependencies from optimization to save memory
     exclude: [
@@ -73,6 +73,14 @@ export default defineConfig({
       'codemirror',
       // Exclude react-router-navigation-prompt - incompatible with React Router v6 (uses withRouter)
       'react-router-navigation-prompt',
+      // Exclude heavy libraries - they should be lazy-loaded
+      'exceljs',
+      '@progress/kendo-react-pdf',
+      '@progress/kendo-drawing',
+      // Exclude lucide-react - using local barrel file for tree-shaking (@/components/icons)
+      'lucide-react',
+      // Exclude framer-motion - replaced with CSS animations in Loader component
+      'framer-motion',
     ],
     // Reduce memory usage during optimization
     force: false, // Don't force re-optimization
@@ -194,6 +202,24 @@ export default defineConfig({
           if (id.includes('node_modules')) {
             // DO NOT split React - keep it in main bundle to ensure it loads first
             // React, React-DOM, React Router, Redux stay in main bundle
+
+            // Split heavy export/PDF libraries - lazy loaded on demand
+            if (id.includes('exceljs')) {
+              return 'exceljs';
+            }
+            if (id.includes('@progress/kendo')) {
+              return 'kendo-pdf';
+            }
+
+            // Split lucide-react icons into separate chunk
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+
+            // Split animation library
+            if (id.includes('framer-motion')) {
+              return 'animations';
+            }
 
             // Only split very large libraries that don't have React dependencies at module level
             if (id.includes('ag-grid')) {

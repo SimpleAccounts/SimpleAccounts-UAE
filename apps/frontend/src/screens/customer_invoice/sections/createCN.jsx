@@ -31,7 +31,7 @@ import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
 import { DataTable } from '@/components/ui/data-table';
-import { Trash2, HelpCircle, IdCard, Upload, X, CircleDot, Ban } from 'lucide-react';
+import { Trash2, HelpCircle, IdCard, Upload, X, CircleDot, Ban } from '@/components/icons';
 
 const mapStateToProps = state => {
   return {

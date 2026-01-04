@@ -20,7 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import '../../product/screens/create/style.scss';
 import { toast } from 'sonner';
-import { IdCard, CircleDot, Ban } from 'lucide-react';
+import { IdCard, CircleDot, Ban } from '@/components/icons';
 
 const customStyles = {
   control: (base, state) => ({

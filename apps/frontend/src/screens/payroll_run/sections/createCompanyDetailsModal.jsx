@@ -26,7 +26,7 @@ import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
 
 import '../style.scss';
-import { Ban, CircleDot, HelpCircle, UserCircle } from 'lucide-react';
+import { Ban, CircleDot, HelpCircle, UserCircle } from '@/components/icons';
 
 const strings = new LocalizedStrings(data);
 
