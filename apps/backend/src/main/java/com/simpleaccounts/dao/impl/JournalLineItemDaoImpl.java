@@ -184,7 +184,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 			return aggregatedTransactionMap;
 		} catch (Exception e) {
 			LOGGER.error(String.format("Error occurred while calling stored procedure profitAndLossStoredProcedure %s",
-					e.getStackTrace()));
+					(Object) e.getStackTrace()));
 		}
 		return aggregatedTransactionMap;
 	}
@@ -331,7 +331,7 @@ public class JournalLineItemDaoImpl extends AbstractDao<Integer, JournalLineItem
 		return aggregatedTransactionMap;
 	} catch (Exception e) {
 		LOGGER.error(String.format("Error occurred while calling stored procedure profitAndLossStoredProcedure %s",
-				e.getStackTrace()));
+				(Object) e.getStackTrace()));
 	}
 		return aggregatedTransactionMap;
 	}

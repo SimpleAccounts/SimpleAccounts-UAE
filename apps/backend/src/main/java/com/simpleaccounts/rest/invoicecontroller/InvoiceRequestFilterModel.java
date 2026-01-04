@@ -8,12 +8,14 @@ package com.simpleaccounts.rest.invoicecontroller;
 import com.simpleaccounts.rest.PaginationModel;
 import java.math.BigDecimal;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
  * @author ashish
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class InvoiceRequestFilterModel extends PaginationModel {
 
     private Integer contact;

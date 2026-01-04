@@ -44,8 +44,10 @@ public class UserModel {
 
     private byte[] profilePicByteArray;
 
+    @Builder.Default
     private Boolean isAlreadyAvailableEmployee = Boolean.FALSE;
 
+    @Builder.Default
     private Boolean isNewEmployee = Boolean.FALSE;
 
     private Integer employeeId;

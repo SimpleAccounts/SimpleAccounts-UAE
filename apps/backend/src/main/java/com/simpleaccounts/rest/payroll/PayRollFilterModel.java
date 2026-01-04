@@ -4,8 +4,10 @@ import com.simpleaccounts.rest.PaginationModel;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PayRollFilterModel extends PaginationModel {
     private Integer id;
     private String payrollDate;

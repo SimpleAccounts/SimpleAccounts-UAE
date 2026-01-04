@@ -2,6 +2,7 @@
 // SIMPLEACCOUNTS UAE - MAIN STYLESHEET
 // Neumorphic Design System
 // ============================================
+@use 'sass:color';
 
 // Neumorphic Variables (must be first)
 @import 'variables';
@@ -532,7 +533,7 @@ label,
 
 .badge-warning {
   background-color: rgba($warning, 0.15);
-  color: darken($warning, 10%);
+  color: color.adjust($warning, $lightness: -10%);
 }
 
 .badge-info {

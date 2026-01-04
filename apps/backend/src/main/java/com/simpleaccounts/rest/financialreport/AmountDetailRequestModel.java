@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class AmountDetailRequestModel extends PaginationModel implements Serializable {
 
 	private String startDate;

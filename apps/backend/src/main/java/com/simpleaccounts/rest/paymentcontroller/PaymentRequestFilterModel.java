@@ -8,12 +8,14 @@ package com.simpleaccounts.rest.paymentcontroller;
 import com.simpleaccounts.rest.PaginationModel;
 import java.math.BigDecimal;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  *
  * @author ashish
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PaymentRequestFilterModel extends PaginationModel {
 
     private Integer supplierId;

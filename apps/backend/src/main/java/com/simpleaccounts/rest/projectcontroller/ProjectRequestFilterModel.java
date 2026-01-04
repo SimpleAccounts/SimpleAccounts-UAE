@@ -2,8 +2,10 @@ package com.simpleaccounts.rest.projectcontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ProjectRequestFilterModel extends PaginationModel{
 
 	private Integer projectId;

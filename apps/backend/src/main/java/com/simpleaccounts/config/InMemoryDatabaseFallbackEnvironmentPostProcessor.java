@@ -12,6 +12,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.StringUtils;
 
+@SuppressWarnings("removal")
 public class InMemoryDatabaseFallbackEnvironmentPostProcessor
     implements EnvironmentPostProcessor, Ordered {
 
