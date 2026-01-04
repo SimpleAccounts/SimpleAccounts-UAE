@@ -57,6 +57,13 @@ export default defineConfig({
       'to-words', // CJS module that needs pre-bundling
       'dayjs', // Pre-bundle dayjs to avoid initialization issues
       '@emotion/react', // Pre-bundle emotion to ensure React is available
+      // Optimize commonly used utilities
+      'clsx',
+      'class-variance-authority',
+      'tailwind-merge',
+      'zod',
+      '@hookform/resolvers',
+      'react-hook-form',
       // NOTE: Removed 'bootstrap' - using TailwindCSS instead
     ],
     // Exclude large dependencies from optimization to save memory
@@ -77,10 +84,15 @@ export default defineConfig({
       'exceljs',
       '@progress/kendo-react-pdf',
       '@progress/kendo-drawing',
-      // Exclude lucide-react - using local barrel file for tree-shaking (@/components/icons)
-      'lucide-react',
       // Exclude framer-motion - replaced with CSS animations in Loader component
       'framer-motion',
+      // NOTE: lucide-react must be pre-bundled - excluding it causes hundreds of
+      // individual module requests which breaks page load
+      // Exclude date picker libraries - they're large and only used in specific screens
+      'react-bootstrap-daterangepicker',
+      'react-datepicker',
+      // Exclude crypto-js - only used for specific encryption features
+      'crypto-js',
     ],
     // Reduce memory usage during optimization
     force: false, // Don't force re-optimization
@@ -211,14 +223,29 @@ export default defineConfig({
               return 'kendo-pdf';
             }
 
-            // Split lucide-react icons into separate chunk
+            // Split lucide-react icons into separate chunk (loaded on-demand)
             if (id.includes('lucide-react')) {
               return 'icons';
+            }
+
+            // Split date picker libraries - they're large and only used in forms
+            if (id.includes('react-datepicker') || id.includes('react-bootstrap-daterangepicker')) {
+              return 'datepickers';
             }
 
             // Split animation library
             if (id.includes('framer-motion')) {
               return 'animations';
+            }
+
+            // Split lodash into separate chunk
+            if (id.includes('lodash')) {
+              return 'lodash';
+            }
+
+            // Split crypto-js - only used for specific features
+            if (id.includes('crypto-js')) {
+              return 'crypto';
             }
 
             // Only split very large libraries that don't have React dependencies at module level
