@@ -165,6 +165,24 @@ if [ ! -f ".envrc" ]; then
 # direnv configuration for SimpleAccounts-UAE
 # This file loads environment variables from .env files
 
+# CODER ENVIRONMENT DETECTION
+# Save Coder-provided environment variables BEFORE loading .env files
+# This prevents .env files from overwriting Coder's Docker network hostnames
+if [ -n "$CODER_AGENT_TOKEN" ]; then
+  # Save database and Redis hostnames (Coder sets these to 'db' and 'redis')
+  _CODER_POSTGRES_HOST="${POSTGRES_HOST:-db}"
+  _CODER_DB_HOST="${SIMPLEACCOUNTS_DB_HOST:-db}"
+  _CODER_REDIS_HOST="${SPRING_DATA_REDIS_HOST:-redis}"
+
+  # Save passwords (Coder generates these per workspace)
+  _CODER_POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-}"
+  _CODER_DB_PASSWORD="${SIMPLEACCOUNTS_DB_PASSWORD:-}"
+
+  # Save CORS and file upload settings (Coder-specific configuration)
+  _CODER_CORS_ORIGINS="${CORS_ALLOWED_ORIGINS:-https://*}"
+  _CODER_FILE_UPLOAD_DIR="${FILE_UPLOAD_DIR:-/tmp/simpleaccounts-uploads}"
+fi
+
 # Load main devcontainer environment variables
 if [ -f .devcontainer/.env ]; then
   dotenv .devcontainer/.env
@@ -184,8 +202,40 @@ fi
 if [ -f .env.local ]; then
   dotenv .env.local
 fi
+
+# CODER ENVIRONMENT RESTORATION
+# Restore Coder-provided values AFTER loading .env files
+# This ensures Coder workspaces use correct Docker network hostnames
+if [ -n "$CODER_AGENT_TOKEN" ]; then
+  # Restore database and Redis hostnames (override .env localhost values)
+  export POSTGRES_HOST="${_CODER_POSTGRES_HOST}"
+  export SIMPLEACCOUNTS_DB_HOST="${_CODER_DB_HOST}"
+  export SPRING_DATA_REDIS_HOST="${_CODER_REDIS_HOST}"
+
+  # Restore passwords
+  export POSTGRES_PASSWORD="${_CODER_POSTGRES_PASSWORD}"
+  export SIMPLEACCOUNTS_DB_PASSWORD="${_CODER_DB_PASSWORD}"
+
+  # Restore CORS and file upload settings (Coder-specific)
+  export CORS_ALLOWED_ORIGINS="${_CODER_CORS_ORIGINS}"
+  export FILE_UPLOAD_DIR="${_CODER_FILE_UPLOAD_DIR}"
+else
+  # Not in Coder - use .env values or defaults for local devcontainer
+  export POSTGRES_HOST="${POSTGRES_HOST:-localhost}"
+  export SIMPLEACCOUNTS_DB_HOST="${SIMPLEACCOUNTS_DB_HOST:-localhost}"
+  export SPRING_DATA_REDIS_HOST="${SPRING_DATA_REDIS_HOST:-localhost}"
+  export CORS_ALLOWED_ORIGINS="${CORS_ALLOWED_ORIGINS:-*}"
+  export FILE_UPLOAD_DIR="${FILE_UPLOAD_DIR:-/tmp/simpleaccounts-uploads}"
+fi
 ENVRCEOF
     echo "  ✅ Created .envrc file"
+
+    # Validate .envrc was created correctly
+    if [ -f ".envrc" ] && grep -q "CODER_AGENT_TOKEN" .envrc; then
+        echo "  ✅ .envrc validated successfully"
+    else
+        echo "  ⚠️  Warning: .envrc may not have been created correctly"
+    fi
 fi
 
 # Allow direnv for this directory
@@ -205,7 +255,10 @@ fi
 if [ ! -f "apps/frontend/.env.local" ]; then
     echo "📝 Creating frontend .env.local..."
     cat > apps/frontend/.env.local << 'EOF'
-VITE_API_URL=http://localhost:8080
+# Use empty string to make API calls relative to current origin
+# Vite dev server will proxy these to backend at localhost:8080
+# This works in both Coder and local devcontainer
+VITE_API_URL=
 VITE_APP_ENV=development
 EOF
 fi
