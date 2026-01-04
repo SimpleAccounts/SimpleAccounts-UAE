@@ -10,7 +10,7 @@ import LocalizedStrings from 'react-localization';
 import { toast } from 'sonner';
 import { CreateCompanyDetails } from './sections';
 import { useNavigate } from 'react-router-dom';
-import { Wallet, Plus } from '@/components/icons';
+import { Wallet, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
 

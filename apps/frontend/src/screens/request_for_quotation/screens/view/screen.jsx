@@ -15,7 +15,7 @@ import { Card, Table } from 'components/migration';
 import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { FileText, Printer } from '@/components/icons';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

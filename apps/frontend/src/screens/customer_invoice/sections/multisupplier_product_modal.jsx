@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { DataTable } from '@/components/ui/data-table';
-import { IdCard, CircleDot, Ban } from '@/components/icons';
+import { IdCard, CircleDot, Ban } from 'lucide-react';
 
 // Zod validation schema
 const supplierModalSchema = z.object({

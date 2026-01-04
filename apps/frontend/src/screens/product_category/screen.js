@@ -12,7 +12,7 @@ import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as ProductCategoryActions from './actions';
-import { Pencil, Package, Plus } from '@/components/icons';
+import { Pencil, Package, Plus } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

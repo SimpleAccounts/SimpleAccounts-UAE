@@ -20,7 +20,7 @@ import dayjs from '@/utils/date';
 // import { StringStream } from 'codemirror'; // Removed: StringStream not available in CodeMirror 6
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { FileText, Printer } from '@/components/icons';
+import { FileText, Printer } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {

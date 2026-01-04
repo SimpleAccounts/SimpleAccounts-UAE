@@ -28,7 +28,7 @@ import * as DetailPaymentActions from './actions';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Wallet, CircleDot, Trash2, Ban } from '@/components/icons';
+import { Wallet, CircleDot, Trash2, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 

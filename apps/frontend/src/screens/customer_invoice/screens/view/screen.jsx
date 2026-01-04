@@ -25,7 +25,7 @@ import { Currency, InvoiceViewJournalEntries } from 'components';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
 import dayjs from '@/utils/date';
-import { FileText, Printer, X } from '@/components/icons';
+import { FileText, Printer, X } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
