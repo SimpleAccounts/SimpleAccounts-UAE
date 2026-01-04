@@ -130,12 +130,7 @@ export default defineConfig({
         bypass: function (req, res, options) {
           const url = req.url;
 
-          // Frontend SPA routes - return index.html (Vite handles routing)
-          if (url === '/' || url.startsWith('/admin')) {
-            return '/index.html';
-          }
-
-          // Static assets - serve from Vite
+          // Static assets - serve from Vite (check first for performance)
           if (url.match(/\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$/)) {
             return url;
           }
@@ -145,7 +140,31 @@ export default defineConfig({
             return url;
           }
 
-          // Everything else goes to Spring Boot backend
+          // Frontend SPA routes - return index.html (Vite/React Router handles routing)
+          // These routes are defined in:
+          // - apps/frontend/src/routes/initial.js (login, register, reset-password, etc.)
+          // - apps/frontend/src/routes/main.js (admin, theme-reference)
+          const frontendRoutes = [
+            '/',
+            '/login',
+            '/logout',
+            '/register',
+            '/reset-password',
+            '/new-password',
+            '/theme-reference',
+          ];
+
+          // Check exact match for root-level SPA routes
+          if (frontendRoutes.includes(url.split('?')[0])) {
+            return '/index.html';
+          }
+
+          // Check if URL starts with /admin (admin routes)
+          if (url.startsWith('/admin')) {
+            return '/index.html';
+          }
+
+          // Everything else goes to Spring Boot backend (API calls)
           return null;
         },
       },

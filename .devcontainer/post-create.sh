@@ -179,7 +179,7 @@ if [ -n "$CODER_AGENT_TOKEN" ]; then
   _CODER_DB_PASSWORD="${SIMPLEACCOUNTS_DB_PASSWORD:-}"
 
   # Save CORS and file upload settings (Coder-specific configuration)
-  _CODER_CORS_ORIGINS="${CORS_ALLOWED_ORIGINS:-https://*}"
+  _CODER_CORS_ORIGINS="${CORS_ALLOWED_ORIGINS:-*}"
   _CODER_FILE_UPLOAD_DIR="${FILE_UPLOAD_DIR:-/tmp/simpleaccounts-uploads}"
 fi
 
