@@ -178,9 +178,13 @@ labels {
 ├── build.yaml              # Template metadata
 ├── deploy.sh               # Deployment script
 ├── README.md               # User documentation
-├── MIGRATION_GUIDE.md      # DevPod → Coder migration
-├── TRAEFIK_INTEGRATION.md  # Reverse proxy setup
-└── DEPLOYMENT.md           # This file
+│
+├── docs/coder/                         # Detailed documentation (moved here)
+│   ├── DEPLOYMENT.md                   # This file
+│   ├── MIGRATION_GUIDE.md              # DevPod → Coder migration
+│   ├── TRAEFIK_INTEGRATION.md          # Reverse proxy setup
+│   ├── CI-CD-SETUP.md                  # CI/CD configuration
+│   └── SECURITY.md                     # Security considerations
 ```
 
 ## Troubleshooting
@@ -258,7 +262,7 @@ nslookup alice-dev.dev.simpleaccounts.io
 # Should resolve to your server IP
 ```
 
-**See TRAEFIK_INTEGRATION.md for detailed troubleshooting**
+**See [TRAEFIK_INTEGRATION.md](./TRAEFIK_INTEGRATION.md) for detailed troubleshooting**
 
 ## Post-Deployment
 
@@ -285,7 +289,7 @@ Quick Start:
 3. Create workspace → Select "SimpleAccounts UAE"
 4. Start coding!
 
-Migration Guide: .coder/MIGRATION_GUIDE.md
+Migration Guide: docs/coder/MIGRATION_GUIDE.md
 Support: #dev-environment Slack channel
 ```
 

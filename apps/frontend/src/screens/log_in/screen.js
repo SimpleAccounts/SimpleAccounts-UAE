@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { SocialLoginButtons } from '@/components/ui/social-login-buttons';
@@ -265,17 +264,32 @@ const LogIn = () => {
                   control={form.control}
                   name="rememberMe"
                   render={({ field }) => (
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="remember-me"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
+                    <div
+                      className="flex items-center gap-3 cursor-pointer select-none"
+                      onClick={() => field.onChange(!field.value)}
+                    >
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={field.value}
                         aria-label="Remember my email"
-                        className="border-none shadow-neu-in dark:shadow-neu-in-dark data-[state=checked]:shadow-neu-out dark:data-[state=checked]:shadow-neu-out-dark data-[state=checked]:bg-primary text-white rounded-md h-5 w-5"
-                      />
+                        onClick={e => {
+                          e.stopPropagation();
+                          field.onChange(!field.value);
+                        }}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${
+                          field.value ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                            field.value ? 'translate-x-5' : 'translate-x-0.5'
+                          } mt-0.5`}
+                        />
+                      </button>
                       <Label
                         htmlFor="remember-me"
-                        className="text-sm font-medium cursor-pointer select-none text-muted-foreground"
+                        className="text-sm font-medium cursor-pointer text-foreground"
                       >
                         Remember me
                       </Label>
@@ -311,7 +325,7 @@ const LogIn = () => {
                 )}
               </Button>
 
-              <div className="relative">
+              <div className="relative mt-2">
                 <div className="absolute inset-0 flex items-center">
                   <span className="w-full border-t border-muted-foreground/20" />
                 </div>

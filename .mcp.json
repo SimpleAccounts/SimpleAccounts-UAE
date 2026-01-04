@@ -5,11 +5,12 @@
       "command": "bash",
       "args": [
         "-c",
-        "[ -f .mcp.env ] && export $(grep -v '^#' .mcp.env | xargs); JAVA_CMD=$(/usr/libexec/java_home -v 21 2>/dev/null)/bin/java || JAVA_CMD=java; exec $JAVA_CMD -jar $HOME/.local/share/mcp-servers/sonarqube-mcp-server.jar"
+        "cd /workspaces/SimpleAccounts-UAE && [ -f .mcp.env ] && set -a && . .mcp.env && set +a; exec java -jar /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.jar"
       ],
       "env": {
+        "HOME": "/home/vscode",
         "SONARQUBE_URL": "https://sonarqube.datainn.io",
-        "STORAGE_PATH": "${HOME}/.local/share/mcp-servers/storage"
+        "STORAGE_PATH": "/home/vscode/.local/share/mcp-servers/storage"
       }
     }
   }

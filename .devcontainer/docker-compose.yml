@@ -82,14 +82,24 @@ services:
       - postgres-data:/var/lib/postgresql/data
       # Use shell script instead of SQL for dynamic environment variable support
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+      # Password sync hook (runs on every startup to fix password mismatch)
+      - ./postgres-startup-hook.sh:/usr/local/bin/password-sync.sh:ro
     environment:
       # PostgreSQL initialization variables (required for container startup)
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      # Additional variables for init script
+      # Additional variables for init script and password sync
       SIMPLEACCOUNTS_DB_USER: ${SIMPLEACCOUNTS_DB_USER}
       SIMPLEACCOUNTS_DB_PASSWORD: ${SIMPLEACCOUNTS_DB_PASSWORD}
+    # Custom command: start postgres normally, then run password sync in background
+    # This ensures passwords are synchronized on EVERY container start, not just first init
+    command: >
+      bash -c "docker-entrypoint.sh postgres &
+      PG_PID=$$!;
+      sleep 5;
+      chmod +x /usr/local/bin/password-sync.sh && /usr/local/bin/password-sync.sh || true;
+      wait $$PG_PID"
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-simpleaccounts}']
       interval: 10s
