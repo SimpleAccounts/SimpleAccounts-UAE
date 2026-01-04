@@ -32,6 +32,7 @@ public class EmployeePersistModel {
 
     private String email;
 
+    @Builder.Default
     private Integer createdBy = 0;
 
     private String createdDate;

@@ -6,28 +6,10 @@
 		</encoder>
 	</appender>
 
-	<if condition='isDefined("LogDir")'>
-		<then>
-			<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<file>${LogDir}/simpleaccounts-api.log</file>
-				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-					<fileNamePattern>${LogDir}/simpleaccounts-api.%d{yyyy-MM-dd}.log</fileNamePattern>
-					<maxHistory>60</maxHistory>
-				</rollingPolicy>
-				<encoder>
-					<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-				</encoder>
-			</appender>
-			<root level="info">
-				<appender-ref ref="FILE" />
-			</root>
-		</then>
-		<else>
-			<root level="info">
-				<appender-ref ref="STDOUT" />
-			</root>
-		</else>
-	</if>
+	<!-- Root logger - console output -->
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
 
 	<!-- Hibernate SQL logging (disabled by default, enable for debugging) -->
 	<!-- <logger name="org.hibernate.SQL" level="debug" /> -->
@@ -35,6 +17,12 @@
 
 	<!-- Spring framework logging -->
 	<logger name="org.springframework.web.client" level="error" />
+
+	<!-- Suppress Spring Security UserDetailsService warning (intentional config) -->
+	<logger name="org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer" level="error" />
+
+	<!-- Suppress Hibernate @Temporal deprecation warnings (legacy Date fields) -->
+	<logger name="org.hibernate.orm.deprecation" level="error" />
 
 	<!-- Application logging -->
 	<logger name="com.simpleaccounts.rest.companycontroller" level="info" />

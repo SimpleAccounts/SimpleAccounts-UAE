@@ -80,6 +80,7 @@ public class EmployeeListModel implements Serializable{
     }
     private byte[] profileImageBinary;
 
+    @Builder.Default
     private Integer createdBy = 0;
 
     private String createdDate;

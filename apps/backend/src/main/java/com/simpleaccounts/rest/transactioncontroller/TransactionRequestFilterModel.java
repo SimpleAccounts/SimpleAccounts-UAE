@@ -2,8 +2,10 @@ package com.simpleaccounts.rest.transactioncontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class TransactionRequestFilterModel extends PaginationModel{
 	private Integer bankId;
 	//formate

@@ -63,12 +63,14 @@ public class ContactPersistModel implements Serializable {
 
     private Integer currencyCode;
 
+    @Builder.Default
     private Integer createdBy = 0;
 
     private Integer lastUpdatedBy;
 
     private Boolean isActive;
 
+    @Builder.Default
     private Boolean isRegisteredForVat = false;
 
     private Integer taxTreatmentId;
@@ -89,6 +91,7 @@ public class ContactPersistModel implements Serializable {
 
     private String website;
 
+    @Builder.Default
     private Boolean isBillingAndShippingAddressSame = Boolean.FALSE;
 
     private String billingTelephone;

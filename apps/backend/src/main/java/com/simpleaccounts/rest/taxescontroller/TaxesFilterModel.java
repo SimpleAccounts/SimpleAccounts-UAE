@@ -3,8 +3,10 @@ package com.simpleaccounts.rest.taxescontroller;
 import com.simpleaccounts.rest.PaginationModel;
 import java.math.BigDecimal;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class TaxesFilterModel  extends PaginationModel {
     private Integer contact;
     private String referenceType;

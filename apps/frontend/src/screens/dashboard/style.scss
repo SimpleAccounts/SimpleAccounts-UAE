@@ -1,5 +1,6 @@
 // Dashboard Styles - Modern Neumorphic Design
 // ============================================
+@use 'sass:color';
 
 // Variables (matching admin layout)
 $bg-color: #e8f0f8;
@@ -65,7 +66,7 @@ $radius-xl: 20px;
     border-radius: $radius-xl;
     padding: $space-xl;
     margin-bottom: $space-lg;
-    background: linear-gradient(135deg, $card-bg 0%, darken($card-bg, 3%) 100%);
+    background: linear-gradient(135deg, $card-bg 0%, color.adjust($card-bg, $lightness: -3%) 100%);
 
     .welcome-content {
       display: flex;

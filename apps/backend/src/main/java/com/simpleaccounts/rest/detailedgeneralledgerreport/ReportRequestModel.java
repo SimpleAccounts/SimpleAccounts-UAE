@@ -3,8 +3,10 @@ package com.simpleaccounts.rest.detailedgeneralledgerreport;
 import com.simpleaccounts.rest.PaginationModel;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ReportRequestModel extends PaginationModel implements Serializable {
 
 	private String startDate;

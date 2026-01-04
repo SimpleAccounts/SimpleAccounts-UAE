@@ -111,6 +111,7 @@ public class Expense implements Serializable {
 
 	@Column(name = "CREATED_BY")
 	@Basic(optional = false)
+	@Builder.Default
 	private Integer createdBy = 0;
 
 	@Column(name = "CREATED_DATE")
@@ -146,22 +147,26 @@ public class Expense implements Serializable {
 	@Column(name = "DELETE_FLAG")
 	@ColumnDefault(value = "false")
 	@Basic(optional = false)
+	@Builder.Default
 	private Boolean deleteFlag = Boolean.FALSE;
 
 	@Column(name = "VAT_CLAIMABLE")
 	@ColumnDefault(value = "false")
 	@Basic(optional = false)
+	@Builder.Default
 	private Boolean vatClaimable = Boolean.FALSE;
 
 	@Column(name = "EXCLUSIVE_VAT")
 	@ColumnDefault(value = "false")
 	@Basic(optional = false)
+	@Builder.Default
 	private Boolean exclusiveVat = Boolean.FALSE;
 
 	@Column(name = "VERSION_NUMBER")
 	@ColumnDefault(value = "1")
 	@Basic(optional = false)
 	@Version
+	@Builder.Default
 	private Integer versionNumber = 1;
 
 	@Basic
@@ -175,6 +180,7 @@ public class Expense implements Serializable {
 	@Basic(optional = false)
 	@ColumnDefault(value = "false")
 	@Column(name = "IS_MIGRATED_RECORD")
+	@Builder.Default
 	private Boolean isMigratedRecord = false;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -184,6 +190,7 @@ public class Expense implements Serializable {
 	@Basic(optional = false)
 	@ColumnDefault(value = "false")
 	@Column(name = "IS_REVERSE_CHARGE_ENABLED")
+	@Builder.Default
 	private Boolean isReverseChargeEnabled  = Boolean.FALSE;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -191,8 +198,8 @@ public class Expense implements Serializable {
 	private PlaceOfSupply placeOfSupplyId;
 
 	@Column(name = "EDIT_FLAG")
-
 	@Basic(optional = false)
+	@Builder.Default
 	private Boolean editFlag = Boolean.TRUE;
 
 	@Column(name = "EXPENSE_TYPE")

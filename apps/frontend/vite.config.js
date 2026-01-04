@@ -226,6 +226,10 @@ export default defineConfig({
       scss: {
         // Add node_modules to includePaths for easier imports
         includePaths: [path.resolve(__dirname, './node_modules')],
+        // Silence deprecation warnings from dependencies (Bootstrap, etc.)
+        // These are internal to Bootstrap and will be fixed in future Bootstrap versions
+        silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
+        quietDeps: true, // Suppress warnings from dependencies
       },
     },
     // Suppress CSS warnings (like unknown properties from SCSS variables)

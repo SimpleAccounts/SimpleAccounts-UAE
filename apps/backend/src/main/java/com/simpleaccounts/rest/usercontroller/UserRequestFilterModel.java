@@ -2,8 +2,10 @@ package com.simpleaccounts.rest.usercontroller;
 
 import com.simpleaccounts.rest.PaginationModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class UserRequestFilterModel extends PaginationModel{
 
 	private String name;

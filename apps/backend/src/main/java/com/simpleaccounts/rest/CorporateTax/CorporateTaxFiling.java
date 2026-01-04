@@ -27,12 +27,13 @@ public class CorporateTaxFiling implements Serializable {
     @Column(name = "CREATED_BY")
     @ColumnDefault(value = "0")
     @Basic(optional = false)
+    @Builder.Default
     private Integer createdBy = 0;
 
     @Column(name = "CREATED_DATE")
     @ColumnDefault(value = "CURRENT_TIMESTAMP")
     @Basic(optional = false)
-
+    @Builder.Default
     private LocalDateTime createdDate = LocalDateTime.now();
 
     @Column(name = "LAST_UPDATED_BY")
@@ -83,6 +84,7 @@ public class CorporateTaxFiling implements Serializable {
     @Column(name = "DELETE_FLAG")
     @ColumnDefault(value = "false")
     @Basic(optional = false)
+    @Builder.Default
     private Boolean deleteFlag = Boolean.FALSE;
 
     @Column(name = "VIEW_CT_REPORT")
