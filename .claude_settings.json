@@ -1,0 +1,34 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read(./**)",
+      "Write(./**)",
+      "Edit(./**)",
+      "Glob(./**)",
+      "Grep(./**)",
+      "Read(/Users/moshinhashmi/github/SimpleAccounts-UAE/**)",
+      "Write(/Users/moshinhashmi/github/SimpleAccounts-UAE/**)",
+      "Edit(/Users/moshinhashmi/github/SimpleAccounts-UAE/**)",
+      "Glob(/Users/moshinhashmi/github/SimpleAccounts-UAE/**)",
+      "Grep(/Users/moshinhashmi/github/SimpleAccounts-UAE/**)",
+      "Read(/Users/moshinhashmi/github/SimpleAccounts-UAE/.auto-claude/ideation/**)",
+      "Write(/Users/moshinhashmi/github/SimpleAccounts-UAE/.auto-claude/ideation/**)",
+      "Edit(/Users/moshinhashmi/github/SimpleAccounts-UAE/.auto-claude/ideation/**)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__context7__resolve-library-id(*)",
+      "mcp__context7__get-library-docs(*)",
+      "mcp__graphiti-memory__search_nodes(*)",
+      "mcp__graphiti-memory__search_facts(*)",
+      "mcp__graphiti-memory__add_episode(*)",
+      "mcp__graphiti-memory__get_episodes(*)",
+      "mcp__graphiti-memory__get_entity_edge(*)"
+    ]
+  }
+}

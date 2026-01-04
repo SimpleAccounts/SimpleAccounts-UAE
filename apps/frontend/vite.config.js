@@ -114,6 +114,61 @@ export default defineConfig({
     open: false, // Don't auto-open browser
     strictPort: false, // Allow fallback to next available port if 3000 is taken
     allowedHosts: ['localhost', '.nip.io', '.dev.simpleaccounts.local', '.dev.simpleaccounts.io'], // Restrict to known hosts for security
+    // Proxy API requests to Spring Boot backend (localhost:8080)
+    // This makes the Vite dev server act as a reverse proxy
+    // Works in both local devcontainer and Coder workspaces because:
+    // - Browser talks to frontend dev server (port 3000)
+    // - Dev server proxies API calls to backend (port 8080) on same machine
+    // - No cross-origin issues, no need for absolute URLs
+    proxy: {
+      // Proxy all paths except frontend routes and static assets
+      '/': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        // Bypass proxy for frontend routes and static files
+        bypass: function (req, res, options) {
+          const url = req.url;
+
+          // Static assets - serve from Vite (check first for performance)
+          if (url.match(/\.(js|css|json|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|map)$/)) {
+            return url;
+          }
+
+          // Vite dev server internal paths
+          if (url.startsWith('/@') || url.startsWith('/node_modules') || url.startsWith('/src')) {
+            return url;
+          }
+
+          // Frontend SPA routes - return index.html (Vite/React Router handles routing)
+          // These routes are defined in:
+          // - apps/frontend/src/routes/initial.js (login, register, reset-password, etc.)
+          // - apps/frontend/src/routes/main.js (admin, theme-reference)
+          const frontendRoutes = [
+            '/',
+            '/login',
+            '/logout',
+            '/register',
+            '/reset-password',
+            '/new-password',
+            '/theme-reference',
+          ];
+
+          // Check exact match for root-level SPA routes
+          if (frontendRoutes.includes(url.split('?')[0])) {
+            return '/index.html';
+          }
+
+          // Check if URL starts with /admin (admin routes)
+          if (url.startsWith('/admin')) {
+            return '/index.html';
+          }
+
+          // Everything else goes to Spring Boot backend (API calls)
+          return null;
+        },
+      },
+    },
     // Reduce memory usage in dev
     fs: {
       // Limit file system access

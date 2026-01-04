@@ -418,6 +418,12 @@ resource "docker_container" "workspace" {
     "SPRING_DATA_REDIS_PORT=6379",
     # Application host
     "SIMPLEACCOUNTS_HOST=http://localhost:8080",
+    # CORS configuration (allow all origins in dev environment)
+    # Note: SimpleCorsFilter only treats literal "*" as wildcard (not pattern matching)
+    # For production, this should be set to specific domain(s)
+    "CORS_ALLOWED_ORIGINS=*",
+    # File upload directory (for user uploads)
+    "FILE_UPLOAD_DIR=/tmp/simpleaccounts-uploads",
     # Application settings
     "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
     "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium",
