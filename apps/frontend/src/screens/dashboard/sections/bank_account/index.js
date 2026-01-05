@@ -350,12 +350,7 @@ class BankAccount extends Component {
             </div>
 
             <div className="chart-wrapper card-visibility">
-              <Line
-                data={line}
-                options={backOption}
-                style={{ height: 200 }}
-                datasetKeyProvider={() => Math.random()}
-              />
+              <Line data={line} options={backOption} style={{ height: 200 }} />
             </div>
           </CardBody>
         </Card>

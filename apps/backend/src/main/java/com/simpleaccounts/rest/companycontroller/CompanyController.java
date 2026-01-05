@@ -175,6 +175,7 @@ public class CompanyController {
 	@LogRequest
 	@LogExecutionTime
 	@GetMapping(value = "/getCompanyDetails")
+	@Transactional(readOnly = true)
 	public ResponseEntity<CompanyModel> getCompanyById(HttpServletRequest request) {
 		try {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

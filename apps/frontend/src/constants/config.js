@@ -7,7 +7,9 @@ export default {
 
   // API_ROOT_URL: 'http://192.168.2.105:8080',
   // API_ROOT_URL: 'https://datainn-api.ae.simpleaccounts.io',
-  API_ROOT_URL: (window._env_ && window._env_.SIMPLEACCOUNTS_HOST) || 'http://localhost:8080',
+  // Use empty string for local dev to go through Vite proxy (port 3000 -> 8080)
+  // Use absolute URL for production (set via window._env_.SIMPLEACCOUNTS_HOST)
+  API_ROOT_URL: (window._env_ && window._env_.SIMPLEACCOUNTS_HOST) || '',
 
   // API_ROOT_URL: 'https://sit2-api.app.simpleaccounts.io',
 

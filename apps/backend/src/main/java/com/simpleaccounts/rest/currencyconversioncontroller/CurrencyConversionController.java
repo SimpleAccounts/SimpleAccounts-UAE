@@ -109,6 +109,7 @@ public class CurrencyConversionController{
     }
     @LogRequest
     @GetMapping(value = "/getActiveCurrencyConversionList")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<CurrencyConversionResponseModel>> getActiveCurrencyConversionList(){
         List<CurrencyConversionResponseModel> response  = new ArrayList<>();
         List<CurrencyConversion> currencyList = currencyExchangeService.getActiveCurrencyConversionList();

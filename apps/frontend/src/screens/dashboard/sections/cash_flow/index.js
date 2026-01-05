@@ -344,12 +344,7 @@ class CashFlow extends Component {
             </div>
 
             <div className="chart-wrapper card-visibility">
-              <Bar
-                data={cashFlowBar}
-                options={cashBarOption}
-                style={{ height: 200 }}
-                datasetKeyProvider={() => Math.random()}
-              />
+              <Bar data={cashFlowBar} options={cashBarOption} style={{ height: 200 }} />
             </div>
           </CardBody>
         </Card>

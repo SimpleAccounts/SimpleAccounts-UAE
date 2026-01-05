@@ -11,10 +11,28 @@ const authApi = axios.create({
 
 authApi.interceptors.request.use(
   config => {
-    config.headers.Authorization = `Bearer ${window['localStorage'].getItem('accessToken')}`;
+    console.log('[authApi] Interceptor called for URL:', config.url);
+    const accessToken = window['localStorage']?.getItem('accessToken');
+    console.log(
+      '[authApi] AccessToken from localStorage:',
+      accessToken ? `${accessToken.substring(0, 20)}... (length: ${accessToken.length})` : 'NULL'
+    );
+
+    // Only add Authorization header if token exists and is not empty
+    if (accessToken && accessToken.trim().length > 0) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      console.log(
+        '[authApi] Authorization header set:',
+        config.headers.Authorization ? 'YES' : 'NO'
+      );
+      console.log('[authApi] Full headers:', JSON.stringify(config.headers));
+    } else {
+      console.warn('[authApi] No valid access token found for request:', config.url);
+    }
     return config;
   },
   error => {
+    console.error('[authApi] Request interceptor error:', error);
     return Promise.reject(error.response);
   }
 );

@@ -117,11 +117,25 @@ const LogIn = () => {
 
     dispatch(AuthActions.logIn({ username, password }))
       .then(action => {
+        console.log('[Login] Action received:', action);
+        console.log('[Login] Action type:', action?.type);
+        console.log('[Login] Includes fulfilled?:', action?.type?.includes('fulfilled'));
+
         if (action && action.type && action.type.includes('fulfilled')) {
+          const targetRoute = config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE;
+          console.log('[Login] Login successful! Navigating to:', targetRoute);
+          console.log(
+            '[Login] AccessToken in localStorage:',
+            !!localStorage.getItem('accessToken')
+          );
+
           toast.success('Logged in successfully');
-          navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
+          navigate(targetRoute, { replace: true });
+
+          console.log('[Login] Navigate called with replace: true');
         } else {
           setLoading(false);
+          console.log('[Login] Login failed:', action?.payload);
           let errorMessage =
             action?.payload?.message || action?.payload || 'Invalid email or password';
           if (errorMessage === 'Unauthorized') {
@@ -130,8 +144,9 @@ const LogIn = () => {
           toast.error(errorMessage);
         }
       })
-      .catch(() => {
+      .catch(error => {
         setLoading(false);
+        console.error('[Login] Login error:', error);
         toast.error('Something went wrong. Please try again.');
       });
   };
@@ -202,7 +217,7 @@ const LogIn = () => {
                       autoComplete="email"
                       aria-describedby={fieldState.error ? 'email-error' : undefined}
                       aria-invalid={!!fieldState.error}
-                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark focus:border-[#21d8aa] focus:outline-none focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
                       {...field}
                     />
                     {fieldState.error && (
@@ -231,7 +246,7 @@ const LogIn = () => {
                         autoComplete="current-password"
                         aria-describedby={fieldState.error ? 'password-error' : undefined}
                         aria-invalid={!!fieldState.error}
-                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:border-[#21d8aa] focus:outline-none focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
                         onPaste={e => e.preventDefault()}
                         onCopy={e => e.preventDefault()}
                         {...field}
@@ -277,14 +292,28 @@ const LogIn = () => {
                           e.stopPropagation();
                           field.onChange(!field.value);
                         }}
-                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${
-                          field.value ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'
-                        }`}
+                        style={{
+                          background: field.value
+                            ? 'linear-gradient(145deg, var(--primary), hsl(var(--primary) / 0.8))'
+                            : 'var(--neu-bg, #e8eef5)',
+                          boxShadow: field.value
+                            ? '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)'
+                            : 'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                          borderRadius: '9999px',
+                          overflow: 'hidden',
+                        }}
+                        className="relative inline-flex h-8 w-16 flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out focus:outline-none border-0"
                       >
                         <span
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
-                            field.value ? 'translate-x-5' : 'translate-x-0.5'
-                          } mt-0.5`}
+                          style={{
+                            background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
+                            boxShadow:
+                              '2px 2px 4px rgba(0,0,0,0.1), -1px -1px 3px rgba(255,255,255,0.8)',
+                            borderRadius: '9999px',
+                          }}
+                          className={`pointer-events-none inline-block h-6 w-6 transform ring-0 transition-all duration-300 ease-in-out ${
+                            field.value ? 'translate-x-9' : 'translate-x-1'
+                          } mt-1`}
                         />
                       </button>
                       <Label
