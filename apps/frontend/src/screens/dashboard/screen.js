@@ -95,16 +95,15 @@ class Dashboard extends React.Component {
                 style={{
                   width: '32px',
                   height: '32px',
-                  borderRadius: '10px',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                  background: 'var(--corp-bg-secondary, #f8f9fa)',
+                  border: '1px solid var(--corp-border-light, #e5e7eb)',
                 }}
               >
-                <LayoutDashboard size={18} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                <LayoutDashboard size={18} style={{ color: 'var(--corp-primary, #2064d8)' }} />
               </div>
               <span>Dashboard Overview</span>
             </div>
@@ -115,15 +114,8 @@ class Dashboard extends React.Component {
         <Row className="stats-row">
           <Col lg={3} md={6}>
             <div className="stat-card stat-primary">
-              <div
-                className="stat-icon"
-                style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                }}
-              >
-                <FileText size={24} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+              <div className="stat-icon">
+                <FileText size={24} style={{ color: 'var(--corp-primary, #2064d8)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Total Invoices</span>
@@ -133,15 +125,8 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-success">
-              <div
-                className="stat-icon"
-                style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                }}
-              >
-                <ArrowUpCircle size={24} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+              <div className="stat-icon">
+                <ArrowUpCircle size={24} style={{ color: 'var(--corp-success, #10b981)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Income</span>
@@ -151,15 +136,8 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-warning">
-              <div
-                className="stat-icon"
-                style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                }}
-              >
-                <ArrowDownCircle size={24} style={{ color: 'var(--neu-warning, #f59e0b)' }} />
+              <div className="stat-icon">
+                <ArrowDownCircle size={24} style={{ color: 'var(--corp-warning, #f59e0b)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Expenses</span>
@@ -169,15 +147,8 @@ class Dashboard extends React.Component {
           </Col>
           <Col lg={3} md={6}>
             <div className="stat-card stat-info">
-              <div
-                className="stat-icon"
-                style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                }}
-              >
-                <Wallet size={24} style={{ color: '#06b6d4' }} />
+              <div className="stat-icon">
+                <Wallet size={24} style={{ color: 'var(--corp-info, #3b82f6)' }} />
               </div>
               <div className="stat-info">
                 <span className="stat-label">Balance</span>
@@ -194,17 +165,16 @@ class Dashboard extends React.Component {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'var(--neu-bg, #e8eef5)',
-              boxShadow:
-                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              background: 'var(--corp-bg-secondary, #f8f9fa)',
+              border: '1px solid var(--corp-border-light, #e5e7eb)',
               marginRight: '12px',
             }}
           >
-            <TrendingUp size={20} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+            <TrendingUp size={20} style={{ color: 'var(--corp-success, #10b981)' }} />
           </div>
           <h2 className="section-title">Key Performance Indicators</h2>
         </div>
@@ -220,17 +190,16 @@ class Dashboard extends React.Component {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'var(--neu-bg, #e8eef5)',
-              boxShadow:
-                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              background: 'var(--corp-bg-secondary, #f8f9fa)',
+              border: '1px solid var(--corp-border-light, #e5e7eb)',
               marginRight: '12px',
             }}
           >
-            <Landmark size={20} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+            <Landmark size={20} style={{ color: 'var(--corp-primary, #2064d8)' }} />
           </div>
           <h2 className="section-title">Financial Overview</h2>
         </div>
@@ -276,17 +245,16 @@ class Dashboard extends React.Component {
             style={{
               width: '36px',
               height: '36px',
-              borderRadius: '10px',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'var(--neu-bg, #e8eef5)',
-              boxShadow:
-                '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+              background: 'var(--corp-bg-secondary, #f8f9fa)',
+              border: '1px solid var(--corp-border-light, #e5e7eb)',
               marginRight: '12px',
             }}
           >
-            <Scale size={20} style={{ color: 'var(--neu-warning, #f59e0b)' }} />
+            <Scale size={20} style={{ color: 'var(--corp-warning, #f59e0b)' }} />
           </div>
           <h2 className="section-title">Profit & Loss Report</h2>
         </div>

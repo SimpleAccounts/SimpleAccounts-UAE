@@ -58,7 +58,7 @@ const getIcon = name => {
 
 /**
  * Sidebar Component
- * Neumorphic collapsible navigation sidebar matching theme reference design
+ * Corporate minimal design - clean, professional navigation
  */
 export function Sidebar({
   className,
@@ -86,50 +86,33 @@ export function Sidebar({
     setExpandedMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
   };
 
-  // Theme colors (matching the neumorphic theme)
+  // Corporate theme colors
   const theme = {
-    bg: '#e8eef5',
+    bg: '#ffffff',
+    bgSecondary: '#f8f9fa',
     primary: '#2064d8',
     secondary: '#21d8aa',
-    warning: '#f59e0b',
-    textPrimary: '#1e3a5f',
-    textSecondary: '#3d5a80',
-    textMuted: '#98afc2',
-    shadowDark: '#c4c9cf',
-    shadowLight: '#ffffff',
-  };
-
-  const shadows = {
-    raised: {
-      sm: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
-      md: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
-      lg: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff',
-      xs: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
-    },
-  };
-
-  const gradients = {
-    primary: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
+    textPrimary: '#111827',
+    textSecondary: '#4b5563',
+    textMuted: '#9ca3af',
+    border: '#e5e7eb',
+    borderMedium: '#d1d5db',
+    danger: '#ef4444',
   };
 
   if (!Array.isArray(items) || items.length === 0) {
     return (
       <aside
         className={cn(
-          'hidden md:flex flex-col relative',
-          'transition-all duration-300 ease-in-out flex-shrink-0 rounded-2xl',
+          'flex flex-col relative bg-white border-r',
+          'transition-all duration-300 ease-in-out flex-shrink-0',
           minimized ? 'w-20' : 'min-w-64 w-fit',
           className
         )}
-        style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
-        }}
+        style={{ borderColor: theme.border }}
       >
         <div className="p-4">
-          <p className="text-sm" style={{ color: theme.textMuted }}>
-            No navigation items
-          </p>
+          <p className="text-sm text-corp-text-muted">No navigation items</p>
         </div>
       </aside>
     );
@@ -138,20 +121,17 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'hidden md:flex flex-col relative',
-        'transition-all duration-300 ease-in-out flex-shrink-0 rounded-2xl',
+        'flex flex-col relative bg-white border-r',
+        'transition-all duration-300 ease-in-out flex-shrink-0',
         minimized ? 'w-20' : 'min-w-64 w-fit',
         className
       )}
-      style={{
-        background: theme.bg,
-        boxShadow: shadows.raised.lg,
-      }}
+      style={{ borderColor: theme.border }}
     >
       {/* Logo Section */}
       <div
         className="flex items-center justify-center p-4 border-b"
-        style={{ borderColor: theme.shadowDark }}
+        style={{ borderColor: theme.border }}
       >
         <div className={`flex items-center justify-center ${minimized ? 'w-full' : ''}`}>
           <img
@@ -166,20 +146,20 @@ export function Sidebar({
       {onToggleMinimize && (
         <button
           onClick={onToggleMinimize}
-          className="absolute -right-3 top-16 w-6 h-6 rounded-full flex items-center justify-center z-10"
-          style={{ background: theme.bg, boxShadow: shadows.raised.sm }}
+          className="absolute -right-3 top-16 w-6 h-6 rounded-full flex items-center justify-center z-10 bg-white border shadow-sm hover:shadow-md transition-shadow"
+          style={{ borderColor: theme.border }}
         >
           {minimized ? (
-            <ChevronRight className="w-4 h-4" style={{ color: theme.textSecondary }} />
+            <ChevronRight className="w-4 h-4 text-corp-text-secondary" />
           ) : (
-            <ChevronLeft className="w-4 h-4" style={{ color: theme.textSecondary }} />
+            <ChevronLeft className="w-4 h-4 text-corp-text-secondary" />
           )}
         </button>
       )}
 
       {/* Menu Items */}
       <ScrollArea className="flex-1">
-        <nav className="p-3 space-y-2">
+        <nav className="p-3 space-y-1">
           {items.map((item, index) => {
             const Icon = getIcon(item.name);
             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
@@ -195,7 +175,7 @@ export function Sidebar({
             return (
               <div
                 key={item.name}
-                className="animate-fade-in-up"
+                className="animate-fade-in"
                 style={{
                   animationDelay,
                   animationFillMode: 'backwards',
@@ -205,32 +185,20 @@ export function Sidebar({
                 {hasChildren ? (
                   <button
                     onClick={() => toggleSubmenu(item.name)}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
-                      minimized ? 'justify-center' : ''
-                    }`}
-                    style={{
-                      background: theme.bg,
-                      boxShadow: isChildActive ? 'none' : shadows.raised.sm,
-                      border:
-                        isChildActive || isExpanded
-                          ? `2px solid ${theme.warning}`
-                          : '2px solid transparent',
-                    }}
+                    className={cn(
+                      'w-full flex items-center gap-3 p-2 rounded-lg transition-all duration-200',
+                      minimized ? 'justify-center' : '',
+                      isChildActive || isExpanded
+                        ? 'bg-corp-primary-light border border-corp-primary'
+                        : 'hover:bg-corp-bg-secondary border border-transparent'
+                    )}
                     title={minimized ? item.name : undefined}
                   >
-                    {/* Icon Container */}
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{
-                        background: theme.bg,
-                        boxShadow: shadows.raised.xs,
-                      }}
-                    >
-                      <Icon
-                        className="w-5 h-5"
-                        style={{ color: isChildActive ? theme.primary : theme.textSecondary }}
-                      />
-                    </div>
+                    {/* Icon */}
+                    <Icon
+                      className="w-5 h-5 flex-shrink-0"
+                      style={{ color: isChildActive ? theme.primary : theme.textSecondary }}
+                    />
                     {!minimized && (
                       <>
                         <span
@@ -240,7 +208,10 @@ export function Sidebar({
                           {item.name}
                         </span>
                         <ChevronUp
-                          className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? '' : 'rotate-180'}`}
+                          className={cn(
+                            'w-4 h-4 transition-transform duration-200',
+                            isExpanded ? '' : 'rotate-180'
+                          )}
                           style={{ color: theme.textMuted }}
                         />
                       </>
@@ -249,33 +220,24 @@ export function Sidebar({
                 ) : (
                   <NavLink
                     to={item.url}
-                    className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 ${
-                      minimized ? 'justify-center' : ''
-                    }`}
-                    style={{
-                      background: theme.bg,
-                      boxShadow: isActive ? 'none' : shadows.raised.sm,
-                      border: isActive ? `2px solid ${theme.warning}` : '2px solid transparent',
-                    }}
+                    className={cn(
+                      'w-full flex items-center gap-3 p-2 rounded-lg transition-all duration-200',
+                      minimized ? 'justify-center' : '',
+                      isActive
+                        ? 'bg-corp-primary text-white'
+                        : 'hover:bg-corp-bg-secondary border border-transparent'
+                    )}
                     title={minimized ? item.name : undefined}
                   >
-                    {/* Icon Container */}
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{
-                        background: theme.bg,
-                        boxShadow: shadows.raised.xs,
-                      }}
-                    >
-                      <Icon
-                        className="w-5 h-5"
-                        style={{ color: isActive ? theme.primary : theme.textSecondary }}
-                      />
-                    </div>
+                    {/* Icon */}
+                    <Icon
+                      className="w-5 h-5 flex-shrink-0"
+                      style={{ color: isActive ? '#ffffff' : theme.textSecondary }}
+                    />
                     {!minimized && (
                       <span
                         className="flex-1 text-left font-medium text-sm"
-                        style={{ color: isActive ? theme.primary : theme.textPrimary }}
+                        style={{ color: isActive ? '#ffffff' : theme.textPrimary }}
                       >
                         {item.name}
                       </span>
@@ -283,7 +245,7 @@ export function Sidebar({
                   </NavLink>
                 )}
 
-                {/* Submenu with Green Vertical Line */}
+                {/* Submenu */}
                 {hasChildren && !minimized && (
                   <div
                     className="overflow-hidden transition-all duration-300"
@@ -292,10 +254,10 @@ export function Sidebar({
                       opacity: isExpanded ? 1 : 0,
                     }}
                   >
-                    <div className="flex mt-2">
-                      {/* Green Vertical Line */}
+                    <div className="flex mt-1">
+                      {/* Indicator Line */}
                       <div
-                        className="rounded-full ml-6 mr-3"
+                        className="rounded-full ml-4 mr-2"
                         style={{
                           background: theme.secondary,
                           width: '2px',
@@ -303,7 +265,7 @@ export function Sidebar({
                       />
 
                       {/* Submenu Items */}
-                      <div className="flex-1 space-y-1">
+                      <div className="flex-1 space-y-0.5">
                         {item.children.map(child => {
                           const ChildIcon = getIcon(child.name) || FileText;
                           const isSubActive = child.url && pathname.startsWith(child.url);
@@ -312,26 +274,20 @@ export function Sidebar({
                             <NavLink
                               key={child.name || child.url}
                               to={child.url}
-                              className="flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
+                              className={cn(
+                                'flex items-center gap-2 py-1.5 px-3 rounded-md transition-all duration-200',
+                                isSubActive
+                                  ? 'bg-corp-primary-light border-l-2'
+                                  : 'hover:bg-corp-bg-secondary border-l-2 border-transparent'
+                              )}
                               style={{
-                                background: isSubActive ? `${theme.primary}10` : 'transparent',
-                                border: isSubActive
-                                  ? `1px solid ${theme.warning}`
-                                  : '1px solid transparent',
+                                borderLeftColor: isSubActive ? theme.primary : 'transparent',
                               }}
                             >
-                              <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style={{
-                                  background: theme.bg,
-                                  boxShadow: isSubActive ? 'none' : shadows.raised.xs,
-                                }}
-                              >
-                                <ChildIcon
-                                  className="w-4 h-4"
-                                  style={{ color: isSubActive ? theme.primary : theme.textMuted }}
-                                />
-                              </div>
+                              <ChildIcon
+                                className="w-4 h-4"
+                                style={{ color: isSubActive ? theme.primary : theme.textMuted }}
+                              />
                               <span
                                 className="text-sm whitespace-nowrap"
                                 style={{
@@ -355,20 +311,20 @@ export function Sidebar({
       </ScrollArea>
 
       {/* User Profile Section with Dropdown */}
-      <div className="p-3 border-t" style={{ borderColor: theme.shadowDark }}>
+      <div className="p-3 border-t" style={{ borderColor: theme.border }}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className={`w-full flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all duration-200 hover:opacity-90 ${minimized ? 'justify-center' : ''}`}
-              style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
-              }}
+              className={cn(
+                'w-full flex items-center gap-3 p-2 rounded-lg cursor-pointer',
+                'transition-all duration-200 hover:bg-corp-bg-secondary',
+                minimized ? 'justify-center' : ''
+              )}
             >
               {/* Avatar */}
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
-                style={{ background: gradients.primary, boxShadow: shadows.raised.xs }}
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0"
+                style={{ background: theme.primary }}
               >
                 {user?.firstName?.[0] || user?.name?.[0] || 'U'}
                 {user?.lastName?.[0] || ''}
@@ -376,19 +332,16 @@ export function Sidebar({
               {!minimized && (
                 <>
                   <div className="flex-1 min-w-0 text-left">
-                    <p
-                      className="text-sm font-medium truncate"
-                      style={{ color: theme.textPrimary }}
-                    >
+                    <p className="text-sm font-medium truncate text-corp-text-primary">
                       {user?.firstName
                         ? `${user.firstName} ${user.lastName || ''}`
                         : user?.name || 'User'}
                     </p>
-                    <p className="text-xs truncate" style={{ color: theme.textMuted }}>
+                    <p className="text-xs truncate text-corp-text-muted">
                       {user?.role?.roleName || 'Administrator'}
                     </p>
                   </div>
-                  <ChevronUp className="w-4 h-4" style={{ color: theme.textMuted }} />
+                  <ChevronUp className="w-4 h-4 text-corp-text-muted" />
                 </>
               )}
             </button>
@@ -396,110 +349,93 @@ export function Sidebar({
           <DropdownMenuContent
             align={minimized ? 'center' : 'end'}
             side="top"
-            className="w-56 mb-2 border-0 rounded-xl p-2"
-            style={{
-              background: theme.bg,
-              boxShadow: shadows.raised.lg,
-            }}
+            className="w-56 mb-2"
           >
             <div className="px-3 py-2">
-              <p className="text-sm font-medium" style={{ color: theme.textPrimary }}>
+              <p className="text-sm font-medium text-corp-text-primary">
                 Hey{' '}
-                <i style={{ color: theme.primary }}>
+                <span className="text-corp-primary font-semibold">
                   {user?.firstName ? `${user.firstName} ${user.lastName || ''}` : 'User'}
-                </i>
+                </span>
               </p>
             </div>
-            <DropdownMenuSeparator style={{ background: theme.shadowDark }} />
-            <DropdownMenuItem
-              onClick={() => navigate('/admin/profile')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
-            >
-              <User className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate('/admin/profile')} className="cursor-pointer">
+              <User className="h-4 w-4 mr-2 text-corp-primary" />
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/general')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <Mail className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <Mail className="h-4 w-4 mr-2 text-corp-primary" />
               General Settings
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/user')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <UserCog className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <UserCog className="h-4 w-4 mr-2 text-corp-primary" />
               User
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/user-role')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <Users className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <Users className="h-4 w-4 mr-2 text-corp-primary" />
               Role
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/payrollsettings')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <Wallet className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <Wallet className="h-4 w-4 mr-2 text-corp-primary" />
               Payroll Settings
             </DropdownMenuItem>
             {config.SETTING_THEME && (
               <DropdownMenuItem
                 onClick={() => navigate('/admin/settings/template')}
-                className="rounded-lg my-1 cursor-pointer"
-                style={{ color: theme.textSecondary }}
+                className="cursor-pointer"
               >
-                <Palette className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+                <Palette className="h-4 w-4 mr-2 text-corp-primary" />
                 Mail Themes
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/notesSettings')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <Info className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <Info className="h-4 w-4 mr-2 text-corp-primary" />
               Notes Settings
             </DropdownMenuItem>
             {config.SETTING_IMPORT && (
               <DropdownMenuItem
                 onClick={() => navigate('/admin/settings/import')}
-                className="rounded-lg my-1 cursor-pointer"
-                style={{ color: theme.textSecondary }}
+                className="cursor-pointer"
               >
-                <Upload className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+                <Upload className="h-4 w-4 mr-2 text-corp-primary" />
                 Import
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
               onClick={() => navigate('/admin/settings/help')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <HelpCircle className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <HelpCircle className="h-4 w-4 mr-2 text-corp-primary" />
               Help
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => navigate('/theme-reference')}
-              className="rounded-lg my-1 cursor-pointer"
-              style={{ color: theme.textSecondary }}
+              className="cursor-pointer"
             >
-              <Palette className="h-4 w-4 mr-2" style={{ color: theme.primary }} />
+              <Palette className="h-4 w-4 mr-2 text-corp-primary" />
               Theme Reference
             </DropdownMenuItem>
-            <DropdownMenuSeparator style={{ background: theme.shadowDark }} />
+            <DropdownMenuSeparator />
             {onLogout && (
               <DropdownMenuItem
                 onClick={onLogout}
-                className="rounded-lg my-1 cursor-pointer text-red-500 focus:text-red-500"
+                className="cursor-pointer text-corp-danger focus:text-corp-danger"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Log Out
