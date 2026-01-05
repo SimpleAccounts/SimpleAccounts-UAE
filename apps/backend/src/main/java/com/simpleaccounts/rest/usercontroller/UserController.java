@@ -309,13 +309,49 @@ public class UserController{
 
 	@LogRequest
 	@GetMapping(value = "/current")
+	@Transactional
 	public ResponseEntity<User> currentUser(HttpServletRequest request) {
 		try {
+			System.out.println("=== currentUser endpoint called ===");
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			System.out.println("userId from token: " + userId);
 			User user = userService.findByPK(userId);
-			System.out.println("user "+user);
+			System.out.println("user found: " + (user != null ? user.getUserEmail() : "null"));
+
+			// Initialize lazy-loaded relationships to prevent LazyInitializationException during JSON serialization
+			if (user != null) {
+				org.hibernate.Hibernate.initialize(user.getCompany());
+				if (user.getCompany() != null) {
+					org.hibernate.Hibernate.initialize(user.getCompany().getCompanyTypeCode());
+					org.hibernate.Hibernate.initialize(user.getCompany().getInvoicingCountryCode());
+					org.hibernate.Hibernate.initialize(user.getCompany().getCompanyCountryCode());
+					org.hibernate.Hibernate.initialize(user.getCompany().getCompanyStateCode());
+					if (user.getCompany().getCompanyStateCode() != null) {
+						org.hibernate.Hibernate.initialize(user.getCompany().getCompanyStateCode().getCountry());
+					}
+				}
+				org.hibernate.Hibernate.initialize(user.getEmployeeId());
+				if (user.getEmployeeId() != null) {
+					org.hibernate.Hibernate.initialize(user.getEmployeeId().getCountry());
+					org.hibernate.Hibernate.initialize(user.getEmployeeId().getShippingCountry());
+					org.hibernate.Hibernate.initialize(user.getEmployeeId().getState());
+					org.hibernate.Hibernate.initialize(user.getEmployeeId().getShippingState());
+					if (user.getEmployeeId().getState() != null) {
+						org.hibernate.Hibernate.initialize(user.getEmployeeId().getState().getCountry());
+					}
+					if (user.getEmployeeId().getShippingState() != null) {
+						org.hibernate.Hibernate.initialize(user.getEmployeeId().getShippingState().getCountry());
+					}
+				}
+			}
+
+			System.out.println("About to return user object...");
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
+			System.err.println("=== ERROR in currentUser endpoint ===");
+			System.err.println("Exception type: " + e.getClass().getName());
+			System.err.println("Exception message: " + e.getMessage());
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

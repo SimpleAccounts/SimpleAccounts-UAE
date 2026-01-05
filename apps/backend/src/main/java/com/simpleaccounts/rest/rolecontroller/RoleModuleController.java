@@ -66,6 +66,7 @@ public class RoleModuleController {
 
     @LogRequest
     @GetMapping(value = "/getModuleListByRoleCode")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> getModuleListByRoleCode(@RequestParam int roleCode){
         List<ModuleResponseModel> response  = new ArrayList<>();
         List<RoleModuleRelation> modulesList=roleModuleService.getModuleListByRoleCode(roleCode);

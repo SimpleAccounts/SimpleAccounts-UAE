@@ -1,5 +1,6 @@
 package com.simpleaccounts.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.simpleaccounts.constant.CommonConstant;
 import com.simpleaccounts.entity.bankaccount.TransactionCategory;
 import java.io.Serializable;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "SA_USER")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;

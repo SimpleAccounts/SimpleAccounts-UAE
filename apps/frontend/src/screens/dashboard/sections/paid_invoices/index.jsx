@@ -201,11 +201,7 @@ const PaidInvoices = props => {
             </h1>
           </div>
           <div className="chart-wrapper" style={{ height: '300px', marginTop: '20px' }}>
-            <Line
-              data={invoice_graph_data}
-              options={data4MultipleOptions}
-              datasetKeyProvider={() => Math.random()}
-            />
+            <Line data={invoice_graph_data} options={data4MultipleOptions} />
           </div>
         </CardBody>
       </Card>

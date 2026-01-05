@@ -97,6 +97,7 @@ public class BankAccountController{
 
 	@LogRequest
 	@GetMapping(value = "/list")
+	@Transactional(readOnly = true)
 		public ResponseEntity<PaginationResponseModel> getBankAccountList(BankAccountFilterModel filterModel,
 																		  HttpServletRequest request) {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);

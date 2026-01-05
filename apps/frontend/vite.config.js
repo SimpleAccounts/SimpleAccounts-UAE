@@ -146,6 +146,30 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
+        // Preserve all headers including Authorization
+        headers: {
+          // Let all headers pass through from the client
+        },
+        // Configure proxy to preserve Authorization header
+        onProxyReq: (proxyReq, req, res) => {
+          // Log all incoming headers for debugging
+          console.log('[Vite Proxy] Request URL:', req.url);
+          console.log('[Vite Proxy] Incoming headers:', JSON.stringify(req.headers, null, 2));
+
+          // Explicitly preserve Authorization header
+          if (req.headers.authorization) {
+            console.log('[Vite Proxy] Found Authorization header, forwarding it');
+            proxyReq.setHeader('Authorization', req.headers.authorization);
+          } else {
+            console.log('[Vite Proxy] WARNING: No Authorization header in request!');
+          }
+
+          // Log what we're sending to backend
+          console.log(
+            '[Vite Proxy] Outgoing headers:',
+            JSON.stringify(proxyReq.getHeaders(), null, 2)
+          );
+        },
         // Bypass proxy for frontend routes and static files
         bypass: function (req, res, options) {
           const url = req.url;

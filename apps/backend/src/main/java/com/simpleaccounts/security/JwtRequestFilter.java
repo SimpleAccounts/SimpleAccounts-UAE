@@ -26,7 +26,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 
+		// Debug logging - log all headers
+		System.out.println("=== JWT Filter Debug ===");
+		System.out.println("Request URL: " + request.getRequestURL());
+		System.out.println("All headers:");
+		java.util.Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			System.out.println("  " + headerName + ": " + request.getHeader(headerName));
+		}
+
 		final String requestTokenHeader = request.getHeader("Authorization");
+		System.out.println("Authorization header value: " + (requestTokenHeader != null ? requestTokenHeader : "NULL"));
 
 		String username = null;
 		String jwtToken = null;
