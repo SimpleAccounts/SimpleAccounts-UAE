@@ -12,8 +12,11 @@ const authApi = axios.create({
 authApi.interceptors.request.use(
   config => {
     const accessToken = window['localStorage']?.getItem('accessToken');
-    if (accessToken) {
+    // Only add Authorization header if token exists and is not empty
+    if (accessToken && accessToken.trim().length > 0) {
       config.headers.Authorization = `Bearer ${accessToken}`;
+    } else {
+      console.warn('[authApi] No valid access token found for request:', config.url);
     }
     return config;
   },

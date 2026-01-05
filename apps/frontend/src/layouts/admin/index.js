@@ -78,12 +78,19 @@ class AdminLayout extends React.Component {
   };
 
   componentDidMount() {
-    if (!window['localStorage'].getItem('accessToken')) {
+    console.log('[AdminLayout] componentDidMount - checking token');
+    const token = window['localStorage'].getItem('accessToken');
+    console.log('[AdminLayout] Token exists:', !!token, 'Length:', token?.length);
+
+    if (!token) {
+      console.log('[AdminLayout] No token, redirecting to login');
       this.props.history.push('/login');
     } else {
+      console.log('[AdminLayout] Token found, calling checkAuthStatus');
       this.props.authActions
         .checkAuthStatus()
         .then(async action => {
+          console.log('[AdminLayout] checkAuthStatus response:', action?.type);
           // Redux Toolkit thunks return action objects, check for fulfilled
           if (action && action.type && action.type.includes('fulfilled')) {
             const userData = action.payload;
@@ -105,13 +112,14 @@ class AdminLayout extends React.Component {
             });
           } else {
             // Auth check failed - user not authenticated
+            console.log('[AdminLayout] checkAuthStatus failed - not fulfilled:', action);
             this.props.commonActions.tostifyAlert('error', 'Session Timed out');
             this.props.authActions.logOut();
             this.props.history.push('/login');
           }
         })
         .catch(err => {
-          console.error('Auth check error:', err);
+          console.error('[AdminLayout] Auth check error caught:', err);
           this.props.commonActions.tostifyAlert('error', 'Session Timed out');
           this.props.authActions.logOut();
           this.props.history.push('/login');

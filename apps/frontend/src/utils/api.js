@@ -11,9 +11,9 @@ const api = axios.create({
 // Request interceptor to add Authorization header and handle FormData
 api.interceptors.request.use(
   config => {
-    // Add Authorization header if accessToken exists
+    // Add Authorization header if accessToken exists and is not empty
     const accessToken = window['localStorage']?.getItem('accessToken');
-    if (accessToken) {
+    if (accessToken && accessToken.trim().length > 0) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
