@@ -117,11 +117,25 @@ const LogIn = () => {
 
     dispatch(AuthActions.logIn({ username, password }))
       .then(action => {
+        console.log('[Login] Action received:', action);
+        console.log('[Login] Action type:', action?.type);
+        console.log('[Login] Includes fulfilled?:', action?.type?.includes('fulfilled'));
+
         if (action && action.type && action.type.includes('fulfilled')) {
+          const targetRoute = config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE;
+          console.log('[Login] Login successful! Navigating to:', targetRoute);
+          console.log(
+            '[Login] AccessToken in localStorage:',
+            !!localStorage.getItem('accessToken')
+          );
+
           toast.success('Logged in successfully');
-          navigate(config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE);
+          navigate(targetRoute);
+
+          console.log('[Login] Navigate called');
         } else {
           setLoading(false);
+          console.log('[Login] Login failed:', action?.payload);
           let errorMessage =
             action?.payload?.message || action?.payload || 'Invalid email or password';
           if (errorMessage === 'Unauthorized') {
@@ -130,8 +144,9 @@ const LogIn = () => {
           toast.error(errorMessage);
         }
       })
-      .catch(() => {
+      .catch(error => {
         setLoading(false);
+        console.error('[Login] Login error:', error);
         toast.error('Something went wrong. Please try again.');
       });
   };
