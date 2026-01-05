@@ -310,3 +310,56 @@ echo ""
 echo "MCP Servers (pre-installed):"
 echo "  SonarQube - Code quality analysis (~/.local/share/mcp-servers/)"
 echo ""
+
+# =============================================================================
+# Auto-start Frontend and Backend Development Servers
+# =============================================================================
+echo "🚀 Starting development servers..."
+
+# Start Backend (Spring Boot)
+if [ -f "apps/backend/mvnw" ]; then
+    if ! pgrep -f "spring-boot:run" > /dev/null; then
+        echo "☕ Starting Backend API (Spring Boot) on port 8080..."
+        cd apps/backend
+        nohup ./mvnw spring-boot:run > /tmp/backend.log 2>&1 &
+        echo "✅ Backend started (logs: /tmp/backend.log)"
+        cd ../..
+    else
+        echo "✅ Backend already running"
+    fi
+else
+    echo "⚠️  Backend mvnw not found, skipping auto-start"
+fi
+
+# Start Frontend (Vite)
+if [ -f "apps/frontend/package.json" ]; then
+    if ! pgrep -f "vite" > /dev/null; then
+        echo "⚛️  Starting Frontend (React + Vite) on port 3000..."
+        cd apps/frontend
+        nohup npm start > /tmp/frontend.log 2>&1 &
+        echo "✅ Frontend started (logs: /tmp/frontend.log)"
+        cd ../..
+    else
+        echo "✅ Frontend already running"
+    fi
+else
+    echo "⚠️  Frontend package.json not found, skipping auto-start"
+fi
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🎯 Development Servers:"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Frontend: http://localhost:3000 (React + Vite)"
+echo "  Backend:  http://localhost:8080 (Spring Boot)"
+echo "  Swagger:  http://localhost:8080/swagger-ui.html"
+echo ""
+echo "📋 View logs:"
+echo "  Frontend: tail -f /tmp/frontend.log"
+echo "  Backend:  tail -f /tmp/backend.log"
+echo ""
+echo "🛑 Stop servers:"
+echo "  pkill -f vite      (stop frontend)"
+echo "  pkill -f spring-boot:run  (stop backend)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
