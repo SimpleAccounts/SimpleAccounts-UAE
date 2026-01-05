@@ -11,7 +11,10 @@ const authApi = axios.create({
 
 authApi.interceptors.request.use(
   config => {
-    config.headers.Authorization = `Bearer ${window['localStorage'].getItem('accessToken')}`;
+    const accessToken = window['localStorage']?.getItem('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
     return config;
   },
   error => {
