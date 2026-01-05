@@ -40,6 +40,16 @@ data "coder_parameter" "git_clone_url" {
   icon         = "/icon/git.svg"
 }
 
+data "coder_parameter" "enable_workspace_apps" {
+  name         = "enable_workspace_apps"
+  display_name = "Enable Workspace Apps"
+  description  = "Show app shortcuts for Frontend, Backend API, and Swagger UI. Only enable if you're running these services."
+  type         = "bool"
+  default      = "false"
+  mutable      = true
+  icon         = "/icon/apps.svg"
+}
+
 # Docker provider configuration
 provider "docker" {
   host = "unix:///var/run/docker.sock"
@@ -394,7 +404,10 @@ module "code-server" {
 }
 
 # Frontend application (React + Vite on port 3000)
+# Only shown if workspace apps are enabled via parameter
 resource "coder_app" "frontend" {
+  count = data.coder_parameter.enable_workspace_apps.value == "true" ? 1 : 0
+
   agent_id     = coder_agent.main.id
   slug         = "frontend"
   display_name = "Frontend (React)"
@@ -411,7 +424,10 @@ resource "coder_app" "frontend" {
 }
 
 # Backend API application (Spring Boot on port 8080)
+# Only shown if workspace apps are enabled via parameter
 resource "coder_app" "backend" {
+  count = data.coder_parameter.enable_workspace_apps.value == "true" ? 1 : 0
+
   agent_id     = coder_agent.main.id
   slug         = "backend"
   display_name = "Backend API"
@@ -428,7 +444,10 @@ resource "coder_app" "backend" {
 }
 
 # Swagger UI for API documentation
+# Only shown if workspace apps are enabled via parameter
 resource "coder_app" "swagger" {
+  count = data.coder_parameter.enable_workspace_apps.value == "true" ? 1 : 0
+
   agent_id     = coder_agent.main.id
   slug         = "swagger"
   display_name = "API Docs (Swagger)"
