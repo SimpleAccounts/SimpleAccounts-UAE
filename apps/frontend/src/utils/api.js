@@ -8,9 +8,15 @@ const api = axios.create({
   },
 });
 
-// Override Content-Type for FormData requests
+// Request interceptor to add Authorization header and handle FormData
 api.interceptors.request.use(
   config => {
+    // Add Authorization header if accessToken exists
+    const accessToken = window['localStorage']?.getItem('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     // If data is FormData, remove Content-Type header to let browser set it with boundary
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
