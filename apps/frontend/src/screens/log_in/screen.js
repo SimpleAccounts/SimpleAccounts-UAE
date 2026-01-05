@@ -217,7 +217,7 @@ const LogIn = () => {
                       autoComplete="email"
                       aria-describedby={fieldState.error ? 'email-error' : undefined}
                       aria-invalid={!!fieldState.error}
-                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark focus:border-[#21d8aa] focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
                       {...field}
                     />
                     {fieldState.error && (
@@ -246,7 +246,7 @@ const LogIn = () => {
                         autoComplete="current-password"
                         aria-describedby={fieldState.error ? 'password-error' : undefined}
                         aria-invalid={!!fieldState.error}
-                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.4),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:border-[#21d8aa] focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
                         onPaste={e => e.preventDefault()}
                         onCopy={e => e.preventDefault()}
                         {...field}
