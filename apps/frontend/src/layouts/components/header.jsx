@@ -78,8 +78,8 @@ class Header extends Component {
     const baseRoute = config.DASHBOARD ? config.BASE_ROUTE : config.SECONDARY_BASE_ROUTE;
 
     return (
-      <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-        <div className="flex h-14 items-center px-4 w-full">
+      <header className="sticky top-0 z-50 w-full border-b bg-white shadow-corp-sm">
+        <div className="flex h-16 items-center px-4 w-full">
           {/* Mobile menu trigger */}
           <Sheet>
             <SheetTrigger asChild>
@@ -90,7 +90,7 @@ class Header extends Component {
                 onClick={onToggleSidebar}
                 aria-label="Toggle mobile menu"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5 text-corp-text-secondary" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
@@ -100,8 +100,8 @@ class Header extends Component {
 
           {/* Logo */}
           <NavLink to={baseRoute} className="mr-4 flex items-center space-x-2">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-8 w-auto hidden lg:block" />
-            <img src={sygnet} alt="SimpleAccounts" className="h-6 w-6 lg:hidden" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-10 w-auto hidden lg:block" />
+            <img src={sygnet} alt="SimpleAccounts" className="h-8 w-8 lg:hidden" />
           </NavLink>
 
           {/* Desktop sidebar toggle */}
@@ -112,13 +112,16 @@ class Header extends Component {
             onClick={onToggleSidebarMinimize}
             aria-label="Toggle sidebar"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5 text-corp-text-secondary" />
           </Button>
 
           {/* User menu */}
-          <div className="ml-auto flex items-center space-x-2">
-            <span className="text-sm text-gray-700">
-              {strings.Hey} <i>{profile && `${profile.firstName} ${profile.lastName}`}</i>
+          <div className="ml-auto flex items-center space-x-3">
+            <span className="text-sm text-corp-text-secondary hidden md:block">
+              {strings.Hey}{' '}
+              <span className="font-semibold text-corp-primary">
+                {profile && `${profile.firstName} ${profile.lastName}`}
+              </span>
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -142,65 +145,86 @@ class Header extends Component {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 z-[100]">
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">
-                    {strings.Hey} <i>{profile && `${profile.firstName} ${profile.lastName}`}</i>
+                  <p className="text-sm font-medium text-corp-text-primary">
+                    {strings.Hey}{' '}
+                    <span className="text-corp-primary font-semibold">
+                      {profile && `${profile.firstName} ${profile.lastName}`}
+                    </span>
                   </p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => this.props.history?.push('/admin/profile')}>
-                  <User className="h-4 w-4" />
+                <DropdownMenuItem
+                  onClick={() => this.props.history?.push('/admin/profile')}
+                  className="cursor-pointer"
+                >
+                  <User className="h-4 w-4 text-corp-primary" />
                   {strings.Profile}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/general')}
+                  className="cursor-pointer"
                 >
-                  <Mail className="h-4 w-4" />
+                  <Mail className="h-4 w-4 text-corp-primary" />
                   {strings.GeneralSettings}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => this.props.history?.push('/admin/settings/user')}>
-                  <UserCog className="h-4 w-4" />
+                <DropdownMenuItem
+                  onClick={() => this.props.history?.push('/admin/settings/user')}
+                  className="cursor-pointer"
+                >
+                  <UserCog className="h-4 w-4 text-corp-primary" />
                   {strings.User}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/user-role')}
+                  className="cursor-pointer"
                 >
-                  <Users className="h-4 w-4" />
+                  <Users className="h-4 w-4 text-corp-primary" />
                   {strings.Role}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/payrollsettings')}
+                  className="cursor-pointer"
                 >
-                  <Wallet className="h-4 w-4" />
+                  <Wallet className="h-4 w-4 text-corp-primary" />
                   {strings.PayrollSettings}
                 </DropdownMenuItem>
                 {config.SETTING_THEME && (
                   <DropdownMenuItem
                     onClick={() => this.props.history?.push('/admin/settings/template')}
+                    className="cursor-pointer"
                   >
-                    <Palette className="h-4 w-4" />
+                    <Palette className="h-4 w-4 text-corp-primary" />
                     {strings.MailThemes}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
                   onClick={() => this.props.history?.push('/admin/settings/notesSettings')}
+                  className="cursor-pointer"
                 >
-                  <Info className="h-4 w-4" />
+                  <Info className="h-4 w-4 text-corp-primary" />
                   {strings.Notes_Settings}
                 </DropdownMenuItem>
                 {config.SETTING_IMPORT && (
                   <DropdownMenuItem
                     onClick={() => this.props.history?.push('/admin/settings/import')}
+                    className="cursor-pointer"
                   >
-                    <Palette className="h-4 w-4" />
+                    <Palette className="h-4 w-4 text-corp-primary" />
                     {strings.Import}
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={() => this.props.history?.push('/admin/settings/help')}>
-                  <Info className="h-4 w-4" />
+                <DropdownMenuItem
+                  onClick={() => this.props.history?.push('/admin/settings/help')}
+                  className="cursor-pointer"
+                >
+                  <Info className="h-4 w-4 text-corp-primary" />
                   {strings.Help}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={this.signOut}>
+                <DropdownMenuItem
+                  onClick={this.signOut}
+                  className="cursor-pointer text-corp-danger"
+                >
                   <LogOut className="h-4 w-4" />
                   {strings.LogOut}
                 </DropdownMenuItem>

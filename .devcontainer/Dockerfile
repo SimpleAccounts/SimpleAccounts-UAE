@@ -91,9 +91,8 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
-# Install code-server for web-based IDE access
-RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local \
-    && echo "Code-server installed successfully"
+# NOTE: code-server is now managed by the Coder template module (see .coder/template.tf)
+# This provides better integration with Coder's app system and automatic URL handling
 
 # Install AI CLI tools (Claude, Codex, OpenAI, Gemini)
 # These are pre-installed but will be updated on container start via install-cli-tools.sh

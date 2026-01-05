@@ -47,12 +47,10 @@ describe('Sidebar Component', () => {
     );
 
     const dashboardLink = screen.getByText('Dashboard').closest('a');
-    // Neumorphic sidebar uses inline styles with amber border for active state
-    // Check for the amber border color (#f59e0b) in the style
-    const hasActiveBorder =
-      dashboardLink.style.border?.includes('#f59e0b') ||
-      dashboardLink.style.border?.includes('rgb(245, 158, 11)');
-    expect(hasActiveBorder).toBe(true);
+    // Corporate sidebar uses blue background and white text for active state
+    // Check for the corporate primary background class
+    expect(dashboardLink).toHaveClass('bg-corp-primary');
+    expect(dashboardLink).toHaveClass('text-white');
   });
 
   test('renders collapsible menu items', () => {

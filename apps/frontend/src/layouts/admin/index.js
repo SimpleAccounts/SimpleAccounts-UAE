@@ -264,7 +264,7 @@ class AdminLayout extends React.Component {
     return loading == true ? (
       <Loader loadingMsg={loadingMsg} />
     ) : (
-      <div className="admin-container flex min-h-screen bg-neu-bg dark:bg-neu-bg-dark overflow-x-hidden">
+      <div className="admin-container flex min-h-screen bg-corp-bg-secondary dark:bg-gray-900 overflow-x-hidden">
         <div className="flex flex-1 p-4 gap-4 w-full max-w-full">
           <Sidebar
             items={finalArray.items}
@@ -277,73 +277,43 @@ class AdminLayout extends React.Component {
               this.props.history.push('/login');
             }}
           />
-          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-neu-bg dark:bg-neu-bg-dark rounded-2xl shadow-neu-out dark:shadow-neu-out-dark">
+          <main className="flex-1 min-w-0 overflow-x-hidden overflow-y-auto bg-white dark:bg-gray-800 rounded-lg border border-corp-border-light">
             {SubscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
               <Alert variant="destructive" className="m-4">
                 <AlertDescription>{SubscriptionMessage}</AlertDescription>
               </Alert>
             )}
-            {/* Neumorphic Page Header with Breadcrumb */}
-            <div className="px-6 py-5">
+            {/* Corporate Page Header with Breadcrumb */}
+            <div className="px-6 py-5 border-b border-corp-border-light">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 {/* Page Title */}
                 <div>
-                  <h1
-                    className="text-2xl font-bold"
-                    style={{ color: 'var(--neu-text-primary, #1e3a5f)' }}
-                  >
+                  <h1 className="text-2xl font-bold text-corp-text-primary">
                     {breadcrumbName || 'Dashboard'}
                   </h1>
                   {/* Breadcrumb Trail */}
                   <nav className="flex items-center gap-2 mt-2">
                     <NavLink
                       to={config.BASE_ROUTE}
-                      className="flex items-center gap-1.5 text-sm transition-colors hover:opacity-80"
-                      style={{ color: 'var(--neu-primary, #2064d8)' }}
+                      className="flex items-center gap-1.5 text-sm transition-colors hover:text-corp-primary text-corp-text-secondary"
                     >
-                      <div
-                        className="w-6 h-6 rounded-lg flex items-center justify-center"
-                        style={{
-                          background: 'var(--neu-bg, #e8eef5)',
-                          boxShadow:
-                            '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                        }}
-                      >
+                      <div className="w-6 h-6 rounded-md flex items-center justify-center bg-corp-bg-secondary">
                         <Home className="w-3.5 h-3.5" />
                       </div>
                       <span>Home</span>
                     </NavLink>
                     {breadcrumbName && (
                       <>
-                        <ChevronRight
-                          className="w-4 h-4"
-                          style={{ color: 'var(--neu-text-muted, #98afc2)' }}
-                        />
-                        <span
-                          className="text-sm font-medium px-3 py-1 rounded-lg"
-                          style={{
-                            color: 'var(--neu-text-secondary, #3d5a80)',
-                            background: 'var(--neu-bg, #e8eef5)',
-                            boxShadow:
-                              'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                          }}
-                        >
+                        <ChevronRight className="w-4 h-4 text-corp-text-muted" />
+                        <span className="text-sm font-medium px-3 py-1 rounded-md bg-corp-bg-secondary text-corp-text-secondary">
                           {breadcrumbName}
                         </span>
                       </>
                     )}
                   </nav>
                 </div>
-                {/* Optional: Date or other info on the right */}
-                <div
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
-                  style={{
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
-                    color: 'var(--neu-text-secondary, #3d5a80)',
-                  }}
-                >
+                {/* Optional: Date on the right */}
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium bg-corp-bg-secondary text-corp-text-secondary">
                   <span>
                     {new Date().toLocaleDateString('en-US', {
                       weekday: 'long',

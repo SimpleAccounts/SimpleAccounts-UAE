@@ -379,6 +379,20 @@ resource "coder_agent" "main" {
   }
 }
 
+# code-server module for web-based VS Code access
+module "code-server" {
+  source   = "registry.coder.com/modules/code-server/coder"
+  version  = "1.4.2"
+  agent_id = coder_agent.main.id
+  folder   = "/workspaces/SimpleAccounts-UAE"
+
+  # Auto-install extensions from devcontainer.json
+  auto_install_extensions = true
+
+  # Display in Web Editors group
+  group = "Web Editors"
+}
+
 # Main workspace container
 resource "docker_container" "workspace" {
   # Use pre-built image for fast startup
