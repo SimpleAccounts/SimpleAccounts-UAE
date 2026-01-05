@@ -130,9 +130,9 @@ const LogIn = () => {
           );
 
           toast.success('Logged in successfully');
-          navigate(targetRoute);
+          navigate(targetRoute, { replace: true });
 
-          console.log('[Login] Navigate called');
+          console.log('[Login] Navigate called with replace: true');
         } else {
           setLoading(false);
           console.log('[Login] Login failed:', action?.payload);
