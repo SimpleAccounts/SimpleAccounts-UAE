@@ -421,7 +421,7 @@ resource "coder_app" "backend" {
   share        = "owner"
 
   healthcheck {
-    url       = "http://localhost:8080/actuator/health"
+    url       = "http://localhost:8080/rest/config/getreleasenumber"
     interval  = 5
     threshold = 10
   }

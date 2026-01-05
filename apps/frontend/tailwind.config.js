@@ -97,6 +97,21 @@ module.exports = {
             dark: 'var(--corp-border-dark)',
           },
         },
+
+        /* Neumorphic theme colors - LEGACY (for backward compatibility during migration) */
+        neu: {
+          bg: '#e8eef5',
+          primary: '#2064d8',
+          secondary: '#21d8aa',
+          text: {
+            primary: '#2e3b52',
+            muted: '#98afc2',
+          },
+          shadow: {
+            light: '#ffffff',
+            dark: '#c4c9cf',
+          },
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -109,6 +124,39 @@ module.exports = {
         'corp-md': 'var(--corp-shadow-md)',
         'corp-lg': 'var(--corp-shadow-lg)',
         'corp-xl': 'var(--corp-shadow-xl)',
+
+        /* Neumorphic shadows - LEGACY (for backward compatibility during migration) */
+        // Soft/Raised shadows (element pops out) - Light mode
+        'neu-flat': '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+        'neu-raised-xs': '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+        'neu-raised-sm': '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+        'neu-raised': '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff',
+        'neu-raised-md': '8px 8px 16px #c4c9cf, -8px -8px 16px #ffffff',
+        'neu-raised-lg': '10px 10px 20px #c4c9cf, -10px -10px 20px #ffffff',
+        'neu-raised-xl': '15px 15px 30px #c4c9cf, -15px -15px 30px #ffffff',
+        // Inset/Pressed shadows (element pushed in) - Light mode
+        'neu-pressed-xs': 'inset 1px 1px 2px #c4c9cf, inset -1px -1px 2px #ffffff',
+        'neu-pressed-sm': 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff',
+        'neu-pressed': 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+        'neu-pressed-md': 'inset 4px 4px 8px #c4c9cf, inset -4px -4px 8px #ffffff',
+        'neu-pressed-lg': 'inset 6px 6px 12px #c4c9cf, inset -6px -6px 12px #ffffff',
+        // Dark mode shadows
+        'neu-raised-dark': '6px 6px 12px #1e1f23, -6px -6px 12px #383b43',
+        'neu-raised-sm-dark': '3px 3px 6px #1e1f23, -3px -3px 6px #383b43',
+        'neu-pressed-dark': 'inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43',
+        'neu-pressed-sm-dark': 'inset 2px 2px 4px #1e1f23, inset -2px -2px 4px #383b43',
+        // Legacy aliases for compatibility
+        'neu-out': '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff',
+        'neu-in': 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+        'neu-out-dark': '6px 6px 12px #1e1f23, -6px -6px 12px #383b43',
+        'neu-in-dark': 'inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43',
+        // Button specific
+        'neu-btn': '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+        'neu-btn-hover': '5px 5px 10px #c4c9cf, -5px -5px 10px #ffffff',
+        'neu-btn-active': 'inset 2px 2px 5px #c4c9cf, inset -2px -2px 5px #ffffff',
+        // Input specific
+        'neu-input': 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff',
+        'neu-input-focus': 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
       },
       animation: {
         'fade-in': 'fadeIn 0.2s ease-in',
