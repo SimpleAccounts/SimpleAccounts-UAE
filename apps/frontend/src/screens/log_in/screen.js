@@ -284,17 +284,20 @@ const LogIn = () => {
                           boxShadow: field.value
                             ? '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)'
                             : 'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                          borderRadius: '9999px',
+                          overflow: 'hidden',
                         }}
-                        className="relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-neu-bg dark:focus:ring-offset-neu-bg-dark"
+                        className="relative inline-flex h-8 w-16 flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out focus:outline-none border-0"
                       >
                         <span
                           style={{
                             background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
                             boxShadow:
                               '2px 2px 4px rgba(0,0,0,0.1), -1px -1px 3px rgba(255,255,255,0.8)',
+                            borderRadius: '9999px',
                           }}
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full ring-0 transition-all duration-300 ease-in-out ${
-                            field.value ? 'translate-x-8' : 'translate-x-1'
+                          className={`pointer-events-none inline-block h-6 w-6 transform ring-0 transition-all duration-300 ease-in-out ${
+                            field.value ? 'translate-x-9' : 'translate-x-1'
                           } mt-1`}
                         />
                       </button>
