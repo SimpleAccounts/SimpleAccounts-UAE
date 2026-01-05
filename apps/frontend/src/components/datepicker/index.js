@@ -1,15 +1,12 @@
 import React from 'react';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-} from '@/components/ui/dropdown-menu';
+
 import { Button } from '@/components/ui/button';
 import dayjs from '@/utils/date';
 
-import DateRangePicker from 'react-bootstrap-daterangepicker';
-
-import 'bootstrap-daterangepicker/daterangepicker.css';
+// DISABLED: This component uses jQuery which causes page load issues
+// Replace with a modern date range picker component
+// import DateRangePicker from 'react-bootstrap-daterangepicker';
+// import 'bootstrap-daterangepicker/daterangepicker.css';
 
 class DateRangePicker2 extends React.Component {
   constructor(props) {
@@ -61,6 +58,16 @@ class DateRangePicker2 extends React.Component {
     if (this.state.startDate !== null && nick_key === null) {
       nick_key = this.state.startDate.format('ll') + ' - ' + this.state.endDate.format('ll');
     }
+
+    // TEMPORARILY DISABLED: jQuery-based DateRangePicker removed for performance
+    // This component needs to be replaced with a modern alternative
+    return (
+      <Button variant="outline" className="date-select" disabled>
+        {nick_key || 'Date Range (Disabled)'}
+      </Button>
+    );
+
+    /* Original jQuery-based implementation - DISABLED
     return (
       <DateRangePicker
         startDate={this.state.startDate}
@@ -76,11 +83,12 @@ class DateRangePicker2 extends React.Component {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {/* Range selection handled by DateRangePicker wrapping this */}
+            {/* Range selection handled by DateRangePicker wrapping this */ /*}
           </DropdownMenuContent>
         </DropdownMenu>
       </DateRangePicker>
     );
+    */
   }
 }
 

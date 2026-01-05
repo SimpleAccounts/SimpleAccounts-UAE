@@ -15,7 +15,7 @@ export const checkAuthStatus = createAsyncThunk(
       };
       const res = await authApi(data);
       if (res.status === 200) {
-        cryptoService.encryptService('userId', res.data.userId);
+        await cryptoService.encryptService('userId', res.data.userId);
         return res.data;
       }
       return rejectWithValue('Auth Failed');

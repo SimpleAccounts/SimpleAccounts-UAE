@@ -13,7 +13,8 @@ import {
 } from 'components/migration';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
-import { DateRangePicker2 } from 'components';
+// DISABLED: DateRangePicker2 removed due to jQuery dependency
+// import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
 import { DataTable } from '@/components/ui/data-table';
 import './style.scss';

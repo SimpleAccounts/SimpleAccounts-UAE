@@ -5,7 +5,7 @@
  * It's a drop-in replacement for the xlsx package to resolve security vulnerabilities
  * (GHSA-4r6h-8v6p-xvw6, GHSA-5pgg-2g8v-p4x9).
  */
-import ExcelJS from 'exceljs';
+import * as ExcelJS from 'exceljs';
 
 /**
  * Convert JSON array to worksheet-ready data

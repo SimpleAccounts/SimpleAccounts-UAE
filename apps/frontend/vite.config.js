@@ -88,11 +88,8 @@ export default defineConfig({
       'framer-motion',
       // NOTE: lucide-react must be pre-bundled - excluding it causes hundreds of
       // individual module requests which breaks page load
-      // Exclude date picker libraries - they're large and only used in specific screens
-      'react-bootstrap-daterangepicker',
+      // Exclude date picker library - large and only used in specific screens
       'react-datepicker',
-      // Exclude crypto-js - only used for specific encryption features
-      'crypto-js',
     ],
     // Reduce memory usage during optimization
     force: false, // Don't force re-optimization
@@ -109,6 +106,9 @@ export default defineConfig({
         __dirname,
         './src/utils/react-router-navigation-prompt-shim.js'
       ),
+      // Stub out react-dom/server for browser - react-to-print doesn't actually need it in modern versions
+      'react-dom/server.browser': path.resolve(__dirname, './src/utils/react-dom-server-stub.js'),
+      'react-dom/server': path.resolve(__dirname, './src/utils/react-dom-server-stub.js'),
       // Support existing imports without '@' prefix (e.g., 'assets/css/global.scss')
       assets: path.resolve(__dirname, './src/assets'),
       components: path.resolve(__dirname, './src/components'),
@@ -228,8 +228,8 @@ export default defineConfig({
               return 'icons';
             }
 
-            // Split date picker libraries - they're large and only used in forms
-            if (id.includes('react-datepicker') || id.includes('react-bootstrap-daterangepicker')) {
+            // Split date picker library - large and only used in forms
+            if (id.includes('react-datepicker')) {
               return 'datepickers';
             }
 
@@ -238,14 +238,9 @@ export default defineConfig({
               return 'animations';
             }
 
-            // Split lodash into separate chunk
-            if (id.includes('lodash')) {
+            // Split lodash-es into separate chunk
+            if (id.includes('lodash-es')) {
               return 'lodash';
-            }
-
-            // Split crypto-js - only used for specific features
-            if (id.includes('crypto-js')) {
-              return 'crypto';
             }
 
             // Only split very large libraries that don't have React dependencies at module level

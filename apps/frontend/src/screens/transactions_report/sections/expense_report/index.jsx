@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Button, Row, Col, FormGroup, ButtonGroup, Form, Input } from 'components/migration';
-import { DateRangePicker2 } from 'components';
+// DISABLED: DateRangePicker2 removed due to jQuery dependency
+// import { DateRangePicker2 } from 'components';
 import dayjs from '@/utils/date';
 import { DataTable } from '@/components/ui/data-table';
-import DateRangePicker from 'react-bootstrap-daterangepicker';
-import 'bootstrap-daterangepicker/daterangepicker.css';
+// DISABLED: jQuery dependency causes performance issues
+// import DateRangePicker from 'react-bootstrap-daterangepicker';
+// import 'bootstrap-daterangepicker/daterangepicker.css';
 import './style.scss';
 import { Download, Search } from 'lucide-react';
 

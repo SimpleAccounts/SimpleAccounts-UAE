@@ -251,7 +251,7 @@ function Profile() {
       setTimezone(tzOptions);
 
       // Get user by ID
-      const userIdFromStorage = cryptoService.decryptService('userId');
+      const userIdFromStorage = await cryptoService.decryptService('userId');
       if (userIdFromStorage) {
         setLoading(true);
         const res = await profileActions.getUserById(userIdFromStorage);

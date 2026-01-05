@@ -5,7 +5,9 @@ import Aside from './aside';
 import Header from './header';
 import Footer from './footer';
 import Message from './message';
-import DateRangePicker2 from './datepicker';
+// COMMENTED OUT: DateRangePicker2 uses jQuery which slows down page load
+// Import it directly in components that need it for lazy loading
+// import DateRangePicker2 from './datepicker';
 import ConfirmDeleteModal from './confirm_delete_modal';
 import ImageUploader from './react-image-upload';
 import Tooltip from './tooltip';
@@ -35,7 +37,7 @@ export {
   Header,
   Footer,
   Message,
-  DateRangePicker2,
+  // DateRangePicker2, // Commented out - import directly where needed
   ConfirmDeleteModal,
   ConfirmLeavePageModal,
   LeavePage,

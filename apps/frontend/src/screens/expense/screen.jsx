@@ -15,7 +15,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
-import 'bootstrap-daterangepicker/daterangepicker.css';
+// Removed: bootstrap-daterangepicker (jQuery dependency)
 import { CommonActions } from 'services/global';
 import * as ExpenseActions from './actions';
 import dayjs from '@/utils/date';

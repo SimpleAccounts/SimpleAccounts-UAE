@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DataTable } from '@/components/ui/data-table';
 
-import { DateRangePicker2, Loader } from 'components';
+// DISABLED: DateRangePicker2 removed due to jQuery dependency
+// import { DateRangePicker2 } from 'components';
+import { Loader } from 'components';
 import dayjs from '@/utils/date';
 import { selectStyles } from 'utils';
 
