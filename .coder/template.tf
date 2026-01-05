@@ -393,6 +393,51 @@ module "code-server" {
   group = "Web Editors"
 }
 
+# Frontend application (React + Vite on port 3000)
+resource "coder_app" "frontend" {
+  agent_id     = coder_agent.main.id
+  slug         = "frontend"
+  display_name = "Frontend (React)"
+  icon         = "/icon/react.svg"
+  url          = "http://localhost:3000"
+  subdomain    = true
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:3000"
+    interval  = 5
+    threshold = 10
+  }
+}
+
+# Backend API application (Spring Boot on port 8080)
+resource "coder_app" "backend" {
+  agent_id     = coder_agent.main.id
+  slug         = "backend"
+  display_name = "Backend API"
+  icon         = "/icon/spring.svg"
+  url          = "http://localhost:8080"
+  subdomain    = true
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:8080/rest/config/getreleasenumber"
+    interval  = 5
+    threshold = 10
+  }
+}
+
+# Swagger UI for API documentation
+resource "coder_app" "swagger" {
+  agent_id     = coder_agent.main.id
+  slug         = "swagger"
+  display_name = "API Docs (Swagger)"
+  icon         = "/icon/swagger.svg"
+  url          = "http://localhost:8080/swagger-ui.html"
+  subdomain    = false
+  share        = "owner"
+}
+
 # Main workspace container
 resource "docker_container" "workspace" {
   # Use pre-built image for fast startup
