@@ -47,10 +47,8 @@ describe('Sidebar Component', () => {
     );
 
     const dashboardLink = screen.getByText('Dashboard').closest('a');
-    // Corporate sidebar uses blue background and white text for active state
-    // Check for the corporate primary background class
-    expect(dashboardLink).toHaveClass('bg-corp-primary');
-    expect(dashboardLink).toHaveClass('text-white');
+    // Corporate sidebar uses corp-menu-item-active class for active state
+    expect(dashboardLink).toHaveClass('corp-menu-item-active');
   });
 
   test('renders collapsible menu items', () => {
