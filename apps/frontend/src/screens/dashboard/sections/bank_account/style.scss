@@ -1,4 +1,4 @@
-// Bank Card - Neumorphic Design
+// Bank Card - Corporate Design
 .bank-card {
   border: none !important;
   background: transparent !important;
@@ -10,13 +10,13 @@
   height: 100%;
 
   .bank-type {
-    color: var(--neu-primary, #2064d8) !important;
+    color: #2064d8 !important;
     font-size: 18px;
   }
 
   h1 {
     font-size: 1.125rem;
-    color: var(--neu-primary, #2064d8);
+    color: #2064d8;
     font-weight: 700;
     margin: 0;
   }
@@ -50,19 +50,27 @@
   }
 
   .bank-type-select {
-    border: none !important;
+    border: 1px solid #e5e7eb !important;
     padding: 10px 36px 10px 14px !important;
     font-size: 14px !important;
-    color: var(--neu-text-primary, #1e3a5f) !important;
+    color: #111827 !important;
     font-weight: 500;
-    background: var(--neu-bg, #e8eef5) !important;
-    box-shadow:
-      inset 3px 3px 6px var(--neu-shadow-dark, #c4c9cf),
-      inset -3px -3px 6px var(--neu-shadow-light, #ffffff) !important;
-    border-radius: 10px !important;
+    background: #ffffff !important;
+    border-radius: 8px !important;
     height: auto !important;
     min-height: 44px !important;
     flex: 1;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #d1d5db !important;
+    }
+
+    &:focus {
+      border-color: #2064d8 !important;
+      box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1) !important;
+      outline: none;
+    }
   }
 
   // Last Updated Section
@@ -70,7 +78,7 @@
     display: flex;
     align-items: center;
     font-size: 0.75rem;
-    color: var(--neu-text-muted, #98afc2);
+    color: #9ca3af;
     margin-bottom: 16px;
   }
 
@@ -83,12 +91,13 @@
   }
 
   .balance-card {
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     min-width: 100px;
     flex: 1 1 auto;
 
     &:hover {
       transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -165,19 +174,18 @@
 }
 
 .card-body .form-control1:focus {
-  border: 1px solid var(--neu-primary, #2064d8) !important;
-  box-shadow: none !important;
+  border: 1px solid #2064d8 !important;
+  box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1) !important;
 }
 
 .card-shadow {
-  background: var(--neu-bg, #e8eef5) !important;
-  box-shadow:
-    6px 6px 12px var(--neu-shadow-dark, #c4c9cf),
-    -6px -6px 12px var(--neu-shadow-light, #ffffff);
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .flex-color {
-  background-color: var(--neu-bg, #e8eef5);
+  background-color: #f8f9fa;
 }
 
 .card-h1 {
@@ -195,12 +203,20 @@
 }
 
 .card-select {
-  background: var(--neu-bg, #e8eef5) !important;
-  border: none !important;
-  box-shadow:
-    inset 3px 3px 6px var(--neu-shadow-dark, #c4c9cf),
-    inset -3px -3px 6px var(--neu-shadow-light, #ffffff) !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
   border-radius: 8px !important;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #d1d5db !important;
+  }
+
+  &:focus {
+    border-color: #2064d8 !important;
+    box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1) !important;
+    outline: none;
+  }
 }
 
 .card-visibility {
@@ -209,7 +225,7 @@
 }
 
 .title-bottom-border {
-  border-bottom: 2px solid rgba(30, 110, 255, 0.1);
+  border-bottom: 1px solid #e5e7eb;
   padding-bottom: 12px;
   margin-bottom: 12px;
 }

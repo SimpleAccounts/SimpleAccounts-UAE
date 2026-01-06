@@ -1,113 +1,115 @@
 // ============================================
-// NEUMORPHIC DESIGN SYSTEM VARIABLES
-// Inspired by Themesberg Neumorphism UI
-// Updated to match sidebar theme (2024)
+// CORPORATE DESIGN SYSTEM VARIABLES
+// Minimal corporate theme inspired by Stripe, Linear, OpenAI
 // ============================================
 
 // ============================================
 // COLOR PALETTE
 // ============================================
 
-// Base Colors (Light Mode) - UPDATED to match sidebar
-$neu-bg: #e8eef5;
-$neu-bg-alt: #e0e5ec;
-$neu-dark-shadow: #c4c9cf;
-$neu-light-shadow: #ffffff;
-$neu-border: #d1d9e6;
+// Corporate Backgrounds
+$corp-bg-primary: #ffffff;
+$corp-bg-secondary: #f8f9fa;
+$corp-bg-tertiary: #f3f4f6;
 
-// Base Colors (Dark Mode)
-$neu-bg-dark: #2b2d33;
-$neu-bg-dark-alt: #31343b;
-$neu-dark-shadow-dark: #1e1f23;
-$neu-light-shadow-dark: #383b43;
-$neu-border-dark: #3d4049;
+// Legacy aliases for backwards compatibility
+$neu-bg: $corp-bg-secondary;
+$neu-bg-alt: $corp-bg-tertiary;
 
-// Brand Colors - UPDATED to match logo
+// Corporate Borders
+$corp-border-light: #e5e7eb;
+$corp-border-dark: #d1d5db;
+$neu-border: $corp-border-light;
+$neu-dark-shadow: $corp-border-light;
+$neu-light-shadow: $corp-bg-primary;
+
+// Brand Colors
 $primary: #2064d8;
 $primary-light: #4a8be8;
-$primary-dark: #1a4fa8;
-$secondary: #21d8aa;
-$success: #21d8aa;
-$info: #06b6d4;
+$primary-dark: #1a56b8;
+$secondary: #10b981;
+$success: #10b981;
+$info: #3b82f6;
 $warning: #f59e0b;
-$danger: #ff4d6a;
+$danger: #ef4444;
 
-// Text Colors - UPDATED to match sidebar
-$text-dark: #1e3a5f;
-$text-primary: #1e3a5f;
-$text-secondary: #3d5a80;
-$text-muted: #98afc2;
-$text-light: #98afc2;
+// Text Colors
+$text-dark: #111827;
+$text-primary: #111827;
+$text-secondary: #4b5563;
+$text-muted: #9ca3af;
+$text-light: #9ca3af;
 $text-white: #ffffff;
 
 // Body defaults
-$body-bg: $neu-bg;
+$body-bg: $corp-bg-secondary;
 $body-color: $text-dark;
 
 // ============================================
-// SHADOW SYSTEM
+// SHADOW SYSTEM (Corporate - Subtle)
 // ============================================
 
-// Soft shadows (raised/extruded effect)
-$shadow-soft-xs:
-  2px 2px 4px $neu-dark-shadow,
-  -2px -2px 4px $neu-light-shadow;
-$shadow-soft-sm:
-  3px 3px 6px $neu-dark-shadow,
-  -3px -3px 6px $neu-light-shadow;
-$shadow-soft:
-  6px 6px 12px $neu-dark-shadow,
-  -6px -6px 12px $neu-light-shadow;
-$shadow-soft-md:
-  8px 8px 16px $neu-dark-shadow,
-  -8px -8px 16px $neu-light-shadow;
-$shadow-soft-lg:
-  10px 10px 20px $neu-dark-shadow,
-  -10px -10px 20px $neu-light-shadow;
-$shadow-soft-xl:
-  15px 15px 30px $neu-dark-shadow,
-  -15px -15px 30px $neu-light-shadow;
+// Corporate shadows (subtle, professional)
+$shadow-corp-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-corp-sm:
+  0 1px 3px 0 rgba(0, 0, 0, 0.1),
+  0 1px 2px -1px rgba(0, 0, 0, 0.1);
+$shadow-corp-md:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-corp-lg:
+  0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-corp-xl:
+  0 20px 25px -5px rgba(0, 0, 0, 0.1),
+  0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
-// Inset shadows (pressed/indented effect)
-$shadow-inset-xs:
-  inset 1px 1px 2px $neu-dark-shadow,
-  inset -1px -1px 2px $neu-light-shadow;
-$shadow-inset-sm:
-  inset 2px 2px 4px $neu-dark-shadow,
-  inset -2px -2px 4px $neu-light-shadow;
-$shadow-inset:
-  inset 3px 3px 6px $neu-dark-shadow,
-  inset -3px -3px 6px $neu-light-shadow;
-$shadow-inset-md:
-  inset 4px 4px 8px $neu-dark-shadow,
-  inset -4px -4px 8px $neu-light-shadow;
-$shadow-inset-lg:
-  inset 6px 6px 12px $neu-dark-shadow,
-  inset -6px -6px 12px $neu-light-shadow;
+// Legacy aliases (now map to corporate shadows)
+$shadow-soft-xs: $shadow-corp-xs;
+$shadow-soft-sm: $shadow-corp-sm;
+$shadow-soft: $shadow-corp-md;
+$shadow-soft-md: $shadow-corp-md;
+$shadow-soft-lg: $shadow-corp-lg;
+$shadow-soft-xl: $shadow-corp-xl;
 
-// Dark mode shadows
-$shadow-soft-dark:
-  6px 6px 12px $neu-dark-shadow-dark,
-  -6px -6px 12px $neu-light-shadow-dark;
-$shadow-soft-sm-dark:
-  3px 3px 6px $neu-dark-shadow-dark,
-  -3px -3px 6px $neu-light-shadow-dark;
-$shadow-inset-dark:
-  inset 3px 3px 6px $neu-dark-shadow-dark,
-  inset -3px -3px 6px $neu-light-shadow-dark;
+// Inset shadows (for inputs - subtle)
+$shadow-inset-xs: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-inset-sm: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-inset-md: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+$shadow-inset-lg: inset 0 2px 4px rgba(0, 0, 0, 0.08);
+
+// Dark mode (kept for compatibility)
+$neu-bg-dark: #1f2937;
+$neu-bg-dark-alt: #374151;
+$neu-dark-shadow-dark: #111827;
+$neu-light-shadow-dark: #4b5563;
+$neu-border-dark: #374151;
+
+$shadow-soft-dark: $shadow-corp-md;
+$shadow-soft-sm-dark: $shadow-corp-sm;
+$shadow-inset-dark: $shadow-inset;
 
 // ============================================
 // BORDER RADIUS
 // ============================================
 $border-radius-xs: 0.25rem; // 4px
-$border-radius-sm: 0.5rem; // 8px
-$border-radius: 0.75rem; // 12px
-$border-radius-md: 1rem; // 16px
-$border-radius-lg: 1.25rem; // 20px
-$border-radius-xl: 1.5rem; // 24px
-$border-radius-2xl: 2rem; // 32px
+$border-radius-sm: 0.375rem; // 6px
+$border-radius: 0.5rem; // 8px
+$border-radius-md: 0.5rem; // 8px
+$border-radius-lg: 0.75rem; // 12px
+$border-radius-xl: 1rem; // 16px
+$border-radius-2xl: 1.5rem; // 24px
 $border-radius-pill: 50rem;
 $border-radius-circle: 50%;
+
+// Corporate radius aliases
+$radius-xs: $border-radius-xs;
+$radius-sm: $border-radius-sm;
+$radius-md: $border-radius;
+$radius-lg: $border-radius-lg;
+$radius-xl: $border-radius-xl;
+$radius-pill: $border-radius-pill;
 
 // ============================================
 // SPACING
@@ -133,10 +135,11 @@ $transition-all: all 200ms ease;
 // ============================================
 
 // Cards
-$card-bg: $neu-bg;
-$card-border-width: 0;
+$card-bg: $corp-bg-primary;
+$card-border-width: 1px;
+$card-border-color: $corp-border-light;
 $card-border-radius: $border-radius-lg;
-$card-shadow: $shadow-soft;
+$card-shadow: $shadow-corp-sm;
 $card-padding: $spacer-lg;
 
 // Buttons
@@ -144,41 +147,43 @@ $btn-border-radius: $border-radius;
 $btn-padding-y: 0.625rem;
 $btn-padding-x: 1.25rem;
 $btn-font-weight: 600;
-$btn-shadow: $shadow-soft-sm;
-$btn-shadow-hover: $shadow-soft;
-$btn-shadow-active: $shadow-inset;
+$btn-shadow: none;
+$btn-shadow-hover: $shadow-corp-sm;
+$btn-shadow-active: none;
 
 // Inputs & Forms
-$input-bg: $neu-bg;
-$input-border-width: 0;
+$input-bg: $corp-bg-primary;
+$input-border-width: 1px;
+$input-border-color: $corp-border-light;
 $input-border-radius: $border-radius;
 $input-padding-y: 0.75rem;
 $input-padding-x: 1rem;
-$input-shadow: $shadow-inset-sm;
-$input-shadow-focus: $shadow-inset;
+$input-shadow: none;
+$input-shadow-focus: 0 0 0 3px rgba($primary, 0.1);
 $input-color: $text-dark;
-$input-placeholder-color: $text-light;
+$input-placeholder-color: $text-muted;
 
 // Dropdowns
-$dropdown-bg: $neu-bg;
-$dropdown-border-width: 0;
+$dropdown-bg: $corp-bg-primary;
+$dropdown-border-width: 1px;
+$dropdown-border-color: $corp-border-light;
 $dropdown-border-radius: $border-radius-md;
-$dropdown-shadow: $shadow-soft-md;
+$dropdown-shadow: $shadow-corp-lg;
 $dropdown-item-padding-y: 0.5rem;
 $dropdown-item-padding-x: 1rem;
 
 // Modals
-$modal-bg: $neu-bg;
+$modal-bg: $corp-bg-primary;
 $modal-border-radius: $border-radius-xl;
-$modal-shadow: $shadow-soft-xl;
+$modal-shadow: $shadow-corp-xl;
 
 // Tables
 $table-bg: transparent;
 $table-border-radius: $border-radius;
 $table-cell-padding: 0.75rem 1rem;
-$table-header-bg: rgba($neu-dark-shadow, 0.1);
-$table-hover-bg: rgba($primary, 0.05);
-$table-striped-bg: rgba($neu-dark-shadow, 0.05);
+$table-header-bg: $corp-bg-secondary;
+$table-hover-bg: $corp-bg-secondary;
+$table-striped-bg: $corp-bg-tertiary;
 
 // Navigation/Sidebar
 $nav-link-padding-y: 0.75rem;
@@ -192,20 +197,35 @@ $badge-padding-x: 0.65rem;
 
 // Alerts
 $alert-border-radius: $border-radius;
-$alert-shadow: $shadow-soft-sm;
+$alert-shadow: none;
 
 // Progress bars
-$progress-height: 0.625rem;
+$progress-height: 0.5rem;
 $progress-border-radius: $border-radius-pill;
-$progress-bg: $neu-bg;
-$progress-shadow: $shadow-inset-xs;
+$progress-bg: $corp-bg-tertiary;
+$progress-shadow: none;
 
 // Tooltips
-$tooltip-bg: $neu-bg;
+$tooltip-bg: $text-dark;
 $tooltip-border-radius: $border-radius-sm;
-$tooltip-shadow: $shadow-soft-sm;
+$tooltip-shadow: $shadow-corp-md;
 
 // Tabs
 $tab-border-radius: $border-radius;
-$tab-shadow: $shadow-soft-xs;
-$tab-shadow-active: $shadow-inset-sm;
+$tab-shadow: none;
+$tab-shadow-active: none;
+
+// ============================================
+// CORPORATE THEME VARIABLES (for new code)
+// ============================================
+$corp-primary: $primary;
+$corp-secondary: $secondary;
+$corp-success: $success;
+$corp-warning: $warning;
+$corp-danger: $danger;
+$corp-info: $info;
+
+$corp-text-primary: $text-dark;
+$corp-text-secondary: $text-secondary;
+$corp-text-muted: $text-muted;
+$corp-text-white: $text-white;

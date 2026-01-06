@@ -1,16 +1,13 @@
-// Neumorphic Variables (matching dashboard)
-$neu-bg: #dfe9f7;
-$neu-light: #ffffff;
-$neu-dark: #a3b1c6;
-$neu-primary: #1e6eff;
-$neu-radius-sm: 12px;
-
-// Neumorphic Mixins
-@mixin neu-shadow-pressed {
-  box-shadow:
-    inset 4px 4px 8px rgba(163, 177, 198, 0.6),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
-}
+// Corporate Header Styles
+$bg-white: #ffffff;
+$bg-color: #f8f9fa;
+$primary: #2064d8;
+$text-primary: #111827;
+$text-secondary: #4b5563;
+$text-muted: #9ca3af;
+$border-color: #e5e7eb;
+$radius-sm: 8px;
+$radius-md: 12px;
 
 .header-component {
   display: flex;
@@ -58,18 +55,23 @@ $neu-radius-sm: 12px;
   margin-right: 20px;
 
   .input-group {
-    background: $neu-bg;
-    @include neu-shadow-pressed;
-    border-radius: $neu-radius-sm;
+    background: $bg-white;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
     padding: 4px 8px;
     display: flex;
     align-items: center;
+    transition: border-color 0.2s ease;
+
+    &:focus-within {
+      border-color: $primary;
+    }
 
     .input-group-text {
       padding: 0 8px;
 
       i {
-        color: #8898aa; // $neu-text-light
+        color: $text-muted;
       }
     }
 
@@ -77,13 +79,13 @@ $neu-radius-sm: 12px;
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
-      color: #44476a; // $neu-text-dark
+      color: $text-primary;
       font-weight: 500;
       font-size: 14px;
       padding: 6px;
 
       &::placeholder {
-        color: #a3b1c6; // $neu-dark
+        color: $text-muted;
       }
 
       &:focus {

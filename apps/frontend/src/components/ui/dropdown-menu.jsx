@@ -52,16 +52,9 @@ const DropdownMenuContent = React.forwardRef(({ className, sideOffset = 4, ...pr
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        'z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-xl border-0 p-2 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-dropdown-menu-content-transform-origin]',
+        'z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-lg border border-gray-200 p-1.5 bg-white shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-dropdown-menu-content-transform-origin]',
         className
       )}
-      style={{
-        background: 'var(--neu-bg, #e8eef5)',
-        boxShadow:
-          '6px 6px 12px var(--neu-shadow-dark, #c4c9cf), -6px -6px 12px var(--neu-shadow-light, #ffffff)',
-        color: 'var(--neu-text-primary, #1e3a5f)',
-        ...props.style,
-      }}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
@@ -72,24 +65,10 @@ const DropdownMenuItem = React.forwardRef(({ className, inset, ...props }, ref) 
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-all duration-200 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+      'relative flex cursor-pointer select-none items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 outline-none transition-colors duration-150 hover:bg-gray-50 hover:text-primary focus:bg-gray-50 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
       inset && 'pl-8',
       className
     )}
-    style={{
-      color: 'var(--neu-text-secondary, #3d5a80)',
-      ...props.style,
-    }}
-    onMouseEnter={e => {
-      e.currentTarget.style.background =
-        'linear-gradient(145deg, rgba(30, 110, 255, 0.08), rgba(30, 110, 255, 0.03))';
-      e.currentTarget.style.boxShadow =
-        'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)';
-    }}
-    onMouseLeave={e => {
-      e.currentTarget.style.background = 'transparent';
-      e.currentTarget.style.boxShadow = 'none';
-    }}
     {...props}
   />
 ));
@@ -148,12 +127,7 @@ DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 const DropdownMenuSeparator = React.forwardRef(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 my-2 h-px', className)}
-    style={{
-      background:
-        'linear-gradient(90deg, transparent, var(--neu-shadow-dark, #c4c9cf), transparent)',
-      ...props.style,
-    }}
+    className={cn('-mx-1 my-1.5 h-px bg-gray-200', className)}
     {...props}
   />
 ));

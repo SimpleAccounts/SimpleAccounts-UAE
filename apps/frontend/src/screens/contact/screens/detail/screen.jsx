@@ -544,20 +544,14 @@ const DetailContact = ({
     });
   };
 
-  // Neumorphic theme constants
+  // Corporate theme constants
   const theme = {
-    bg: '#e8eef5',
-    shadowDark: '#c4c9cf',
-    shadowLight: '#ffffff',
-  };
-
-  const shadows = {
-    raised: {
-      lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    },
-    pressed: {
-      sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    },
+    bg: '#f8f9fa',
+    bgWhite: '#ffffff',
+    primary: '#2064d8',
+    textPrimary: '#111827',
+    textSecondary: '#4b5563',
+    border: '#e5e7eb',
   };
 
   if (loading) {
@@ -572,26 +566,24 @@ const DetailContact = ({
       <div className="animated fadeIn max-w-7xl mx-auto">
         {dialog}
         <Card
-          className="rounded-2xl overflow-hidden"
+          className="rounded-xl overflow-hidden"
           style={{
-            background: theme.bg,
-            boxShadow: shadows.raised.lg,
+            background: theme.bgWhite,
+            border: `1px solid ${theme.border}`,
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
           }}
         >
-          <CardHeader className="border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+          <CardHeader className="border-b" style={{ borderColor: theme.border }}>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
-                <IdCard className="h-5 w-5" style={{ color: '#1e6eff' }} />
+                <IdCard className="h-5 w-5" style={{ color: theme.primary }} />
                 <span>{strings.UpdateContact}</span>
               </CardTitle>
               <Button
                 type="button"
                 variant="destructive"
                 onClick={deleteContact}
-                className="rounded-xl"
-                style={{
-                  boxShadow: shadows.raised.sm,
-                }}
+                className="rounded-lg"
               >
                 <Trash2 className="h-4 w-4" />
                 {strings.Delete}
