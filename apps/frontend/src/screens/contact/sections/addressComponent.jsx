@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { upperFirst } from 'lodash-es';
 import Select from 'react-select';
 import { ZipCodeInput } from 'components';
@@ -46,38 +46,33 @@ const AddressComponent = ({
   onChange,
 }) => {
   const dispatch = useDispatch();
-  const contactActions = bindActionCreators(ContactActions, dispatch);
+  const contactActions = useMemo(() => bindActionCreators(ContactActions, dispatch), [dispatch]);
 
-  // Always call useFormContext unconditionally (hooks must be called in same order)
-  // Wrap component usage in FormProvider when using addressPrefix
-  let formContext = null;
-  let hasFormContext = false;
-
-  // Call hook unconditionally, but only use it if addressPrefix is provided
-  // Note: This violates rules-of-hooks but is necessary for optional form context support
-  /* eslint-disable react-hooks/rules-of-hooks */
-  try {
-    formContext = useFormContext();
-    hasFormContext = addressPrefix !== undefined && formContext !== null;
-  } catch (e) {
-    // Form context not available (not within FormProvider), use props
-    hasFormContext = false;
-  }
-  /* eslint-enable react-hooks/rules-of-hooks */
+  // Get form context if available
+  const formContext = useFormContext();
+  const hasFormContext = !!addressPrefix && !!formContext;
 
   const control = formContext?.control;
-  const watch = formContext?.watch;
   const setValue = formContext?.setValue;
   const formState = formContext?.formState;
   const contextErrors = formState?.errors || {};
   const contextTouched = formState?.touchedFields || {};
 
+  // Use useWatch for reactive form values - more performant than watch()
+  // When not in form context, these will be undefined and we fall back to props
+  const watchedAddress = useWatch({
+    control,
+    name: addressPrefix,
+    defaultValue: {},
+  });
+
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
   const [state_list, setState_list] = useState([]);
+  const prevCountryIdRef = useRef(null);
 
-  // Get address values - from context or props
-  const countryId = hasFormContext ? watch(`${addressPrefix}.countryId`) : values?.countryId;
-  const addressValues = hasFormContext ? watch(addressPrefix) || {} : values || {};
+  // Get address values - from useWatch or props
+  const addressValues = hasFormContext ? watchedAddress || {} : values || {};
+  const countryId = addressValues?.countryId;
 
   // Validation patterns
   const regEx = /^[0-9]+$/;
@@ -100,18 +95,23 @@ const AddressComponent = ({
         if (res.status === 200) {
           const stateDropdown = DropdownLists.getStateDropdown(res.data, countryId);
           setState_list(stateDropdown);
-          // Clear state when country changes
-          if (hasFormContext && setValue) {
-            setValue(`${addressPrefix}.stateId`, '');
-          } else if (onChange) {
-            onChange('stateId', '');
+          // Only clear state when country actually changed (not on initial load)
+          if (prevCountryIdRef.current !== null && prevCountryIdRef.current !== countryId) {
+            if (hasFormContext && setValue) {
+              setValue(`${addressPrefix}.stateId`, '');
+            } else if (onChange) {
+              onChange('stateId', '');
+            }
           }
+          prevCountryIdRef.current = countryId;
         }
       });
     } else {
       setState_list([]);
+      prevCountryIdRef.current = null;
     }
-  }, [countryId, addressPrefix, contactActions, setValue, hasFormContext, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countryId, contactActions]);
 
   // Get errors and touched - from context or props
   const addressErrors = hasFormContext ? contextErrors[addressPrefix] || {} : errors || {};
