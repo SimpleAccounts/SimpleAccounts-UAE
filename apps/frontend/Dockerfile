@@ -8,10 +8,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies with BuildKit cache mounts
-# Using separate caches for npm registry and node_modules
+# Using cache for npm registry only (node_modules must persist for build)
 # This significantly reduces network bandwidth on subsequent builds
 RUN --mount=type=cache,target=/root/.npm \
-    --mount=type=cache,target=/app/node_modules \
     npm ci --legacy-peer-deps --prefer-offline --no-audit --no-fund
 
 # Copy source code
