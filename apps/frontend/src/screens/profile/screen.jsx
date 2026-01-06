@@ -98,34 +98,38 @@ const companyProfileSchema = z.object({
   fax: z.string().optional(),
 });
 
-// Custom select styles for dark mode
+// Corporate select styles
 const selectStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? 'hsl(var(--primary))' : 'hsl(var(--input))',
-    backgroundColor: 'hsl(var(--background))',
-    '&:hover': {
-      borderColor: 'hsl(var(--primary))',
-    },
+    minHeight: '40px',
+    borderRadius: '0.5rem',
+    borderColor: state.isFocused ? '#2064d8' : '#e5e7eb',
+    boxShadow: state.isFocused ? '0 0 0 3px rgba(32, 100, 216, 0.1)' : 'none',
+    backgroundColor: '#ffffff',
+    '&:hover': { borderColor: '#d1d5db' },
+    transition: 'all 0.2s ease',
   }),
   menu: base => ({
     ...base,
-    backgroundColor: 'hsl(var(--background))',
-    border: '1px solid hsl(var(--border))',
+    backgroundColor: '#ffffff',
+    borderRadius: '0.5rem',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    border: '1px solid #e5e7eb',
+    padding: '0.25rem',
+    zIndex: 50,
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
-    color: 'hsl(var(--foreground))',
+    backgroundColor: state.isFocused ? '#f8f9fa' : 'transparent',
+    color: '#111827',
+    borderRadius: '0.375rem',
+    '&:active': { backgroundColor: '#e5e7eb' },
+    cursor: 'pointer',
   }),
-  singleValue: base => ({
-    ...base,
-    color: 'hsl(var(--foreground))',
-  }),
-  input: base => ({
-    ...base,
-    color: 'hsl(var(--foreground))',
-  }),
+  singleValue: base => ({ ...base, color: '#111827', fontWeight: 500 }),
+  input: base => ({ ...base, color: '#111827' }),
+  placeholder: base => ({ ...base, color: '#9ca3af' }),
 };
 
 /**

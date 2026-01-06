@@ -101,22 +101,22 @@ const ResetNewPassword = ({ token }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-corp-bg-secondary p-4 transition-colors duration-300">
       {/* Theme Toggle */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <Card className="w-full max-w-md animate-slide-up shadow-2xl shadow-blue-900/5 dark:shadow-blue-900/20 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 border-slate-200/60 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <CardHeader className="space-y-6 text-center pb-8 border-b border-border/40 bg-slate-50/50 dark:bg-slate-900/50">
+      <Card className="w-full max-w-md animate-slide-up bg-white border border-corp-border-light shadow-corp-lg rounded-xl overflow-hidden">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-corp-border-light">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-20 w-auto drop-shadow-sm" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            <CardTitle className="text-3xl font-bold tracking-tight text-corp-text-primary">
               {success ? 'Password Reset!' : 'Create New Password'}
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-base text-corp-text-secondary">
               {success
                 ? 'Your password has been successfully reset'
                 : 'Please enter your new password below'}
@@ -126,10 +126,10 @@ const ResetNewPassword = ({ token }) => {
         <CardContent className="animate-fade-in pt-8" style={{ animationDelay: '200ms' }}>
           {success ? (
             <div className="flex flex-col items-center gap-4 py-6">
-              <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center animate-scale-in">
-                <CheckCircle2 className="h-10 w-10 text-green-600 dark:text-green-400" />
+              <div className="h-16 w-16 rounded-full bg-corp-success-light flex items-center justify-center animate-scale-in">
+                <CheckCircle2 className="h-10 w-10 text-corp-success" />
               </div>
-              <p className="text-sm text-muted-foreground text-center">
+              <p className="text-sm text-corp-text-muted text-center">
                 Redirecting you to login...
               </p>
             </div>
@@ -137,7 +137,7 @@ const ResetNewPassword = ({ token }) => {
             <>
               {alert && (
                 <Alert
-                  className="mb-4 bg-destructive/10 text-destructive border-destructive/20 animate-shake"
+                  className="mb-4 bg-corp-danger-light text-corp-danger border-corp-danger/20 animate-shake"
                   role="alert"
                   aria-live="polite"
                 >
@@ -145,7 +145,7 @@ const ResetNewPassword = ({ token }) => {
                     {alert.message}{' '}
                     <Button
                       variant="link"
-                      className="h-auto p-0 text-destructive underline"
+                      className="h-auto p-0 text-corp-danger underline"
                       onClick={() => navigate('/reset-password')}
                     >
                       Request new link
@@ -166,8 +166,11 @@ const ResetNewPassword = ({ token }) => {
                     name="password"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel className="font-semibold" htmlFor="new-password">
-                          <span className="text-destructive" aria-hidden="true">
+                        <FormLabel
+                          className="font-semibold text-corp-text-primary"
+                          htmlFor="new-password"
+                        >
+                          <span className="text-corp-danger" aria-hidden="true">
                             *{' '}
                           </span>
                           New Password
@@ -183,7 +186,7 @@ const ResetNewPassword = ({ token }) => {
                             aria-required="true"
                             aria-describedby="password-requirements"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition focus-ring-animate pr-10 ${fieldState.error ? 'border-destructive' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light pr-10 focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'border-corp-danger' : ''}`}
                             onPaste={e => e.preventDefault()}
                             onCopy={e => e.preventDefault()}
                             {...field}
@@ -191,7 +194,7 @@ const ResetNewPassword = ({ token }) => {
                           <button
                             type="button"
                             onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-corp-text-muted hover:text-corp-primary transition-colors duration-200 focus:outline-none p-2 rounded-md hover:bg-corp-bg-hover"
                             aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
                             aria-pressed={isPasswordShown}
                           >
@@ -203,7 +206,9 @@ const ResetNewPassword = ({ token }) => {
                           </button>
                         </div>
                         {fieldState.error && (
-                          <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                          <FormMessage role="alert" className="text-corp-danger">
+                            {fieldState.error.message}
+                          </FormMessage>
                         )}
                         <div id="password-requirements">
                           <PasswordStrengthMeter password={password} />
@@ -217,8 +222,11 @@ const ResetNewPassword = ({ token }) => {
                     name="confirmPassword"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel className="font-semibold" htmlFor="confirm-password">
-                          <span className="text-destructive" aria-hidden="true">
+                        <FormLabel
+                          className="font-semibold text-corp-text-primary"
+                          htmlFor="confirm-password"
+                        >
+                          <span className="text-corp-danger" aria-hidden="true">
                             *{' '}
                           </span>
                           Confirm Password
@@ -233,7 +241,7 @@ const ResetNewPassword = ({ token }) => {
                             autoComplete="new-password"
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`input-transition focus-ring-animate pr-10 ${fieldState.error ? 'border-destructive' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light pr-10 focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'border-corp-danger' : ''}`}
                             onPaste={e => e.preventDefault()}
                             onCopy={e => e.preventDefault()}
                             {...field}
@@ -241,7 +249,7 @@ const ResetNewPassword = ({ token }) => {
                           <button
                             type="button"
                             onClick={toggleConfirmPasswordVisibility}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-corp-text-muted hover:text-corp-primary transition-colors duration-200 focus:outline-none p-2 rounded-md hover:bg-corp-bg-hover"
                             aria-label={isConfirmPasswordShown ? 'Hide password' : 'Show password'}
                             aria-pressed={isConfirmPasswordShown}
                           >
@@ -253,10 +261,12 @@ const ResetNewPassword = ({ token }) => {
                           </button>
                         </div>
                         {fieldState.error && (
-                          <FormMessage role="alert">{fieldState.error.message}</FormMessage>
+                          <FormMessage role="alert" className="text-corp-danger">
+                            {fieldState.error.message}
+                          </FormMessage>
                         )}
                         {password && confirmPassword && password === confirmPassword && (
-                          <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1 animate-fade-in">
+                          <p className="text-xs text-corp-success flex items-center gap-1 mt-1 animate-fade-in">
                             <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
                             Passwords match
                           </p>
@@ -267,7 +277,7 @@ const ResetNewPassword = ({ token }) => {
 
                   <Button
                     type="submit"
-                    className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-11 rounded-lg bg-corp-primary text-white font-semibold hover:bg-corp-primary-hover active:scale-[0.98] transition-all duration-200"
                     disabled={loading}
                     aria-busy={loading}
                   >
