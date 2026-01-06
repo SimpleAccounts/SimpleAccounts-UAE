@@ -1,13 +1,13 @@
 // ============================================
 // SIMPLEACCOUNTS UAE - MAIN STYLESHEET
-// Neumorphic Design System
+// Corporate Design System
 // ============================================
 @use 'sass:color';
 
-// Neumorphic Variables (must be first)
+// Corporate Variables (must be first)
 @import 'variables';
 
-// Neumorphic Mixins
+// Corporate Mixins
 @import 'mixins';
 
 // Import Bootstrap 5 (replacing CoreUI Pro)
@@ -22,7 +22,7 @@
   }
 }
 
-// Neumorphic Component Styles
+// Corporate Component Styles
 @import 'neumorphic-components';
 
 // Custom overrides
@@ -35,11 +35,11 @@
 @import 'fixes';
 
 // ============================================
-// GLOBAL NEUMORPHIC STYLES
+// GLOBAL CORPORATE STYLES
 // ============================================
 
 body {
-  background-color: $neu-bg !important;
+  background-color: $corp-bg-secondary !important;
   color: $text-dark;
   font-family:
     'Inter',
@@ -51,21 +51,21 @@ body {
 }
 
 // ============================================
-// CARDS - Neumorphic Override
+// CARDS - Corporate Override
 // ============================================
 
 .card {
-  background-color: $neu-bg;
-  border: none !important;
-  border-radius: $border-radius-xl !important;
-  box-shadow: $shadow-soft !important;
+  background-color: $corp-bg-primary;
+  border: 1px solid $corp-border-light !important;
+  border-radius: $border-radius-lg !important;
+  box-shadow: $shadow-corp-sm !important;
   margin-bottom: $spacer-xl;
 
   .card-header {
     background-color: transparent !important;
-    border-bottom: 1px solid rgba($neu-border, 0.3) !important;
-    font-weight: 700;
-    color: $primary !important;
+    border-bottom: 1px solid $corp-border-light !important;
+    font-weight: 600;
+    color: $text-dark !important;
     padding: $spacer-md $card-padding;
   }
 
@@ -75,77 +75,69 @@ body {
 
   .card-footer {
     background-color: transparent !important;
-    border-top: 1px solid rgba($neu-border, 0.3) !important;
+    border-top: 1px solid $corp-border-light !important;
     padding: $spacer-md $card-padding;
   }
 }
 
 // ============================================
-// BUTTONS - Neumorphic Override
+// BUTTONS - Corporate Override
 // ============================================
 
 .btn {
-  border: none !important;
+  border: 1px solid transparent !important;
   border-radius: $btn-border-radius !important;
-  box-shadow: $btn-shadow !important;
+  box-shadow: none !important;
   font-weight: $btn-font-weight;
   transition: $transition-all;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: $btn-shadow-hover !important;
+    transform: translateY(-1px);
+    box-shadow: $shadow-corp-sm !important;
   }
 
   &:active,
   &.active {
     transform: translateY(0);
-    box-shadow: $btn-shadow-active !important;
+    box-shadow: none !important;
   }
 
   &:focus {
-    box-shadow:
-      $btn-shadow,
-      0 0 0 3px rgba($primary, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba($primary, 0.2) !important;
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     transform: none;
-    box-shadow: $shadow-soft-xs !important;
+    box-shadow: none !important;
   }
 }
 
 .btn-primary {
   background-color: $primary !important;
   color: $text-white !important;
-  box-shadow: $shadow-soft-sm !important;
 
   &:hover {
-    background-color: $primary-light !important;
-    box-shadow: $shadow-soft !important;
+    background-color: $primary-dark !important;
   }
 
   &:active {
-    background-color: $primary-dark !important;
-    box-shadow:
-      inset 2px 2px 5px rgba(0, 0, 0, 0.2),
-      inset -2px -2px 5px rgba(255, 255, 255, 0.1) !important;
+    background-color: darken($primary-dark, 5%) !important;
   }
 
   &:focus {
-    box-shadow:
-      $shadow-soft-sm,
-      0 0 0 3px rgba($primary, 0.35) !important;
+    box-shadow: 0 0 0 3px rgba($primary, 0.3) !important;
   }
 }
 
 .btn-secondary {
-  background-color: $neu-bg !important;
-  color: $text-dark !important;
+  background-color: $corp-bg-primary !important;
+  color: $text-secondary !important;
+  border-color: $corp-border-light !important;
 
   &:hover {
-    background-color: $primary !important;
-    color: $text-white !important;
+    background-color: $corp-bg-secondary !important;
+    border-color: $corp-border-dark !important;
   }
 }
 
@@ -172,23 +164,25 @@ body {
 .btn-link {
   color: $primary;
   box-shadow: none !important;
+  border: none !important;
 
   &:hover {
     transform: none;
     box-shadow: none !important;
+    color: $primary-dark;
   }
 }
 
 .btn-square,
 .btn-square1 {
   background-color: $primary;
-  border-color: $primary;
+  border-color: $primary !important;
   border-radius: $border-radius !important;
   margin: 0 4px;
 
   &:hover {
     background-color: $success;
-    border-color: $success;
+    border-color: $success !important;
   }
 }
 
@@ -199,7 +193,7 @@ body {
 
 // Icon button
 .btn-icon {
-  @include neu-raised('xs');
+  @include corp-card;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -207,25 +201,27 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50% !important;
+  color: $text-muted;
 
   &:hover {
-    box-shadow: $shadow-soft-sm !important;
+    border-color: $primary !important;
+    color: $primary;
   }
 
   &:active {
-    box-shadow: $shadow-inset-xs !important;
+    background-color: $corp-bg-secondary;
   }
 }
 
 // ============================================
-// FORM INPUTS - Neumorphic Override
+// FORM INPUTS - Corporate Override
 // ============================================
 
 .form-control {
-  background-color: $neu-bg !important;
-  border: none !important;
+  background-color: $corp-bg-primary !important;
+  border: 1px solid $corp-border-light !important;
   border-radius: $input-border-radius !important;
-  box-shadow: $input-shadow !important;
+  box-shadow: none !important;
   color: $input-color !important;
   padding: $input-padding-y $input-padding-x;
   transition: $transition-all;
@@ -235,15 +231,15 @@ body {
   }
 
   &:focus {
-    box-shadow:
-      $input-shadow-focus,
-      0 0 0 3px rgba($primary, 0.15) !important;
+    border-color: $primary !important;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1) !important;
     outline: none;
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    background-color: $corp-bg-secondary !important;
   }
 }
 
@@ -265,7 +261,7 @@ textarea.form-control {
 // Select
 select.form-control {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2366799e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
   background-size: 1.5em 1.5em;
@@ -277,9 +273,9 @@ select.form-control {
   .input-group-prepend,
   .input-group-append {
     .input-group-text {
-      background-color: $neu-bg;
-      border: none;
-      box-shadow: $shadow-inset-xs;
+      background-color: $corp-bg-secondary;
+      border: 1px solid $corp-border-light;
+      border-right: none;
       color: $text-muted;
     }
   }
@@ -305,7 +301,7 @@ label,
 }
 
 // ============================================
-// TABLES - Neumorphic Override
+// TABLES - Corporate Override
 // ============================================
 
 .table {
@@ -314,11 +310,14 @@ label,
   border-spacing: 0;
 
   thead th {
-    background-color: rgba($neu-dark-shadow, 0.1);
-    border-bottom: 2px solid rgba($neu-border, 0.3) !important;
-    color: $primary;
+    background-color: $corp-bg-secondary;
+    border-bottom: 1px solid $corp-border-light !important;
+    color: $text-dark;
     font-weight: 600;
     padding: $spacer-md;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 
     &:first-child {
       border-radius: $border-radius 0 0 0;
@@ -330,13 +329,14 @@ label,
   }
 
   td {
-    border-top: 1px solid rgba($neu-border, 0.2) !important;
+    border-top: 1px solid $corp-border-light !important;
     padding: $spacer-md;
     vertical-align: middle;
+    color: $text-secondary;
   }
 
   tbody tr:hover td {
-    background-color: rgba($primary, 0.03);
+    background-color: $corp-bg-secondary;
   }
 
   th {
@@ -345,67 +345,64 @@ label,
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba($neu-dark-shadow, 0.03);
+  background-color: $corp-bg-tertiary;
 }
 
 // ============================================
-// DROPDOWNS - Neumorphic Override
+// DROPDOWNS - Corporate Override
 // ============================================
 
 .dropdown-menu {
-  background-color: $neu-bg;
-  border: none !important;
+  background-color: $corp-bg-primary;
+  border: 1px solid $corp-border-light !important;
   border-radius: $dropdown-border-radius !important;
-  box-shadow: $dropdown-shadow !important;
-  padding: $spacer-sm;
+  box-shadow: $shadow-corp-lg !important;
+  padding: $spacer-xs;
 
   .dropdown-item {
     border-radius: $border-radius-sm;
     padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-    color: $text-dark;
+    color: $text-secondary;
     transition: $transition-all;
 
     &:hover {
-      background-color: rgba($primary, 0.05);
+      background-color: $corp-bg-secondary;
       color: $primary;
-      box-shadow: $shadow-soft-xs;
     }
 
     &.active,
     &:active {
       background-color: rgba($primary, 0.1);
       color: $primary;
-      box-shadow: $shadow-inset-xs;
     }
   }
 
   .dropdown-divider {
-    border-color: rgba($neu-border, 0.3);
+    border-color: $corp-border-light;
   }
 }
 
 // ============================================
-// MODALS - Neumorphic Override
+// MODALS - Corporate Override
 // ============================================
 
 .modal-content {
-  background-color: $neu-bg;
-  border: none !important;
+  background-color: $corp-bg-primary;
+  border: 1px solid $corp-border-light !important;
   border-radius: $modal-border-radius !important;
-  box-shadow: $modal-shadow !important;
+  box-shadow: $shadow-corp-xl !important;
 }
 
 .modal-header {
-  border-bottom: 1px solid rgba($neu-border, 0.3);
+  border-bottom: 1px solid $corp-border-light;
   padding: $spacer-lg;
 
   .modal-title {
-    font-weight: 700;
+    font-weight: 600;
     color: $text-dark;
   }
 
   .close {
-    @include neu-raised('xs');
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -414,9 +411,13 @@ label,
     justify-content: center;
     opacity: 1;
     transition: $transition-all;
+    background: $corp-bg-primary;
+    border: 1px solid $corp-border-light;
+    color: $text-muted;
 
     &:hover {
-      box-shadow: $shadow-soft-sm;
+      border-color: $primary;
+      color: $primary;
     }
   }
 }
@@ -426,7 +427,7 @@ label,
 }
 
 .modal-footer {
-  border-top: 1px solid rgba($neu-border, 0.3);
+  border-top: 1px solid $corp-border-light;
   padding: $spacer-lg;
 }
 
@@ -817,34 +818,54 @@ label,
   color: $primary !important;
 }
 
+// Corporate backgrounds
+.bg-corp,
 .bg-neu {
-  background-color: $neu-bg !important;
+  background-color: $corp-bg-secondary !important;
 }
 
+.bg-corp-white {
+  background-color: $corp-bg-primary !important;
+}
+
+// Corporate shadows
+.shadow-corp,
 .shadow-neu {
-  box-shadow: $shadow-soft !important;
+  box-shadow: $shadow-corp-md !important;
 }
 
+.shadow-corp-sm,
 .shadow-neu-sm {
-  box-shadow: $shadow-soft-sm !important;
+  box-shadow: $shadow-corp-sm !important;
 }
 
+.shadow-corp-lg,
 .shadow-neu-lg {
-  box-shadow: $shadow-soft-lg !important;
+  box-shadow: $shadow-corp-lg !important;
 }
 
+.shadow-corp-none,
 .shadow-neu-inset {
-  box-shadow: $shadow-inset !important;
+  box-shadow: none !important;
 }
 
+// Corporate borders
+.border-corp {
+  border: 1px solid $corp-border-light !important;
+}
+
+// Border radius
+.rounded-corp,
 .rounded-neu {
   border-radius: $border-radius !important;
 }
 
+.rounded-corp-lg,
 .rounded-neu-lg {
   border-radius: $border-radius-lg !important;
 }
 
+.rounded-corp-xl,
 .rounded-neu-xl {
   border-radius: $border-radius-xl !important;
 }

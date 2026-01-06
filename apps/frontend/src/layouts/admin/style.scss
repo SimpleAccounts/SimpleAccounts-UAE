@@ -1,19 +1,18 @@
-// Modern Neumorphic Admin Layout
+// Modern Corporate Admin Layout
 // ================================
 
 // Color Palette
-$bg-color: #e8f0f8;
-$card-bg: #e8f0f8;
-$primary: #2563eb;
-$primary-light: #3b82f6;
+$bg-color: #f8f9fa;
+$bg-white: #ffffff;
+$primary: #2064d8;
+$primary-hover: #1a56b8;
 $secondary: #10b981;
 $accent: #f59e0b;
-$text-dark: #1e293b;
-$text-muted: #64748b;
-$text-light: #94a3b8;
-$white: #ffffff;
-$shadow-dark: rgba(163, 177, 198, 0.6);
-$shadow-light: rgba(255, 255, 255, 0.9);
+$text-primary: #111827;
+$text-secondary: #4b5563;
+$text-muted: #9ca3af;
+$border-color: #e5e7eb;
+$border-hover: #d1d5db;
 
 // Spacing
 $space-xs: 4px;
@@ -26,29 +25,6 @@ $space-xl: 32px;
 $radius-sm: 8px;
 $radius-md: 12px;
 $radius-lg: 16px;
-$radius-xl: 20px;
-
-// Neumorphic Shadows
-@mixin neu-raised {
-  background: $card-bg;
-  box-shadow:
-    6px 6px 14px $shadow-dark,
-    -6px -6px 14px $shadow-light;
-}
-
-@mixin neu-pressed {
-  background: $card-bg;
-  box-shadow:
-    inset 4px 4px 8px $shadow-dark,
-    inset -4px -4px 8px $shadow-light;
-}
-
-@mixin neu-flat {
-  background: $card-bg;
-  box-shadow:
-    3px 3px 8px $shadow-dark,
-    -3px -3px 8px $shadow-light;
-}
 
 // Admin Container
 .admin-container {
@@ -65,7 +41,9 @@ $radius-xl: 20px;
   // HEADER
   // ============================================
   .app-header {
-    @include neu-raised;
+    background: $bg-white;
+    border: 1px solid $border-color;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     padding: $space-md $space-lg;
@@ -77,20 +55,20 @@ $radius-xl: 20px;
     z-index: 100;
 
     .navbar-toggler {
-      @include neu-flat;
-      border: none;
+      background: $bg-white;
+      border: 1px solid $border-color;
       padding: $space-sm $space-md;
       border-radius: $radius-sm;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &:hover {
-        transform: translateY(-1px);
+        border-color: $border-hover;
+        background: $bg-color;
       }
 
       &:active {
-        @include neu-pressed;
-        transform: translateY(0);
+        background: $bg-color;
       }
 
       i {
@@ -120,11 +98,17 @@ $radius-xl: 20px;
       margin: 0 $space-lg;
 
       .input-group {
-        @include neu-pressed;
+        background: $bg-white;
+        border: 1px solid $border-color;
         border-radius: $radius-md;
         padding: $space-xs;
         display: flex;
         align-items: center;
+        transition: border-color 0.2s ease;
+
+        &:focus-within {
+          border-color: $primary;
+        }
 
         .input-group-text {
           background: transparent;
@@ -132,19 +116,19 @@ $radius-xl: 20px;
           padding: $space-sm;
 
           i {
-            color: $text-light;
+            color: $text-muted;
           }
         }
 
         .form-control {
           background: transparent;
           border: none;
-          color: $text-dark;
+          color: $text-primary;
           font-size: 14px;
           padding: $space-sm;
 
           &::placeholder {
-            color: $text-light;
+            color: $text-muted;
           }
 
           &:focus {
@@ -165,8 +149,8 @@ $radius-xl: 20px;
     // Dropdown buttons
     .nav-link,
     button[class*='nav-link'] {
-      @include neu-flat;
-      border: none !important;
+      background: $bg-white;
+      border: 1px solid $border-color;
       border-radius: $radius-md;
       padding: $space-sm $space-md;
       display: flex;
@@ -174,10 +158,11 @@ $radius-xl: 20px;
       gap: $space-sm;
       cursor: pointer;
       transition: all 0.2s ease;
-      color: $text-dark;
+      color: $text-primary;
 
       &:hover {
-        transform: translateY(-1px);
+        border-color: $border-hover;
+        background: $bg-color;
       }
 
       .img-avatar {
@@ -185,7 +170,7 @@ $radius-xl: 20px;
         height: 36px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid $white;
+        border: 2px solid $bg-white;
       }
 
       i {
@@ -195,10 +180,10 @@ $radius-xl: 20px;
       span {
         font-size: 14px;
         font-weight: 500;
-        color: $text-dark;
+        color: $text-primary;
 
         i {
-          color: $text-dark;
+          color: $text-primary;
           font-style: normal;
           font-weight: 600;
         }
@@ -221,7 +206,9 @@ $radius-xl: 20px;
   // SIDEBAR
   // ============================================
   .sidebar {
-    @include neu-raised;
+    background: $bg-white;
+    border: 1px solid $border-color;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     width: 260px !important;
     min-width: 260px !important;
     flex: 0 0 260px !important;
@@ -255,7 +242,7 @@ $radius-xl: 20px;
             align-items: center;
             padding: $space-md;
             border-radius: $radius-md;
-            color: $text-dark;
+            color: $text-primary;
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
@@ -270,7 +257,7 @@ $radius-xl: 20px;
             }
 
             &:hover {
-              @include neu-flat;
+              background: $bg-color;
               color: $primary;
 
               .nav-icon {
@@ -279,7 +266,7 @@ $radius-xl: 20px;
             }
 
             &.active {
-              @include neu-pressed;
+              background: rgba($primary, 0.1);
               color: $primary;
               font-weight: 600;
 
@@ -300,7 +287,7 @@ $radius-xl: 20px;
                 font-weight: 900;
                 margin-left: auto;
                 transition: transform 0.2s ease;
-                color: $text-light;
+                color: $text-muted;
               }
             }
 
@@ -325,13 +312,12 @@ $radius-xl: 20px;
               .nav-item .nav-link {
                 padding: $space-sm $space-md;
                 font-size: 13px;
-                color: $text-muted;
+                color: $text-secondary;
 
                 &:hover,
                 &.active {
                   color: $primary;
                   background: transparent;
-                  box-shadow: none;
                 }
 
                 &.active {
@@ -345,8 +331,8 @@ $radius-xl: 20px;
     }
 
     .sidebar-minimizer {
-      @include neu-flat;
-      border: none;
+      background: $bg-white;
+      border: 1px solid $border-color;
       padding: $space-md;
       margin: $space-md;
       border-radius: $radius-md;
@@ -356,6 +342,7 @@ $radius-xl: 20px;
 
       &:hover {
         color: $primary;
+        border-color: $border-hover;
       }
 
       &::before {
@@ -411,7 +398,9 @@ $radius-xl: 20px;
     min-width: 0;
 
     .breadcrumb-container {
-      @include neu-flat;
+      background: $bg-white;
+      border: 1px solid $border-color;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
       border-radius: $radius-md;
       padding: $space-md $space-lg;
       margin-bottom: $space-md;
@@ -434,12 +423,12 @@ $radius-xl: 20px;
           }
 
           &.active {
-            color: $text-dark;
+            color: $text-primary;
             font-weight: 600;
           }
 
           + .breadcrumb-item::before {
-            color: $text-light;
+            color: $text-muted;
           }
         }
       }
@@ -455,7 +444,9 @@ $radius-xl: 20px;
   // FOOTER
   // ============================================
   .app-footer {
-    @include neu-raised;
+    background: $bg-white;
+    border: 1px solid $border-color;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -485,17 +476,23 @@ $radius-xl: 20px;
     // Language selector
     button[role='combobox'],
     select {
-      @include neu-pressed;
-      border: none !important;
+      background: $bg-white;
+      border: 1px solid $border-color;
       border-radius: $radius-sm;
       padding: $space-sm $space-md;
       font-size: 13px;
-      color: $text-dark;
+      color: $text-primary;
       cursor: pointer;
       min-width: 100px;
+      transition: border-color 0.2s ease;
+
+      &:hover {
+        border-color: $border-hover;
+      }
 
       &:focus {
         outline: none;
+        border-color: $primary;
       }
     }
   }
@@ -511,8 +508,9 @@ $radius-xl: 20px;
 
 [role='menu'],
 .dropdown-menu {
-  @include neu-raised;
-  border: none !important;
+  background: $bg-white;
+  border: 1px solid $border-color;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: $radius-md;
   padding: $space-sm;
   min-width: 200px;
@@ -523,7 +521,7 @@ $radius-xl: 20px;
     align-items: center;
     padding: $space-sm $space-md;
     border-radius: $radius-sm;
-    color: $text-dark;
+    color: $text-primary;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -535,7 +533,7 @@ $radius-xl: 20px;
     }
 
     &:hover {
-      @include neu-flat;
+      background: $bg-color;
       color: $primary;
 
       i {
@@ -547,7 +545,7 @@ $radius-xl: 20px;
   [role='separator'],
   .dropdown-divider {
     height: 1px;
-    background: rgba($text-light, 0.3);
+    background: $border-color;
     margin: $space-sm 0;
     border: none;
   }
@@ -613,11 +611,11 @@ $radius-xl: 20px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba($text-light, 0.4);
+    background: rgba($text-muted, 0.4);
     border-radius: 3px;
 
     &:hover {
-      background: rgba($text-light, 0.6);
+      background: rgba($text-muted, 0.6);
     }
   }
 }

@@ -14,32 +14,20 @@ import { CommonActions } from 'services/global';
 
 import './style.scss';
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
   warning: '#f59e0b',
-  danger: '#ff4d6a',
-  textPrimary: '#1e3a5f',
-  textSecondary: '#3d5a80',
-  textMuted: '#98afc2',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  raised: {
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
-    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
-  },
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
-  },
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 /**
@@ -222,9 +210,9 @@ function Employee() {
         header: 'Department',
         cell: ({ row }) => (
           <span
-            className="px-2 py-1 rounded-lg text-xs font-medium"
+            className="px-2 py-1 rounded text-xs font-medium"
             style={{
-              background: `${theme.primary}15`,
+              background: '#eff6ff',
               color: theme.primary,
             }}
           >
@@ -266,20 +254,20 @@ function Employee() {
 
       {/* Page Header Card */}
       <div
-        className="rounded-2xl p-6 mb-6"
+        className="rounded-xl p-6 mb-6"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* Title Section */}
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
+                background: '#dbeafe',
               }}
             >
               <Users className="w-6 h-6" style={{ color: theme.primary }} />
@@ -298,10 +286,9 @@ function Employee() {
           <div className="flex gap-3 flex-wrap">
             <button
               onClick={() => navigate('/admin/master/employee/create')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
               style={{
-                background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-                boxShadow: shadows.raised.sm,
+                background: theme.primary,
               }}
             >
               <Plus className="w-4 h-4" />
@@ -309,10 +296,10 @@ function Employee() {
             </button>
             <button
               onClick={getCsvData}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
+                background: theme.bgWhite,
+                border: `1px solid ${theme.border}`,
                 color: theme.textSecondary,
               }}
             >
@@ -334,14 +321,15 @@ function Employee() {
 
       {/* Filters & Table Card */}
       <div
-        className="rounded-2xl overflow-hidden"
+        className="rounded-xl overflow-hidden"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         {/* Filters Section */}
-        <div className="p-6 border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+        <div className="p-6 border-b" style={{ borderColor: theme.border }}>
           <h5 className="text-sm font-semibold mb-4" style={{ color: theme.textPrimary }}>
             Filter:
           </h5>
@@ -351,42 +339,45 @@ function Employee() {
               placeholder="Enter Employee Name"
               value={filterData.name}
               onChange={e => handleFilterChange('name', e.target.value)}
-              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              className="px-4 py-2.5 rounded-lg outline-none w-full transition-all duration-200"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.pressed.sm,
+                background: theme.bgWhite,
+                border: `1px solid ${theme.border}`,
                 color: theme.textPrimary,
               }}
+              onFocus={e => (e.target.style.borderColor = theme.primary)}
+              onBlur={e => (e.target.style.borderColor = theme.border)}
             />
             <input
               type="text"
               placeholder="Enter Email"
               value={filterData.email}
               onChange={e => handleFilterChange('email', e.target.value)}
-              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              className="px-4 py-2.5 rounded-lg outline-none w-full transition-all duration-200"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.pressed.sm,
+                background: theme.bgWhite,
+                border: `1px solid ${theme.border}`,
                 color: theme.textPrimary,
               }}
+              onFocus={e => (e.target.style.borderColor = theme.primary)}
+              onBlur={e => (e.target.style.borderColor = theme.border)}
             />
             <div className="flex gap-2 lg:col-start-4">
               <button
                 onClick={handleSearch}
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-90"
                 style={{
-                  background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.primary,
                 }}
               >
                 <Search className="w-4 h-4 text-white" />
               </button>
               <button
                 onClick={clearAll}
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-gray-50"
                 style={{
-                  background: theme.bg,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.bgWhite,
+                  border: `1px solid ${theme.border}`,
                 }}
               >
                 <RefreshCw className="w-4 h-4" style={{ color: theme.textSecondary }} />
@@ -408,7 +399,6 @@ function Employee() {
             onSortingChange={setSorting}
             sorting={sorting}
             onRowClick={handleRowClick}
-            neumorphicPagination
             totalCount={employee_list?.count || 0}
           />
         </div>

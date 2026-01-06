@@ -15,17 +15,14 @@ import { cn } from '@/lib/utils';
 
 const strings = new LocalizedStrings(data);
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-  },
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  primary: '#2064d8',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  border: '#e5e7eb',
 };
 
 /**
@@ -225,10 +222,10 @@ const AddressComponent = ({
                     placeholder={`${strings.Enter} ${addressType} ${strings.Address}`}
                     onChange={handleAddressChange}
                     value={addressValues.address || ''}
-                    className={cn('rounded-xl border-0', fieldState.error && 'border-red-500')}
+                    className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                     style={{
-                      background: theme.bg,
-                      boxShadow: shadows.pressed.sm,
+                      background: theme.bgWhite,
+                      border: `1px solid ${theme.border}`,
                     }}
                   />
                 </FormControl>
@@ -264,17 +261,18 @@ const AddressComponent = ({
                     styles={{
                       control: base => ({
                         ...base,
-                        borderRadius: '12px',
-                        border: fieldState.error ? '1px solid #ef4444' : 'none',
-                        boxShadow: shadows.pressed.sm,
-                        backgroundColor: theme.bg,
+                        borderRadius: '8px',
+                        border: fieldState.error
+                          ? '1px solid #ef4444'
+                          : `1px solid ${theme.border}`,
+                        backgroundColor: theme.bgWhite,
                         '&:hover': {
-                          border: fieldState.error ? '1px solid #ef4444' : 'none',
+                          borderColor: fieldState.error ? '#ef4444' : theme.borderHover,
                         },
                       }),
                       menu: base => ({
                         ...base,
-                        borderRadius: '12px',
+                        borderRadius: '8px',
                       }),
                     }}
                   />
@@ -307,17 +305,18 @@ const AddressComponent = ({
                     styles={{
                       control: base => ({
                         ...base,
-                        borderRadius: '12px',
-                        border: fieldState.error ? '1px solid #ef4444' : 'none',
-                        boxShadow: shadows.pressed.sm,
-                        backgroundColor: theme.bg,
+                        borderRadius: '8px',
+                        border: fieldState.error
+                          ? '1px solid #ef4444'
+                          : `1px solid ${theme.border}`,
+                        backgroundColor: theme.bgWhite,
                         '&:hover': {
-                          border: fieldState.error ? '1px solid #ef4444' : 'none',
+                          borderColor: fieldState.error ? '#ef4444' : theme.borderHover,
                         },
                       }),
                       menu: base => ({
                         ...base,
-                        borderRadius: '12px',
+                        borderRadius: '8px',
                       }),
                     }}
                   />
@@ -347,10 +346,10 @@ const AddressComponent = ({
                       placeholder={`${strings.Enter} ${addressType} ${strings.Email} ${strings.Address}`}
                       value={addressValues.email || ''}
                       onChange={e => handleFieldChange('email', e.target.value)}
-                      className={cn('rounded-xl border-0', fieldState.error && 'border-red-500')}
+                      className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                       style={{
-                        background: theme.bg,
-                        boxShadow: shadows.pressed.sm,
+                        background: theme.bgWhite,
+                        border: `1px solid ${theme.border}`,
                       }}
                     />
                   </FormControl>
@@ -378,10 +377,10 @@ const AddressComponent = ({
                     placeholder={strings.Location}
                     type="text"
                     maxLength={100}
-                    className={cn('rounded-xl border-0', fieldState.error && 'border-red-500')}
+                    className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                     style={{
-                      background: theme.bg,
-                      boxShadow: shadows.pressed.sm,
+                      background: theme.bgWhite,
+                      border: `1px solid ${theme.border}`,
                     }}
                   />
                 </FormControl>
@@ -435,10 +434,10 @@ const AddressComponent = ({
                     placeholder={`${strings.Enter} ${strings.TelephoneNumber}`}
                     value={addressValues.telephone || ''}
                     onChange={handleTelephoneChange}
-                    className={cn('rounded-xl border-0', fieldState.error && 'border-red-500')}
+                    className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                     style={{
-                      background: theme.bg,
-                      boxShadow: shadows.pressed.sm,
+                      background: theme.bgWhite,
+                      border: `1px solid ${theme.border}`,
                     }}
                   />
                 </FormControl>
@@ -465,10 +464,10 @@ const AddressComponent = ({
                     placeholder={`${strings.Enter} ${strings.Fax}`}
                     value={addressValues.fax || ''}
                     onChange={handleFaxChange}
-                    className={cn('rounded-xl border-0', fieldState.error && 'border-red-500')}
+                    className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                     style={{
-                      background: theme.bg,
-                      boxShadow: shadows.pressed.sm,
+                      background: theme.bgWhite,
+                      border: `1px solid ${theme.border}`,
                     }}
                   />
                 </FormControl>
@@ -504,8 +503,8 @@ const AddressComponent = ({
               addressErrors.address && addressTouched.address && 'border-red-500'
             )}
             style={{
-              background: theme.bg,
-              boxShadow: shadows.pressed.sm,
+              background: theme.bgWhite,
+              border: `1px solid ${theme.border}`,
             }}
           />
           {addressErrors.address && addressTouched.address && (
@@ -533,13 +532,12 @@ const AddressComponent = ({
             styles={{
               control: base => ({
                 ...base,
-                borderRadius: '12px',
+                borderRadius: '8px',
                 border:
                   addressErrors.countryId && addressTouched.countryId
                     ? '1px solid #ef4444'
-                    : 'none',
-                boxShadow: shadows.pressed.sm,
-                backgroundColor: theme.bg,
+                    : `1px solid ${theme.border}`,
+                backgroundColor: theme.bgWhite,
               }),
             }}
           />
