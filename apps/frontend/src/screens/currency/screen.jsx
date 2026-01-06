@@ -29,50 +29,73 @@ const theme = {
   borderHover: '#d1d5db',
 };
 
-// Custom select styles for corporate theme
+// Custom select styles for corporate theme - Dark mode compatible
 const selectStyles = {
   control: (provided, state) => ({
     ...provided,
-    background: '#ffffff',
-    border: state.isFocused ? '1px solid #2064d8' : '1px solid #e5e7eb',
+    background: 'hsl(var(--background))',
+    border: state.isFocused ? '1px solid hsl(var(--ring))' : '1px solid hsl(var(--input))',
     boxShadow: state.isFocused ? '0 0 0 3px rgba(32, 100, 216, 0.1)' : 'none',
     borderRadius: '8px',
     padding: '2px 4px',
     minHeight: '42px',
     transition: 'all 0.2s ease',
     '&:hover': {
-      borderColor: '#d1d5db',
+      borderColor: 'hsl(var(--ring))',
     },
   }),
   option: (provided, state) => ({
     ...provided,
-    background: state.isSelected ? '#eff6ff' : state.isFocused ? '#f8f9fa' : 'transparent',
-    color: state.isSelected ? '#2064d8' : '#4b5563',
+    background: state.isSelected
+      ? 'hsl(var(--primary))'
+      : state.isFocused
+        ? 'hsl(var(--accent))'
+        : 'transparent',
+    color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
     '&:hover': {
-      background: '#f8f9fa',
+      background: 'hsl(var(--accent))',
     },
+    cursor: 'pointer',
   }),
   menu: provided => ({
     ...provided,
-    background: '#ffffff',
-    border: '1px solid #e5e7eb',
+    background: 'hsl(var(--background))',
+    border: '1px solid hsl(var(--border))',
     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
     borderRadius: '8px',
     overflow: 'hidden',
+    zIndex: 50,
+  }),
+  menuList: provided => ({
+    ...provided,
+    backgroundColor: 'hsl(var(--background))',
   }),
   singleValue: provided => ({
     ...provided,
-    color: '#111827',
+    color: 'hsl(var(--foreground))',
+  }),
+  input: provided => ({
+    ...provided,
+    color: 'hsl(var(--foreground))',
   }),
   placeholder: provided => ({
     ...provided,
-    color: '#9ca3af',
+    color: 'hsl(var(--muted-foreground))',
+  }),
+  dropdownIndicator: provided => ({
+    ...provided,
+    color: 'hsl(var(--muted-foreground))',
+    '&:hover': { color: 'hsl(var(--foreground))' },
+  }),
+  indicatorSeparator: provided => ({
+    ...provided,
+    backgroundColor: 'hsl(var(--border))',
   }),
 };
 
 /**
  * Modern Currency Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function Currency() {
   const dispatch = useDispatch();

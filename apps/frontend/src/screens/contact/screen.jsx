@@ -36,7 +36,7 @@ const theme = {
 
 /**
  * Modern Contact List Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function Contact() {
   const navigate = useNavigate();

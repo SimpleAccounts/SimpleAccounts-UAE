@@ -17,12 +17,19 @@ This project uses a **Minimal Corporate Design System** inspired by modern SaaS 
 
 ### Design Documentation
 
-**📖 See [DESIGN-GUIDE.md](./DESIGN-GUIDE.md) for complete design system documentation**, including:
+**📖 See the following guides for complete design system documentation:**
+
+- **[docs/THEME-GUIDELINES.md](./docs/THEME-GUIDELINES.md)** - Comprehensive theme reference (START HERE)
+- **[DESIGN-GUIDE.md](./DESIGN-GUIDE.md)** - Design system overview with examples
+- **[MIGRATION-TO-CORPORATE.md](./MIGRATION-TO-CORPORATE.md)** - Migration guide from legacy styles
+
+These guides include:
 
 - Color palette and usage guidelines
 - Typography and spacing rules
 - Component examples and code snippets
-- Migration guide from neumorphic to corporate theme
+- CSS variables and Tailwind classes reference
+- Do's and Don'ts
 
 ### Design Principles
 

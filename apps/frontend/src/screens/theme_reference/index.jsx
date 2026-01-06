@@ -1437,7 +1437,7 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Text Inputs"
-                description="Neumorphic inputs use inset shadows to appear pressed into the surface, creating a natural input field effect."
+                description="Corporate inputs use subtle borders and clean backgrounds for a professional appearance."
                 code={`// Basic Inset Input
 <input
   type="text"
@@ -1695,10 +1695,10 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Checkboxes"
-                description="Custom neumorphic checkboxes that toggle between raised (unchecked) and gradient-filled (checked) states."
+                description="Corporate checkboxes with clean borders and primary color fill when checked."
                 code={`const [checked, setChecked] = useState(false);
 
-// Neumorphic Checkbox
+// Corporate Checkbox
 <label className="flex items-center gap-3 cursor-pointer">
   <div
     onClick={() => setChecked(!checked)}
@@ -1746,7 +1746,7 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Radio Buttons"
-                description="Neumorphic radio buttons with a centered dot indicator for the selected state."
+                description="Corporate radio buttons with clean styling and primary color indicator."
                 code={`const [radioValue, setRadioValue] = useState('option1');
 
 // Radio Button
@@ -2438,7 +2438,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 
               <ComponentCard
                 title="Alert Boxes"
-                description="Neumorphic alert boxes with colored left border and icon indicator for different status types."
+                description="Corporate alert boxes with colored left border and icon for different status types."
                 code={`// Alert Box with Left Border
 <div
   className="flex items-start gap-4 p-4 rounded-xl"
@@ -2700,7 +2700,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
   Success
 </span>
 
-// Neumorphic Badge (no gradient)
+// Corporate Badge
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold"
   style={{
@@ -2803,7 +2803,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
                 </div>
               </ComponentCard>
 
-              <ComponentCard title="Neumorphic Badges">
+              <ComponentCard title="Corporate Badges">
                 <div className="flex flex-wrap gap-3">
                   <span
                     className="px-4 py-1.5 rounded-xl text-xs font-semibold"
@@ -3009,7 +3009,7 @@ function CollapsibleSidebarDemo({ theme, shadows, gradients }) {
 
               <ComponentCard
                 title="Tabs"
-                description="Neumorphic tab navigation with raised inactive tabs and gradient-filled active tab."
+                description="Corporate tab navigation with clean styling and primary color active state."
                 code={`const [activeTab, setActiveTab] = useState(0);
 const tabs = ['Overview', 'Analytics', 'Reports', 'Settings'];
 
@@ -3297,14 +3297,14 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
 
               <ComponentCard
                 title="Basic Table"
-                description="Neumorphic data table with inset container, hover states, and action buttons."
+                description="Corporate data table with clean borders, hover states, and action buttons."
                 code={`const tableData = [
   { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
   { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
   { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Editor', status: 'Inactive' },
 ];
 
-// Neumorphic Table
+// Corporate Table
 <div
   className="rounded-xl overflow-hidden"
   style={{
@@ -3639,7 +3639,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
 
               <ComponentCard
                 title="Progress Bars"
-                description="Neumorphic progress bars with inset track and gradient-filled indicator."
+                description="Corporate progress bars with subtle track and primary color indicator."
                 code={`// Progress Bar with Label
 <div>
   <div className="flex justify-between mb-2">
@@ -3886,7 +3886,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
               <ComponentCard
                 title="Avatar Sizes"
-                description="Neumorphic avatars with gradient background and raised shadow effect."
+                description="Corporate avatars with clean styling and subtle shadow."
                 code={`// Avatar Component
 <div
   className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
@@ -4449,7 +4449,7 @@ import { toast } from 'sonner';
 
               <ComponentCard
                 title="Inline Modal Preview"
-                description="Neumorphic modal dialogs with raised card appearance, header, content, and action buttons."
+                description="Corporate modal dialogs with clean card appearance, header, content, and action buttons."
                 code={`const [showModal, setShowModal] = useState(false);
 
 // Modal Component

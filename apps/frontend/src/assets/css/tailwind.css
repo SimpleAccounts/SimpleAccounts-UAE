@@ -1,93 +1,57 @@
 @import 'tailwindcss';
 
+/* ============================================
+   SIMPLEACCOUNTS UAE - DUAL THEME SYSTEM
+   Light Mode + Dark Mode
+   ============================================ */
+
 /* Tailwind v4 Theme Configuration */
 @theme {
-  /* Corporate Colors - Primary Theme */
+  /* ==========================================
+     LIGHT MODE CORPORATE COLORS (Default)
+     ========================================== */
+
+  /* Background Colors - Light Mode */
   --color-corp-bg-primary: #ffffff;
   --color-corp-bg-secondary: #f8f9fa;
   --color-corp-bg-tertiary: #f3f4f6;
+  --color-corp-bg-hover: #f1f5f9;
+
+  /* Border Colors - Light Mode */
   --color-corp-border-light: #e5e7eb;
-  --color-corp-border-dark: #d1d5db;
+  --color-corp-border-medium: #d1d5db;
+  --color-corp-border-dark: #9ca3af;
+
+  /* Brand Colors (Same in both modes) */
   --color-corp-primary: #2064d8;
   --color-corp-primary-dark: #1a56b8;
+  --color-corp-primary-light: #3b82f6;
   --color-corp-secondary: #10b981;
-  --color-corp-success: #10b981;
-  --color-corp-warning: #f59e0b;
-  --color-corp-danger: #ef4444;
-  --color-corp-info: #3b82f6;
+  --color-corp-secondary-dark: #059669;
 
-  /* Corporate Text Colors */
+  /* Semantic Colors - Light Mode */
+  --color-corp-success: #10b981;
+  --color-corp-success-light: #d1fae5;
+  --color-corp-warning: #f59e0b;
+  --color-corp-warning-light: #fef3c7;
+  --color-corp-danger: #ef4444;
+  --color-corp-danger-light: #fee2e2;
+  --color-corp-info: #3b82f6;
+  --color-corp-info-light: #dbeafe;
+
+  /* Text Colors - Light Mode */
   --color-corp-text-primary: #111827;
   --color-corp-text-secondary: #4b5563;
+  --color-corp-text-tertiary: #6b7280;
   --color-corp-text-muted: #9ca3af;
+  --color-corp-text-disabled: #d1d5db;
 
-  /* Corporate Shadows - Clean and minimal */
+  /* Corporate Shadows - Light Mode (Clean and minimal) */
   --shadow-corp-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-corp-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --shadow-corp-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-corp-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-corp-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-
-  /* Legacy Aliases - Map neu- to corporate values for backwards compatibility */
-  --color-neu-bg: #f8f9fa;
-  --color-neu-bg-alt: #f3f4f6;
-  --color-neu-bg-dark: #1f2937;
-  --color-neu-bg-dark-alt: #374151;
-  --color-neu-border: #e5e7eb;
-  --color-neu-border-dark: #374151;
-  --color-neu-shadow-dark: #e5e7eb;
-  --color-neu-shadow-light: #ffffff;
-  --color-neu-shadow-dark-dm: #111827;
-  --color-neu-shadow-light-dm: #4b5563;
-  --color-neu-primary: #2064d8;
-  --color-neu-primary-dark: #1a56b8;
-  --color-neu-secondary: #10b981;
-  --color-neu-warning: #f59e0b;
-  --color-neu-danger: #ef4444;
-
-  /* Legacy Text Colors */
-  --color-neu-text-primary: #111827;
-  --color-neu-text-secondary: #4b5563;
-  --color-neu-text-muted: #9ca3af;
-  --color-neu-text-dark: #111827;
-  --color-neu-text-light: #9ca3af;
-
-  /* Legacy Shadows - Now map to corporate shadows */
-  --shadow-neu-flat: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-neu-raised-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-neu-raised-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-neu-raised: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-neu-raised-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-neu-raised-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-neu-raised-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-
-  /* Legacy Inset Shadows - Now none or minimal */
-  --shadow-neu-pressed-xs: none;
-  --shadow-neu-pressed-sm: none;
-  --shadow-neu-pressed: none;
-  --shadow-neu-pressed-md: none;
-  --shadow-neu-pressed-lg: none;
-
-  /* Legacy Dark Mode Shadows */
-  --shadow-neu-raised-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-neu-raised-sm-dark: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
-  --shadow-neu-pressed-dark: none;
-  --shadow-neu-pressed-sm-dark: none;
-
-  /* Legacy Aliases */
-  --shadow-neu-out: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-neu-in: none;
-  --shadow-neu-out-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-  --shadow-neu-in-dark: none;
-
-  /* Legacy Button Shadows */
-  --shadow-neu-btn: none;
-  --shadow-neu-btn-hover: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-neu-btn-active: none;
-
-  /* Legacy Input Shadows */
-  --shadow-neu-input: none;
-  --shadow-neu-input-focus: 0 0 0 3px rgba(32, 100, 216, 0.1);
 
   /* Border Radius */
   --radius-corp-xs: 0.25rem;
@@ -96,18 +60,46 @@
   --radius-corp-lg: 0.75rem;
   --radius-corp-xl: 1rem;
 
-  /* Legacy Border Radius */
+  /* ==========================================
+     LEGACY ALIASES (Backward Compatibility)
+     ========================================== */
+  --color-neu-bg: #f8f9fa;
+  --color-neu-bg-alt: #f3f4f6;
+  --color-neu-border: #e5e7eb;
+  --color-neu-primary: #2064d8;
+  --color-neu-secondary: #10b981;
+  --color-neu-warning: #f59e0b;
+  --color-neu-danger: #ef4444;
+  --color-neu-text-primary: #111827;
+  --color-neu-text-secondary: #4b5563;
+  --color-neu-text-muted: #9ca3af;
+
+  /* Legacy Shadow Aliases */
+  --shadow-neu-flat: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-neu-raised: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-neu-pressed: none;
+  --shadow-neu-pressed-sm: none;
+  --shadow-neu-input: none;
+  --shadow-neu-input-focus: 0 0 0 3px rgba(32, 100, 216, 0.1);
+
+  /* Legacy Radius Aliases */
   --radius-neu-xs: 0.25rem;
   --radius-neu-sm: 0.375rem;
   --radius-neu: 0.5rem;
   --radius-neu-md: 0.5rem;
   --radius-neu-lg: 0.75rem;
   --radius-neu-xl: 1rem;
-  --radius-neu-2xl: 1.5rem;
 }
 
+/* ============================================
+   LIGHT MODE (Default)
+   ============================================ */
 @layer base {
   :root {
+    /* shadcn/ui HSL Variables - Light Mode */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -128,16 +120,54 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 218 74% 49%;
     --radius: 0.5rem;
+
+    /* Corporate CSS Variables - Light Mode */
+    --corp-bg-primary: #ffffff;
+    --corp-bg-secondary: #f8f9fa;
+    --corp-bg-tertiary: #f3f4f6;
+    --corp-bg-hover: #f1f5f9;
+    --corp-border-light: #e5e7eb;
+    --corp-border-medium: #d1d5db;
+    --corp-border-dark: #9ca3af;
+    --corp-text-primary: #111827;
+    --corp-text-secondary: #4b5563;
+    --corp-text-tertiary: #6b7280;
+    --corp-text-muted: #9ca3af;
+    --corp-text-disabled: #d1d5db;
+    --corp-primary: #2064d8;
+    --corp-primary-hover: #1a56b8;
+    --corp-primary-light: #e3f2fd;
+    --corp-secondary: #10b981;
+    --corp-secondary-hover: #059669;
+    --corp-success: #10b981;
+    --corp-success-light: #d1fae5;
+    --corp-warning: #f59e0b;
+    --corp-warning-light: #fef3c7;
+    --corp-danger: #ef4444;
+    --corp-danger-light: #fee2e2;
+    --corp-info: #3b82f6;
+    --corp-info-light: #dbeafe;
+
+    /* Corporate Shadows - Light Mode */
+    --corp-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --corp-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --corp-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --corp-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --corp-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   }
 
+  /* ============================================
+     DARK MODE
+     ============================================ */
   .dark {
+    /* shadcn/ui HSL Variables - Dark Mode */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 47% 11.2%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 222.2 47% 11.2%;
     --popover-foreground: 210 40% 98%;
-    --primary: 218 74% 49%;
+    --primary: 218 74% 55%;
     --primary-foreground: 0 0% 100%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -145,54 +175,267 @@
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 218 74% 49%;
+    --ring: 218 74% 55%;
+
+    /* Corporate CSS Variables - Dark Mode */
+    --corp-bg-primary: #0f172a;
+    --corp-bg-secondary: #1e293b;
+    --corp-bg-tertiary: #334155;
+    --corp-bg-hover: #1e293b;
+    --corp-border-light: #334155;
+    --corp-border-medium: #475569;
+    --corp-border-dark: #64748b;
+    --corp-text-primary: #f8fafc;
+    --corp-text-secondary: #e2e8f0;
+    --corp-text-tertiary: #cbd5e1;
+    --corp-text-muted: #94a3b8;
+    --corp-text-disabled: #64748b;
+    --corp-primary: #3b82f6;
+    --corp-primary-hover: #60a5fa;
+    --corp-primary-light: #1e3a5f;
+    --corp-secondary: #34d399;
+    --corp-secondary-hover: #6ee7b7;
+    --corp-success: #34d399;
+    --corp-success-light: #064e3b;
+    --corp-warning: #fbbf24;
+    --corp-warning-light: #78350f;
+    --corp-danger: #f87171;
+    --corp-danger-light: #7f1d1d;
+    --corp-info: #60a5fa;
+    --corp-info-light: #1e3a8a;
+
+    /* Corporate Shadows - Dark Mode (Darker, more subtle) */
+    --corp-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --corp-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    --corp-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+    --corp-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    --corp-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   }
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
 @layer base {
   * {
     border-color: hsl(var(--border));
   }
 
-  /* Ensure all primary background elements have white text */
-  .bg-primary {
-    color: #ffffff !important;
-  }
-
   html,
   body {
     font-family:
-      'Montserrat',
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      'Roboto',
-      'Oxygen',
-      'Ubuntu',
-      'Cantarell',
-      'Fira Sans',
-      'Droid Sans',
-      'Helvetica Neue',
-      sans-serif !important;
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+      'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
   }
+
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background-color: var(--corp-bg-secondary);
+    color: var(--corp-text-primary);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  /* Ensure primary background elements have proper text color */
+  .bg-primary {
+    color: #ffffff !important;
   }
 }
 
-/* Animation utilities for auth screens */
+/* ============================================
+   CORPORATE UTILITY CLASSES
+   ============================================ */
+@layer components {
+  /* Card Component */
+  .corp-card {
+    background-color: var(--corp-bg-primary);
+    border: 1px solid var(--corp-border-light);
+    border-radius: 0.5rem;
+    box-shadow: var(--corp-shadow-sm);
+    transition:
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .corp-card:hover {
+    box-shadow: var(--corp-shadow-md);
+  }
+
+  /* Primary Button */
+  .corp-btn-primary {
+    background-color: var(--corp-primary);
+    color: white;
+    border: 1px solid var(--corp-primary);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .corp-btn-primary:hover {
+    background-color: var(--corp-primary-hover);
+    border-color: var(--corp-primary-hover);
+  }
+
+  .corp-btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.3);
+  }
+
+  /* Secondary Button */
+  .corp-btn {
+    background-color: var(--corp-bg-primary);
+    border: 1px solid var(--corp-border-light);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: var(--corp-text-primary);
+    transition: all 0.15s ease;
+  }
+
+  .corp-btn:hover {
+    background-color: var(--corp-bg-hover);
+    border-color: var(--corp-border-medium);
+  }
+
+  .corp-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.2);
+  }
+
+  /* Danger Button */
+  .corp-btn-danger {
+    background-color: var(--corp-danger);
+    color: white;
+    border: 1px solid var(--corp-danger);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .corp-btn-danger:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+  }
+
+  /* Input Field */
+  .corp-input {
+    background-color: var(--corp-bg-primary);
+    border: 1px solid var(--corp-border-light);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--corp-text-primary);
+    transition: all 0.15s ease;
+  }
+
+  .corp-input:focus {
+    outline: none;
+    border-color: var(--corp-primary);
+    box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1);
+  }
+
+  .corp-input::placeholder {
+    color: var(--corp-text-muted);
+  }
+
+  /* Table */
+  .corp-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .corp-table thead {
+    background-color: var(--corp-bg-secondary);
+    border-bottom: 2px solid var(--corp-border-light);
+  }
+
+  .corp-table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--corp-text-primary);
+    font-size: 0.875rem;
+  }
+
+  .corp-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--corp-border-light);
+    color: var(--corp-text-secondary);
+  }
+
+  .corp-table tbody tr {
+    transition: background-color 0.15s ease;
+  }
+
+  .corp-table tbody tr:hover {
+    background-color: var(--corp-bg-hover);
+  }
+
+  /* Badges */
+  .corp-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .corp-badge-success {
+    background-color: var(--corp-success-light);
+    color: var(--corp-success);
+  }
+
+  .corp-badge-warning {
+    background-color: var(--corp-warning-light);
+    color: var(--corp-warning);
+  }
+
+  .corp-badge-danger {
+    background-color: var(--corp-danger-light);
+    color: var(--corp-danger);
+  }
+
+  .corp-badge-info {
+    background-color: var(--corp-info-light);
+    color: var(--corp-info);
+  }
+
+  .corp-badge-primary {
+    background-color: var(--corp-primary-light);
+    color: var(--corp-primary);
+  }
+
+  /* Divider */
+  .corp-divider {
+    border-top: 1px solid var(--corp-border-light);
+  }
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
 @layer utilities {
+  /* Theme transition */
+  .theme-transition {
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
   /* Fade in animation */
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
   }
 
-  /* Fade in with slide up animation (for sidebar nav items) */
+  /* Fade in with slide up animation */
   .animate-fade-in-up {
     animation: fadeInUp 0.4s ease-out;
   }

@@ -35,6 +35,11 @@ const selectStyles = {
     ...base,
     backgroundColor: 'hsl(var(--background))',
     border: '1px solid hsl(var(--border))',
+    zIndex: 9999,
+  }),
+  menuList: base => ({
+    ...base,
+    backgroundColor: 'hsl(var(--background))',
   }),
   option: (base, state) => ({
     ...base,
@@ -44,6 +49,7 @@ const selectStyles = {
         ? 'hsl(var(--accent))'
         : 'transparent',
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+    cursor: 'pointer',
   }),
   singleValue: base => ({
     ...base,
@@ -52,6 +58,52 @@ const selectStyles = {
   placeholder: base => ({
     ...base,
     color: 'hsl(var(--muted-foreground))',
+  }),
+  input: base => ({
+    ...base,
+    color: 'hsl(var(--foreground))',
+  }),
+  noOptionsMessage: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
+  }),
+  loadingMessage: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
+  }),
+  multiValue: base => ({
+    ...base,
+    backgroundColor: 'hsl(var(--accent))',
+  }),
+  multiValueLabel: base => ({
+    ...base,
+    color: 'hsl(var(--accent-foreground))',
+  }),
+  multiValueRemove: base => ({
+    ...base,
+    color: 'hsl(var(--accent-foreground))',
+    '&:hover': {
+      backgroundColor: 'hsl(var(--destructive))',
+      color: 'hsl(var(--destructive-foreground))',
+    },
+  }),
+  indicatorSeparator: base => ({
+    ...base,
+    backgroundColor: 'hsl(var(--border))',
+  }),
+  dropdownIndicator: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
+    '&:hover': {
+      color: 'hsl(var(--foreground))',
+    },
+  }),
+  clearIndicator: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
+    '&:hover': {
+      color: 'hsl(var(--foreground))',
+    },
   }),
 };
 
