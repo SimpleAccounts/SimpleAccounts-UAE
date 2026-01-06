@@ -35,7 +35,7 @@ const theme = {
 
 /**
  * Modern Product Category Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function ProductCategory() {
   const navigate = useNavigate();

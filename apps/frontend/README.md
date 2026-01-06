@@ -1,5 +1,22 @@
 # SimpleAccounts Frontend Admin Website
 
+## Design System
+
+This project uses a **Corporate Design System**. All UI development must follow the theme guidelines.
+
+**📖 Documentation:**
+
+- [Theme Guidelines](../../docs/THEME-GUIDELINES.md) - Comprehensive theme reference
+- [Design Guide](../../DESIGN-GUIDE.md) - Design system overview
+- [Migration Guide](../../MIGRATION-TO-CORPORATE.md) - Legacy style migration
+
+**Quick Reference:**
+
+- Primary color: `#2064d8`
+- Background: `#ffffff` (content), `#f8f9fa` (page)
+- Text: `#111827` (primary), `#4b5563` (secondary)
+- Borders: `#e5e7eb`
+
 ## Project Folder Structure
 
 ### assets

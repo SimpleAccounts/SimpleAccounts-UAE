@@ -407,32 +407,49 @@ const Register = () => {
       ...base,
       minHeight: '44px',
       borderRadius: '0.5rem',
-      borderColor: state.isFocused ? '#2064d8' : '#e5e7eb',
+      borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
       boxShadow: state.isFocused ? '0 0 0 3px rgba(32, 100, 216, 0.1)' : 'none',
-      backgroundColor: '#ffffff',
-      '&:hover': { borderColor: '#d1d5db' },
+      backgroundColor: 'hsl(var(--background))',
+      '&:hover': { borderColor: 'hsl(var(--ring))' },
       transition: 'all 0.2s ease',
     }),
     menu: base => ({
       ...base,
-      backgroundColor: '#ffffff',
+      backgroundColor: 'hsl(var(--background))',
       borderRadius: '0.5rem',
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      border: '1px solid #e5e7eb',
+      border: '1px solid hsl(var(--border))',
       padding: '0.25rem',
       zIndex: 50,
     }),
+    menuList: base => ({
+      ...base,
+      backgroundColor: 'hsl(var(--background))',
+    }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isFocused ? '#f8f9fa' : 'transparent',
-      color: '#111827',
+      backgroundColor: state.isSelected
+        ? 'hsl(var(--primary))'
+        : state.isFocused
+          ? 'hsl(var(--accent))'
+          : 'transparent',
+      color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
       borderRadius: '0.375rem',
-      '&:active': { backgroundColor: '#e5e7eb' },
+      '&:active': { backgroundColor: 'hsl(var(--accent))' },
       cursor: 'pointer',
     }),
-    singleValue: base => ({ ...base, color: '#111827', fontWeight: 500 }),
-    input: base => ({ ...base, color: '#111827' }),
-    placeholder: base => ({ ...base, color: '#9ca3af' }),
+    singleValue: base => ({ ...base, color: 'hsl(var(--foreground))', fontWeight: 500 }),
+    input: base => ({ ...base, color: 'hsl(var(--foreground))' }),
+    placeholder: base => ({ ...base, color: 'hsl(var(--muted-foreground))' }),
+    dropdownIndicator: base => ({
+      ...base,
+      color: 'hsl(var(--muted-foreground))',
+      '&:hover': { color: 'hsl(var(--foreground))' },
+    }),
+    indicatorSeparator: base => ({
+      ...base,
+      backgroundColor: 'hsl(var(--border))',
+    }),
   };
 
   if (loading) {
@@ -586,6 +603,8 @@ const Register = () => {
                             {strings.CompanyBusinessType}
                           </FormLabel>
                           <Select
+                            id="companyTypeCode"
+                            inputId="companyTypeCode-input"
                             styles={customSelectStyles}
                             aria-label="Select company type"
                             options={

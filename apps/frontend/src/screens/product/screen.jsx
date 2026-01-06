@@ -36,7 +36,7 @@ const theme = {
 
 /**
  * Modern Product List Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function Product() {
   const navigate = useNavigate();

@@ -32,7 +32,7 @@ const theme = {
 
 /**
  * Modern Employee Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function Employee() {
   const navigate = useNavigate();
