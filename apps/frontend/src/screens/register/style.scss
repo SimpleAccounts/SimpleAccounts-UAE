@@ -11,7 +11,7 @@
   margin-bottom: 0;
 }
 .registerScreen h2 {
-  color: #1e6eff;
+  color: #2064d8;
   font-weight: 600;
 }
 .registerScreen {
@@ -23,7 +23,7 @@
   right: 10%;
 }
 .inputRShow:hover {
-  color: #1e6eff;
+  color: #2064d8;
   cursor: pointer;
 }
 
@@ -46,7 +46,7 @@
     width: 100%;
     margin-top: 0.25rem;
     font-size: 0.71rem;
-    color: #f86c6b;
+    color: #ef4444;
   }
 }
 
@@ -57,19 +57,22 @@
 .tooltip-icon .tooltiptext {
   visibility: hidden;
   width: 350px;
-  background-color: #555;
+  background-color: #111827;
   color: white;
-  border: 2px solid #555;
+  border: 1px solid #e5e7eb;
   text-align: center;
-  border-radius: 10px;
-  padding: 5px 0;
+  border-radius: 0.5rem;
+  padding: 8px 12px;
   position: absolute;
   z-index: 1;
   bottom: 150%;
   left: -15px;
   font-weight: normal;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .tooltip-icon .tooltiptext::after {
@@ -78,9 +81,9 @@
   top: 100%;
   left: 10%;
   margin-left: -20px;
-  border-width: 9px;
+  border-width: 8px;
   border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  border-color: #111827 transparent transparent transparent;
 }
 
 .tooltip-icon:hover .tooltiptext {
@@ -88,64 +91,44 @@
   opacity: 1;
 }
 
-/* Modern Input Styling */
+/* Modern Corporate Input Styling */
 .input-transition {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
 
   &:hover {
-    background-color: #ffffff;
-    border-color: #94a3b8;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-color: #d1d5db;
   }
 
   &:focus {
     background-color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-    transform: translateY(-1px);
+    border-color: #2064d8;
+    box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1);
+    outline: none;
   }
 }
 
-/* Dark mode support via global class usually, or relying on native inputs */
-:global(.dark) .input-transition {
-  background-color: rgba(30, 41, 59, 0.5);
-  border-color: rgba(51, 65, 85, 0.6);
-  color: white;
-
-  &:hover {
-    background-color: rgba(30, 41, 59, 0.8);
-    border-color: #64748b;
-  }
-
-  &:focus {
-    background-color: rgba(15, 23, 42, 1);
-    border-color: #3b82f6;
-  }
-}
-
-/* Phone Input Overrides - Neumorphic Style */
-.phone-input-container {
+/* Phone Input Overrides - Corporate Style */
+.phone-input-container-corp {
   .form-control {
     width: 100% !important;
-    height: 2.75rem !important; /* h-11 */
-    border-radius: 0.75rem !important; /* rounded-xl */
-    font-size: 0.875rem !important; /* text-sm */
-    transition: all 0.3s ease !important;
-    background-color: #e0e5ec !important; /* neu-bg */
-    border: none !important;
-    box-shadow:
-      inset 2px 2px 5px rgba(0, 0, 0, 0.1),
-      inset -2px -2px 5px rgba(255, 255, 255, 0.7) !important;
+    height: 2.75rem !important;
+    border-radius: 0.5rem !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s ease !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
 
-    &:hover,
+    &:hover {
+      border-color: #d1d5db !important;
+    }
+
     &:focus {
-      background-color: #e0e5ec !important;
-      box-shadow:
-        inset 2px 2px 5px rgba(0, 0, 0, 0.1),
-        inset -2px -2px 5px rgba(255, 255, 255, 0.7) !important;
+      background-color: #ffffff !important;
+      border-color: #2064d8 !important;
+      box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1) !important;
       outline: none !important;
     }
   }
@@ -153,64 +136,61 @@
   .flag-dropdown {
     border: none !important;
     background-color: transparent !important;
-    border-radius: 0.75rem 0 0 0.75rem !important;
+    border-radius: 0.5rem 0 0 0.5rem !important;
 
     &:hover,
     &.open {
-      background-color: rgba(0, 0, 0, 0.05) !important;
+      background-color: #f8f9fa !important;
     }
 
     .selected-flag {
-      border-radius: 0.75rem 0 0 0.75rem !important;
+      border-radius: 0.5rem 0 0 0.5rem !important;
 
       &:hover,
       &:focus {
-        background-color: rgba(0, 0, 0, 0.05) !important;
+        background-color: #f8f9fa !important;
       }
     }
   }
 
   .country-list {
-    background-color: #e0e5ec !important;
-    border: none !important;
-    border-radius: 0.75rem !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.5rem !important;
     box-shadow:
-      9px 9px 16px rgb(163, 177, 198, 0.6),
-      -9px -9px 16px rgba(255, 255, 255, 0.5) !important;
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
     margin-top: 4px !important;
     max-height: 250px !important;
     overflow-y: auto !important;
 
     .search {
-      background-color: #e0e5ec !important;
+      background-color: #ffffff !important;
       padding: 10px !important;
       position: sticky !important;
       top: 0 !important;
       z-index: 1 !important;
+      border-bottom: 1px solid #e5e7eb !important;
     }
 
     .search-box {
       width: 100% !important;
       padding: 8px 12px !important;
-      border: none !important;
-      border-radius: 0.5rem !important;
-      background-color: #d1d9e6 !important;
-      box-shadow:
-        inset 2px 2px 5px rgba(0, 0, 0, 0.1),
-        inset -2px -2px 5px rgba(255, 255, 255, 0.7) !important;
+      border: 1px solid #e5e7eb !important;
+      border-radius: 0.375rem !important;
+      background-color: #ffffff !important;
       font-size: 0.875rem !important;
-      color: #374151 !important;
+      color: #111827 !important;
       outline: none !important;
+      transition: all 0.2s ease !important;
 
       &::placeholder {
         color: #9ca3af !important;
       }
 
       &:focus {
-        background-color: #d1d9e6 !important;
-        box-shadow:
-          inset 2px 2px 5px rgba(0, 0, 0, 0.15),
-          inset -2px -2px 5px rgba(255, 255, 255, 0.8) !important;
+        border-color: #2064d8 !important;
+        box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1) !important;
       }
     }
 
@@ -220,14 +200,16 @@
 
     .country {
       padding: 8px 12px !important;
+      border-radius: 0.375rem !important;
+      margin: 2px 4px !important;
 
       &:hover,
       &.highlight {
-        background-color: #cbd5e1 !important;
+        background-color: #f8f9fa !important;
       }
 
       .country-name {
-        color: #374151 !important;
+        color: #111827 !important;
       }
 
       .dial-code {
@@ -243,82 +225,7 @@
   }
 }
 
-:global(.dark) .phone-input-container {
-  .form-control {
-    background-color: #2a2f3a !important; /* neu-bg-dark */
-    color: white !important;
-    box-shadow:
-      inset 2px 2px 5px rgba(0, 0, 0, 0.3),
-      inset -2px -2px 5px rgba(255, 255, 255, 0.05) !important;
-
-    &:hover,
-    &:focus {
-      background-color: #2a2f3a !important;
-      box-shadow:
-        inset 2px 2px 5px rgba(0, 0, 0, 0.3),
-        inset -2px -2px 5px rgba(255, 255, 255, 0.05) !important;
-    }
-  }
-
-  .flag-dropdown {
-    &:hover,
-    &.open {
-      background-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-    .selected-flag {
-      &:hover,
-      &:focus {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-      }
-    }
-  }
-
-  .country-list {
-    background-color: #2a2f3a !important;
-    box-shadow:
-      9px 9px 16px rgba(0, 0, 0, 0.3),
-      -9px -9px 16px rgba(255, 255, 255, 0.05) !important;
-
-    .search {
-      background-color: #2a2f3a !important;
-    }
-
-    .search-box {
-      background-color: #1e242d !important;
-      color: white !important;
-      box-shadow:
-        inset 2px 2px 5px rgba(0, 0, 0, 0.3),
-        inset -2px -2px 5px rgba(255, 255, 255, 0.05) !important;
-
-      &::placeholder {
-        color: #6b7280 !important;
-      }
-
-      &:focus {
-        background-color: #1e242d !important;
-      }
-    }
-
-    .country {
-      color: white !important;
-
-      .country-name {
-        color: white !important;
-      }
-
-      .dial-code {
-        color: #9ca3af !important;
-      }
-
-      &:hover,
-      &.highlight {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-      }
-    }
-
-    .no-entries-message {
-      color: #9ca3af !important;
-    }
-  }
+/* Keep legacy class for backward compatibility */
+.phone-input-container {
+  @extend .phone-input-container-corp;
 }

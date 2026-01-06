@@ -470,20 +470,14 @@ const CreateContact = ({
     return <Loader loadingMsg={loadingMsg} />;
   }
 
-  // Neumorphic theme constants
+  // Corporate theme constants
   const theme = {
-    bg: '#e8eef5',
-    shadowDark: '#c4c9cf',
-    shadowLight: '#ffffff',
-  };
-
-  const shadows = {
-    raised: {
-      lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    },
-    pressed: {
-      sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    },
+    bg: '#f8f9fa',
+    bgWhite: '#ffffff',
+    primary: '#2064d8',
+    textPrimary: '#111827',
+    textSecondary: '#4b5563',
+    border: '#e5e7eb',
   };
 
   return (
@@ -493,13 +487,14 @@ const CreateContact = ({
     >
       <div className="animated fadeIn max-w-7xl mx-auto">
         <Card
-          className="rounded-2xl overflow-hidden"
+          className="rounded-xl overflow-hidden"
           style={{
-            background: theme.bg,
-            boxShadow: shadows.raised.lg,
+            background: theme.bgWhite,
+            border: `1px solid ${theme.border}`,
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
           }}
         >
-          <CardHeader className="border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+          <CardHeader className="border-b" style={{ borderColor: theme.border }}>
             <CardTitle className="flex items-center gap-2">
               <IdCard className="h-5 w-5" style={{ color: '#1e6eff' }} />
               <span>{strings.CreateContact}</span>
@@ -575,14 +570,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -613,14 +604,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -654,14 +641,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -676,10 +659,7 @@ const CreateContact = ({
                 </div>
 
                 {/* Contact Details Section */}
-                <div
-                  className="space-y-4 border-t pt-6"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
-                >
+                <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                   <h4 className="text-lg font-semibold mb-4">{strings.ContactDetails}</h4>
 
                   {/* Contact Type, Organization, Email */}
@@ -727,9 +707,11 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
+                                    border: fieldState?.error
+                                      ? '1px solid #ef4444'
+                                      : `1px solid ${theme.border}`,
+                                    boxShadow: 'none',
+                                    backgroundColor: theme.bgWhite,
                                   }),
                                 }}
                               />
@@ -761,14 +743,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -800,14 +778,10 @@ const CreateContact = ({
                                   field.onChange(e);
                                   emailvalidationCheck(e.target.value);
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -854,9 +828,11 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
+                                    border: fieldState?.error
+                                      ? '1px solid #ef4444'
+                                      : `1px solid ${theme.border}`,
+                                    boxShadow: 'none',
+                                    backgroundColor: theme.bgWhite,
                                   }),
                                 }}
                               />
@@ -888,14 +864,10 @@ const CreateContact = ({
                                     field.onChange(e);
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -956,14 +928,10 @@ const CreateContact = ({
                                     field.onChange(e);
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -1047,9 +1015,11 @@ const CreateContact = ({
                                   control: (base, state) => ({
                                     ...selectStyles.control(base, state),
                                     borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
+                                    border: fieldState?.error
+                                      ? '1px solid #ef4444'
+                                      : `1px solid ${theme.border}`,
+                                    boxShadow: 'none',
+                                    backgroundColor: theme.bgWhite,
                                   }),
                                 }}
                               />
@@ -1096,14 +1066,10 @@ const CreateContact = ({
                                       validationCheck(value);
                                     }
                                   }}
-                                  className={cn(
-                                    'rounded-xl border-0',
-                                    fieldState.error && 'border-red-500',
-                                    shadows.pressed.sm
-                                  )}
+                                  className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                                   style={{
-                                    background: theme.bg,
-                                    boxShadow: shadows.pressed.sm,
+                                    background: theme.bgWhite,
+                                    border: `1px solid ${theme.border}`,
                                   }}
                                 />
                               </FormControl>
@@ -1129,10 +1095,7 @@ const CreateContact = ({
                 </div>
 
                 {/* Contact Address Details Section */}
-                <div
-                  className="space-y-4 border-t pt-6"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
-                >
+                <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                   <h2 className="text-xl font-semibold mb-4">{strings.ContactAddressDetails}</h2>
 
                   {/* Billing Address */}
@@ -1156,10 +1119,7 @@ const CreateContact = ({
                   </div>
 
                   {/* Shipping Address */}
-                  <div
-                    className="space-y-4 border-t pt-6"
-                    style={{ borderColor: `${theme.shadowDark}40` }}
-                  >
+                  <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                     <h5 className="text-lg font-medium mb-4">{strings.ShippingDetails}</h5>
                     <div className="mb-4">
                       <div className="flex items-center space-x-2">
@@ -1210,7 +1170,7 @@ const CreateContact = ({
                 {/* Action Buttons */}
                 <div
                   className="flex justify-end gap-3 mt-8 pt-6 border-t"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
+                  style={{ borderColor: theme.border }}
                 >
                   <Button
                     type="button"
@@ -1224,10 +1184,9 @@ const CreateContact = ({
                       setCreateMore(false);
                       handleSubmit(onSubmit)();
                     }}
-                    className="rounded-xl"
+                    className="rounded-lg"
                     style={{
-                      background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
-                      boxShadow: shadows.raised.lg,
+                      background: theme.primary,
                     }}
                   >
                     <CircleDot className="h-4 w-4" />
@@ -1247,10 +1206,9 @@ const CreateContact = ({
                         setIsSame(false);
                         handleSubmit(onSubmit)();
                       }}
-                      className="rounded-xl"
+                      className="rounded-lg"
                       style={{
-                        background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
-                        boxShadow: shadows.raised.lg,
+                        background: theme.primary,
                       }}
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -1260,7 +1218,7 @@ const CreateContact = ({
                   <Button
                     type="button"
                     variant="outline"
-                    className="rounded-xl"
+                    className="rounded-lg"
                     onClick={() => {
                       if (isParentComponentPresent && isParentComponentPresent === true) {
                         confirmCancel(true);
@@ -1269,7 +1227,7 @@ const CreateContact = ({
                       }
                     }}
                     style={{
-                      boxShadow: shadows.raised.sm,
+                      border: `1px solid ${theme.border}`,
                     }}
                   >
                     <Ban className="h-4 w-4" />

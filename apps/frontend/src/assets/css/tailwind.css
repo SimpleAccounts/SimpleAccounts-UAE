@@ -2,75 +2,108 @@
 
 /* Tailwind v4 Theme Configuration */
 @theme {
-  /* Neumorphic Colors */
-  --color-neu-bg: #e8eef5;
-  --color-neu-bg-alt: #e0e5ec;
-  --color-neu-bg-dark: #2b2d33;
-  --color-neu-bg-dark-alt: #31343b;
-  --color-neu-border: #d1d9e6;
-  --color-neu-border-dark: #3d4049;
-  --color-neu-shadow-dark: #c4c9cf;
+  /* Corporate Colors - Primary Theme */
+  --color-corp-bg-primary: #ffffff;
+  --color-corp-bg-secondary: #f8f9fa;
+  --color-corp-bg-tertiary: #f3f4f6;
+  --color-corp-border-light: #e5e7eb;
+  --color-corp-border-dark: #d1d5db;
+  --color-corp-primary: #2064d8;
+  --color-corp-primary-dark: #1a56b8;
+  --color-corp-secondary: #10b981;
+  --color-corp-success: #10b981;
+  --color-corp-warning: #f59e0b;
+  --color-corp-danger: #ef4444;
+  --color-corp-info: #3b82f6;
+
+  /* Corporate Text Colors */
+  --color-corp-text-primary: #111827;
+  --color-corp-text-secondary: #4b5563;
+  --color-corp-text-muted: #9ca3af;
+
+  /* Corporate Shadows - Clean and minimal */
+  --shadow-corp-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-corp-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-corp-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-corp-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-corp-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* Legacy Aliases - Map neu- to corporate values for backwards compatibility */
+  --color-neu-bg: #f8f9fa;
+  --color-neu-bg-alt: #f3f4f6;
+  --color-neu-bg-dark: #1f2937;
+  --color-neu-bg-dark-alt: #374151;
+  --color-neu-border: #e5e7eb;
+  --color-neu-border-dark: #374151;
+  --color-neu-shadow-dark: #e5e7eb;
   --color-neu-shadow-light: #ffffff;
-  --color-neu-shadow-dark-dm: #1e1f23;
-  --color-neu-shadow-light-dm: #383b43;
-  --color-neu-primary: #1e6eff;
-  --color-neu-primary-dark: #0052cc;
-  --color-neu-secondary: #00c896;
+  --color-neu-shadow-dark-dm: #111827;
+  --color-neu-shadow-light-dm: #4b5563;
+  --color-neu-primary: #2064d8;
+  --color-neu-primary-dark: #1a56b8;
+  --color-neu-secondary: #10b981;
   --color-neu-warning: #f59e0b;
-  --color-neu-danger: #ff4d6a;
+  --color-neu-danger: #ef4444;
 
-  /* Neumorphic Text Colors */
-  --color-neu-text-primary: #1e3a5f;
-  --color-neu-text-secondary: #3d5a80;
-  --color-neu-text-muted: #98afc2;
-  --color-neu-text-dark: #1e3a5f;
-  --color-neu-text-light: #98afc2;
+  /* Legacy Text Colors */
+  --color-neu-text-primary: #111827;
+  --color-neu-text-secondary: #4b5563;
+  --color-neu-text-muted: #9ca3af;
+  --color-neu-text-dark: #111827;
+  --color-neu-text-light: #9ca3af;
 
-  /* Neumorphic Shadows - Light Mode */
-  --shadow-neu-flat: 2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff;
-  --shadow-neu-raised-xs: 2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff;
-  --shadow-neu-raised-sm: 3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff;
-  --shadow-neu-raised: 6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff;
-  --shadow-neu-raised-md: 8px 8px 16px #c4c9cf, -8px -8px 16px #ffffff;
-  --shadow-neu-raised-lg: 10px 10px 20px #c4c9cf, -10px -10px 20px #ffffff;
-  --shadow-neu-raised-xl: 15px 15px 30px #c4c9cf, -15px -15px 30px #ffffff;
+  /* Legacy Shadows - Now map to corporate shadows */
+  --shadow-neu-flat: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-neu-raised-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-neu-raised-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-neu-raised-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
-  /* Neumorphic Inset Shadows - Light Mode */
-  --shadow-neu-pressed-xs: inset 1px 1px 2px #c4c9cf, inset -1px -1px 2px #ffffff;
-  --shadow-neu-pressed-sm: inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff;
-  --shadow-neu-pressed: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
-  --shadow-neu-pressed-md: inset 4px 4px 8px #c4c9cf, inset -4px -4px 8px #ffffff;
-  --shadow-neu-pressed-lg: inset 6px 6px 12px #c4c9cf, inset -6px -6px 12px #ffffff;
+  /* Legacy Inset Shadows - Now none or minimal */
+  --shadow-neu-pressed-xs: none;
+  --shadow-neu-pressed-sm: none;
+  --shadow-neu-pressed: none;
+  --shadow-neu-pressed-md: none;
+  --shadow-neu-pressed-lg: none;
 
-  /* Neumorphic Shadows - Dark Mode */
-  --shadow-neu-raised-dark: 6px 6px 12px #1e1f23, -6px -6px 12px #383b43;
-  --shadow-neu-raised-sm-dark: 3px 3px 6px #1e1f23, -3px -3px 6px #383b43;
-  --shadow-neu-pressed-dark: inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43;
-  --shadow-neu-pressed-sm-dark: inset 2px 2px 4px #1e1f23, inset -2px -2px 4px #383b43;
+  /* Legacy Dark Mode Shadows */
+  --shadow-neu-raised-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-neu-raised-sm-dark: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-neu-pressed-dark: none;
+  --shadow-neu-pressed-sm-dark: none;
 
-  /* Legacy Aliases for Compatibility */
-  --shadow-neu-out: 6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff;
-  --shadow-neu-in: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
-  --shadow-neu-out-dark: 6px 6px 12px #1e1f23, -6px -6px 12px #383b43;
-  --shadow-neu-in-dark: inset 3px 3px 6px #1e1f23, inset -3px -3px 6px #383b43;
+  /* Legacy Aliases */
+  --shadow-neu-out: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-neu-in: none;
+  --shadow-neu-out-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-neu-in-dark: none;
 
-  /* Button Shadows */
-  --shadow-neu-btn: 3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff;
-  --shadow-neu-btn-hover: 5px 5px 10px #c4c9cf, -5px -5px 10px #ffffff;
-  --shadow-neu-btn-active: inset 2px 2px 5px #c4c9cf, inset -2px -2px 5px #ffffff;
+  /* Legacy Button Shadows */
+  --shadow-neu-btn: none;
+  --shadow-neu-btn-hover: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-neu-btn-active: none;
 
-  /* Input Shadows */
-  --shadow-neu-input: inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff;
-  --shadow-neu-input-focus: inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff;
+  /* Legacy Input Shadows */
+  --shadow-neu-input: none;
+  --shadow-neu-input-focus: 0 0 0 3px rgba(32, 100, 216, 0.1);
 
   /* Border Radius */
+  --radius-corp-xs: 0.25rem;
+  --radius-corp-sm: 0.375rem;
+  --radius-corp-md: 0.5rem;
+  --radius-corp-lg: 0.75rem;
+  --radius-corp-xl: 1rem;
+
+  /* Legacy Border Radius */
   --radius-neu-xs: 0.25rem;
-  --radius-neu-sm: 0.5rem;
-  --radius-neu: 0.75rem;
-  --radius-neu-md: 1rem;
-  --radius-neu-lg: 1.25rem;
-  --radius-neu-xl: 1.5rem;
-  --radius-neu-2xl: 2rem;
+  --radius-neu-sm: 0.375rem;
+  --radius-neu: 0.5rem;
+  --radius-neu-md: 0.5rem;
+  --radius-neu-lg: 0.75rem;
+  --radius-neu-xl: 1rem;
+  --radius-neu-2xl: 1.5rem;
 }
 
 @layer base {
