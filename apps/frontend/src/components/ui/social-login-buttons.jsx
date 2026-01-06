@@ -48,7 +48,7 @@ export function SocialLoginButtons({
         onClick={onGoogleClick}
         disabled={disabled}
         className={cn(
-          'w-full h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] hover:bg-neu-bg dark:hover:bg-neu-bg-dark active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200',
+          'w-full h-11 rounded-xl bg-corp-bg-secondary dark:bg-corp-bg-secondary border border-corp-border-light shadow-corp-sm hover:translate-y-[-1px] hover:bg-corp-bg-hover active:shadow-corp-sm transition-all duration-200',
           buttonClassName
         )}
         aria-label="Sign in with Google"
@@ -63,7 +63,7 @@ export function SocialLoginButtons({
         onClick={onMicrosoftClick}
         disabled={disabled}
         className={cn(
-          'w-full h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] hover:bg-neu-bg dark:hover:bg-neu-bg-dark active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200',
+          'w-full h-11 rounded-xl bg-corp-bg-secondary dark:bg-corp-bg-secondary border border-corp-border-light shadow-corp-sm hover:translate-y-[-1px] hover:bg-corp-bg-hover active:shadow-corp-sm transition-all duration-200',
           buttonClassName
         )}
         aria-label="Sign in with Microsoft"

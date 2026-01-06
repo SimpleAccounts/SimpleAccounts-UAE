@@ -329,7 +329,8 @@ const LogIn = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-lg bg-corp-primary text-white font-semibold text-base hover:bg-corp-primary-hover active:scale-[0.98] transition-all duration-200"
+                className="w-full h-12 rounded-lg bg-corp-primary font-semibold text-base hover:bg-corp-primary-hover active:scale-[0.98] transition-all duration-200"
+                style={{ color: '#ffffff' }}
                 disabled={loading}
                 aria-busy={loading}
               >
