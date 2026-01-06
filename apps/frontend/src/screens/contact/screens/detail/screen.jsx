@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -106,12 +107,12 @@ const DetailContact = ({
   contactActions,
   detailContactActions,
   commonActions,
-  history,
-  location,
   country_list,
   currency_list_dropdown,
   contact_type_list,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading');
@@ -213,7 +214,7 @@ const DetailContact = ({
   }, []);
 
   const initializeData = () => {
-    if (location.state && location.state.id) {
+    if (location?.state?.id) {
       contactActions.getContactTypeList();
       contactActions.getCountryList();
       detailContactActions
@@ -285,7 +286,7 @@ const DetailContact = ({
           commonActions.tostifyAlert('error', err);
         });
     } else {
-      history.push('/admin/master/contact');
+      navigate('/admin/master/contact');
     }
   };
 
@@ -402,7 +403,7 @@ const DetailContact = ({
             'success',
             res.data ? res.data.message : 'Contact Updated Successfully'
           );
-          history.push('/admin/master/contact');
+          navigate('/admin/master/contact');
           setLoading(false);
         }
       })
@@ -463,7 +464,7 @@ const DetailContact = ({
             'success',
             res.data ? res.data.message : 'Contact Deleted Successfully'
           );
-          history.push('/admin/master/contact');
+          navigate('/admin/master/contact');
           setLoading(false);
         }
       })
@@ -1253,7 +1254,7 @@ const DetailContact = ({
                         color="secondary"
                         className="btn-square"
                         onClick={() => {
-                          history.push('/admin/master/contact');
+                          navigate('/admin/master/contact');
                         }}
                       >
                         <Ban className="h-4 w-4" /> {disabled1 ? 'Deleting...' : strings.Cancel}
