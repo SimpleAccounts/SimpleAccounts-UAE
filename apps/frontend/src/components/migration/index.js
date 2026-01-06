@@ -1,122 +1,130 @@
 /**
- * Migration compatibility layer
- * Re-exports reactstrap components for backwards compatibility
+ * Migration Components
  *
- * This file provides a compatibility layer for components that were
- * previously imported from a custom migration path.
+ * Neumorphic wrapper components for migrating from reactstrap to shadcn/ui.
+ * These components provide reactstrap-compatible APIs with neumorphic styling.
+ *
+ * Usage:
+ *   // Replace reactstrap imports with migration imports
+ *   // Before:
+ *   import { Button, Card, CardBody, Modal, Row, Col } from 'components/migration';
+ *
+ *   // After:
+ *   import {
+ *     Button, Card, CardBody, Modal, Row, Col
+ *   } from 'components/migration';
  */
 
-// Re-export all commonly used reactstrap components
+// Button
+export { NeuButton, NeuButton as Button } from './NeuButton';
+
+// ButtonGroup
+export { NeuButtonGroup, NeuButtonGroup as ButtonGroup } from './NeuButtonGroup';
+
+// Card
 export {
-  // Layout
-  Container,
-  Row,
-  Col,
+  NeuCard,
+  NeuCard as Card,
+  NeuCardHeader,
+  NeuCardHeader as CardHeader,
+  NeuCardBody,
+  NeuCardBody as CardBody,
+  NeuCardFooter,
+  NeuCardFooter as CardFooter,
+  NeuCardTitle,
+  NeuCardTitle as CardTitle,
+  NeuCardText,
+  NeuCardText as CardText,
+} from './NeuCard';
 
-  // Cards
-  Card,
-  CardBody,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardText,
-  CardGroup,
-  CardDeck,
-  CardColumns,
-  CardImg,
-  CardImgOverlay,
-  CardSubtitle,
-  CardLink,
+// For CardGroup - just a flex container
+export const CardGroup = ({ children, className, ...props }) => (
+  <div className={`flex flex-wrap gap-4 ${className || ''}`} {...props}>
+    {children}
+  </div>
+);
 
-  // Buttons
-  Button,
-  ButtonGroup,
-  ButtonDropdown,
-  ButtonToolbar,
+// Modal
+export {
+  NeuModal,
+  NeuModal as Modal,
+  NeuModalHeader,
+  NeuModalHeader as ModalHeader,
+  NeuModalBody,
+  NeuModalBody as ModalBody,
+  NeuModalFooter,
+  NeuModalFooter as ModalFooter,
+} from './NeuModal';
 
-  // Forms
-  Form,
-  FormGroup,
-  FormText,
-  FormFeedback,
-  Input,
-  Label,
+// Table
+export { NeuTable, NeuTable as Table, NeuTh, NeuTd } from './NeuTable';
 
-  // Dropdowns
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
+// Input/Form
+export {
+  NeuInput,
+  NeuInput as Input,
+  NeuLabel,
+  NeuLabel as Label,
+  NeuFormGroup,
+  NeuFormGroup as FormGroup,
+  NeuInputGroup,
+  NeuInputGroup as InputGroup,
+  NeuInputGroupText,
+  NeuInputGroupText as InputGroupText,
+} from './NeuInput';
 
-  // Modals
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+// Form
+export { NeuForm, NeuForm as Form } from './NeuForm';
 
-  // Navigation
-  Nav,
-  NavItem,
-  NavLink,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
+// Dropdown
+export {
+  NeuDropdown,
+  NeuDropdown as Dropdown,
+  NeuDropdown as ButtonDropdown,
+  NeuDropdownToggle,
+  NeuDropdownToggle as DropdownToggle,
+  NeuDropdownMenu,
+  NeuDropdownMenu as DropdownMenu,
+  NeuDropdownItem,
+  NeuDropdownItem as DropdownItem,
+} from './NeuDropdown';
 
-  // Tabs
-  TabContent,
-  TabPane,
+// Layout (Row, Col, Container)
+export {
+  NeuRow,
+  NeuRow as Row,
+  NeuCol,
+  NeuCol as Col,
+  NeuContainer,
+  NeuContainer as Container,
+} from './NeuLayout';
 
-  // Tables
-  Table,
+// Navigation/Tabs
+export {
+  NeuNav,
+  NeuNav as Nav,
+  NeuNavItem,
+  NeuNavItem as NavItem,
+  NeuNavLink,
+  NeuNavLink as NavLink,
+  NeuTabContent,
+  NeuTabContent as TabContent,
+  NeuTabPane,
+  NeuTabPane as TabPane,
+} from './NeuNav';
 
-  // Alerts & Badges
-  Alert,
-  Badge,
+// Badge
+export { NeuBadge, NeuBadge as Badge } from './NeuBadge';
 
-  // Tooltips & Popovers
-  Tooltip,
-  UncontrolledTooltip,
-  Popover,
-  PopoverHeader,
-  PopoverBody,
-  UncontrolledPopover,
+// Alert
+export { NeuAlert, NeuAlert as Alert } from './NeuAlert';
 
-  // Progress & Spinners
-  Progress,
-  Spinner,
-
-  // Collapse
-  Collapse,
-  UncontrolledCollapse,
-
-  // List
-  ListGroup,
-  ListGroupItem,
-  ListGroupItemHeading,
-  ListGroupItemText,
-
-  // Breadcrumb
-  Breadcrumb,
-  BreadcrumbItem,
-
-  // Pagination
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-
-  // Media
-  Media,
-
-  // Carousel
-  Carousel,
-  CarouselItem,
-  CarouselControl,
-  CarouselIndicators,
-  CarouselCaption,
-
-  // Other
-  Fade,
-  InputGroup,
-  InputGroupText,
-} from 'reactstrap';
+// Tooltip
+export {
+  NeuTooltipProvider,
+  NeuTooltip,
+  NeuTooltipTrigger,
+  NeuTooltipContent,
+  NeuUncontrolledTooltip,
+  NeuUncontrolledTooltip as UncontrolledTooltip,
+} from './NeuTooltip';
