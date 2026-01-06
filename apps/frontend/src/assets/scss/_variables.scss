@@ -79,69 +79,16 @@ $shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 $shadow-inset-md: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 $shadow-inset-lg: inset 0 2px 4px rgba(0, 0, 0, 0.08);
 
-// ============================================
-// DARK MODE COLORS
-// ============================================
-
-// Dark Mode Backgrounds
-$corp-bg-primary-dark: #0f172a;
-$corp-bg-secondary-dark: #1e293b;
-$corp-bg-tertiary-dark: #334155;
-$corp-bg-hover-dark: #1e293b;
-
-// Dark Mode Borders
-$corp-border-light-dark: #334155;
-$corp-border-medium-dark: #475569;
-$corp-border-dark-dark: #64748b;
-
-// Dark Mode Text
-$corp-text-primary-dark: #f8fafc;
-$corp-text-secondary-dark: #e2e8f0;
-$corp-text-tertiary-dark: #cbd5e1;
-$corp-text-muted-dark: #94a3b8;
-$corp-text-disabled-dark: #64748b;
-
-// Dark Mode Brand Colors (slightly brighter for contrast)
-$corp-primary-dark: #3b82f6;
-$corp-primary-hover-dark: #60a5fa;
-$corp-secondary-dark: #34d399;
-$corp-success-dark: #34d399;
-$corp-warning-dark: #fbbf24;
-$corp-danger-dark: #f87171;
-$corp-info-dark: #60a5fa;
-
-// Dark Mode Semantic Light Backgrounds
-$corp-success-light-dark: #064e3b;
-$corp-warning-light-dark: #78350f;
-$corp-danger-light-dark: #7f1d1d;
-$corp-info-light-dark: #1e3a8a;
-$corp-primary-light-dark: #1e3a5f;
-
-// Dark Mode Shadows (darker, more subtle)
-$shadow-corp-xs-dark: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-$shadow-corp-sm-dark:
-  0 1px 3px 0 rgba(0, 0, 0, 0.4),
-  0 1px 2px -1px rgba(0, 0, 0, 0.4);
-$shadow-corp-md-dark:
-  0 4px 6px -1px rgba(0, 0, 0, 0.4),
-  0 2px 4px -2px rgba(0, 0, 0, 0.4);
-$shadow-corp-lg-dark:
-  0 10px 15px -3px rgba(0, 0, 0, 0.4),
-  0 4px 6px -4px rgba(0, 0, 0, 0.4);
-$shadow-corp-xl-dark:
-  0 20px 25px -5px rgba(0, 0, 0, 0.4),
-  0 8px 10px -6px rgba(0, 0, 0, 0.4);
-
-// Legacy aliases (for backwards compatibility)
-$neu-bg-dark: $corp-bg-secondary-dark;
-$neu-bg-dark-alt: $corp-bg-tertiary-dark;
+// Dark mode (kept for compatibility)
+$neu-bg-dark: #1f2937;
+$neu-bg-dark-alt: #374151;
 $neu-dark-shadow-dark: #111827;
 $neu-light-shadow-dark: #4b5563;
-$neu-border-dark: $corp-border-light-dark;
+$neu-border-dark: #374151;
 
-$shadow-soft-dark: $shadow-corp-md-dark;
-$shadow-soft-sm-dark: $shadow-corp-sm-dark;
-$shadow-inset-dark: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+$shadow-soft-dark: $shadow-corp-md;
+$shadow-soft-sm-dark: $shadow-corp-sm;
+$shadow-inset-dark: $shadow-inset;
 
 // ============================================
 // BORDER RADIUS

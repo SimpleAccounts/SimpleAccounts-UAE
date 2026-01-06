@@ -243,15 +243,17 @@ class BankAccount extends Component {
             {/* Balance Cards */}
             <div className="balance-cards">
               <div
-                className="balance-card bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+                className="balance-card"
                 style={{
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
                   borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
               >
                 <div
-                  className="balance-icon bg-blue-50 dark:bg-blue-900/30"
+                  className="balance-icon"
                   style={{
                     width: '36px',
                     height: '36px',
@@ -259,15 +261,16 @@ class BankAccount extends Component {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    background: '#eff6ff',
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Wallet size={18} className="text-primary" />
+                  <Wallet size={18} style={{ color: '#2064d8' }} />
                 </div>
                 <p
-                  className="text-muted-foreground"
                   style={{
                     marginBottom: '4px',
+                    color: '#9ca3af',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -275,7 +278,7 @@ class BankAccount extends Component {
                 >
                   {strings.BALANCE}
                 </p>
-                <h5 className="text-foreground" style={{ margin: 0, fontWeight: 700 }}>
+                <h5 style={{ margin: 0, color: '#111827', fontWeight: 700 }}>
                   {universal_currency_list[0] && (
                     <Currency
                       value={this.props.bank_account_graph?.balance || 0}
@@ -286,15 +289,17 @@ class BankAccount extends Component {
               </div>
 
               <div
-                className="balance-card bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+                className="balance-card"
                 style={{
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
                   borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
               >
                 <div
-                  className="balance-icon bg-emerald-50 dark:bg-emerald-900/30"
+                  className="balance-icon"
                   style={{
                     width: '36px',
                     height: '36px',
@@ -302,15 +307,16 @@ class BankAccount extends Component {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    background: '#ecfdf5',
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Building2 size={18} className="text-emerald-500" />
+                  <Building2 size={18} style={{ color: '#10b981' }} />
                 </div>
                 <p
-                  className="text-muted-foreground"
                   style={{
                     marginBottom: '4px',
+                    color: '#9ca3af',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -318,7 +324,7 @@ class BankAccount extends Component {
                 >
                   {strings.ALLBANKACCOUNTS}
                 </p>
-                <h5 className="text-foreground" style={{ margin: 0, fontWeight: 700 }}>
+                <h5 style={{ margin: 0, color: '#111827', fontWeight: 700 }}>
                   {universal_currency_list[0] && (
                     <Currency
                       value={this.state.totalBalance}

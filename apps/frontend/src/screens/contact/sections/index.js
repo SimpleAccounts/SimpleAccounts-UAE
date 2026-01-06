@@ -1,3 +1,3 @@
-import AddressComponent from './addressComponent';
+import AddressComponent from './addressComponent.jsx';
 
 export { AddressComponent };
