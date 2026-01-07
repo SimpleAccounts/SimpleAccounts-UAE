@@ -15,12 +15,12 @@ echo "  → Fixing config directories ownership..."
 for dir in /home/vscode/.local /home/vscode/.config /home/vscode/.vscode-server; do
     if [ ! -d "$dir" ]; then
         mkdir -p "$dir"
-        chown vscode:vscode "$dir"
+        chown vscode:vscode "$dir" 2>/dev/null || true
     fi
 done
 
-# Fix ownership of ALL vscode home directories (including bind-mounted ones)
-# This ensures any existing directories get correct ownership
+# Fix ownership of vscode home directories (skip errors for bind-mounted volumes)
+# Some directories (like .local) may be bind-mounted volumes that can't be chowned
 for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.config/gh /home/vscode/.bash_history_dir \
            /home/vscode/.gitconfig_dir /home/vscode/.ssh \
@@ -29,20 +29,21 @@ for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.local /home/vscode/.config \
            /home/vscode/.vscode-server; do
     if [ -d "$dir" ]; then
-        chown -R vscode:vscode "$dir"
+        chown -R vscode:vscode "$dir" 2>/dev/null || true
     fi
 done
 
-# NOW create subdirectories (parent dirs exist with correct ownership)
-mkdir -p /home/vscode/.local/share/code-server \
-         /home/vscode/.config/code-server \
-         /home/vscode/.vscode-server/bin \
-         /home/vscode/.vscode-server/extensions
+# NOW create subdirectories (parent dirs exist)
+# Create them with proper ownership using install command
+install -d -o vscode -g vscode /home/vscode/.local/share/code-server 2>/dev/null || mkdir -p /home/vscode/.local/share/code-server 2>/dev/null || true
+install -d -o vscode -g vscode /home/vscode/.config/code-server 2>/dev/null || mkdir -p /home/vscode/.config/code-server 2>/dev/null || true
+install -d -o vscode -g vscode /home/vscode/.vscode-server/bin 2>/dev/null || mkdir -p /home/vscode/.vscode-server/bin 2>/dev/null || true
+install -d -o vscode -g vscode /home/vscode/.vscode-server/extensions 2>/dev/null || mkdir -p /home/vscode/.vscode-server/extensions 2>/dev/null || true
 
-# Final ownership fix to catch anything created by mkdir
-chown -R vscode:vscode /home/vscode/.local \
-                       /home/vscode/.config \
-                       /home/vscode/.vscode-server
+# Fix ownership of created directories (ignore errors for bind-mounts)
+chown -R vscode:vscode /home/vscode/.local 2>/dev/null || true
+chown -R vscode:vscode /home/vscode/.config 2>/dev/null || true
+chown -R vscode:vscode /home/vscode/.vscode-server 2>/dev/null || true
 
 # Ensure SSH directory has correct permissions if it exists
 if [ -d "/home/vscode/.ssh" ]; then
