@@ -34,16 +34,18 @@ for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
 done
 
 # NOW create subdirectories (parent dirs exist)
-# Create them with proper ownership using install command
-install -d -o vscode -g vscode /home/vscode/.local/share/code-server 2>/dev/null || mkdir -p /home/vscode/.local/share/code-server 2>/dev/null || true
-install -d -o vscode -g vscode /home/vscode/.config/code-server 2>/dev/null || mkdir -p /home/vscode/.config/code-server 2>/dev/null || true
-install -d -o vscode -g vscode /home/vscode/.vscode-server/bin 2>/dev/null || mkdir -p /home/vscode/.vscode-server/bin 2>/dev/null || true
-install -d -o vscode -g vscode /home/vscode/.vscode-server/extensions 2>/dev/null || mkdir -p /home/vscode/.vscode-server/extensions 2>/dev/null || true
+# For bind-mounted volumes (like .local), we need to create subdirectories as root
+# then chown them, since the parent directory is owned by root
+mkdir -p /home/vscode/.local/share/code-server 2>/dev/null || true
+mkdir -p /home/vscode/.config/code-server 2>/dev/null || true
+mkdir -p /home/vscode/.vscode-server/bin 2>/dev/null || true
+mkdir -p /home/vscode/.vscode-server/extensions 2>/dev/null || true
 
-# Fix ownership of created directories (ignore errors for bind-mounts)
-chown -R vscode:vscode /home/vscode/.local 2>/dev/null || true
-chown -R vscode:vscode /home/vscode/.config 2>/dev/null || true
-chown -R vscode:vscode /home/vscode/.vscode-server 2>/dev/null || true
+# Fix ownership of subdirectories we created (not the bind-mounted parents)
+chown -R vscode:vscode /home/vscode/.local/share/code-server 2>/dev/null || true
+chown -R vscode:vscode /home/vscode/.config/code-server 2>/dev/null || true
+chown -R vscode:vscode /home/vscode/.vscode-server/bin 2>/dev/null || true
+chown -R vscode:vscode /home/vscode/.vscode-server/extensions 2>/dev/null || true
 
 # Ensure SSH directory has correct permissions if it exists
 if [ -d "/home/vscode/.ssh" ]; then
