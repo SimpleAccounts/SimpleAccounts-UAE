@@ -63,12 +63,13 @@
   },
 
   // Port forwarding
-  "forwardPorts": [3000, 8080, 5432, 6379],
+  "forwardPorts": [3000, 8080, 5432, 6379, 6080],
   "portsAttributes": {
     "3000": { "label": "Frontend (Vite)", "onAutoForward": "notify" },
     "8080": { "label": "Backend (Spring Boot)", "onAutoForward": "notify" },
     "5432": { "label": "PostgreSQL", "onAutoForward": "silent" },
-    "6379": { "label": "Redis", "onAutoForward": "silent" }
+    "6379": { "label": "Redis", "onAutoForward": "silent" },
+    "6080": { "label": "VNC (Browser)", "onAutoForward": "notify" }
   },
 
   // Lifecycle scripts

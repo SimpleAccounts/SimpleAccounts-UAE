@@ -327,6 +327,13 @@ resource "coder_agent" "main" {
       bash .devcontainer/post-start.sh || echo "⚠️  Post-start script had issues"
     fi
 
+    # Start VNC server for browser testing
+    echo "🖥️  Starting VNC server..."
+    if [ -x /usr/local/bin/start-vnc ]; then
+      /usr/local/bin/start-vnc &
+      echo "✅ VNC server started on port 6080"
+    fi
+
     echo "✅ Workspace ready!"
     echo ""
     echo "Quick start commands:"
@@ -336,6 +343,8 @@ resource "coder_agent" "main" {
     echo "Or from app directories:"
     echo "  Frontend: cd apps/frontend && npm start"
     echo "  Backend:  cd apps/backend && ./mvnw spring-boot:run"
+    echo ""
+    echo "VNC Browser: https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io/vnc.html"
   EOT
 
   # Display apps (for web access)
@@ -455,6 +464,24 @@ resource "coder_app" "swagger" {
   url          = "http://localhost:8080/swagger-ui.html"
   subdomain    = false
   share        = "owner"
+}
+
+# VNC Browser for UI testing and preview
+# Always enabled - useful for Playwright tests and visual debugging
+resource "coder_app" "vnc" {
+  agent_id     = coder_agent.main.id
+  slug         = "vnc"
+  display_name = "VNC Browser"
+  icon         = "/icon/desktop.svg"
+  url          = "http://localhost:6080/vnc.html?autoconnect=true"
+  subdomain    = true
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:6080"
+    interval  = 10
+    threshold = 20
+  }
 }
 
 # Main workspace container
@@ -629,6 +656,22 @@ resource "docker_container" "workspace" {
     value = "8080"
   }
 
+  # VNC routing (port 6080)
+  labels {
+    label = "traefik.http.routers.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.rule"
+    value = "Host(`${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io`)"
+  }
+
+  labels {
+    label = "traefik.http.routers.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.service"
+    value = "${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc"
+  }
+
+  labels {
+    label = "traefik.http.services.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.loadbalancer.server.port"
+    value = "6080"
+  }
+
   # Depend on database containers and host directory setup
   depends_on = [
     docker_container.postgres,
@@ -657,6 +700,11 @@ resource "coder_metadata" "workspace_info" {
   item {
     key   = "backend_url"
     value = "https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-api.dev.simpleaccounts.io"
+  }
+
+  item {
+    key   = "vnc_url"
+    value = "https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io/vnc.html"
   }
 
   item {

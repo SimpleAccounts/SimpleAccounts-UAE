@@ -82,11 +82,21 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         libevdev2 \
         libnotify4 \
         libflite1 \
+        # VNC packages for browser testing and UI preview
+        xvfb \
+        x11vnc \
+        novnc \
+        websockify \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Set Playwright to use system Chromium
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+
+# VNC configuration
+ENV DISPLAY=:99
+ENV VNC_PORT=5900
+ENV NOVNC_PORT=6080
 
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
@@ -123,6 +133,10 @@ RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm pr
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
 RUN chmod +x /usr/local/bin/install-cli-tools
+
+# Copy VNC startup script
+COPY --chown=vscode:vscode .devcontainer/start-vnc.sh /usr/local/bin/start-vnc
+RUN chmod +x /usr/local/bin/start-vnc
 
 # Provide Cursor CLI shim in PATH (resolves actual binary at runtime)
 COPY --chown=vscode:vscode .devcontainer/cursor-cli.sh /usr/local/bin/cursor
