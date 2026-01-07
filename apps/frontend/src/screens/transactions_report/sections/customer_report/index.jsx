@@ -137,7 +137,8 @@ const CustomerReport = () => {
                   </FormGroup>
                   <FormGroup>
                     <div className="date-range">
-                      <DateRangePicker2 ranges={ranges} opens={'left'} />
+                      {/* DISABLED: DateRangePicker2 removed due to jQuery dependency */}
+                      {/* <DateRangePicker2 ranges={ranges} opens={'left'} /> */}
                     </div>
                   </FormGroup>
                 </div>
@@ -155,9 +156,11 @@ const CustomerReport = () => {
                   />
                 </Col>
                 <Col lg={2} className="mb-1">
-                  <DateRangePicker onApply={handleDateChange}>
+                  {/* DISABLED: DateRangePicker removed due to jQuery dependency */}
+                  {/* <DateRangePicker onApply={handleDateChange}>
                     <Input type="text" value={startDate} placeholder="Start Date" readOnly />
-                  </DateRangePicker>
+                  </DateRangePicker> */}
+                  <Input type="text" value={startDate} placeholder="Start Date" readOnly />
                 </Col>
                 <Col lg={2} className="mb-1">
                   <Input type="text" value={endDate} placeholder="End Date" readOnly />

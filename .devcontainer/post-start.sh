@@ -135,7 +135,8 @@ if command -v code-server &> /dev/null; then
     CODE_SERVER_CONFIG="$HOME/.config/code-server/config.yaml"
     CODE_SERVER_CONFIG_DIR="$(dirname "$CODE_SERVER_CONFIG")"
 
-    # Create config directory if it doesn't exist
+    # Create required directories if they don't exist
+    mkdir -p "$HOME/.local/share/code-server"
     mkdir -p "$CODE_SERVER_CONFIG_DIR"
 
     # Generate config with random password if it doesn't exist

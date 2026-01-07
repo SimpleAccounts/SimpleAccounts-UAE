@@ -123,7 +123,8 @@ const ReportsFiling = () => {
                 </FormGroup>
                 <FormGroup>
                   <div className="date-range">
-                    <DateRangePicker2 ranges={ranges} opens={'left'} />
+                    {/* DISABLED: DateRangePicker2 removed due to jQuery dependency */}
+                    {/* <DateRangePicker2 ranges={ranges} opens={'left'} /> */}
                   </div>
                 </FormGroup>
               </div>

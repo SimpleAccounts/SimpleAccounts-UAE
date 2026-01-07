@@ -407,7 +407,6 @@ const SupplierModal = ({
                         rel="noreferrer"
                         href="https://tax.gov.ae/en/default.aspx"
                         style={{ color: '#2266d8' }}
-                        rel="noreferrer"
                       >
                         {strings.VerifyTRN}
                       </a>

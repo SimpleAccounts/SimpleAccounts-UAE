@@ -75,6 +75,12 @@ ensure_dir "$TARGET_HOME/.vscode-server"
 ensure_dir "$TARGET_HOME/.vscode-server/bin"
 ensure_dir "$TARGET_HOME/.vscode-server/extensions"
 
+# Ensure code-server directories exist with correct permissions
+ensure_dir "$TARGET_HOME/.local"
+ensure_dir "$TARGET_HOME/.local/share"
+ensure_dir "$TARGET_HOME/.local/share/code-server"
+ensure_dir "$TARGET_HOME/.config/code-server"
+
 # ============================================
 # Install npm dependencies
 # ============================================
