@@ -11,8 +11,16 @@ if [ -d "/workspaces/SimpleAccounts-UAE" ]; then
 fi
 
 echo "  → Fixing config directories ownership..."
-# First, fix ownership of parent directories (they might be bind-mounted or exist from previous runs)
-# This must happen BEFORE we try to create subdirectories
+# First, create parent directories if they don't exist (with correct ownership from the start)
+for dir in /home/vscode/.local /home/vscode/.config /home/vscode/.vscode-server; do
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
+        chown vscode:vscode "$dir"
+    fi
+done
+
+# Fix ownership of ALL vscode home directories (including bind-mounted ones)
+# This ensures any existing directories get correct ownership
 for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.config/gh /home/vscode/.bash_history_dir \
            /home/vscode/.gitconfig_dir /home/vscode/.ssh \
@@ -21,20 +29,20 @@ for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.local /home/vscode/.config \
            /home/vscode/.vscode-server; do
     if [ -d "$dir" ]; then
-        chown -R vscode:vscode "$dir" 2>/dev/null || true
+        chown -R vscode:vscode "$dir"
     fi
 done
 
-# NOW create subdirectories (after parent directories have correct ownership)
+# NOW create subdirectories (parent dirs exist with correct ownership)
 mkdir -p /home/vscode/.local/share/code-server \
          /home/vscode/.config/code-server \
          /home/vscode/.vscode-server/bin \
-         /home/vscode/.vscode-server/extensions 2>/dev/null || true
+         /home/vscode/.vscode-server/extensions
 
-# Fix ownership of newly created directories
+# Final ownership fix to catch anything created by mkdir
 chown -R vscode:vscode /home/vscode/.local \
                        /home/vscode/.config \
-                       /home/vscode/.vscode-server 2>/dev/null || true
+                       /home/vscode/.vscode-server
 
 # Ensure SSH directory has correct permissions if it exists
 if [ -d "/home/vscode/.ssh" ]; then
