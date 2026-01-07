@@ -1,5 +1,6 @@
 #!/bin/bash
 # Devcontainer entrypoint - runs as root to fix permissions, then switches to vscode user
+# This ensures correct ownership of directories even when using bind-mounted volumes
 set -e
 
 echo "🔧 Initializing devcontainer as root..."
