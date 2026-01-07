@@ -177,10 +177,10 @@ RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
 # Pre-create user directories to avoid permission issues in post-create
 USER vscode
 RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
-    && mkdir -p ~/.local/share && chmod 755 ~/.local \
-    && mkdir -p ~/.local/share/code-server ~/.config/code-server \
-    && mkdir -p ~/.vscode-server/bin ~/.vscode-server/extensions \
-    && chmod -R 755 ~/.m2 ~/.npm ~/.cache ~/.local ~/.config ~/.vscode-server
+    && chmod -R 755 ~/.m2 ~/.npm ~/.cache
+
+# Note: code-server and vscode-server directories are created in entrypoint.sh
+# as root to avoid permission issues during image build
 
 # Reset working directory and user
 USER root
