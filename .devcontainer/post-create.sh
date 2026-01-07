@@ -82,6 +82,20 @@ ensure_dir "$TARGET_HOME/.local/share/code-server"
 ensure_dir "$TARGET_HOME/.config/code-server"
 
 # ============================================
+# Configure git safe directory
+# ============================================
+echo "🔧 Configuring git safe directory..."
+# Mark workspace as safe directory to avoid ownership warnings
+if [ "$(id -u)" = "0" ]; then
+    # Running as root - configure for vscode user
+    su - "$TARGET_USER" -c "git config --global --add safe.directory /workspaces/SimpleAccounts-UAE" 2>/dev/null || true
+else
+    # Running as vscode user - configure directly
+    git config --global --add safe.directory /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+fi
+echo "  ✅ Git safe directory configured"
+
+# ============================================
 # Install npm dependencies
 # ============================================
 echo "📦 Installing root npm dependencies..."
