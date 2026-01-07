@@ -41,6 +41,7 @@ This means all services (devcontainer, postgres, redis) are accessible via `loca
 │  │              │  │              │  │              │       │
 │  │ localhost:3000 (frontend)                        │       │
 │  │ localhost:8080 (backend)                         │       │
+│  │ localhost:6080 (vnc)                             │       │
 │  │              │  │ localhost:5432                 │       │
 │  │              │  │              │  │ localhost:6379       │
 │  └──────────────┘  └──────────────┘  └──────────────┘       │
@@ -55,6 +56,59 @@ This means all services (devcontainer, postgres, redis) are accessible via `loca
 | Redis      | `localhost:6379`      |
 | Frontend   | `localhost:3000`      |
 | Backend    | `localhost:8080`      |
+| VNC        | `localhost:6080`      |
+
+## VNC Browser Access
+
+The devcontainer includes a VNC server for browser testing and UI preview. This allows you to run headed Playwright tests and visually debug the application.
+
+### Accessing VNC
+
+**In Coder Workspaces:**
+
+- Click the **"VNC Browser"** icon in the workspace apps panel
+- Or use the external URL: `https://{owner}-{workspace}-vnc.dev.simpleaccounts.io/vnc.html`
+
+**In Local Dev Container:**
+
+- Open `http://localhost:6080/vnc.html` in your browser
+- Click **Connect** to view the virtual desktop
+
+### Starting VNC Manually
+
+VNC starts automatically in Coder workspaces. For local development:
+
+```bash
+# Start VNC server
+start-vnc
+
+# Or manually:
+Xvfb :99 -screen 0 1400x900x24 &
+export DISPLAY=:99
+x11vnc -display :99 -forever -nopw -shared -rfbport 5900 &
+/usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 &
+```
+
+### Running Playwright Tests in Headed Mode
+
+With VNC running, you can watch Playwright tests execute:
+
+```bash
+# Run tests in headed mode (visible in VNC)
+DISPLAY=:99 npx playwright test --headed --project=chromium
+
+# Run a specific test file
+DISPLAY=:99 npx playwright test e2e/my-test.spec.ts --headed --project=chromium --workers=1
+```
+
+### VNC Configuration
+
+| Setting    | Value               |
+| ---------- | ------------------- |
+| Display    | `:99`               |
+| Resolution | `1400x900x24`       |
+| VNC Port   | `5900`              |
+| noVNC Port | `6080` (web access) |
 
 ## Files
 
@@ -74,6 +128,7 @@ This means all services (devcontainer, postgres, redis) are accessible via `loca
 | `init-db.sql`          | PostgreSQL initialization script                |
 | `post-create.sh`       | Runs once on container creation                 |
 | `post-start.sh`        | Runs on every container start                   |
+| `start-vnc.sh`         | Starts VNC server for browser testing           |
 | **Documentation**      |                                                 |
 | `README.md`            | This file - DevContainer overview               |
 | `DATABASE_SETUP.md`    | Detailed database setup and troubleshooting     |
