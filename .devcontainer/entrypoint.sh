@@ -11,13 +11,8 @@ if [ -d "/workspaces/SimpleAccounts-UAE" ]; then
 fi
 
 echo "  → Fixing config directories ownership..."
-# Ensure critical directories exist before fixing ownership
-mkdir -p /home/vscode/.local/share/code-server \
-         /home/vscode/.config/code-server \
-         /home/vscode/.vscode-server/bin \
-         /home/vscode/.vscode-server/extensions
-
-# Fix all vscode home directories that might be bind-mounted
+# First, fix ownership of parent directories (they might be bind-mounted or exist from previous runs)
+# This must happen BEFORE we try to create subdirectories
 for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.config/gh /home/vscode/.bash_history_dir \
            /home/vscode/.gitconfig_dir /home/vscode/.ssh \
@@ -29,6 +24,17 @@ for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
         chown -R vscode:vscode "$dir" 2>/dev/null || true
     fi
 done
+
+# NOW create subdirectories (after parent directories have correct ownership)
+mkdir -p /home/vscode/.local/share/code-server \
+         /home/vscode/.config/code-server \
+         /home/vscode/.vscode-server/bin \
+         /home/vscode/.vscode-server/extensions 2>/dev/null || true
+
+# Fix ownership of newly created directories
+chown -R vscode:vscode /home/vscode/.local \
+                       /home/vscode/.config \
+                       /home/vscode/.vscode-server 2>/dev/null || true
 
 # Ensure SSH directory has correct permissions if it exists
 if [ -d "/home/vscode/.ssh" ]; then
