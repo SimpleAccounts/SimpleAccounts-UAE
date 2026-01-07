@@ -37,15 +37,32 @@ done
 # NOW create subdirectories (parent dirs exist)
 # For bind-mounted volumes (like .local), we need to create subdirectories as root
 # then chown them, since the parent directory is owned by root
-mkdir -p /home/vscode/.local/share/code-server 2>/dev/null || true
-mkdir -p /home/vscode/.config/code-server 2>/dev/null || true
-mkdir -p /home/vscode/.vscode-server/bin 2>/dev/null || true
-mkdir -p /home/vscode/.vscode-server/extensions 2>/dev/null || true
+echo "  → Creating code-server directories..."
 
-# Fix ownership of subdirectories we created (not the bind-mounted parents)
-chown -R vscode:vscode /home/vscode/.local/share/code-server 2>/dev/null || true
-chown -R vscode:vscode /home/vscode/.config/code-server 2>/dev/null || true
+# Create parent directories first to ensure they exist
+mkdir -p /home/vscode/.local/share 2>/dev/null || true
+mkdir -p /home/vscode/.config 2>/dev/null || true
+mkdir -p /home/vscode/.vscode-server 2>/dev/null || true
+
+# Create application-specific subdirectories
+# These MUST succeed as they're critical for code-server to work
+if mkdir -p /home/vscode/.local/share/code-server; then
+    chown -R vscode:vscode /home/vscode/.local/share/code-server
+    echo "    ✓ Created /home/vscode/.local/share/code-server"
+else
+    echo "    ⚠ Warning: Could not create /home/vscode/.local/share/code-server" >&2
+fi
+
+if mkdir -p /home/vscode/.config/code-server; then
+    chown -R vscode:vscode /home/vscode/.config/code-server
+    echo "    ✓ Created /home/vscode/.config/code-server"
+fi
+
+# Create VS Code server directories
+mkdir -p /home/vscode/.vscode-server/bin 2>/dev/null || true
 chown -R vscode:vscode /home/vscode/.vscode-server/bin 2>/dev/null || true
+
+mkdir -p /home/vscode/.vscode-server/extensions 2>/dev/null || true
 chown -R vscode:vscode /home/vscode/.vscode-server/extensions 2>/dev/null || true
 
 # Ensure SSH directory has correct permissions if it exists
