@@ -45,17 +45,24 @@ mkdir -p /home/vscode/.config 2>/dev/null || true
 mkdir -p /home/vscode/.vscode-server 2>/dev/null || true
 
 # Create application-specific subdirectories
-# These MUST succeed as they're critical for code-server to work
-if mkdir -p /home/vscode/.local/share/code-server; then
-    chown -R vscode:vscode /home/vscode/.local/share/code-server
+# Use install command to create with correct ownership in one step
+# If it fails, fall back to mkdir + chown
+if install -d -o vscode -g vscode /home/vscode/.local/share/code-server 2>/dev/null; then
     echo "    ✓ Created /home/vscode/.local/share/code-server"
+elif mkdir -p /home/vscode/.local/share/code-server 2>/dev/null && chown -R vscode:vscode /home/vscode/.local/share/code-server 2>/dev/null; then
+    echo "    ✓ Fixed /home/vscode/.local/share/code-server ownership"
+elif [ -d "/home/vscode/.local/share/code-server" ]; then
+    # Directory exists but we couldn't change ownership - try anyway
+    chown -R vscode:vscode /home/vscode/.local/share/code-server 2>/dev/null || true
+    echo "    ℹ /home/vscode/.local/share/code-server exists (ownership may need manual fix)"
 else
     echo "    ⚠ Warning: Could not create /home/vscode/.local/share/code-server" >&2
 fi
 
-if mkdir -p /home/vscode/.config/code-server; then
-    chown -R vscode:vscode /home/vscode/.config/code-server
+if install -d -o vscode -g vscode /home/vscode/.config/code-server 2>/dev/null; then
     echo "    ✓ Created /home/vscode/.config/code-server"
+elif mkdir -p /home/vscode/.config/code-server 2>/dev/null && chown -R vscode:vscode /home/vscode/.config/code-server 2>/dev/null; then
+    echo "    ✓ Fixed /home/vscode/.config/code-server ownership"
 fi
 
 # Create VS Code server directories
