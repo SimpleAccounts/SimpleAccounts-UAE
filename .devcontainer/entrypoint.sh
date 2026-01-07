@@ -11,12 +11,20 @@ if [ -d "/workspaces/SimpleAccounts-UAE" ]; then
 fi
 
 echo "  → Fixing config directories ownership..."
+# Ensure critical directories exist before fixing ownership
+mkdir -p /home/vscode/.local/share/code-server \
+         /home/vscode/.config/code-server \
+         /home/vscode/.vscode-server/bin \
+         /home/vscode/.vscode-server/extensions
+
 # Fix all vscode home directories that might be bind-mounted
 for dir in /home/vscode/.claude /home/vscode/.gemini /home/vscode/.codex \
            /home/vscode/.config/gh /home/vscode/.bash_history_dir \
            /home/vscode/.gitconfig_dir /home/vscode/.ssh \
            /home/vscode/.docker /home/vscode/.kube \
-           /home/vscode/.aws /home/vscode/.azure; do
+           /home/vscode/.aws /home/vscode/.azure \
+           /home/vscode/.local /home/vscode/.config \
+           /home/vscode/.vscode-server; do
     if [ -d "$dir" ]; then
         chown -R vscode:vscode "$dir" 2>/dev/null || true
     fi
