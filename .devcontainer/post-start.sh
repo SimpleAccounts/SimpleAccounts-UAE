@@ -161,6 +161,31 @@ CONFIGEOF
     fi
 fi
 
+# Start VNC server for browser testing and UI preview
+if command -v Xvfb &> /dev/null && command -v x11vnc &> /dev/null; then
+    if ! pgrep -f "Xvfb" > /dev/null; then
+        echo "🖥️  Starting VNC server..."
+        # Start Xvfb (Virtual Framebuffer)
+        Xvfb :99 -screen 0 1400x900x24 > /tmp/xvfb.log 2>&1 &
+        sleep 2
+        export DISPLAY=:99
+        # Start x11vnc
+        x11vnc -display :99 -forever -nopw -shared -rfbport 5900 > /tmp/x11vnc.log 2>&1 &
+        sleep 1
+        # Start noVNC (web-based VNC client)
+        if [ -f /usr/share/novnc/utils/novnc_proxy ]; then
+            /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 > /tmp/novnc.log 2>&1 &
+        elif command -v websockify &> /dev/null; then
+            websockify --web /usr/share/novnc 6080 localhost:5900 > /tmp/novnc.log 2>&1 &
+        fi
+        echo "✅ VNC server started on port 6080"
+    else
+        echo "✅ VNC server already running"
+    fi
+else
+    echo "⚠️  VNC packages not installed, skipping VNC auto-start"
+fi
+
 # =============================================================================
 # Traefik Integration (Dev-Server only)
 # =============================================================================
@@ -353,13 +378,16 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  Frontend: http://localhost:3000 (React + Vite)"
 echo "  Backend:  http://localhost:8080 (Spring Boot)"
 echo "  Swagger:  http://localhost:8080/swagger-ui.html"
+echo "  VNC:      http://localhost:6080/vnc.html (Browser Testing)"
 echo ""
 echo "📋 View logs:"
 echo "  Frontend: tail -f /tmp/frontend.log"
 echo "  Backend:  tail -f /tmp/backend.log"
+echo "  VNC:      tail -f /tmp/novnc.log"
 echo ""
 echo "🛑 Stop servers:"
 echo "  pkill -f vite      (stop frontend)"
 echo "  pkill -f spring-boot:run  (stop backend)"
+echo "  pkill -f Xvfb      (stop VNC)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
