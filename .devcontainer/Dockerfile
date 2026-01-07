@@ -177,8 +177,9 @@ RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
 # Pre-create user directories to avoid permission issues in post-create
 USER vscode
 RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
-             ~/.local/share/code-server ~/.config/code-server \
-             ~/.vscode-server/bin ~/.vscode-server/extensions \
+    && mkdir -p ~/.local/share && chmod 755 ~/.local \
+    && mkdir -p ~/.local/share/code-server ~/.config/code-server \
+    && mkdir -p ~/.vscode-server/bin ~/.vscode-server/extensions \
     && chmod -R 755 ~/.m2 ~/.npm ~/.cache ~/.local ~/.config ~/.vscode-server
 
 # Reset working directory and user
