@@ -104,7 +104,8 @@ print_header "3. Databases"
 print_check "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
 if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
-        -lqt | cut -d \| -f 1 | grep -qw "${SIMPLEACCOUNTS_DB:-simpleaccounts}"; then
+        -d postgres \
+        -tAc "SELECT 1 FROM pg_database WHERE datname='${SIMPLEACCOUNTS_DB:-simpleaccounts}'" | grep -q 1; then
     print_success "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
 else
     print_error "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' NOT found"
@@ -114,7 +115,8 @@ fi
 print_check "Database 'simpleaccounts_test' exists"
 if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
-        -lqt | cut -d \| -f 1 | grep -qw "simpleaccounts_test"; then
+        -d postgres \
+        -tAc "SELECT 1 FROM pg_database WHERE datname='simpleaccounts_test'" | grep -q 1; then
     print_success "Database 'simpleaccounts_test' exists"
 else
     print_warning "Database 'simpleaccounts_test' NOT found (optional)"
