@@ -174,10 +174,11 @@ if command -v Xvfb &> /dev/null && command -v x11vnc &> /dev/null; then
         x11vnc -display :99 -forever -nopw -shared -rfbport 5900 > /tmp/x11vnc.log 2>&1 &
         sleep 1
         # Start noVNC (web-based VNC client)
-        if [ -f /usr/share/novnc/utils/novnc_proxy ]; then
+        if command -v websockify &> /dev/null; then
+            # Use websockify directly with correct web root path
+            websockify --web=/usr/share/novnc 6080 localhost:5900 > /tmp/novnc.log 2>&1 &
+        elif [ -f /usr/share/novnc/utils/novnc_proxy ]; then
             /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 > /tmp/novnc.log 2>&1 &
-        elif command -v websockify &> /dev/null; then
-            websockify --web /usr/share/novnc 6080 localhost:5900 > /tmp/novnc.log 2>&1 &
         fi
         echo "✅ VNC server started on port 6080"
     else
