@@ -46,11 +46,27 @@ These guides include:
 
 ```css
 /* Backgrounds */
---corp-bg-primary: #ffffff /* Main background */ --corp-bg-secondary: #f8f9fa /* Subtle contrast */
-  /* Brand Colors */ --corp-primary: #2064d8 /* Primary blue (CTAs) */ --corp-secondary: #21d8aa
-  /* Success/teal */ /* Semantic Colors */ --corp-success: #10b981 --corp-warning: #f59e0b
-  --corp-danger: #ef4444 --corp-info: #3b82f6 /* Text Colors */ --corp-text-primary: #111827
-  /* Headings */ --corp-text-secondary: #4b5563 /* Body */ --corp-text-muted: #9ca3af /* Hints */;
+--corp-bg-primary: #ffffff; /* Main background */
+--corp-bg-secondary: #f8f9fa; /* Subtle contrast */
+
+/* Brand Colors */
+--corp-primary: #2064d8; /* Primary blue (CTAs) */
+--corp-primary-dark: #1a56b8; /* Primary hover state */
+
+/* Semantic Colors */
+--corp-success: #10b981; /* Green - success states */
+--corp-warning: #f59e0b; /* Amber - warnings */
+--corp-danger: #ef4444; /* Red - errors */
+--corp-info: #3b82f6; /* Blue - info */
+
+/* Text Colors */
+--corp-text-primary: #111827; /* Headings */
+--corp-text-secondary: #4b5563; /* Body text */
+--corp-text-muted: #9ca3af; /* Hints, placeholders */
+
+/* Border Colors */
+--corp-border-light: #e5e7eb; /* Default borders */
+--corp-border-dark: #d1d5db; /* Emphasized borders */
 ```
 
 #### Component Examples
