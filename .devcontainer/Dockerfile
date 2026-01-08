@@ -98,6 +98,20 @@ ENV DISPLAY=:99
 ENV VNC_PORT=5900
 ENV NOVNC_PORT=6080
 
+# Create index.html redirect for noVNC (Coder subdomain apps request / instead of /vnc.html)
+RUN echo '<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+    <meta charset="utf-8">\n\
+    <title>noVNC - Redirecting...</title>\n\
+    <meta http-equiv="refresh" content="0; url=vnc.html?autoconnect=true">\n\
+</head>\n\
+<body>\n\
+    <p>Redirecting to VNC...</p>\n\
+    <p>If you are not redirected, <a href="vnc.html?autoconnect=true">click here</a>.</p>\n\
+</body>\n\
+</html>' > /usr/share/novnc/index.html
+
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
 
