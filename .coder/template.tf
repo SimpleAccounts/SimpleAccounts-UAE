@@ -122,6 +122,56 @@ EOF
   }
 }
 
+# Prepare database init scripts (must exist before postgres container starts)
+resource "null_resource" "db_init_scripts" {
+  # Re-run when workspace is rebuilt
+  triggers = {
+    workspace_id = data.coder_workspace.me.id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      #!/bin/bash
+      set -e
+
+      # Directory for database init scripts (persists across workspace rebuilds)
+      SCRIPT_DIR="/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
+      mkdir -p "$SCRIPT_DIR"
+
+      # Clone repository to temporary location to get init scripts
+      TEMP_DIR=$(mktemp -d)
+      trap "rm -rf $TEMP_DIR" EXIT
+
+      echo "📦 Fetching database init scripts from repository..."
+      git clone --depth 1 --branch ${data.coder_parameter.git_clone_url.value != "" ? "develop" : "develop"} \
+        ${data.coder_parameter.git_clone_url.value != "" ? data.coder_parameter.git_clone_url.value : "https://github.com/SimpleAccounts/SimpleAccounts-UAE.git"} \
+        "$TEMP_DIR" --quiet || true
+
+      # Copy init scripts to persistent location
+      if [ -f "$TEMP_DIR/.devcontainer/init-db.sh" ]; then
+        cp "$TEMP_DIR/.devcontainer/init-db.sh" "$SCRIPT_DIR/init-db.sh"
+        chmod +x "$SCRIPT_DIR/init-db.sh"
+        echo "✅ Copied init-db.sh"
+      else
+        echo "⚠️  Warning: init-db.sh not found in repository"
+      fi
+
+      if [ -f "$TEMP_DIR/.devcontainer/postgres-startup-hook.sh" ]; then
+        cp "$TEMP_DIR/.devcontainer/postgres-startup-hook.sh" "$SCRIPT_DIR/postgres-startup-hook.sh"
+        chmod +x "$SCRIPT_DIR/postgres-startup-hook.sh"
+        echo "✅ Copied postgres-startup-hook.sh"
+      else
+        echo "⚠️  Warning: postgres-startup-hook.sh not found in repository"
+      fi
+
+      echo "✅ Database init scripts prepared"
+    EOT
+    interpreter = ["bash", "-c"]
+  }
+
+  depends_on = [null_resource.host_directories]
+}
+
 # Random password for PostgreSQL (generated once per workspace)
 # NOTE: This password persists in Terraform state across workspace stop/start cycles.
 # However, if Terraform state is reset while the volume persists, password mismatch occurs.
@@ -186,15 +236,17 @@ resource "docker_container" "postgres" {
   }
 
   # Database initialization script (creates extensions and test database)
+  # Note: Mounted from persistent location prepared by null_resource.db_init_scripts
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sh"
+    host_path      = "/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}/init-db.sh"
     container_path = "/docker-entrypoint-initdb.d/init-db.sh"
     read_only      = true
   }
 
   # Password sync hook (runs on every startup to fix password mismatch)
+  # Note: Mounted from persistent location prepared by null_resource.db_init_scripts
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/postgres-startup-hook.sh"
+    host_path      = "/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}/postgres-startup-hook.sh"
     container_path = "/usr/local/bin/password-sync.sh"
     read_only      = true
   }
@@ -219,6 +271,9 @@ resource "docker_container" "postgres" {
   ]
 
   restart = "unless-stopped"
+
+  # Ensure init scripts are prepared before container starts
+  depends_on = [null_resource.db_init_scripts]
 }
 
 # Redis container
