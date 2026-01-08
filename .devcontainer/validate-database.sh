@@ -102,7 +102,7 @@ print_header "3. Databases"
 
 # Check main database
 print_check "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
         -lqt | cut -d \| -f 1 | grep -qw "${SIMPLEACCOUNTS_DB:-simpleaccounts}"; then
     print_success "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
@@ -112,7 +112,7 @@ fi
 
 # Check test database
 print_check "Database 'simpleaccounts_test' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
         -lqt | cut -d \| -f 1 | grep -qw "simpleaccounts_test"; then
     print_success "Database 'simpleaccounts_test' exists"
@@ -129,7 +129,7 @@ echo ""
 print_header "4. Database Users"
 
 print_check "User '${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
         -tAc "SELECT 1 FROM pg_roles WHERE rolname='${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}'" | grep -q 1; then
     print_success "User '${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}' exists"
