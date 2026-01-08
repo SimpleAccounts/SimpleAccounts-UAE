@@ -118,8 +118,8 @@ ARG SONARQUBE_MCP_VERSION="1.5.0.1706"
 RUN mkdir -p /home/vscode/.local/share/mcp-servers/storage \
     && curl -fsSL -o /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.jar \
        "https://github.com/SonarSource/sonarqube-mcp-server/releases/download/${SONARQUBE_MCP_VERSION}/sonarqube-mcp-server-${SONARQUBE_MCP_VERSION}.jar" \
-    && chown -R vscode:vscode /home/vscode/.local/share/mcp-servers \
-    && echo "${SONARQUBE_MCP_VERSION}" > /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.version
+    && echo "${SONARQUBE_MCP_VERSION}" > /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.version \
+    && chown -R vscode:vscode /home/vscode/.local
 
 # Create symlinks in /usr/local/bin for npm global packages
 # This ensures CLI tools are in PATH regardless of NVM sourcing
