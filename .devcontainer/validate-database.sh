@@ -34,17 +34,17 @@ print_check() {
 
 print_success() {
     echo -e "  ${GREEN}✓${NC} $1"
-    ((CHECKS_PASSED++))
+    CHECKS_PASSED=$((CHECKS_PASSED + 1))
 }
 
 print_error() {
     echo -e "  ${RED}✗${NC} $1"
-    ((CHECKS_FAILED++))
+    CHECKS_FAILED=$((CHECKS_FAILED + 1))
 }
 
 print_warning() {
     echo -e "  ${YELLOW}⚠${NC} $1"
-    ((CHECKS_WARNING++))
+    CHECKS_WARNING=$((CHECKS_WARNING + 1))
 }
 
 print_info() {
