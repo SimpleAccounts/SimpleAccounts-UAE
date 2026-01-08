@@ -463,8 +463,9 @@ module "code-server" {
   # Auto-install extensions from devcontainer.json
   auto_install_extensions = true
 
-  # Display in Web Editors group
+  # Display in Web Editors group with code icon
   group = "Web Editors"
+  icon  = "/icon/code.svg"
 }
 
 # Frontend application (React + Vite on port 3000)
