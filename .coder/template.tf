@@ -528,7 +528,7 @@ resource "coder_app" "vnc" {
   slug         = "vnc"
   display_name = "VNC Browser"
   icon         = "/icon/desktop.svg"
-  url          = "http://localhost:6080/vnc.html?autoconnect=true"
+  url          = "http://localhost:6080/"
   subdomain    = true
   share        = "owner"
 
