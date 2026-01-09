@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "playwright": "^1.57.0",
-    "sass": "1.97.1"
+    "sass": "1.97.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",
