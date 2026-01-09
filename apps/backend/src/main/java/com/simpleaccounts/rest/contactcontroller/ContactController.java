@@ -239,8 +239,11 @@ public class ContactController {
 						}
 					}
 				}
-				Map<String, Object> supplierMap = new HashMap<>();
-			supplierMap.put("contact", contactPersistModel.getContactId());
+				// First get the Contact entity for the query
+			Contact existingContact = contactService.findByPK(contactPersistModel.getContactId());
+
+			Map<String, Object> supplierMap = new HashMap<>();
+			supplierMap.put("contact", existingContact);  // Pass Contact entity, not ID
 			supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 			List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 					.findByAttributes(supplierMap);
@@ -304,7 +307,7 @@ public class ContactController {
 			transactionCategoryList = transactionCategoryService.findByAttributes(tmap);
 		}
 		Map<String, Object> filterMap = new HashMap<>();
-		filterMap.put("contact", contact.getContactId());
+		filterMap.put("contact", contact);  // Pass Contact entity, not ID
 		// delete Contact Transaction Category Relation
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(filterMap);

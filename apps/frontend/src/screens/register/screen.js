@@ -152,6 +152,7 @@ const Register = () => {
   // Local state
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checkingCompany, setCheckingCompany] = useState(true);
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false);
   const [timezone, setTimezone] = useState([]);
@@ -218,6 +219,19 @@ const Register = () => {
   };
 
   const getInitialData = () => {
+    // First check if company already exists - redirect immediately if so
+    dispatch(AuthActions.getCompanyCount())
+      .then(res => {
+        if (res?.data > 0) {
+          navigate('/login');
+        } else {
+          setCheckingCompany(false);
+        }
+      })
+      .catch(() => {
+        setCheckingCompany(false);
+      });
+
     dispatch(AuthActions.getTimeZoneList())
       .then(action => {
         if (action?.data && Array.isArray(action.data)) {
@@ -229,11 +243,6 @@ const Register = () => {
     dispatch(CommonActions.getStateList()).catch(() => {});
     dispatch(CommonActions.getCompanyTypeListRegister()).catch(() => {});
     dispatch(AuthActions.getCurrencyList()).catch(() => {});
-    dispatch(AuthActions.getCompanyCount())
-      .then(action => {
-        if (action?.payload > 0) navigate('/login');
-      })
-      .catch(() => {});
   };
 
   const validateCurrentStep = async () => {
@@ -451,6 +460,15 @@ const Register = () => {
       backgroundColor: 'hsl(var(--border))',
     }),
   };
+
+  if (checkingCompany) {
+    return (
+      <LoadingOverlay
+        message="Checking registration status..."
+        submessage="Please wait"
+      />
+    );
+  }
 
   if (loading) {
     return (
