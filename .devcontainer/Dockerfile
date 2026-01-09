@@ -89,9 +89,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         websockify \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Set Playwright to use system Chromium
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+# Set Playwright browsers path for consistent caching
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/vscode/.cache/ms-playwright
 
 # VNC configuration
 ENV DISPLAY=:99
@@ -183,6 +182,10 @@ RUN . /usr/local/share/nvm/nvm.sh && (npm ci --ignore-scripts || npm install --i
 WORKDIR /tmp/frontend
 COPY --chown=vscode:vscode apps/frontend/package.json apps/frontend/package-lock.json apps/frontend/.npmrc* ./
 RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts || npm install --legacy-peer-deps --ignore-scripts || true)
+
+# Install Playwright browsers (baked into image for faster test execution)
+# This prevents the need to run 'npx playwright install' every time tests run
+RUN . /usr/local/share/nvm/nvm.sh && npx playwright install chromium
 
 # Clean up temp directories
 USER root

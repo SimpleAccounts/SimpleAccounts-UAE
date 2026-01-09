@@ -122,9 +122,10 @@ cd ../..
 # Setup Playwright
 # ============================================
 echo "🎭 Setting up Playwright..."
-# Playwright browser deps are installed in Dockerfile
-# Just ensure the cache directory exists
+# Playwright Chromium browser is pre-installed in the Docker image
+# Just ensure the cache directory has correct permissions
 ensure_dir "$TARGET_HOME/.cache/ms-playwright"
+fix_ownership "$TARGET_HOME/.cache/ms-playwright"
 
 # ============================================
 # Download Maven dependencies
