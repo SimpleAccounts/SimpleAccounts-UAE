@@ -81,8 +81,12 @@
     // Playwright browsers are pre-installed in the Docker image
     "PLAYWRIGHT_BROWSERS_PATH": "/home/vscode/.cache/ms-playwright",
     // JVM Performance Optimizations
-    "MAVEN_OPTS": "-Xmx2g -XX:+UseG1GC -XX:+UseStringDeduplication",
-    "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0",
+    // MAVEN_OPTS: Maven compiler JVM (1GB to allow room for Spring Boot)
+    // SPRING_JVM_ARGS: Spring Boot application JVM (1GB default, override as needed)
+    // JAVA_TOOL_OPTIONS: Fallback for all Java processes (conservative 25%)
+    "MAVEN_OPTS": "-Xmx1g -XX:+UseG1GC -XX:+UseStringDeduplication",
+    "SPRING_JVM_ARGS": "-Xmx1g -XX:+UseG1GC",
+    "JAVA_TOOL_OPTIONS": "-XX:+UseContainerSupport -XX:MaxRAMPercentage=25.0",
     // Node.js Memory Optimization (2GB for 4GB RAM container)
     "NODE_OPTIONS": "--max-old-space-size=2048",
     // Bash history persistence

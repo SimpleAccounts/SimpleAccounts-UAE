@@ -49,9 +49,15 @@ fi
 
 ensure_java
 
+# Memory settings for development
+# MAVEN_OPTS controls the Maven JVM (compilation)
+# spring-boot.run.jvmArguments controls the Spring Boot application JVM
+export MAVEN_OPTS="${MAVEN_OPTS:--Xmx1g -XX:+UseG1GC}"
+SPRING_JVM_ARGS="${SPRING_JVM_ARGS:--Xmx1g -XX:+UseG1GC}"
+
 # Run Spring Boot application (use mvn if mvnw not available)
 if [ -f ./mvnw ]; then
-    ./mvnw spring-boot:run
+    ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="$SPRING_JVM_ARGS"
 else
-    mvn spring-boot:run
+    mvn spring-boot:run -Dspring-boot.run.jvmArguments="$SPRING_JVM_ARGS"
 fi
