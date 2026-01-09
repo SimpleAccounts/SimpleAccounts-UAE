@@ -10,7 +10,9 @@ test.describe('Login Test', () => {
     await page.goto(`${BASE_URL}/login`);
 
     // Wait for login form
-    await page.waitForSelector('input[type="email"], input[name="email"], #email', { timeout: 10000 });
+    await page.waitForSelector('input[type="email"], input[name="email"], #email', {
+      timeout: 10000,
+    });
 
     // Fill in credentials
     await page.fill('input[type="email"], input[name="email"], #email', LOGIN_EMAIL);

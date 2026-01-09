@@ -22,7 +22,9 @@ test.describe('Contact Module CRUD Operations', () => {
     // ============ STEP 1: LOGIN via UI ============
     console.log('=== STEP 1: LOGIN ===');
     await page.goto(`${BASE_URL}/login`);
-    await page.waitForSelector('input[type="email"], input[name="email"], #email', { timeout: 15000 });
+    await page.waitForSelector('input[type="email"], input[name="email"], #email', {
+      timeout: 15000,
+    });
     await page.fill('input[type="email"], input[name="email"], #email', LOGIN_EMAIL);
     await page.fill('input[type="password"], input[name="password"], #password', LOGIN_PASSWORD);
     await page.click('button[type="submit"]');
@@ -31,7 +33,10 @@ test.describe('Contact Module CRUD Operations', () => {
 
     // Get auth token from localStorage
     authToken = await page.evaluate(() => localStorage.getItem('accessToken') || '');
-    console.log('Auth token obtained:', authToken ? 'Yes (length: ' + authToken.length + ')' : 'No');
+    console.log(
+      'Auth token obtained:',
+      authToken ? 'Yes (length: ' + authToken.length + ')' : 'No'
+    );
 
     // ============ STEP 2: CREATE via API ============
     console.log('\n=== STEP 2: CREATE CONTACT via API ===');
@@ -73,7 +78,7 @@ test.describe('Contact Module CRUD Operations', () => {
     };
 
     // Create contact using the app's axios instance
-    const createResult = await page.evaluate(async (payload) => {
+    const createResult = await page.evaluate(async payload => {
       // Get axios from the app's global scope (if available) or use fetch with same-origin
       const baseUrl = window.location.origin.replace(':3000', ':8080');
       const token = localStorage.getItem('accessToken');
@@ -82,7 +87,7 @@ test.describe('Contact Module CRUD Operations', () => {
         const response = await fetch(`${baseUrl}/rest/contact/save`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
@@ -106,13 +111,19 @@ test.describe('Contact Module CRUD Operations', () => {
       contactId = createResult.data.id || createResult.data.contactId;
       console.log('✓ Contact created via API, ID:', contactId);
     } else {
-      console.log('Create failed:', createResult.error || JSON.stringify(createResult.data).substring(0, 200));
+      console.log(
+        'Create failed:',
+        createResult.error || JSON.stringify(createResult.data).substring(0, 200)
+      );
       // Don't return - try to continue with existing contacts if any
     }
 
     // ============ STEP 3: READ via UI ============
     console.log('\n=== STEP 3: READ CONTACT via UI ===');
-    await page.goto(`${BASE_URL}/admin/master/contact`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.goto(`${BASE_URL}/admin/master/contact`, {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
     await page.waitForLoadState('networkidle', { timeout: 60000 });
 
     // Wait for table to be visible and have rows
@@ -122,7 +133,10 @@ test.describe('Contact Module CRUD Operations', () => {
     await page.waitForTimeout(2000); // Additional buffer for data to render
 
     // Get table content and log it
-    const tableContent = await page.locator('table').textContent({ timeout: 10000 }).catch(() => '');
+    const tableContent = await page
+      .locator('table')
+      .textContent({ timeout: 10000 })
+      .catch(() => '');
     console.log('Table content preview:', tableContent?.substring(0, 300));
 
     // Check for various possible matches
@@ -185,7 +199,7 @@ test.describe('Contact Module CRUD Operations', () => {
       isBillingAndShippingAddressSame: true,
     };
 
-    const updateResult = await page.evaluate(async (payload) => {
+    const updateResult = await page.evaluate(async payload => {
       const baseUrl = window.location.origin.replace(':3000', ':8080');
       const token = localStorage.getItem('accessToken');
 
@@ -193,7 +207,7 @@ test.describe('Contact Module CRUD Operations', () => {
         const response = await fetch(`${baseUrl}/rest/contact/update`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(payload),
@@ -217,7 +231,10 @@ test.describe('Contact Module CRUD Operations', () => {
     if (updateResult.status === 200) {
       console.log('✓ Contact updated via API');
     } else {
-      console.log('Update failed:', updateResult.error || JSON.stringify(updateResult.data).substring(0, 200));
+      console.log(
+        'Update failed:',
+        updateResult.error || JSON.stringify(updateResult.data).substring(0, 200)
+      );
     }
 
     await page.screenshot({ path: 'test-results/contact-after-update.png', fullPage: true });
@@ -226,7 +243,10 @@ test.describe('Contact Module CRUD Operations', () => {
     console.log('\n=== STEP 5: VERIFY UPDATE via UI ===');
 
     // Navigate to contact list and verify the updated organization name appears
-    await page.goto(`${BASE_URL}/admin/master/contact`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await page.goto(`${BASE_URL}/admin/master/contact`, {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
     await page.waitForLoadState('networkidle', { timeout: 60000 });
     await page.waitForTimeout(2000);
 
@@ -261,7 +281,7 @@ test.describe('Contact Module CRUD Operations', () => {
     console.log('\n=== STEP 6: DELETE CONTACT via API ===');
 
     // Delete contact using API
-    const deleteResult = await page.evaluate(async (id) => {
+    const deleteResult = await page.evaluate(async id => {
       const baseUrl = window.location.origin.replace(':3000', ':8080');
       const token = localStorage.getItem('accessToken');
 
@@ -269,7 +289,7 @@ test.describe('Contact Module CRUD Operations', () => {
         const response = await fetch(`${baseUrl}/rest/contact/delete?id=${id}`, {
           method: 'DELETE',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         });
@@ -292,7 +312,10 @@ test.describe('Contact Module CRUD Operations', () => {
     if (deleteResult.status === 200) {
       console.log('✓ Contact deleted via API');
     } else {
-      console.log('Delete failed:', deleteResult.error || JSON.stringify(deleteResult.data).substring(0, 200));
+      console.log(
+        'Delete failed:',
+        deleteResult.error || JSON.stringify(deleteResult.data).substring(0, 200)
+      );
     }
 
     await page.screenshot({ path: 'test-results/contact-after-delete.png', fullPage: true });

@@ -462,12 +462,7 @@ const Register = () => {
   };
 
   if (checkingCompany) {
-    return (
-      <LoadingOverlay
-        message="Checking registration status..."
-        submessage="Please wait"
-      />
-    );
+    return <LoadingOverlay message="Checking registration status..." submessage="Please wait" />;
   }
 
   if (loading) {
