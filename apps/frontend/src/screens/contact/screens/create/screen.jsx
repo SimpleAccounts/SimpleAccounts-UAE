@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -99,7 +100,6 @@ const CreateContact = ({
   contactActions,
   createContactActions,
   commonActions,
-  history,
   contactType,
   country_list,
   currency_list_dropdown,
@@ -110,6 +110,7 @@ const CreateContact = ({
   closeModal,
   confirmCancel,
 }) => {
+  const navigate = useNavigate();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
@@ -124,7 +125,7 @@ const CreateContact = ({
   const [taxTreatmentList, setTaxTreatmentList] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [disableCountry, setDisableCountry] = useState(false);
-  const [isRegisteredVat, setIsRegisteredVat] = useState(false);
+  const [_isRegisteredVat, setIsRegisteredVat] = useState(false);
   const [trnExist, setTrnExist] = useState(false);
   const [emailExist, setEmailExist] = useState(false);
 
@@ -166,12 +167,11 @@ const CreateContact = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, touchedFields },
+    formState: { errors },
     reset,
     setValue,
     watch,
     setError,
-    clearErrors,
     trigger,
   } = form;
 
@@ -195,6 +195,7 @@ const CreateContact = ({
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || err?.message || 'ERROR');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeData = () => {
@@ -352,24 +353,31 @@ const CreateContact = ({
     console.log('✅ [CONTACT_CREATE] Email check passed');
 
     console.log('✅ [CONTACT_CREATE] Check 5: Shipping address validation');
-    console.log(
-      '📦 [CONTACT_CREATE] Shipping address data:',
-      JSON.stringify(data.shippingAddress, null, 2)
-    );
-    const shippingAddressError = InputValidation.addressValidation(data.shippingAddress);
-    console.log(
-      '📦 [CONTACT_CREATE] Shipping address errors:',
-      JSON.stringify(shippingAddressError, null, 2)
-    );
-    if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
-      console.error(
-        '❌ [CONTACT_CREATE] Shipping address validation failed:',
-        shippingAddressError
+    console.log('📦 [CONTACT_CREATE] Is billing and shipping address same:', isSame);
+
+    // Only validate shipping address if billing and shipping addresses are different
+    if (!isSame) {
+      console.log(
+        '📦 [CONTACT_CREATE] Shipping address data:',
+        JSON.stringify(data.shippingAddress, null, 2)
       );
-      setError('shippingAddress', { type: 'manual', message: 'Invalid shipping address' });
-      return;
+      const shippingAddressError = InputValidation.addressValidation(data.shippingAddress);
+      console.log(
+        '📦 [CONTACT_CREATE] Shipping address errors:',
+        JSON.stringify(shippingAddressError, null, 2)
+      );
+      if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
+        console.error(
+          '❌ [CONTACT_CREATE] Shipping address validation failed:',
+          shippingAddressError
+        );
+        setError('shippingAddress', { type: 'manual', message: 'Invalid shipping address' });
+        return;
+      }
+      console.log('✅ [CONTACT_CREATE] Shipping address validation passed');
+    } else {
+      console.log('✅ [CONTACT_CREATE] Shipping address validation skipped (same as billing)');
     }
-    console.log('✅ [CONTACT_CREATE] Shipping address validation passed');
 
     console.log('✅ [CONTACT_CREATE] Check 6: Billing address validation');
     console.log(
@@ -441,7 +449,7 @@ const CreateContact = ({
               getCurrentContactData(res.data);
               closeModal(true);
             } else {
-              history.push('/admin/master/contact');
+              navigate('/admin/master/contact');
             }
             setLoading(false);
           }
@@ -1319,7 +1327,7 @@ const CreateContact = ({
                       if (isParentComponentPresent && isParentComponentPresent === true) {
                         confirmCancel(true);
                       } else {
-                        history.push('/admin/master/contact');
+                        navigate('/admin/master/contact');
                       }
                     }}
                     style={{

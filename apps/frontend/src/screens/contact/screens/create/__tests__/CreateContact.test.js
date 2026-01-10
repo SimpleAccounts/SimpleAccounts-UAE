@@ -98,6 +98,16 @@ vi.mock('screens/contact/sections', () => ({
   AddressComponent: () => <div data-testid="address-component">Address Component</div>,
 }));
 
+// Mock useNavigate from react-router-dom
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 // Import component AFTER all mocks are set up
 import CreateContact from '../screen';
 
@@ -156,6 +166,7 @@ const renderComponent = (props = {}, initialState = {}) => {
 describe('CreateContact Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
   });
 
   it('should render create contact form', async () => {
@@ -245,19 +256,14 @@ describe('CreateContact Component', () => {
   });
 
   it('should navigate back on cancel', async () => {
-    const mockHistory = {
-      push: vi.fn(),
-      goBack: vi.fn(),
-    };
-
-    renderComponent({ history: mockHistory });
+    renderComponent({ isParentComponentPresent: false });
 
     const cancelButton = await screen.findByRole('button', { name: /cancel/i });
     fireEvent.click(cancelButton);
 
-    // Cancel navigates to /admin/master/contact via history.push
+    // Cancel navigates to /admin/master/contact via useNavigate
     await waitFor(() => {
-      expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
+      expect(mockNavigate).toHaveBeenCalledWith('/admin/master/contact');
     });
   });
 
