@@ -21,11 +21,11 @@ describeSmoke('Contact management smoke journey', () => {
 
     // Login
     await page.goto(LOGIN_PATH);
-    await expect(page.locator('input#username')).toBeVisible();
-    await expect(page.locator('input#password')).toBeVisible();
+    await expect(page.locator('input#email-input')).toBeVisible();
+    await expect(page.locator('input#password-input')).toBeVisible();
 
-    await page.fill('input#username', username!);
-    await page.fill('input#password', password!);
+    await page.fill('input#email-input', username!);
+    await page.fill('input#password-input', password!);
 
     const loginButton = page.getByRole('button', { name: /log in/i });
     const buttonHandle = await loginButton.elementHandle();
@@ -66,8 +66,8 @@ describeSmoke('Contact management smoke journey', () => {
 
     // Login
     await page.goto(LOGIN_PATH);
-    await page.fill('input#username', username!);
-    await page.fill('input#password', password!);
+    await page.fill('input#email-input', username!);
+    await page.fill('input#password-input', password!);
 
     const loginButton = page.getByRole('button', { name: /log in/i });
     const buttonHandle = await loginButton.elementHandle();
@@ -88,8 +88,8 @@ describeSmoke('Contact management smoke journey', () => {
     const createContactPath = `${CONTACTS_PATH}/create`;
     await page.goto(createContactPath, { waitUntil: 'domcontentloaded' });
 
-    // Verify form elements are present (name input field)
-    const nameInput = page.locator('input[name*="name"], input#name, input[id*="name"]');
-    await expect(nameInput.first()).toBeVisible({ timeout: 180_000 });
+    // Verify form elements are present (firstName input field)
+    const firstNameInput = page.locator('input[placeholder*="First Name"]');
+    await expect(firstNameInput).toBeVisible({ timeout: 180_000 });
   });
 });

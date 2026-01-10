@@ -8,8 +8,8 @@ const CREATE_CONTACT_PATH = `${CONTACTS_PATH}/create`;
 // Helper function to perform login
 async function login(page: Page, username: string, password: string) {
   await page.goto(LOGIN_PATH);
-  await page.fill('input#username', username);
-  await page.fill('input#password', password);
+  await page.fill('input#email-input', username);
+  await page.fill('input#password-input', password);
 
   const loginButton = page.getByRole('button', { name: /log in/i });
   const buttonHandle = await loginButton.elementHandle();
