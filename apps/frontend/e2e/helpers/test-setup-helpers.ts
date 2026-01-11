@@ -14,13 +14,15 @@ import * as path from 'path';
  * ```
  */
 export async function clearDatabase(force: boolean = true): Promise<void> {
-  const scriptPath = path.join(__dirname, '../../../scripts/clear-database-auto.sh');
+  // Calculate path from e2e/helpers to project root (go up 4 levels)
+  const projectRoot = path.join(__dirname, '../../../../');
+  const scriptPath = path.join(projectRoot, 'scripts/clear-database-auto.sh');
 
   try {
     const command = force ? `bash ${scriptPath} --force` : `bash ${scriptPath}`;
     execSync(command, {
       stdio: 'inherit',
-      cwd: path.join(__dirname, '../../..'),
+      cwd: projectRoot,
     });
     console.log('✅ Database cleared successfully');
   } catch (error) {
