@@ -36,7 +36,8 @@ test.describe('Prerequisites and Test Data Setup', () => {
     } catch (loginError) {
       console.log('⚠️  Login failed, checking if user creation is possible...');
       // Check company count - if > 0, registration is not available
-      const companyCountResponse = await request.get(
+      // Use page.request context for API calls in beforeAll
+      const companyCountResponse = await page.request.get(
         `${getApiBaseUrl()}/rest/company/getCompanyCount`
       );
       const companyCount = await companyCountResponse.json();
