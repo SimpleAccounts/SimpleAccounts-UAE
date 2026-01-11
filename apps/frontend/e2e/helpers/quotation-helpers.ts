@@ -123,9 +123,36 @@ export async function createQuotationViaAPI(
   }
 
   const responseData = await response.json();
+
   // The API returns a message, so we need to get the quotation ID from the list
-  // For now, we'll return the quotation data with a placeholder ID
-  // In a real scenario, you might need to fetch the quotation by number
+  // Fetch the quotation by number to get the ID
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Wait a bit for DB to sync
+
+  const quotationListResponse = await request.get(
+    `${apiUrl}/rest/poquatation/getListForQuatation?type=6&paginationDisable=true&quatationNumber=${payload.quotationNumber}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+  );
+
+  if (quotationListResponse.ok()) {
+    const listData = await quotationListResponse.json();
+    const quotation = listData.data?.find(
+      (q: any) =>
+        q.quotationNumber === payload.quotationNumber ||
+        q.quatationNumber === payload.quotationNumber
+    );
+    if (quotation) {
+      return {
+        ...quotationData,
+        quotationId: quotation.id || quotation.quotationId || quotation.quatationId || 0,
+      };
+    }
+  }
+
+  // Fallback: return with 0 ID if we can't find it
   return {
     ...quotationData,
     quotationId: responseData.id || responseData.quotationId || 0,
