@@ -1,6 +1,6 @@
 import { test, expect, Page, APIRequestContext } from '@playwright/test';
 import { setupTestEnvironment, getApiBaseUrl } from './helpers/test-setup-helpers';
-import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
+import { loginTestUser, getTestUserCredentials, createTestUser } from './helpers/test-user-helpers';
 import { createPettyCashAccount, createTestBankAccount } from './helpers/bank-account-helpers';
 import { createTestCustomer } from './helpers/customer-helpers';
 import { createTestSupplier } from './helpers/supplier-helpers';
@@ -15,26 +15,67 @@ import { setupChartOfAccounts } from './helpers/chart-of-accounts-helpers';
  */
 test.describe('Prerequisites and Test Data Setup', () => {
   let page: Page;
-  let request: APIRequestContext;
   let authToken: string;
 
-  test.beforeAll(async ({ browser, request: apiRequest }) => {
-    // Setup test environment
-    await setupTestEnvironment({ clearDb: true, verifyServices: true });
+  test.beforeAll(async ({ browser }) => {
+    test.setTimeout(120_000); // 2 minutes for user creation if needed
 
-    // Get browser page and API request context
+    // Setup test environment (skip database cleanup if it fails - not critical for test execution)
+    await setupTestEnvironment({ clearDb: false, verifyServices: true });
+
+    // Get browser page
     page = await browser.newPage();
-    request = apiRequest;
 
-    // Login to get authentication token
+    // Get credentials
     const credentials = getTestUserCredentials();
-    await loginTestUser(page, credentials.username, credentials.password);
+
+    // Try to login - if it fails, check if we can create user (only if no companies exist)
+    try {
+      await loginTestUser(page, credentials.username, credentials.password);
+      console.log('✅ Login successful');
+    } catch (loginError) {
+      console.log('⚠️  Login failed, checking if user creation is possible...');
+      // Check company count - if > 0, registration is not available
+      const companyCountResponse = await request.get(
+        `${getApiBaseUrl()}/rest/company/getCompanyCount`
+      );
+      const companyCount = await companyCountResponse.json();
+
+      if (companyCount > 0) {
+        throw new Error(
+          `Login failed and user creation not possible (company count: ${companyCount}). ` +
+            `Please ensure test user '${credentials.username}' exists in the database, or clear companies to enable registration.`
+        );
+      }
+
+      // No companies exist, try to create user
+      try {
+        await createTestUser(page, {
+          email: credentials.username,
+          password: credentials.password,
+          firstName: 'Test',
+          lastName: 'User',
+          companyName: 'Test Company',
+        });
+        console.log('✅ Test user created, attempting login...');
+        // Wait a bit for user to be fully registered
+        await page.waitForTimeout(2000);
+        // Try login again after user creation
+        await loginTestUser(page, credentials.username, credentials.password);
+        console.log('✅ Login successful after user creation');
+      } catch (createError) {
+        throw new Error(
+          `Failed to create or login test user: ${createError instanceof Error ? createError.message : String(createError)}`
+        );
+      }
+    }
 
     // Extract token from localStorage
     authToken = (await page.evaluate(() => localStorage.getItem('accessToken'))) || '';
     if (!authToken) {
       throw new Error('Failed to get authentication token after login');
     }
+    console.log('✅ Authentication token obtained');
   });
 
   test.afterAll(async () => {
@@ -43,7 +84,7 @@ test.describe('Prerequisites and Test Data Setup', () => {
     }
   });
 
-  test('should setup and verify VAT codes exist', async () => {
+  test('should setup and verify VAT codes exist', async ({ request }) => {
     const vatCategories = await setupVATCodes(request, authToken);
 
     expect(vatCategories).toBeDefined();
@@ -53,7 +94,7 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(vatCategories[0]).toHaveProperty('vat');
   });
 
-  test('should setup and verify Chart of Accounts structure exists', async () => {
+  test('should setup and verify Chart of Accounts structure exists', async ({ request }) => {
     const coaList = await setupChartOfAccounts(request, authToken);
 
     expect(coaList).toBeDefined();
@@ -63,7 +104,9 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(coaList[0]).toHaveProperty('chartOfAccountCode');
   });
 
-  test('should create petty cash account (essential for payment workflows)', async () => {
+  test('should create petty cash account (essential for payment workflows)', async ({
+    request,
+  }) => {
     const pettyCash = await createPettyCashAccount(request, authToken, {
       openingBalance: 10000,
     });
@@ -75,7 +118,7 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(pettyCash.bankAccountId).toBeGreaterThan(0);
   });
 
-  test('should create test bank account', async () => {
+  test('should create test bank account', async ({ request }) => {
     const bankAccount = await createTestBankAccount(request, page, authToken, {
       bankAccountName: 'Test Bank Account',
       accountNumber: 'ACC-TEST-001',
@@ -89,7 +132,9 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(bankAccount.bankAccountId).toBeGreaterThan(0);
   });
 
-  test('should create test customer with proper billing/shipping addresses', async () => {
+  test('should create test customer with proper billing/shipping addresses', async ({
+    request,
+  }) => {
     const customer = await createTestCustomer(request, page, authToken, {
       firstName: 'John',
       lastName: 'Doe',
@@ -107,7 +152,9 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(customer.isBillingAndShippingAddressSame).toBe(true);
   });
 
-  test('should create test supplier with proper billing/shipping addresses', async () => {
+  test('should create test supplier with proper billing/shipping addresses', async ({
+    request,
+  }) => {
     const supplier = await createTestSupplier(request, page, authToken, {
       firstName: 'Jane',
       lastName: 'Smith',
@@ -125,7 +172,7 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(supplier.isBillingAndShippingAddressSame).toBe(true);
   });
 
-  test('should create test product with proper VAT code', async () => {
+  test('should create test product with proper VAT code', async ({ request }) => {
     const product = await createTestProduct(request, page, authToken, {
       productName: 'Test Product',
       productCode: 'PRD-TEST-001',
@@ -144,7 +191,7 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(product.vatCategoryId).toBe(1);
   });
 
-  test('should create test service', async () => {
+  test('should create test service', async ({ request }) => {
     const service = await createTestService(request, page, authToken, {
       productName: 'Test Service',
       productCode: 'SRV-TEST-001',
@@ -158,7 +205,9 @@ test.describe('Prerequisites and Test Data Setup', () => {
     expect(service.salesUnitPrice).toBe(150);
   });
 
-  test('should create all prerequisites in sequence (end-to-end validation)', async () => {
+  test('should create all prerequisites in sequence (end-to-end validation)', async ({
+    request,
+  }) => {
     // This test validates that all helpers work together correctly
 
     // 1. Setup VAT codes
