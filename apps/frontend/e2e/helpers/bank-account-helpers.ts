@@ -266,7 +266,6 @@ export async function createTestBankAccount(
     } as BankAccountData & { bankAccountId: number };
   }
 }
-
 /**
  * Transaction data structure for creation
  */
