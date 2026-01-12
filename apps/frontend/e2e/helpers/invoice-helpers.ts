@@ -72,15 +72,20 @@ export async function createInvoiceViaAPI(
 ): Promise<InvoiceData & { invoiceId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  // Use YYYY-MM-DD format (ISO format) which Spring Boot can parse correctly
+  const formattedDate =
+    invoiceData.invoiceDate ||
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const dueDate = new Date(today);
   dueDate.setDate(dueDate.getDate() + 30);
-  const formattedDueDate = `${String(dueDate.getDate()).padStart(2, '0')}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${dueDate.getFullYear()}`;
+  const formattedDueDate =
+    invoiceData.dueDate ||
+    `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')}`;
 
   const payload = {
     referenceNumber: invoiceData.referenceNumber || generateInvoiceNumber(),
-    invoiceDate: invoiceData.invoiceDate || formattedDate,
-    invoiceDueDate: invoiceData.dueDate || formattedDueDate,
+    invoiceDate: formattedDate,
+    invoiceDueDate: formattedDueDate,
     contactId: invoiceData.contactId,
     currencyCode: invoiceData.currencyCode || 150, // AED default
     type: invoiceData.type || 2, // Customer invoice default

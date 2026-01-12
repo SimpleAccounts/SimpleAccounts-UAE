@@ -58,11 +58,14 @@ export async function createExpenseViaAPI(
 ): Promise<ExpenseData & { expenseId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  // Use YYYY-MM-DD format (ISO format) which Spring Boot can parse correctly
+  const formattedDate =
+    expenseData.expenseDate ||
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const payload: any = {
     expenseNumber: expenseData.expenseNumber || generateExpenseNumber(),
-    expenseDate: expenseData.expenseDate || formattedDate,
+    expenseDate: formattedDate,
     amount: expenseData.amount,
     expenseCategory: expenseData.expenseCategory || '',
     vatId: expenseData.vatId || '',

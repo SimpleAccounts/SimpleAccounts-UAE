@@ -76,11 +76,14 @@ export async function createDebitNoteViaAPI(
 ): Promise<DebitNoteData & { debitNoteId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  // Use YYYY-MM-DD format (ISO format) which Spring Boot can parse correctly
+  const formattedDate =
+    debitNoteData.debitNoteDate ||
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const payload = {
     creditNoteNumber: debitNoteData.debitNoteNumber || generateDebitNoteNumber(),
-    creditNoteDate: debitNoteData.debitNoteDate || formattedDate,
+    creditNoteDate: formattedDate,
     invoiceId: debitNoteData.invoiceId,
     contactId: debitNoteData.contactId,
     type: '13', // Type 13 = Debit Note (Supplier)
