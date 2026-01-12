@@ -107,19 +107,35 @@ export async function createInvoiceViaAPI(
     ),
   };
 
-  const formData = new URLSearchParams();
+  // Use FormData (multipart) to match frontend behavior exactly
+  // The frontend appends Date objects directly to FormData
+  // When FormData converts Date to string, it uses toString() which Spring Boot can parse from multipart
+  const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      formData.append(key, String(value));
+      // For dates, append as Date object (matches frontend behavior)
+      // FormData will convert Date.toString() which Spring Boot parses from multipart form-data
+      if (key === 'invoiceDate' || key === 'invoiceDueDate') {
+        const dateValue = new Date(value as string);
+        formData.append(key, dateValue);
+      } else {
+        formData.append(key, String(value));
+      }
     }
   });
+
+  // Convert FormData to plain object for Playwright's multipart option
+  // Playwright expects a plain object, not FormData instance
+  const multipartData: Record<string, string | number | Date> = {};
+  for (const [key, value] of formData.entries()) {
+    multipartData[key] = value as string | number | Date;
+  }
 
   const response = await request.post(`${apiUrl}/rest/invoice/save`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    data: formData.toString(),
+    multipart: multipartData,
   });
 
   if (!response.ok()) {

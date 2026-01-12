@@ -108,19 +108,32 @@ export async function createDebitNoteViaAPI(
     ),
   };
 
-  const formData = new URLSearchParams();
+  // Use FormData (multipart) to match frontend behavior exactly
+  // The frontend appends Date objects to FormData, which converts them to strings via toString()
+  const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      formData.append(key, String(value));
+      // For dates, append as Date object - FormData will convert to toString() format
+      if (key === 'creditNoteDate') {
+        const dateValue = new Date(value as string);
+        formData.append(key, dateValue);
+      } else {
+        formData.append(key, String(value));
+      }
     }
   });
+
+  // Convert FormData entries to plain object for Playwright's multipart option
+  const multipartData: Record<string, string | number> = {};
+  for (const [key, value] of formData.entries()) {
+    multipartData[key] = value as string | number;
+  }
 
   const response = await request.post(`${apiUrl}/rest/creditNote/save`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    data: formData.toString(),
+    multipart: multipartData,
   });
 
   if (!response.ok()) {
