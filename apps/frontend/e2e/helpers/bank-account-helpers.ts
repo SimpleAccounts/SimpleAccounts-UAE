@@ -94,12 +94,23 @@ export async function createBankAccountViaAPI(
     ...accountData,
   };
 
+  // Add openingDate if not provided (required by backend - must be LocalDateTime format)
+  const today = new Date();
+  const openingDate =
+    accountData.openingDate ||
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}T00:00:00`;
+
+  const finalPayload = {
+    ...payload,
+    openingDate: openingDate,
+  };
+
   const response = await request.post(`${apiUrl}/rest/bank/save`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
-    data: payload,
+    data: finalPayload,
   });
 
   if (!response.ok()) {
