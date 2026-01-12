@@ -72,15 +72,16 @@ export async function createInvoiceViaAPI(
 ): Promise<InvoiceData & { invoiceId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  // Use YYYY-MM-DD format (ISO format) which Spring Boot can parse correctly
+  // Use dd/MM/yyyy format which matches backend CommonColumnConstants.DD_MM_YYYY
+  // This is the format Spring Boot expects for form data Date fields
   const formattedDate =
     invoiceData.invoiceDate ||
-    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
   const dueDate = new Date(today);
   dueDate.setDate(dueDate.getDate() + 30);
   const formattedDueDate =
     invoiceData.dueDate ||
-    `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')}`;
+    `${String(dueDate.getDate()).padStart(2, '0')}/${String(dueDate.getMonth() + 1).padStart(2, '0')}/${dueDate.getFullYear()}`;
 
   const payload = {
     referenceNumber: invoiceData.referenceNumber || generateInvoiceNumber(),
