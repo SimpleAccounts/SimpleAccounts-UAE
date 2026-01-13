@@ -26,10 +26,11 @@ export interface InvoiceData {
   contactId: number; // Customer contact ID
   currencyCode?: number; // Currency code (default: 150 for AED)
   type?: number; // Invoice type: 1 = Supplier, 2 = Customer (default: 2)
-  taxType?: number; // Tax type: 1 = Exclusive, 2 = Inclusive (default: 1)
+  taxType?: boolean | number; // Tax type: false/1 = Exclusive, true/2 = Inclusive (default: false)
   lineItems: InvoiceLineItem[];
   notes?: string;
   placeOfSupplyId?: number;
+  term?: string; // Invoice term (e.g., 'NET_30', 'NET_7', 'DUE_ON_RECEIPT')
 }
 
 /**
@@ -40,9 +41,14 @@ export interface InvoiceLineItem {
   description: string;
   quantity: number;
   unitPrice: number;
-  vatId?: number; // VAT code ID
+  vatCategoryId?: string; // VAT category ID as string (matches backend InvoiceLineItemModel)
+  vatId?: number; // Legacy field, will be converted to vatCategoryId
   discount?: number;
+  discountType?: string; // 'FIXED' or 'PERCENTAGE'
   subTotal?: number; // Auto-calculated if not provided
+  vatAmount?: number; // VAT amount for this line item
+  exciseAmount?: number; // Excise tax amount
+  exciseTaxId?: number; // Excise tax ID
 }
 
 /**
@@ -72,16 +78,92 @@ export async function createInvoiceViaAPI(
 ): Promise<InvoiceData & { invoiceId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  // Use dd/MM/yyyy format which matches backend CommonColumnConstants.DD_MM_YYYY
-  // This is the format Spring Boot expects for form data Date fields
+  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
+  // This is the format Spring Boot can parse by default without @DateTimeFormat annotation
   const formattedDate =
     invoiceData.invoiceDate ||
-    `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const dueDate = new Date(today);
   dueDate.setDate(dueDate.getDate() + 30);
   const formattedDueDate =
     invoiceData.dueDate ||
-    `${String(dueDate.getDate()).padStart(2, '0')}/${String(dueDate.getMonth() + 1).padStart(2, '0')}/${dueDate.getFullYear()}`;
+    `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')}`;
+
+  // Calculate totals from line items
+  let totalNet = 0;
+  let totalVatAmount = 0;
+  let totalExciseAmount = 0;
+  // Convert taxType to number for calculation: false/1 = Exclusive, true/2 = Inclusive
+  const taxTypeNum =
+    typeof invoiceData.taxType === 'boolean'
+      ? invoiceData.taxType
+        ? 2
+        : 1
+      : invoiceData.taxType || 1; // 1 = Exclusive, 2 = Inclusive
+
+  const lineItemsData = invoiceData.lineItems.map(item => {
+    const quantity = item.quantity;
+    const unitPrice = item.unitPrice;
+    const discount = item.discount || 0;
+    const discountType = item.discountType || 'FIXED';
+
+    // Calculate net value (after discount)
+    let netValue = quantity * unitPrice;
+    if (discount > 0) {
+      if (discountType === 'PERCENTAGE') {
+        netValue = netValue * (1 - discount / 100);
+      } else {
+        netValue = netValue - discount;
+      }
+    }
+
+    // Calculate VAT amount (simplified - assumes 5% VAT if vatCategoryId provided)
+    // In real scenario, VAT rate would come from vatCategory lookup
+    // For E2E tests, we'll use a default VAT category ID if not provided
+    // Default to empty string if no VAT category - backend will handle it
+    const vatCategoryId = item.vatCategoryId || (item.vatId ? String(item.vatId) : '');
+    let vatAmount = 0;
+    // Only calculate VAT if vatCategoryId is provided
+    // For now, skip VAT calculation if no vatCategoryId - backend will handle validation
+    if (vatCategoryId && taxTypeNum === 1) {
+      // Exclusive VAT: VAT is added on top
+      vatAmount = netValue * 0.05; // Default 5% VAT (should lookup actual rate)
+    } else if (vatCategoryId && taxTypeNum === 2) {
+      // Inclusive VAT: VAT is included, extract it
+      vatAmount = netValue * (5 / 105); // Default 5% VAT included
+    }
+
+    const exciseAmount = item.exciseAmount || 0;
+    const subTotal = netValue + vatAmount;
+
+    totalNet += netValue;
+    totalVatAmount += vatAmount;
+    totalExciseAmount += exciseAmount;
+
+    return {
+      id: 0,
+      productId: item.productId || '',
+      description: item.description,
+      quantity: quantity,
+      unitPrice: unitPrice,
+      vatCategoryId: vatCategoryId,
+      discount: discount,
+      discountType: discountType,
+      subTotal: subTotal,
+      vatAmount: vatAmount,
+      exciseAmount: exciseAmount,
+      exciseTaxId: item.exciseTaxId || '',
+    };
+  });
+
+  const totalAmount = totalNet + totalVatAmount;
+
+  // Convert taxType: number (1/2) to boolean (false/true)
+  // taxType: false = Exclusive VAT, true = Inclusive VAT
+  const taxTypeBoolean =
+    typeof invoiceData.taxType === 'boolean'
+      ? invoiceData.taxType
+      : invoiceData.taxType === 2 || invoiceData.taxType === true;
 
   const payload = {
     referenceNumber: invoiceData.referenceNumber || generateInvoiceNumber(),
@@ -89,46 +171,34 @@ export async function createInvoiceViaAPI(
     invoiceDueDate: formattedDueDate,
     contactId: invoiceData.contactId,
     currencyCode: invoiceData.currencyCode || 150, // AED default
-    type: invoiceData.type || 2, // Customer invoice default
-    taxType: invoiceData.taxType || 1, // Exclusive VAT default
+    type: String(invoiceData.type || 2), // Must be string: 1 = Supplier, 2 = Customer, 6 = Supplier (frontend uses 6)
+    taxType: taxTypeBoolean, // Boolean: false = Exclusive, true = Inclusive
     notes: invoiceData.notes || '',
     placeOfSupplyId: invoiceData.placeOfSupplyId || '',
-    // Line items need to be formatted for the API
-    lineItems: JSON.stringify(
-      invoiceData.lineItems.map(item => ({
-        productId: item.productId || '',
-        description: item.description,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        vatId: item.vatId || '',
-        discount: item.discount || 0,
-        subTotal: item.subTotal || item.quantity * item.unitPrice,
-      }))
-    ),
+    lineItemsString: JSON.stringify(lineItemsData), // Field name must be lineItemsString (not lineItems)
+    totalAmount: totalAmount,
+    totalVatAmount: totalVatAmount,
+    totalExciseAmount: totalExciseAmount,
+    discount: 0, // Can be calculated if needed
+    term: invoiceData.term || 'NET_30', // Default term (InvoiceDuePeriodEnum)
   };
 
-  // Use FormData (multipart) to match frontend behavior exactly
-  // The frontend appends Date objects directly to FormData
-  // When FormData converts Date to string, it uses toString() which Spring Boot can parse from multipart
+  // Use FormData (multipart) to match frontend behavior
+  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
+  // Send dates as ISO format strings which Spring Boot can parse by default
   const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      // For dates, append as Date object (matches frontend behavior)
-      // FormData will convert Date.toString() which Spring Boot parses from multipart form-data
-      if (key === 'invoiceDate' || key === 'invoiceDueDate') {
-        const dateValue = new Date(value as string);
-        formData.append(key, dateValue);
-      } else {
-        formData.append(key, String(value));
-      }
+      // All values are sent as strings (dates are already formatted as ISO yyyy-MM-dd)
+      formData.append(key, String(value));
     }
   });
 
   // Convert FormData to plain object for Playwright's multipart option
   // Playwright expects a plain object, not FormData instance
-  const multipartData: Record<string, string | number | Date> = {};
+  const multipartData: Record<string, string | number> = {};
   for (const [key, value] of formData.entries()) {
-    multipartData[key] = value as string | number | Date;
+    multipartData[key] = value as string | number;
   }
 
   const response = await request.post(`${apiUrl}/rest/invoice/save`, {

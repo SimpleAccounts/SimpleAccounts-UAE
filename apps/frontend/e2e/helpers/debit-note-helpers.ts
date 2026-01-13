@@ -76,11 +76,11 @@ export async function createDebitNoteViaAPI(
 ): Promise<DebitNoteData & { debitNoteId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  // Use dd/MM/yyyy format which matches backend CommonColumnConstants.DD_MM_YYYY
-  // This is the format Spring Boot expects for form data Date fields
+  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
+  // This is the format Spring Boot can parse by default without @DateTimeFormat annotation
   const formattedDate =
     debitNoteData.creditNoteDate ||
-    `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const payload = {
     creditNoteNumber: debitNoteData.debitNoteNumber || generateDebitNoteNumber(),
@@ -108,18 +108,14 @@ export async function createDebitNoteViaAPI(
     ),
   };
 
-  // Use FormData (multipart) to match frontend behavior exactly
-  // The frontend appends Date objects to FormData, which converts them to strings via toString()
+  // Use FormData (multipart) to match frontend behavior
+  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
+  // Send dates as ISO format strings which Spring Boot can parse by default
   const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      // For dates, append as Date object - FormData will convert to toString() format
-      if (key === 'creditNoteDate') {
-        const dateValue = new Date(value as string);
-        formData.append(key, dateValue);
-      } else {
-        formData.append(key, String(value));
-      }
+      // All values are sent as strings (dates are already formatted as ISO yyyy-MM-dd)
+      formData.append(key, String(value));
     }
   });
 
