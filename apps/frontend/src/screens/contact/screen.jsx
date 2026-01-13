@@ -123,10 +123,10 @@ function Contact() {
     initializeData();
   }, [pagination, sorting]);
 
-  // Navigate to detail
+  // Navigate to view page (read-only)
   const goToDetail = useCallback(
     row => {
-      navigate('/admin/master/contact/detail', { state: { id: row.id } });
+      navigate('/admin/master/contact/view', { state: { id: row.id } });
     },
     [navigate]
   );
@@ -194,11 +194,38 @@ function Contact() {
         cell: ({ row }) => <span style={{ color: theme.textSecondary }}>{row.original.email}</span>,
       },
       {
+        accessorKey: 'telephone',
+        header: strings.Telephone || 'Telephone',
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.telephone || '-'}</span>
+        ),
+      },
+      {
         accessorKey: 'mobileNumber',
         header: strings.MOBILENUMBER,
         cell: ({ row }) => {
           const mobile = row.original.mobileNumber;
-          return <span style={{ color: theme.textSecondary }}>{mobile ? `+${mobile}` : ''}</span>;
+          return <span style={{ color: theme.textSecondary }}>{mobile ? `+${mobile}` : '-'}</span>;
+        },
+      },
+      {
+        accessorKey: 'dueAmount',
+        header: strings.DueAmount || 'Due Amount',
+        cell: ({ row }) => {
+          const dueAmount = row.original.dueAmount;
+          if (!dueAmount || dueAmount === 0) {
+            return <span style={{ color: theme.textMuted }}>-</span>;
+          }
+          return (
+            <span
+              className="font-semibold"
+              style={{
+                color: theme.danger,
+              }}
+            >
+              {row.original.currencySymbol || ''} {Number(dueAmount).toFixed(2)}
+            </span>
+          );
         },
       },
       {
@@ -229,7 +256,7 @@ function Contact() {
               label: strings.Edit,
               icon: Edit,
               onClick: () =>
-                navigate('/admin/master/contact/detail', {
+                navigate('/admin/master/contact/edit', {
                   state: { id: contact.id },
                 }),
             },
@@ -245,15 +272,28 @@ function Contact() {
   // Transform data for table
   const tableData = useMemo(() => {
     if (!contact_list?.data) return [];
-    return contact_list.data.map(contact => ({
-      id: contact.id,
-      fullName: contact.fullName || '',
-      organization: contact.organization || '',
-      contactTypeString: contact.contactTypeString || '',
-      email: contact.email || '',
-      mobileNumber: contact.mobileNumber || '',
-      isActive: contact.isActive,
-    }));
+    return contact_list.data.map(contact => {
+      // Build fullName from firstName, middleName, lastName
+      const nameParts = [];
+      if (contact.firstName) nameParts.push(contact.firstName);
+      if (contact.middleName) nameParts.push(contact.middleName);
+      if (contact.lastName) nameParts.push(contact.lastName);
+      const fullName = nameParts.join(' ') || '-';
+
+      return {
+        id: contact.id,
+        fullName: fullName,
+        organization: contact.organization || '',
+        contactTypeString: contact.contactTypeString || '',
+        email: contact.email || '',
+        telephone: contact.telephone || '',
+        mobileNumber: contact.mobileNumber || '',
+        currencySymbol: contact.currencySymbol || '',
+        dueAmount: contact.dueAmount || 0,
+        nextDueDate: contact.nextDueDate || null,
+        isActive: contact.isActive,
+      };
+    });
   }, [contact_list]);
 
   if (loading) {

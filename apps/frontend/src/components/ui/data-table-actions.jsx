@@ -61,7 +61,12 @@ export function DataTableRowActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted" disabled={disabled}>
+        <Button
+          variant="ghost"
+          className="h-8 w-8 p-0 hover:bg-muted"
+          disabled={disabled}
+          onClick={e => e.stopPropagation()}
+        >
           <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
@@ -74,26 +79,44 @@ export function DataTableRowActions({
         {showDefaultActions && (
           <>
             {onView && (
-              <DropdownMenuItem onClick={() => onView(row.original)}>
+              <DropdownMenuItem
+                onClick={e => {
+                  e.stopPropagation();
+                  onView(row.original);
+                }}
+              >
                 <Eye className="mr-2 h-4 w-4" />
                 View
               </DropdownMenuItem>
             )}
             {onEdit && (
-              <DropdownMenuItem onClick={() => onEdit(row.original)}>
+              <DropdownMenuItem
+                onClick={e => {
+                  e.stopPropagation();
+                  onEdit(row.original);
+                }}
+              >
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
             )}
             {onDuplicate && (
-              <DropdownMenuItem onClick={() => onDuplicate(row.original)}>
+              <DropdownMenuItem
+                onClick={e => {
+                  e.stopPropagation();
+                  onDuplicate(row.original);
+                }}
+              >
                 <Copy className="mr-2 h-4 w-4" />
                 Duplicate
               </DropdownMenuItem>
             )}
             {onDelete && (
               <DropdownMenuItem
-                onClick={() => onDelete(row.original)}
+                onClick={e => {
+                  e.stopPropagation();
+                  onDelete(row.original);
+                }}
                 className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -124,7 +147,10 @@ export function DataTableRowActions({
           return (
             <DropdownMenuItem
               key={action.label || index}
-              onClick={() => action.onClick?.(row.original)}
+              onClick={e => {
+                e.stopPropagation();
+                action.onClick?.(row.original);
+              }}
               disabled={isDisabled}
               className={action.destructive ? 'text-destructive focus:text-destructive' : ''}
             >

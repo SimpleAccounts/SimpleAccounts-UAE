@@ -1,10 +1,16 @@
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 
 import { data } from 'screens/Language/index';
 import LocalizedStrings from 'react-localization';
 
 const strings = new LocalizedStrings(data);
+
+// Corporate theme constants
+const theme = {
+  bgWhite: '#ffffff',
+  border: '#e5e7eb',
+  textPrimary: '#111827',
+};
 
 const ZipCodeInputValidation = {
   229: { maxLength: 6, minLength: 3 },
@@ -32,7 +38,7 @@ function ZipCodeInput(props) {
         {required && <span className="text-destructive">* </span>}
         {label}
       </Label>
-      <Input
+      <input
         maxLength={ZipCodeInputValidation[countryId]?.maxLength ?? 6}
         minLength={ZipCodeInputValidation[countryId]?.minLength ?? 6}
         type="text"
@@ -46,7 +52,15 @@ function ZipCodeInput(props) {
             onChange(zipCodeName, e);
           }
         }}
-        className={`input-transition ${zipCodeError && zipCodeTouched ? 'border-destructive' : ''}`}
+        className={`flex h-10 w-full rounded-lg px-3 py-2 text-base md:text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 ${
+          zipCodeError && zipCodeTouched ? 'border-red-500' : ''
+        }`}
+        style={{
+          backgroundColor: theme.bgWhite,
+          border: `1px solid ${zipCodeError && zipCodeTouched ? '#ef4444' : theme.border}`,
+          color: theme.textPrimary,
+        }}
+        data-testid="zip-code-input"
       />
       {zipCodeError && zipCodeTouched && (
         <div className="text-sm text-destructive mt-1">{zipCodeError}</div>

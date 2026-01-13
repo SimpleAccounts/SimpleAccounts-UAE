@@ -176,6 +176,8 @@ import CreateChartAccount from './chart_account/screens/create/index.js';
 import DetailChartAccount from './chart_account/screens/detail/index.js';
 import CreateContact from './contact/screens/create/index.js';
 import DetailContact from './contact/screens/detail/index.js';
+import ViewContact from './contact/screens/view/index.js';
+import EditContact from './contact/screens/edit/index.js';
 import ViewEmployee from './payrollemp/screens/view/index.js';
 import CreateProduct from './product/screens/create/index.js';
 import DetailProduct from './product/screens/detail/index.js';
@@ -372,6 +374,8 @@ export {
   DetailChartAccount,
   CreateContact,
   DetailContact,
+  ViewContact,
+  EditContact,
   ViewEmployee,
   CreateProduct,
   DetailProduct,
