@@ -30,5 +30,11 @@ public interface UserDao extends Dao<Integer, User> {
     List<Integer> getAllUserIds();
 
     List<DropdownModel> getUserForPayrollDropdown(Integer userId);
+    
+    boolean updateForgotPasswordToken(Integer userId, String token, java.sql.Timestamp expiryDate, java.sql.Timestamp updateDate);
+    
+    boolean updateForgotPasswordTokenByEmail(String userEmail, String token, java.sql.Timestamp expiryDate, java.sql.Timestamp updateDate);
+    
+    String verifyTokenFromDatabase(String userEmail);
 }
     

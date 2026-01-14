@@ -30,7 +30,10 @@ public abstract class UserService extends SimpleAccountsService<Integer, User> {
 
 	public abstract PaginationResponseModel getUserList(Map<UserFilterEnum, Object> filterMap,PaginationModel paginationModel);
 
-	public abstract boolean updateForgotPasswordToken(User user, JwtRequest jwtRequest);
+	public abstract boolean updateForgotPasswordToken(String userEmail, String firstName, String lastName, JwtRequest jwtRequest);
+	
+	// For E2E testing - returns the generated token instead of just success/failure
+	public abstract String updateForgotPasswordTokenAndReturnToken(String userEmail, String firstName, String lastName, JwtRequest jwtRequest);
 
 	public abstract String createPassword (User user,UserModel selectedUser,User sender);
 
@@ -41,4 +44,6 @@ public abstract class UserService extends SimpleAccountsService<Integer, User> {
 	public abstract List<DropdownModel> getUserForPayrollDropdown(Integer userId);
 	
 	public abstract Optional<User> findUserById(Integer id);
+	
+	public abstract String verifyTokenFromDatabase(String userEmail);
 }

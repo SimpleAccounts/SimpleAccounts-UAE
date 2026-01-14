@@ -1,6 +1,7 @@
 package com.simpleaccounts.rest.Logincontroller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,6 +15,7 @@ import com.simpleaccounts.repository.UserJpaRepository;
 import com.simpleaccounts.rest.usercontroller.UserRestHelper;
 import com.simpleaccounts.service.EmaiLogsService;
 import com.simpleaccounts.service.UserService;
+import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,7 +25,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -60,10 +65,21 @@ class LoginRestControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(loginRestController).build();
         objectMapper = new ObjectMapper();
+        
+        // Setup MessageUtil for tests that use MessageUtil.getMessage()
+        ApplicationContext applicationContext = org.mockito.Mockito.mock(ApplicationContext.class);
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setBasename("classpath:messages");
+        lenient().when(applicationContext.getBean(ReloadableResourceBundleMessageSource.class)).thenReturn(messageSource);
+        new MessageUtil().setApplicationContext(applicationContext);
+        ReflectionTestUtils.setField(MessageUtil.class, "messageSource", messageSource);
 
         testUser = new User();
         testUser.setUserId(1);
         testUser.setUserEmail("test@example.com");
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
         testUser.setPassword("encodedPassword");
         testUser.setDeleteFlag(false);
         testUser.setIsActive(true);
@@ -77,8 +93,8 @@ class LoginRestControllerTest {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("userEmail", "test@example.com");
 
-        when(userService.findByAttributes(any())).thenReturn(Collections.singletonList(testUser));
-        when(userService.updateForgotPasswordToken(any(), any())).thenReturn(true);
+        when(userService.getUserEmail(anyString())).thenReturn(testUser);
+        when(userService.updateForgotPasswordToken(anyString(), anyString(), anyString(), any())).thenReturn(true);
 
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +106,7 @@ class LoginRestControllerTest {
     void shouldReturnUnauthorizedWhenUserNotFound() throws Exception {
         JwtRequest request = new JwtRequest("nonexistent@example.com", null, "http://localhost");
 
-        when(userService.findByAttributes(any())).thenReturn(Collections.emptyList());
+        when(userService.getUserEmail(anyString())).thenReturn(null);
 
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,10 +115,10 @@ class LoginRestControllerTest {
     }
 
     @Test
-    void shouldReturnUnauthorizedWhenUserListIsNull() throws Exception {
+    void shouldReturnUnauthorizedWhenUserIsNull() throws Exception {
         JwtRequest request = new JwtRequest("test@example.com", null, "http://localhost");
 
-        when(userService.findByAttributes(any())).thenReturn(null);
+        when(userService.getUserEmail(anyString())).thenReturn(null);
 
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,20 +127,22 @@ class LoginRestControllerTest {
     }
 
     @Test
-    void shouldSkipDeletedUserInForgotPassword() throws Exception {
+    void shouldReturnUnauthorizedForDeletedUserInForgotPassword() throws Exception {
         JwtRequest request = new JwtRequest("deleted@example.com", null, "http://localhost");
 
         User deletedUser = new User();
         deletedUser.setUserId(2);
         deletedUser.setUserEmail("deleted@example.com");
+        deletedUser.setFirstName("Deleted");
+        deletedUser.setLastName("User");
         deletedUser.setDeleteFlag(true);
 
-        when(userService.findByAttributes(any())).thenReturn(Collections.singletonList(deletedUser));
+        when(userService.getUserEmail(anyString())).thenReturn(deletedUser);
 
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnauthorized());
     }
 
     // ========== resetPassword Tests ==========
@@ -239,12 +257,10 @@ class LoginRestControllerTest {
     void shouldHandleEmptyUsername() throws Exception {
         JwtRequest request = new JwtRequest("", null, "http://localhost");
 
-        when(userService.findByAttributes(any())).thenReturn(Collections.emptyList());
-
         mockMvc.perform(post("/public/forgotPassword")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
