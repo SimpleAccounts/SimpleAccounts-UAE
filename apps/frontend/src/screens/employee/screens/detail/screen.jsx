@@ -1,55 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { UserCircle, Trash2, CircleDot, Ban, ChevronRight, Home } from 'lucide-react';
-import DatePicker from 'react-datepicker';
-
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
+  FormGroup,
+  Input,
+  Label,
+} from 'components/migration';
+import Select from 'react-select';
+import DatePicker from 'react-datepicker';
 import { Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
+import { selectCurrencyFactory, selectStyles } from 'utils';
 import * as EmployeeActions from '../../actions';
 import * as EmployeeDetailActions from './actions';
 import 'react-datepicker/dist/react-datepicker.css';
-
-const strings = {
-  Update: 'Update',
-  Delete: 'Delete',
-  Cancel: 'Cancel',
-};
-
-// Corporate theme constants
-const theme = {
-  bg: '#f8f9fa',
-  bgWhite: '#ffffff',
-  primary: '#2064d8',
-  textPrimary: '#111827',
-  textSecondary: '#4b5563',
-  textMuted: '#9ca3af',
-  border: '#e5e7eb',
-  danger: '#ef4444',
-};
+import './style.scss';
+import { UserCircle, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const regExBoth = /[a-zA-Z0-9]+$/;
 const regExAlpha = /^[a-zA-Z ]+$/;
@@ -84,7 +60,14 @@ const detailEmployeeSchema = z
       .optional()
       .or(z.literal('')),
     vatRegestationNo: z.string().max(15, 'Tax registration number is too long').optional(),
-    currencyCode: z.string().optional(),
+    currencyCode: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .optional()
+      .or(z.string()),
     poBoxNumber: z.string().max(8, 'Contract PO number is too long').optional(),
   })
   .refine(
@@ -100,31 +83,32 @@ const detailEmployeeSchema = z
     }
   );
 
-const mapStateToProps = state => ({
-  currency_list: state.employee.currency_list,
-});
+const mapStateToProps = state => {
+  return {
+    currency_list: state.employee.currency_list,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
-  commonActions: bindActionCreators(CommonActions, dispatch),
-  employeeActions: bindActionCreators(EmployeeActions, dispatch),
-  employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch),
-});
+const mapDispatchToProps = dispatch => {
+  return {
+    commonActions: bindActionCreators(CommonActions, dispatch),
+    employeeActions: bindActionCreators(EmployeeActions, dispatch),
+    employeeDetailActions: bindActionCreators(EmployeeDetailActions, dispatch),
+  };
+};
 
 const DetailEmployee = ({
   commonActions,
   employeeActions,
   employeeDetailActions,
   currency_list,
+  history,
+  location,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [dialog, setDialog] = useState(null);
   const [currentEmployeeId, setCurrentEmployeeId] = useState(null);
-  const [disabled, setDisabled] = useState(false);
-  const [disabled1, setDisabled1] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(detailEmployeeSchema),
@@ -136,7 +120,7 @@ const DetailEmployee = ({
       email: '',
       password: '',
       confirmPassword: '',
-      dob: null,
+      dob: '',
       referenceCode: '',
       title: '',
       billingEmail: '',
@@ -147,10 +131,15 @@ const DetailEmployee = ({
     mode: 'onChange',
   });
 
-  const { reset } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = form;
 
   const initializeData = useCallback(() => {
-    if (location.state?.id) {
+    if (location.state && location.state.id) {
       employeeActions.getCurrencyList();
       employeeDetailActions
         .getEmployeeDetail(location.state.id)
@@ -165,37 +154,39 @@ const DetailEmployee = ({
               email: res.data.email || '',
               password: res.data.password || '',
               confirmPassword: '',
-              dob: res.data.dob ? new Date(res.data.dob) : null,
+              dob: res.data.dob ? new Date(res.data.dob) : '',
               referenceCode: res.data.referenceCode || '',
               title: res.data.title || '',
               billingEmail: res.data.billingEmail || '',
               vatRegestationNo: res.data.vatRegestationNo || '',
-              currencyCode: res.data.currencyCode?.toString() || '',
+              currencyCode: res.data.currencyCode || '',
               poBoxNumber: res.data.poBoxNumber || '',
             });
             setLoading(false);
           }
         })
         .catch(err => {
-          commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+          commonActions.tostifyAlert(
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
+          );
           setLoading(false);
         });
     } else {
-      navigate('/admin/master/employee');
+      history.push('/admin/master/employee');
     }
-  }, [location.state, employeeActions, employeeDetailActions, commonActions, reset, navigate]);
+  }, [location.state, employeeActions, employeeDetailActions, commonActions, reset, history]);
 
   useEffect(() => {
     initializeData();
   }, [initializeData]);
 
   const onSubmit = data => {
-    let postData = { ...data };
-    if (postData.currencyCode) {
-      postData.currencyCode = parseInt(postData.currencyCode);
+    const postData = Object.assign({}, data);
+    if (typeof postData.currencyCode === 'object') {
+      postData.currencyCode = data.currencyCode.value;
     }
 
-    setDisabled(true);
     setLoading(true);
     setLoadingMsg('Updating Employee...');
 
@@ -203,39 +194,42 @@ const DetailEmployee = ({
       .updateEmployee(postData)
       .then(res => {
         if (res.status === 200) {
-          setDisabled(false);
           commonActions.tostifyAlert(
             'success',
-            res.data?.message || 'Employee Updated Successfully'
+            res.data ? res.data.message : 'Employee Updated Successfully'
           );
-          navigate('/admin/master/employee');
+          history.push('/admin/master/employee');
           setLoading(false);
         }
       })
       .catch(err => {
-        setDisabled(false);
         commonActions.tostifyAlert(
           'error',
-          err?.data?.message || 'Employee Updated Unsuccessfully'
+          err && err.data ? err.data.message : 'Employee Updated Unsuccessfully'
         );
         setLoading(false);
       });
   };
 
   const deleteEmployee = () => {
+    const message1 = (
+      <text>
+        <b>Delete Employee?</b>
+      </text>
+    );
+    const message = 'This Employee will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
         okHandler={removeEmployee}
-        cancelHandler={() => setDialog(null)}
-        message="This Employee will be deleted permanently and cannot be recovered."
-        message1={<b>Delete Employee?</b>}
+        cancelHandler={removeDialog}
+        message={message}
+        message1={message1}
       />
     );
   };
 
   const removeEmployee = () => {
-    setDisabled1(true);
     setLoading(true);
     setLoadingMsg('Deleting Employee...');
     employeeDetailActions
@@ -244,20 +238,23 @@ const DetailEmployee = ({
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
-            res.data?.message || 'Employee Deleted Successfully !!'
+            res.data ? res.data.message : 'Employee Deleted Successfully !!'
           );
-          navigate('/admin/master/employee');
+          history.push('/admin/master/employee');
           setLoading(false);
         }
       })
       .catch(err => {
-        setDisabled1(false);
         commonActions.tostifyAlert(
           'error',
-          err?.data?.message || 'Employee Deleted Unsuccessfully'
+          err && err.data ? err.data.message : 'Employee Deleted Unsuccessfully'
         );
         setLoading(false);
       });
+  };
+
+  const removeDialog = () => {
+    setDialog(null);
   };
 
   if (loading) {
@@ -265,470 +262,457 @@ const DetailEmployee = ({
   }
 
   return (
-    <div style={{ background: theme.bg, minHeight: '100%' }}>
-      {dialog}
-
-      {/* Page Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
-              Edit Employee
-            </h1>
-            <div
-              className="flex items-center gap-2 mt-1 text-sm"
-              style={{ color: theme.textMuted }}
-            >
-              <Home className="w-4 h-4" />
-              <span
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => navigate('/admin/dashboard')}
-              >
-                Home
-              </span>
-              <ChevronRight className="w-4 h-4" />
-              <span
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => navigate('/admin/master/employee')}
-              >
-                Employees
-              </span>
-              <ChevronRight className="w-4 h-4" />
-              <span>Edit</span>
-            </div>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={deleteEmployee}
-            disabled={disabled1}
-            className="h-10 px-4"
-            style={{ borderColor: theme.danger, color: theme.danger }}
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            {disabled1 ? 'Deleting...' : strings.Delete}
-          </Button>
+    <div>
+      <div className="detail-employee-screen">
+        <div className="animated fadeIn">
+          <Row>
+            <Col lg={12} className="mx-auto">
+              <Card>
+                <CardHeader>
+                  <Row>
+                    <Col lg={12}>
+                      <div className="h4 mb-0 d-flex align-items-center">
+                        <UserCircle className="h-4 w-4" />
+                        <span className="ml-2">Update Employee</span>
+                      </div>
+                    </Col>
+                  </Row>
+                </CardHeader>
+                <CardBody>
+                  {dialog}
+                  <Row>
+                    <Col lg={12}>
+                      <Form onSubmit={handleSubmit(onSubmit)}>
+                        <h4 className="mb-4">Contact Name</h4>
+                        <Row>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="referenceCode">Reference Code</Label>
+                              <Controller
+                                name="referenceCode"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    id="referenceCode"
+                                    placeholder="Enter Reference Code"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExBoth.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.referenceCode ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.referenceCode && (
+                                <div className="invalid-feedback">
+                                  {errors.referenceCode.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="title">Title</Label>
+                              <Controller
+                                name="title"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    id="title"
+                                    placeholder="Enter Title"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExAlpha.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.title ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.title && (
+                                <div className="invalid-feedback">{errors.title.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="email">
+                                <span className="text-danger">* </span>Email
+                              </Label>
+                              <Controller
+                                name="email"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="email"
+                                    maxLength="80"
+                                    id="email"
+                                    placeholder="Enter Email Address"
+                                    {...field}
+                                    className={errors.email ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.email && (
+                                <div className="invalid-feedback">{errors.email.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row className="row-wrapper">
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="firstName">
+                                <span className="text-danger">* </span>First Name
+                              </Label>
+                              <Controller
+                                name="firstName"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="100"
+                                    id="firstName"
+                                    placeholder="Enter First Name"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExAlpha.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.firstName ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.firstName && (
+                                <div className="invalid-feedback">{errors.firstName.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="middleName">
+                                <span className="text-danger">* </span>Middle Name
+                              </Label>
+                              <Controller
+                                name="middleName"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="100"
+                                    id="middleName"
+                                    placeholder="Enter Middle Name"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExAlpha.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.middleName ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.middleName && (
+                                <div className="invalid-feedback">{errors.middleName.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="lastName">
+                                <span className="text-danger">* </span>Last Name
+                              </Label>
+                              <Controller
+                                name="lastName"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="100"
+                                    id="lastName"
+                                    placeholder="Enter Last Name"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExAlpha.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.lastName ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.lastName && (
+                                <div className="invalid-feedback">{errors.lastName.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row className="row-wrapper">
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="password">Password</Label>
+                              <Controller
+                                name="password"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="password"
+                                    id="password"
+                                    placeholder="Enter Password"
+                                    {...field}
+                                    className={errors.password ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.password ? (
+                                <div className="invalid-feedback">{errors.password.message}</div>
+                              ) : (
+                                <span className="password-msg">
+                                  Must Contain 8 Characters, One Uppercase, One Lowercase, One
+                                  Number and one special case Character.
+                                </span>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="confirmPassword">Confirm Password</Label>
+                              <Controller
+                                name="confirmPassword"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="password"
+                                    id="confirmPassword"
+                                    placeholder="Enter Confirm Password"
+                                    {...field}
+                                    className={errors.confirmPassword ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.confirmPassword && (
+                                <div className="invalid-feedback">
+                                  {errors.confirmPassword.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="dob">Date Of Birth</Label>
+                              <Controller
+                                name="dob"
+                                control={control}
+                                render={({ field }) => (
+                                  <DatePicker
+                                    className={`form-control ${errors.dob ? 'is-invalid' : ''}`}
+                                    id="dob"
+                                    showMonthDropdown
+                                    showYearDropdown
+                                    dateFormat="dd-MM-yyyy"
+                                    dropdownMode="select"
+                                    placeholderText="Select Date of Birth"
+                                    selected={field.value}
+                                    maxDate={new Date()}
+                                    onChange={date => field.onChange(date)}
+                                  />
+                                )}
+                              />
+                              {errors.dob && (
+                                <div className="invalid-feedback d-block">{errors.dob.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <hr />
+                        <h4 className="mb-3 mt-3">Invoicing Details</h4>
+                        <Row className="row-wrapper">
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="billingEmail">Billing Email</Label>
+                              <Controller
+                                name="billingEmail"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="80"
+                                    id="billingEmail"
+                                    placeholder="Enter Billing Email Address"
+                                    {...field}
+                                    className={errors.billingEmail ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.billingEmail && (
+                                <div className="invalid-feedback">
+                                  {errors.billingEmail.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="poBoxNumber">Contract PO Number</Label>
+                              <Controller
+                                name="poBoxNumber"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="8"
+                                    id="poBoxNumber"
+                                    placeholder="Enter Contract PO Number"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExBoth.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.poBoxNumber ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.poBoxNumber && (
+                                <div className="invalid-feedback">{errors.poBoxNumber.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row className="row-wrapper">
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="vatRegestationNo">Tax Registration Number</Label>
+                              <Controller
+                                name="vatRegestationNo"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    type="text"
+                                    maxLength="15"
+                                    id="vatRegestationNo"
+                                    placeholder="Enter Tax Registration Number"
+                                    {...field}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (value === '' || regExBoth.test(value)) {
+                                        field.onChange(e);
+                                      }
+                                    }}
+                                    className={errors.vatRegestationNo ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.vatRegestationNo && (
+                                <div className="invalid-feedback">
+                                  {errors.vatRegestationNo.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Label htmlFor="currencyCode">Currency Code</Label>
+                              <Controller
+                                name="currencyCode"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    {...field}
+                                    options={
+                                      currency_list
+                                        ? selectCurrencyFactory.renderOptions(
+                                            'currencyName',
+                                            'currencyCode',
+                                            currency_list,
+                                            'Currency'
+                                          )
+                                        : []
+                                    }
+                                    value={
+                                      currency_list && typeof field.value === 'string'
+                                        ? selectCurrencyFactory
+                                            .renderOptions(
+                                              'currencyName',
+                                              'currencyCode',
+                                              currency_list,
+                                              'Currency'
+                                            )
+                                            .find(option => option.value === +field.value)
+                                        : field.value
+                                    }
+                                    onChange={option => {
+                                      field.onChange(option);
+                                    }}
+                                    placeholder="Select Currency"
+                                    id="currencyCode"
+                                    styles={selectStyles}
+                                    className={errors.currencyCode ? 'is-invalid' : ''}
+                                    isClearable
+                                  />
+                                )}
+                              />
+                              {errors.currencyCode && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.currencyCode.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col
+                            lg={12}
+                            className="d-flex align-items-center justify-content-between flex-wrap mt-5"
+                          >
+                            <FormGroup>
+                              <Button
+                                type="button"
+                                color="danger"
+                                className="btn-square"
+                                onClick={deleteEmployee}
+                              >
+                                <Trash2 className="h-4 w-4" /> Delete
+                              </Button>
+                            </FormGroup>
+                            <FormGroup className="text-right">
+                              <Button type="submit" color="primary" className="btn-square mr-3">
+                                <CircleDot className="h-4 w-4" /> Update
+                              </Button>
+                              <Button
+                                type="button"
+                                color="secondary"
+                                className="btn-square"
+                                onClick={() => {
+                                  history.push('/admin/master/employee');
+                                }}
+                              >
+                                <Ban className="h-4 w-4" /> Cancel
+                              </Button>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
-
-      {/* Form Card */}
-      <Card
-        className="rounded-xl"
-        style={{
-          background: theme.bgWhite,
-          border: `1px solid ${theme.border}`,
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <CardHeader className="border-b" style={{ borderColor: theme.border }}>
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ background: '#dbeafe' }}
-            >
-              <UserCircle className="w-5 h-5" style={{ color: theme.primary }} />
-            </div>
-            <CardTitle className="text-lg font-semibold" style={{ color: theme.textPrimary }}>
-              Update Employee
-            </CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Contact Name Section */}
-              <div>
-                <h4 className="text-md font-semibold mb-4" style={{ color: theme.textPrimary }}>
-                  Contact Name
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Reference Code */}
-                  <FormField
-                    control={form.control}
-                    name="referenceCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Reference Code</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Reference Code"
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Title */}
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Title</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Title"
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExAlpha.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Email */}
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          <span className="text-red-500">*</span> Email
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="Enter Email Address"
-                            maxLength={80}
-                            {...field}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  {/* First Name */}
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          <span className="text-red-500">*</span> First Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter First Name"
-                            maxLength={100}
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExAlpha.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Middle Name */}
-                  <FormField
-                    control={form.control}
-                    name="middleName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          <span className="text-red-500">*</span> Middle Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Middle Name"
-                            maxLength={100}
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExAlpha.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Last Name */}
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          <span className="text-red-500">*</span> Last Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Last Name"
-                            maxLength={100}
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExAlpha.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  {/* Password */}
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter Password"
-                            {...field}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        {!form.formState.errors.password && (
-                          <p className="text-xs mt-1" style={{ color: theme.textMuted }}>
-                            Must contain 8 characters, one uppercase, one lowercase, one number and
-                            one special character.
-                          </p>
-                        )}
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Confirm Password */}
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Confirm Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter Confirm Password"
-                            {...field}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Date of Birth */}
-                  <FormField
-                    control={form.control}
-                    name="dob"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Date Of Birth</FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            className="flex h-11 w-full rounded-md border px-3 py-2 text-sm"
-                            style={{ borderColor: theme.border }}
-                            placeholderText="Select Date of Birth"
-                            showMonthDropdown
-                            showYearDropdown
-                            dateFormat="dd-MM-yyyy"
-                            dropdownMode="select"
-                            selected={field.value}
-                            maxDate={new Date()}
-                            onChange={date => field.onChange(date)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              {/* Divider */}
-              <hr style={{ borderColor: theme.border }} />
-
-              {/* Invoicing Details Section */}
-              <div>
-                <h4 className="text-md font-semibold mb-4" style={{ color: theme.textPrimary }}>
-                  Invoicing Details
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Billing Email */}
-                  <FormField
-                    control={form.control}
-                    name="billingEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Billing Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="Enter Billing Email Address"
-                            maxLength={80}
-                            {...field}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Contract PO Number */}
-                  <FormField
-                    control={form.control}
-                    name="poBoxNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          Contract PO Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Contract PO Number"
-                            maxLength={8}
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  {/* Tax Registration Number */}
-                  <FormField
-                    control={form.control}
-                    name="vatRegestationNo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>
-                          Tax Registration Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter Tax Registration Number"
-                            maxLength={15}
-                            value={field.value}
-                            onChange={e => {
-                              if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                field.onChange(e.target.value);
-                              }
-                            }}
-                            className="h-11"
-                            style={{ borderColor: theme.border }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Currency Code */}
-                  <FormField
-                    control={form.control}
-                    name="currencyCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel style={{ color: theme.textPrimary }}>Currency Code</FormLabel>
-                        <Select value={field.value} onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger className="h-11" style={{ borderColor: theme.border }}>
-                              <SelectValue placeholder="Select Currency" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {currency_list?.map(currency => (
-                              <SelectItem
-                                key={currency.currencyCode}
-                                value={currency.currencyCode.toString()}
-                              >
-                                {currency.currencyName}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div
-                className="flex items-center justify-end gap-3 pt-4 border-t"
-                style={{ borderColor: theme.border }}
-              >
-                <Button
-                  type="submit"
-                  disabled={disabled}
-                  className="h-10 px-4"
-                  style={{ background: theme.primary }}
-                >
-                  <CircleDot className="w-4 h-4 mr-2" />
-                  {disabled ? 'Updating...' : strings.Update}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate('/admin/master/employee')}
-                  className="h-10 px-4"
-                  style={{ borderColor: theme.border, color: theme.textSecondary }}
-                >
-                  <Ban className="w-4 h-4 mr-2" />
-                  {strings.Cancel}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
     </div>
   );
 };

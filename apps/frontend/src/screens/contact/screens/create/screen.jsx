@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -61,88 +62,44 @@ const mapDispatchToProps = dispatch => {
 const strings = new LocalizedStrings(data);
 
 // Zod validation schema
-const createContactSchema = z
-  .object({
-    firstName: z.string().min(1, 'First Name is required'),
-    lastName: z.string().min(1, 'Last Name is required'),
-    middleName: z.string().optional(),
-    currencyCode: z.string().min(1, 'Currency is required'),
-    contactType: z.string().min(1, 'Contact type is required'),
-    taxTreatmentId: z.string().min(1, 'Tax Treatment is required'),
-    email: z.string().min(1, 'Email is required').email('Invalid Email'),
-    organization: z.string().optional(),
+const createContactSchema = z.object({
+  firstName: z.string().min(1, 'First Name is required'),
+  lastName: z.string().min(1, 'Last Name is required'),
+  middleName: z.string().optional(),
+  currencyCode: z.string().min(1, 'Currency is required'),
+  contactType: z.string().min(1, 'Contact type is required'),
+  taxTreatmentId: z.string().min(1, 'Tax Treatment is required'),
+  email: z.string().min(1, 'Email is required').email('Invalid Email'),
+  organization: z.string().optional(),
+  telephone: z.string().optional(),
+  mobileNumber: z.string().optional(),
+  website: z.string().optional(),
+  vatRegistrationNumber: z.string().optional(),
+  billingAddress: z.object({
+    email: z.string().optional(),
+    city: z.string().optional(),
+    countryId: z.union([z.string(), z.number()]).optional(),
+    address: z.string().optional(),
+    postZipCode: z.string().optional(),
+    stateId: z.union([z.string(), z.number()]).optional(),
     telephone: z.string().optional(),
-    mobileNumber: z.string().optional(),
-    website: z.string().optional(),
-    vatRegistrationNumber: z.string().optional(),
-    isBillingAndShippingAddressSame: z.boolean().default(false),
-    billingAddress: z.object({
-      email: z.string().optional(),
-      city: z.string().optional(),
-      countryId: z
-        .union([z.string(), z.number()])
-        .refine(val => val !== '' && val !== null && val !== undefined, {
-          message: 'Country is required',
-        }),
-      address: z.string().min(1, 'Address is required'),
-      postZipCode: z.string().min(1, 'PO Box / Zip Code is required'),
-      stateId: z
-        .union([z.string(), z.number()])
-        .refine(val => val !== '' && val !== null && val !== undefined, {
-          message: 'State/Emirate is required',
-        }),
-      telephone: z.string().optional(),
-      fax: z.string().optional(),
-    }),
-    shippingAddress: z.object({
-      city: z.string().optional(),
-      countryId: z.union([z.string(), z.number()]).optional().nullable(),
-      address: z.string().optional(),
-      postZipCode: z.string().optional(),
-      stateId: z.union([z.string(), z.number()]).optional().nullable(),
-      telephone: z.string().optional(),
-      fax: z.string().optional(),
-    }),
-  })
-  .superRefine((data, ctx) => {
-    // Only validate shipping address if it's NOT same as billing
-    if (!data.isBillingAndShippingAddressSame) {
-      if (!data.shippingAddress.address || data.shippingAddress.address.trim() === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Address is required',
-          path: ['shippingAddress', 'address'],
-        });
-      }
-      if (!data.shippingAddress.countryId) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Country is required',
-          path: ['shippingAddress', 'countryId'],
-        });
-      }
-      if (!data.shippingAddress.stateId) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'State/Emirate is required',
-          path: ['shippingAddress', 'stateId'],
-        });
-      }
-      if (!data.shippingAddress.postZipCode || data.shippingAddress.postZipCode.trim() === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'PO Box / Zip Code is required',
-          path: ['shippingAddress', 'postZipCode'],
-        });
-      }
-    }
-  });
+    fax: z.string().optional(),
+  }),
+  shippingAddress: z.object({
+    city: z.string().optional(),
+    countryId: z.union([z.string(), z.number()]).optional(),
+    address: z.string().optional(),
+    postZipCode: z.string().optional(),
+    stateId: z.union([z.string(), z.number()]).optional(),
+    telephone: z.string().optional(),
+    fax: z.string().optional(),
+  }),
+});
 
 const CreateContact = ({
   contactActions,
   createContactActions,
   commonActions,
-  history,
   contactType,
   country_list,
   currency_list_dropdown,
@@ -153,6 +110,7 @@ const CreateContact = ({
   closeModal,
   confirmCancel,
 }) => {
+  const navigate = useNavigate();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
@@ -167,7 +125,7 @@ const CreateContact = ({
   const [taxTreatmentList, setTaxTreatmentList] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [disableCountry, setDisableCountry] = useState(false);
-  const [isRegisteredVat, setIsRegisteredVat] = useState(false);
+  const [_isRegisteredVat, setIsRegisteredVat] = useState(false);
   const [trnExist, setTrnExist] = useState(false);
   const [emailExist, setEmailExist] = useState(false);
 
@@ -190,7 +148,6 @@ const CreateContact = ({
         telephone: '',
         fax: '',
       },
-      isBillingAndShippingAddressSame: false,
       contactType: contactType ? String(contactType.value || contactType) : '',
       currencyCode: '',
       email: '',
@@ -210,12 +167,11 @@ const CreateContact = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, touchedFields },
+    formState: { errors },
     reset,
     setValue,
     watch,
     setError,
-    clearErrors,
     trigger,
   } = form;
 
@@ -239,20 +195,8 @@ const CreateContact = ({
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || err?.message || 'ERROR');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Initialize countryList when Redux country_list is populated
-  useEffect(() => {
-    if (country_list && country_list.length > 0 && countryList.length === 0) {
-      const list = selectOptionsFactory.renderOptions(
-        'countryName',
-        'countryCode',
-        country_list,
-        'Country'
-      );
-      setCountryList(list);
-    }
-  }, [country_list]);
 
   const initializeData = () => {
     commonActions.getCurrencyConversionList();
@@ -409,8 +353,9 @@ const CreateContact = ({
     console.log('✅ [CONTACT_CREATE] Email check passed');
 
     console.log('✅ [CONTACT_CREATE] Check 5: Shipping address validation');
-    console.log('📦 [CONTACT_CREATE] isSame (shipping same as billing):', isSame);
-    // Only validate shipping address if it's NOT same as billing address
+    console.log('📦 [CONTACT_CREATE] Is billing and shipping address same:', isSame);
+
+    // Only validate shipping address if billing and shipping addresses are different
     if (!isSame) {
       console.log(
         '📦 [CONTACT_CREATE] Shipping address data:',
@@ -429,8 +374,10 @@ const CreateContact = ({
         setError('shippingAddress', { type: 'manual', message: 'Invalid shipping address' });
         return;
       }
+      console.log('✅ [CONTACT_CREATE] Shipping address validation passed');
+    } else {
+      console.log('✅ [CONTACT_CREATE] Shipping address validation skipped (same as billing)');
     }
-    console.log('✅ [CONTACT_CREATE] Shipping address validation passed');
 
     console.log('✅ [CONTACT_CREATE] Check 6: Billing address validation');
     console.log(
@@ -502,7 +449,7 @@ const CreateContact = ({
               getCurrentContactData(res.data);
               closeModal(true);
             } else {
-              history.push('/admin/master/contact');
+              navigate('/admin/master/contact');
             }
             setLoading(false);
           }
@@ -558,7 +505,6 @@ const CreateContact = ({
       setValue('shippingAddress.stateId', '');
       setValue('billingAddress.stateId', '');
       setIsSame(false);
-      setValue('isBillingAndShippingAddressSame', false);
     } else {
       list = country_list;
       const country = country_list.find(option => option.countryCode === 229);
@@ -569,7 +515,6 @@ const CreateContact = ({
       setValue('shippingAddress.stateId', '');
       setValue('billingAddress.stateId', '');
       setIsSame(false);
-      setValue('isBillingAndShippingAddressSame', false);
     }
     list = list
       ? selectOptionsFactory.renderOptions('countryName', 'countryCode', list, 'Country')
@@ -1296,7 +1241,6 @@ const CreateContact = ({
                               }
                             }
                             setIsSame(checkedValue);
-                            setValue('isBillingAndShippingAddressSame', checkedValue);
                           }}
                         />
                         <label
@@ -1364,7 +1308,6 @@ const CreateContact = ({
                         });
                         setCreateMore(true);
                         setIsSame(false);
-                        setValue('isBillingAndShippingAddressSame', false);
                         handleSubmit(onSubmit)();
                       }}
                       className="rounded-lg"
@@ -1384,7 +1327,7 @@ const CreateContact = ({
                       if (isParentComponentPresent && isParentComponentPresent === true) {
                         confirmCancel(true);
                       } else {
-                        history.push('/admin/master/contact');
+                        navigate('/admin/master/contact');
                       }
                     }}
                     style={{

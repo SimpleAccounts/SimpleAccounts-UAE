@@ -4,7 +4,7 @@ const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 90 * 1000, // 90 seconds to accommodate tests creating multiple contacts
+  timeout: 30 * 1000,
   expect: {
     timeout: 10 * 1000,
   },

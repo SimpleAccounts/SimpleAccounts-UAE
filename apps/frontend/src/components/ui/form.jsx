@@ -122,7 +122,7 @@ export const FormMessage = ({ className, children, ...props }) => {
   // If children provided, use them (for custom messages)
   if (children) {
     return (
-      <p className={cn('text-sm font-medium text-red-500', className)} {...props}>
+      <p className={cn('text-sm font-medium text-destructive', className)} {...props}>
         {children}
       </p>
     );

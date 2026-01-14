@@ -1,69 +1,74 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
-import { Boxes, HelpCircle, CircleDot, RefreshCw, Ban, ChevronRight, Home } from 'lucide-react';
-
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Input,
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-
+  FormGroup,
+  Label,
+  Row,
+  Col,
+  UncontrolledTooltip,
+} from 'components/migration';
 import { LeavePage, Loader } from 'components';
 import { CommonActions } from 'services/global';
-import * as CreateProductCategoryActions from './actions';
-import * as ProductCategoryActions from '../../actions';
-
+import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import * as CreateProductCategoryActions from './actions';
+import * as ProductCategoryActions from '../../actions';
+import { Package, HelpCircle, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
-strings.setLanguage(localStorage.getItem('language') || 'en');
 
-// Corporate theme constants
-const theme = {
-  bg: '#f8f9fa',
-  bgWhite: '#ffffff',
-  primary: '#2064d8',
-  textPrimary: '#111827',
-  textSecondary: '#4b5563',
-  textMuted: '#9ca3af',
-  border: '#e5e7eb',
-  danger: '#ef4444',
-};
+if (localStorage.getItem('language') == null) {
+  strings.setLanguage('en');
+} else {
+  strings.setLanguage(localStorage.getItem('language'));
+}
 
 // Zod validation schema
-const createProductCategorySchema = z.object({
-  productCategoryCode: z
-    .string()
-    .min(1, strings.ProductCategoryCodeRequired || 'Product Category Code is required')
-    .max(20, 'Code is too long'),
-  productCategoryName: z
-    .string()
-    .min(1, strings.ProductCategoryNameRequired || 'Product Category Name is required')
-    .max(50, 'Name is too long'),
-});
+const createProductCategorySchema = z
+  .object({
+    productCategoryCode: z
+      .string()
+      .min(1, strings.ProductCategoryCodeRequired || 'Product Category Code is required')
+      .max(20, 'Code is too long'),
+    productCategoryName: z
+      .string()
+      .min(1, strings.ProductCategoryNameRequired || 'Product Category Name is required')
+      .max(50, 'Name is too long'),
+  })
+  .refine(
+    data => {
+      return true; // Custom validation for duplicate code will be handled separately
+    },
+    {
+      message: 'Product category code already exists',
+      path: ['productCategoryCode'],
+    }
+  );
 
-const mapStateToProps = state => ({
-  product_category_list: state.product_category.product_category_list,
-});
+const mapStateToProps = state => {
+  return {
+    product_category_list: state.product_category.product_category_list,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
-  commonActions: bindActionCreators(CommonActions, dispatch),
-  createProductCategoryActions: bindActionCreators(CreateProductCategoryActions, dispatch),
-  productCategoryActions: bindActionCreators(ProductCategoryActions, dispatch),
-});
+const mapDispatchToProps = dispatch => {
+  return {
+    commonActions: bindActionCreators(CommonActions, dispatch),
+    createProductCategoryActions: bindActionCreators(CreateProductCategoryActions, dispatch),
+    productCategoryActions: bindActionCreators(ProductCategoryActions, dispatch),
+  };
+};
 
 const regExBoth = /^[a-zA-Z0-9\s,'\-/()]+$/;
 
@@ -71,8 +76,8 @@ const CreateProductCategory = ({
   commonActions,
   createProductCategoryActions,
   productCategoryActions,
+  history,
 }) => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading');
   const [createMore, setCreateMore] = useState(false);
@@ -89,7 +94,14 @@ const CreateProductCategory = ({
     mode: 'onChange',
   });
 
-  const { setError, clearErrors } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setError,
+    clearErrors,
+  } = form;
 
   useEffect(() => {
     productCategoryActions.getProductCategoryList().then(res => {
@@ -101,6 +113,7 @@ const CreateProductCategory = ({
   }, [productCategoryActions]);
 
   const onSubmit = data => {
+    // Check for duplicate code
     if (productCategoryList.includes(data.productCategoryCode)) {
       setError('productCategoryCode', {
         type: 'manual',
@@ -122,11 +135,12 @@ const CreateProductCategory = ({
           setLoading(false);
           commonActions.tostifyAlert(
             'success',
-            res.data?.message || 'Product Category Created Successfully'
+            res.data ? res.data.message : 'Product Category Created Successfully'
           );
 
           if (createMore) {
-            form.reset();
+            reset();
+            // Refresh the category list
             productCategoryActions.getProductCategoryList().then(res => {
               if (res.status === 200) {
                 const categoryList = res.data.data.map(item => item.productCategoryCode);
@@ -136,7 +150,8 @@ const CreateProductCategory = ({
             setCreateMore(false);
             setDisableLeavePage(false);
           } else {
-            navigate('/admin/master/product-category');
+            history.push('/admin/master/product-category');
+            setLoading(false);
           }
         }
       })
@@ -145,26 +160,29 @@ const CreateProductCategory = ({
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err?.data?.message || 'Product Category Created Unsuccessfully'
+          err && err.data ? err.data.message : 'Product Category Created Unsuccessfully'
         );
       });
   };
 
-  const handleCodeChange = (value, onChange) => {
+  const handleCodeChange = (e, onChange) => {
+    const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
-      onChange(value);
+      onChange(e);
+      // Clear error if it exists
       if (
-        form.formState.errors.productCategoryCode?.message ===
-        'Product category code already exists'
+        errors.productCategoryCode &&
+        errors.productCategoryCode.message === 'Product category code already exists'
       ) {
         clearErrors('productCategoryCode');
       }
     }
   };
 
-  const handleNameChange = (value, onChange) => {
+  const handleNameChange = (e, onChange) => {
+    const value = e.target.value;
     if (value === '' || regExBoth.test(value)) {
-      onChange(value);
+      onChange(e);
     }
   };
 
@@ -173,167 +191,133 @@ const CreateProductCategory = ({
   }
 
   return (
-    <div style={{ background: theme.bg, minHeight: '100%' }}>
-      {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
-          Add Product Category
-        </h1>
-        <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: theme.textMuted }}>
-          <Home className="w-4 h-4" />
-          <span
-            className="cursor-pointer hover:text-blue-600"
-            onClick={() => navigate('/admin/dashboard')}
-          >
-            Home
-          </span>
-          <ChevronRight className="w-4 h-4" />
-          <span
-            className="cursor-pointer hover:text-blue-600"
-            onClick={() => navigate('/admin/master/product-category')}
-          >
-            Product Category
-          </span>
-          <ChevronRight className="w-4 h-4" />
-          <span>Add Product Category</span>
+    <div>
+      <div className="vat-code-create-screen">
+        <div className="animated fadeIn">
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <CardHeader>
+                  <div className="h4 mb-0 d-flex align-items-center">
+                    <Package className="h-4 w-4" />
+                    <span className="ml-2">{strings.NewProductCategory}</span>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col lg={6}>
+                      <Form onSubmit={handleSubmit(onSubmit)} name="simpleForm">
+                        <FormGroup>
+                          <Label htmlFor="productCategoryCode">
+                            <span className="text-danger">* </span>
+                            {strings.ProductCategoryCode}
+                            <HelpCircle
+                              id="ProductcatcodeTooltip"
+                              className="h-4 w-4 ml-1 inline"
+                            />
+                            <UncontrolledTooltip placement="right" target="ProductcatcodeTooltip">
+                              Product Category Code - Unique identifier code of the product
+                            </UncontrolledTooltip>
+                          </Label>
+                          <Controller
+                            name="productCategoryCode"
+                            control={control}
+                            render={({ field }) => (
+                              <Input
+                                type="text"
+                                maxLength="20"
+                                id="productCategoryCode"
+                                placeholder={strings.Enter + strings.ProductCategoryCode}
+                                {...field}
+                                onChange={e => handleCodeChange(e, field.onChange)}
+                                className={errors.productCategoryCode ? 'is-invalid' : ''}
+                              />
+                            )}
+                          />
+                          {errors.productCategoryCode && (
+                            <div className="invalid-feedback">
+                              {errors.productCategoryCode.message}
+                            </div>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label htmlFor="productCategoryName">
+                            <span className="text-danger">* </span>
+                            {strings.ProductCategoryName}
+                          </Label>
+                          <Controller
+                            name="productCategoryName"
+                            control={control}
+                            render={({ field }) => (
+                              <Input
+                                type="text"
+                                maxLength="50"
+                                id="productCategoryName"
+                                placeholder={strings.Enter + strings.ProductCategoryName}
+                                {...field}
+                                onChange={e => handleNameChange(e, field.onChange)}
+                                className={errors.productCategoryName ? 'is-invalid' : ''}
+                              />
+                            )}
+                          />
+                          {errors.productCategoryName && (
+                            <div className="invalid-feedback">
+                              {errors.productCategoryName.message}
+                            </div>
+                          )}
+                        </FormGroup>
+                        Note: If the product category is associated with the product, it cannot be
+                        deleted.
+                        <FormGroup className="text-right mt-5">
+                          <Button
+                            type="submit"
+                            name="submit"
+                            color="primary"
+                            className="btn-square mr-3"
+                            disabled={disabled}
+                            onClick={() => {
+                              setCreateMore(false);
+                            }}
+                          >
+                            <CircleDot className="h-4 w-4" />{' '}
+                            {disabled ? 'Creating...' : strings.Create}
+                          </Button>
+
+                          <Button
+                            type="submit"
+                            name="button"
+                            color="primary"
+                            className="btn-square mr-3"
+                            disabled={disabled}
+                            onClick={() => {
+                              setCreateMore(true);
+                            }}
+                          >
+                            <RefreshCw className="h-4 w-4" />{' '}
+                            {disabled ? 'Creating...' : strings.CreateandMore}
+                          </Button>
+
+                          <Button
+                            type="button"
+                            color="secondary"
+                            className="btn-square"
+                            onClick={() => {
+                              history.push('/admin/master/product-category');
+                            }}
+                          >
+                            <Ban className="h-4 w-4" />
+                            {strings.Cancel}
+                          </Button>
+                        </FormGroup>
+                      </Form>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
-
-      {/* Form Card */}
-      <Card
-        className="rounded-xl"
-        style={{
-          background: theme.bgWhite,
-          border: `1px solid ${theme.border}`,
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <CardHeader className="border-b" style={{ borderColor: theme.border }}>
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ background: '#eff6ff' }}
-            >
-              <Boxes className="w-5 h-5" style={{ color: theme.primary }} />
-            </div>
-            <CardTitle className="text-lg font-semibold" style={{ color: theme.textPrimary }}>
-              {strings.NewProductCategory || 'New Product Category'}
-            </CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
-              {/* Product Category Code */}
-              <FormField
-                control={form.control}
-                name="productCategoryCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="flex items-center gap-1"
-                      style={{ color: theme.textPrimary }}
-                    >
-                      <span className="text-red-500">*</span>
-                      {strings.ProductCategoryCode || 'Product Category Code'}
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <HelpCircle
-                              className="w-4 h-4 cursor-help"
-                              style={{ color: theme.textMuted }}
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Unique identifier code for the product category</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={`${strings.Enter || 'Enter'} ${strings.ProductCategoryCode || 'Product Category Code'}`}
-                        maxLength={20}
-                        value={field.value}
-                        onChange={e => handleCodeChange(e.target.value, field.onChange)}
-                        className="h-11"
-                        style={{ borderColor: theme.border }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Product Category Name */}
-              <FormField
-                control={form.control}
-                name="productCategoryName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel style={{ color: theme.textPrimary }}>
-                      <span className="text-red-500">*</span>
-                      {strings.ProductCategoryName || 'Product Category Name'}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={`${strings.Enter || 'Enter'} ${strings.ProductCategoryName || 'Product Category Name'}`}
-                        maxLength={50}
-                        value={field.value}
-                        onChange={e => handleNameChange(e.target.value, field.onChange)}
-                        className="h-11"
-                        style={{ borderColor: theme.border }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <p className="text-sm" style={{ color: theme.textMuted }}>
-                Note: If the product category is associated with the product, it cannot be deleted.
-              </p>
-
-              {/* Action Buttons */}
-              <div
-                className="flex items-center justify-end gap-3 pt-4 border-t"
-                style={{ borderColor: theme.border }}
-              >
-                <Button
-                  type="submit"
-                  disabled={disabled}
-                  onClick={() => setCreateMore(false)}
-                  className="h-10 px-4"
-                  style={{ background: theme.primary }}
-                >
-                  <CircleDot className="w-4 h-4 mr-2" />
-                  {disabled ? 'Creating...' : strings.Create || 'Create'}
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={disabled}
-                  onClick={() => setCreateMore(true)}
-                  className="h-10 px-4"
-                  style={{ background: theme.primary }}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  {disabled ? 'Creating...' : strings.CreateandMore || 'Create and More'}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate('/admin/master/product-category')}
-                  className="h-10 px-4"
-                  style={{ borderColor: theme.border, color: theme.textSecondary }}
-                >
-                  <Ban className="w-4 h-4 mr-2" />
-                  {strings.Cancel || 'Cancel'}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
       {!disableLeavePage && <LeavePage />}
     </div>
   );

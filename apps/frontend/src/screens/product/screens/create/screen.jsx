@@ -1,32 +1,23 @@
 import { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Row,
+  Col,
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Textarea } from '@/components/ui/textarea';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { cn } from '@/lib/utils';
+  FormGroup,
+  Input,
+  Label,
+  UncontrolledTooltip,
+} from 'components/migration';
+import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import './style.scss';
 import { data } from '../../../Language/index';
@@ -46,6 +37,7 @@ import {
   getTransactionCategoryListForInventory,
 } from '../../productSlice';
 import { WareHouseModal } from '../../sections';
+import { selectOptionsFactory, selectStyles } from 'utils';
 import config from '../../../../constants/config';
 import { Ban, CircleDot, HelpCircle, Package, RefreshCw } from 'lucide-react';
 
@@ -69,41 +61,86 @@ const mapDispatchToProps = dispatch => {
 
 const strings = new LocalizedStrings(data);
 
-// Corporate theme constants
-const theme = {
-  bg: '#f8f9fa',
-  bgWhite: '#ffffff',
-  primary: '#2064d8',
-  textPrimary: '#111827',
-  textSecondary: '#4b5563',
-  border: '#e5e7eb',
-};
-
 // Zod validation schema
 const createProductSchema = z
   .object({
     productName: z.string().min(1, 'Product name is required'),
     productCode: z.string().min(1, 'Product code is required'),
     productDescription: z.string().optional(),
-    vatCategoryId: z.string().min(1, 'VAT type is required'),
-    unitTypeId: z.string().optional(),
-    productCategoryId: z.string().optional(),
+    vatCategoryId: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .refine(val => val !== null, 'VAT type is required'),
+    unitTypeId: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .optional(),
+    productCategoryId: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .optional(),
+    productWarehouseId: z.string().optional(),
     vatIncluded: z.boolean().optional(),
     productType: z.enum(['GOODS', 'SERVICE']),
     salesUnitPrice: z.string().optional(),
     purchaseUnitPrice: z.string().optional(),
     productPriceType: z.array(z.string()).min(1, 'At least one selling type is required'),
-    salesTransactionCategoryId: z.string().optional(),
-    purchaseTransactionCategoryId: z.string().optional(),
+    salesTransactionCategoryId: z
+      .union([
+        z.object({
+          value: z.number(),
+          label: z.string(),
+        }),
+        z.string(),
+      ])
+      .optional(),
+    purchaseTransactionCategoryId: z
+      .union([
+        z.object({
+          value: z.number(),
+          label: z.string(),
+        }),
+        z.string(),
+      ])
+      .optional(),
     inventoryPurchasePrice: z.string().optional(),
     inventoryQty: z.string().optional(),
     inventoryReorderLevel: z.string().optional(),
-    contactId: z.string().optional(),
+    contactId: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .optional(),
     salesDescription: z.string().optional(),
     purchaseDescription: z.string().optional(),
     isInventoryEnabled: z.boolean().optional(),
-    transactionCategoryId: z.string().optional(),
-    exciseTaxId: z.string().optional(),
+    transactionCategoryId: z
+      .object({
+        value: z.number(),
+        label: z.string(),
+      })
+      .nullable()
+      .optional(),
+    exciseTaxId: z
+      .union([
+        z.object({
+          value: z.number(),
+          label: z.string(),
+        }),
+        z.string(),
+      ])
+      .optional(),
   })
   .refine(
     data => {
@@ -125,7 +162,7 @@ const createProductSchema = z
       return true;
     },
     {
-      message: 'Sales account is required',
+      message: 'Selling category is required',
       path: ['salesTransactionCategoryId'],
     }
   )
@@ -151,7 +188,7 @@ const createProductSchema = z
       return true;
     },
     {
-      message: 'Purchase account is required',
+      message: 'Purchase category is required',
       path: ['purchaseTransactionCategoryId'],
     }
   );
@@ -203,24 +240,28 @@ const CreateProduct = ({
       productName: '',
       productDescription: '',
       productCode: '',
-      vatCategoryId: '',
-      unitTypeId: '',
-      productCategoryId: '',
+      vatCategoryId: null,
+      unitTypeId: null,
+      productCategoryId: null,
+      productWarehouseId: '',
       vatIncluded: false,
       productType: 'GOODS',
       salesUnitPrice: '',
       purchaseUnitPrice: '',
       productPriceType: [expense === true ? 'PURCHASE' : 'SALES'],
-      salesTransactionCategoryId: '84',
-      purchaseTransactionCategoryId: '49',
+      salesTransactionCategoryId: { value: 84, label: 'Sales' },
+      purchaseTransactionCategoryId: {
+        value: 49,
+        label: 'Cost of Goods Sold',
+      },
       inventoryPurchasePrice: '',
       inventoryQty: '',
       inventoryReorderLevel: '',
-      contactId: '',
+      contactId: null,
       salesDescription: '',
       purchaseDescription: '',
       isInventoryEnabled: false,
-      transactionCategoryId: '150',
+      transactionCategoryId: { value: 150, label: 'Inventory Asset' },
       exciseTaxId: '',
     },
     mode: 'onChange',
@@ -254,12 +295,13 @@ const CreateProduct = ({
   }, []);
 
   const getcompanyDetails = () => {
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
     getCompanyDetailsApi()
       .then(res => {
         if (res.status === 200) {
           setCompanyDetails(res.data);
           if (res.data && res.data.isRegisteredVat === false) {
-            setValue('vatCategoryId', '10');
+            setValue('vatCategoryId', { label: 'N/A', value: 10 });
           }
         }
       })
@@ -272,9 +314,12 @@ const CreateProduct = ({
   };
 
   const initializeData = () => {
+    // Dispatch async thunks directly using dispatch (RTK async thunks need to be dispatched)
     dispatch(getProductVatCategoryList());
     dispatch(getProductCategoryList());
 
+    // Regular async functions - call directly (not through bindActionCreators)
+    // These are utility functions, not Redux actions, so don't dispatch them
     getExciseTaxList().then(res => {
       if (res.status === 200) {
         setExciseTaxList(res.data);
@@ -291,6 +336,7 @@ const CreateProduct = ({
 
   const salesCategoryFn = () => {
     try {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
       getTransactionCategoryListForSalesProduct('2').then(res => {
         if (res.status === 200) {
           setSalesCategory(res.data);
@@ -303,6 +349,7 @@ const CreateProduct = ({
 
   const purchaseCategoryFn = () => {
     try {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
       getTransactionCategoryListForPurchaseProduct('10').then(res => {
         if (res.status === 200) {
           setPurchaseCategory(res.data);
@@ -315,6 +362,7 @@ const CreateProduct = ({
 
   const inventoryAccountFn = () => {
     try {
+      // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
       getTransactionCategoryListForInventory().then(res => {
         if (res.status === 200) {
           setInventoryAccount(res.data);
@@ -338,23 +386,7 @@ const CreateProduct = ({
     let temp = {};
     for (let item in data) {
       if (typeof data[`${item}`] !== 'object') {
-        // Convert string IDs to numbers
-        if (
-          item === 'vatCategoryId' ||
-          item === 'salesTransactionCategoryId' ||
-          item === 'purchaseTransactionCategoryId' ||
-          item === 'transactionCategoryId' ||
-          item === 'productCategoryId' ||
-          item === 'unitTypeId' ||
-          item === 'exciseTaxId' ||
-          item === 'contactId'
-        ) {
-          if (data[`${item}`] && data[`${item}`] !== '') {
-            temp[`${item}`] = parseInt(data[`${item}`], 10);
-          }
-        } else {
-          temp[`${item}`] = data[`${item}`];
-        }
+        temp[`${item}`] = data[`${item}`];
       } else {
         temp[`${item}`] = data[`${item}`].value;
       }
@@ -404,7 +436,7 @@ const CreateProduct = ({
     const inventoryPurchasePrice = data['inventoryPurchasePrice'];
     const inventoryQty = data['inventoryQty'];
     const inventoryReorderLevel = data['inventoryReorderLevel'];
-    const contactId = data['contactId'] || '';
+    const contactId = data['contactId'] ? data['contactId'].value : '';
     const isInventoryEnabled = data['isInventoryEnabled'];
     const transactionCategoryId = data['transactionCategoryId'];
     const productCategoryId = data['productCategoryId'];
@@ -491,24 +523,28 @@ const CreateProduct = ({
               productName: '',
               productDescription: '',
               productCode: '',
-              vatCategoryId: '',
-              unitTypeId: '',
-              productCategoryId: '',
+              vatCategoryId: null,
+              unitTypeId: null,
+              productCategoryId: null,
+              productWarehouseId: '',
               vatIncluded: false,
               productType: 'GOODS',
               salesUnitPrice: '',
               purchaseUnitPrice: '',
               productPriceType: [expense === true ? 'PURCHASE' : 'SALES'],
-              salesTransactionCategoryId: '84',
-              purchaseTransactionCategoryId: '49',
+              salesTransactionCategoryId: { value: 84, label: 'Sales' },
+              purchaseTransactionCategoryId: {
+                value: 49,
+                label: 'Cost of Goods Sold',
+              },
               inventoryPurchasePrice: '',
               inventoryQty: '',
               inventoryReorderLevel: '',
-              contactId: '',
+              contactId: null,
               salesDescription: '',
               purchaseDescription: '',
               isInventoryEnabled: false,
-              transactionCategoryId: '150',
+              transactionCategoryId: { value: 150, label: 'Inventory Asset' },
               exciseTaxId: '',
             });
             getProductCode();
@@ -563,6 +599,7 @@ const CreateProduct = ({
   };
 
   const getProductCode = () => {
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
     getProductCodeApi().then(res => {
       if (res.status === 200) {
         setValue('productCode', res.data);
@@ -581,962 +618,1101 @@ const CreateProduct = ({
   }
 
   return (
-    <div
-      className="create-product-screen"
-      style={{ background: theme.bg, minHeight: '100vh', padding: '24px' }}
-    >
-      <div className="animated fadeIn max-w-7xl mx-auto">
-        <Card
-          className="rounded-xl overflow-hidden"
-          style={{
-            background: theme.bgWhite,
-            border: `1px solid ${theme.border}`,
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <CardHeader className="border-b" style={{ borderColor: theme.border }}>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="h-5 w-5" style={{ color: theme.primary }} />
-              <span>{strings.CreateProduct}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <Form {...form}>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* Product Type & Status Section */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Product Type */}
-                  <div>
-                    <FormLabel className="flex items-center gap-2 mb-3">
-                      {strings.ProductType}
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <HelpCircle className="h-4 w-4 cursor-help" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>
-                              The product type cannot be changed after any document has been created
-                              using this product.
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </FormLabel>
-                    <FormField
-                      name="productType"
-                      control={control}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <RadioGroup
-                              value={field.value}
-                              onValueChange={value => {
-                                field.onChange(value);
-                                if (value === 'SERVICE') {
-                                  setExciseTaxCheck(false);
-                                  setValue('exciseTaxId', '');
-                                }
-                              }}
-                              className="flex gap-6"
-                            >
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="GOODS" id="producttypeone" />
-                                <label
-                                  htmlFor="producttypeone"
-                                  className="text-sm font-medium cursor-pointer"
-                                >
-                                  {strings.Goods}
-                                </label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="SERVICE" id="producttypetwo" />
-                                <label
-                                  htmlFor="producttypetwo"
-                                  className="text-sm font-medium cursor-pointer"
-                                >
-                                  {strings.Service}
-                                </label>
-                              </div>
-                            </RadioGroup>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Status */}
-                  {!(isParentComponentPresent && isParentComponentPresent === true) && (
-                    <div>
-                      <FormLabel className="mb-3 block">
-                        <span className="text-red-500">* </span>
-                        {strings.Status}
-                      </FormLabel>
-                      <RadioGroup
-                        value={selectedStatus ? 'true' : 'false'}
-                        onValueChange={value => {
-                          const boolValue = value === 'true';
-                          setSelectedStatus(boolValue);
-                          setProductActive(boolValue);
-                        }}
-                        className="flex gap-6"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="true" id="status-active" />
-                          <label
-                            htmlFor="status-active"
-                            className="text-sm font-medium cursor-pointer"
-                          >
-                            {strings.Active}
-                          </label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="false" id="status-inactive" />
-                          <label
-                            htmlFor="status-inactive"
-                            className="text-sm font-medium cursor-pointer"
-                          >
-                            {strings.Inactive}
-                          </label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                  )}
-                </div>
-
-                <hr style={{ borderColor: theme.border }} />
-
-                {/* Basic Information Section */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold">
-                    {strings.BasicInformation || 'Basic Information'}
-                  </h4>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Product Name */}
-                    <FormField
-                      name="productName"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel>
-                            <span className="text-red-500">* </span>
-                            {strings.ProductName}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="text"
-                              maxLength={100}
-                              autoComplete="off"
-                              placeholder={`${strings.Enter} ${strings.ProductName}`}
-                              onChange={e => {
-                                if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                  field.onChange(e);
-                                }
-                                validationCheck(e.target.value);
-                              }}
-                              className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                            />
-                          </FormControl>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Product Code */}
-                    <FormField
-                      name="productCode"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <span className="text-red-500">* </span>
-                            {strings.ProductCode}
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <HelpCircle className="h-4 w-4 cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Product Code - Unique identifier code for the product</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="text"
-                              maxLength={50}
-                              disabled
-                              placeholder={`${strings.Enter} ${strings.ProductCode}`}
-                              onChange={e => {
-                                if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                  field.onChange(e);
-                                }
-                                ProductvalidationCheck(e.target.value);
-                              }}
-                              className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                            />
-                          </FormControl>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Product Category */}
-                    <FormField
-                      name="productCategoryId"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel>{strings.ProductCategory}</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="rounded-lg">
-                                <SelectValue
-                                  placeholder={`${strings.Select} ${strings.ProductCategory}`}
-                                />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {product_category_list?.map((category, index) => (
-                                <SelectItem
-                                  key={`category-${category.value}-${index}`}
-                                  value={String(category.value)}
-                                >
-                                  {category.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* VAT Type */}
-                    <FormField
-                      name="vatCategoryId"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel>
-                            <span className="text-red-500">* </span>
-                            {strings.VATType}
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            disabled={companyDetails && !companyDetails.isRegisteredVat}
-                          >
-                            <FormControl>
-                              <SelectTrigger
-                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                              >
-                                <SelectValue placeholder={`${strings.Select} VAT Type`} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {vat_list?.map((vat, index) => (
-                                <SelectItem key={`vat-${vat.id}-${index}`} value={String(vat.id)}>
-                                  {vat.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Unit Type */}
-                    <FormField
-                      name="unitTypeId"
-                      control={control}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{strings.unit_type}</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="rounded-lg">
-                                <SelectValue
-                                  placeholder={`${strings.Select} ${strings.unit_type}`}
-                                />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {unitTypeList?.map((unit, index) => (
-                                <SelectItem
-                                  key={`unit-${unit.unitTypeId}-${index}`}
-                                  value={String(unit.unitTypeId)}
-                                >
-                                  {unit.unitType}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Excise Tax Checkbox - Only for GOODS */}
-                  {watchedValues.productType !== 'SERVICE' && (
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="exciseTaxCheck"
-                        checked={exciseTaxCheck}
-                        onCheckedChange={checked => {
-                          setExciseTaxCheck(checked === true);
-                          if (!checked) {
-                            setValue('exciseTaxId', '');
-                          }
-                        }}
-                      />
-                      <label
-                        htmlFor="exciseTaxCheck"
-                        className="text-sm font-medium cursor-pointer flex items-center gap-2"
-                      >
-                        {strings.excise_product}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <HelpCircle className="h-4 w-4 cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>
-                                Note: It is not possible to switch from Excise Goods to Non-Excise
-                                Goods or vice versa once any document is created using this product.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </label>
-                    </div>
-                  )}
-
-                  {/* Excise Tax Dropdown */}
-                  {exciseTaxCheck && watchedValues.productType !== 'SERVICE' && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <FormField
-                        name="exciseTaxId"
-                        control={control}
-                        render={({ field, fieldState }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <span className="text-red-500">* </span>
-                              {strings.excise_tax_type}
-                            </FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger
-                                  className={cn(
-                                    'rounded-lg',
-                                    fieldState?.error && 'border-red-500'
-                                  )}
-                                >
-                                  <SelectValue
-                                    placeholder={`${strings.Select} ${strings.excise_tax_slab}`}
-                                  />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {exciseTaxList?.map((tax, index) => (
-                                  <SelectItem
-                                    key={`excise-${tax.id}-${index}`}
-                                    value={String(tax.id)}
-                                  >
-                                    {tax.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {fieldState?.error && (
-                              <FormMessage>{fieldState.error.message}</FormMessage>
-                            )}
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <hr style={{ borderColor: theme.border }} />
-
-                {/* Sales Information Section */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <FormField
-                      name="productPriceType"
-                      control={control}
-                      render={({ field }) => (
-                        <Checkbox
-                          id="salesCheckbox"
-                          checked={field.value.includes('SALES')}
-                          onCheckedChange={checked => {
-                            if (income !== true) {
-                              if (checked) {
-                                field.onChange([...field.value, 'SALES']);
-                              } else {
-                                field.onChange(field.value.filter(v => v !== 'SALES'));
-                              }
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                    <label htmlFor="salesCheckbox" className="text-lg font-semibold cursor-pointer">
-                      {strings.SalesInformation}
-                    </label>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Selling Price */}
-                    <FormField
-                      name="salesUnitPrice"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <span className="text-red-500">* </span>
-                            {strings.SellingPrice}
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <HelpCircle className="h-4 w-4 cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Selling price – Price at which your product is sold</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="text"
-                              maxLength={14}
-                              autoComplete="off"
-                              placeholder={`${strings.Enter} ${strings.SellingPrice}`}
-                              readOnly={!watchedValues.productPriceType.includes('SALES')}
-                              onChange={e => {
-                                if (e.target.value === '' || regDecimal.test(e.target.value)) {
-                                  field.onChange(e);
-                                }
-                              }}
-                              className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                            />
-                          </FormControl>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Sales Account */}
-                    <FormField
-                      name="salesTransactionCategoryId"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel>
-                            <span className="text-red-500">* </span>
-                            {strings.Account}
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            disabled={!watchedValues.productPriceType.includes('SALES')}
-                          >
-                            <FormControl>
-                              <SelectTrigger
-                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                              >
-                                <SelectValue placeholder={`${strings.Select} ${strings.Account}`} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {salesCategory?.map((category, index) => (
-                                <SelectItem
-                                  key={`sales-cat-${category.value}-${index}`}
-                                  value={String(category.value)}
-                                >
-                                  {category.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Sales Description */}
-                  <FormField
-                    name="salesDescription"
-                    control={control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{strings.Description}</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            maxLength={2000}
-                            rows={3}
-                            readOnly={!watchedValues.productPriceType.includes('SALES')}
-                            placeholder={strings.Description}
-                            className="rounded-lg"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Purchase Information Section */}
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <FormField
-                      name="productPriceType"
-                      control={control}
-                      render={({ field }) => (
-                        <Checkbox
-                          id="purchaseCheckbox"
-                          checked={field.value.includes('PURCHASE')}
-                          onCheckedChange={checked => {
-                            if (income !== false) {
-                              if (checked) {
-                                field.onChange([...field.value, 'PURCHASE']);
-                              } else {
-                                field.onChange(field.value.filter(v => v !== 'PURCHASE'));
-                              }
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                    <label
-                      htmlFor="purchaseCheckbox"
-                      className="text-lg font-semibold cursor-pointer"
-                    >
-                      {strings.PurchaseInformation}
-                    </label>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Purchase Price */}
-                    <FormField
-                      name="purchaseUnitPrice"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <span className="text-red-500">* </span>
-                            {strings.PurchasePrice}
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <HelpCircle className="h-4 w-4 cursor-help" />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Purchase price – Amount of money you paid for the product</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="text"
-                              maxLength={14}
-                              autoComplete="off"
-                              placeholder={`${strings.Enter} ${strings.PurchasePrice}`}
-                              readOnly={!watchedValues.productPriceType.includes('PURCHASE')}
-                              onChange={e => {
-                                if (e.target.value === '' || regDecimal.test(e.target.value)) {
-                                  field.onChange(e);
-                                }
-                              }}
-                              className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                            />
-                          </FormControl>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Purchase Account */}
-                    <FormField
-                      name="purchaseTransactionCategoryId"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <FormItem>
-                          <FormLabel>
-                            <span className="text-red-500">* </span>
-                            {strings.Account}
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            disabled={!watchedValues.productPriceType.includes('PURCHASE')}
-                          >
-                            <FormControl>
-                              <SelectTrigger
-                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
-                              >
-                                <SelectValue placeholder={`${strings.Select} ${strings.Account}`} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {purchaseCategory?.map((category, index) => (
-                                <SelectItem
-                                  key={`purchase-cat-${category.value}-${index}`}
-                                  value={String(category.value)}
-                                >
-                                  {category.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {fieldState?.error && (
-                            <FormMessage>{fieldState.error.message}</FormMessage>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Purchase Description */}
-                  <FormField
-                    name="purchaseDescription"
-                    control={control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{strings.Description}</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            maxLength={2000}
-                            rows={3}
-                            readOnly={!watchedValues.productPriceType.includes('PURCHASE')}
-                            placeholder={strings.Description}
-                            className="rounded-lg"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <hr style={{ borderColor: theme.border }} />
-
-                {/* Inventory Section - Only show if PURCHASE is selected and product type is GOODS */}
-                {watchedValues.productPriceType.includes('PURCHASE') &&
-                  watchedValues.productType !== 'SERVICE' &&
-                  config.INVENTORY_MODULE && (
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <FormField
-                          name="isInventoryEnabled"
-                          control={control}
-                          render={({ field }) => (
-                            <Checkbox
-                              id="inventoryCheckbox"
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          )}
-                        />
-                        <label
-                          htmlFor="inventoryCheckbox"
-                          className="text-lg font-semibold cursor-pointer flex items-center gap-2"
-                        >
-                          {strings.EnableInventory}
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <HelpCircle className="h-4 w-4 cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  Inventory cannot be enabled or disabled once a document has been
-                                  created using this product.
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </label>
+    <div>
+      <div className="create-product-screen">
+        <div className="animated fadeIn">
+          <Row>
+            <Col lg={12} className="mx-auto">
+              <Card>
+                <CardHeader>
+                  <Row>
+                    <Col lg={12}>
+                      <div className="h4 mb-0 d-flex align-items-center">
+                        <Package className="h-4 w-4" />
+                        <span className="ml-2">{strings.CreateProduct}</span>
                       </div>
-
-                      {watchedValues.isInventoryEnabled && (
-                        <>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Inventory Account */}
-                            <FormField
-                              name="transactionCategoryId"
-                              control={control}
-                              render={({ field, fieldState }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    <span className="text-red-500">* </span>
-                                    {strings.InventoryAccount}
-                                  </FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="rounded-lg">
-                                        <SelectValue
-                                          placeholder={`${strings.Select} ${strings.InventoryAccount}`}
+                    </Col>
+                  </Row>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col lg={12}>
+                      <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Row>
+                          <Col lg={4}>
+                            <FormGroup check inline className="mb-3">
+                              <Label className="productlabel">
+                                {strings.ProductType}
+                                <HelpCircle id="ProductTypetip" className="h-4 w-4 inline" />
+                                <UncontrolledTooltip placement="right" target="ProductTypetip">
+                                  The product type cannot be changed after any document has been
+                                  created using this product.
+                                </UncontrolledTooltip>
+                              </Label>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <FormGroup check inline>
+                                <div className="custom-radio custom-control">
+                                  <Controller
+                                    name="productType"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <>
+                                        <input
+                                          className="custom-control-input"
+                                          type="radio"
+                                          id="producttypeone"
+                                          name="productType"
+                                          value="GOODS"
+                                          onChange={e => field.onChange(e.target.value)}
+                                          checked={field.value === 'GOODS'}
                                         />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {inventoryAccount?.map((account, index) => (
-                                        <SelectItem
-                                          key={`inv-acc-${account.value}-${index}`}
-                                          value={String(account.value)}
+                                        <label
+                                          className="custom-control-label"
+                                          htmlFor="producttypeone"
                                         >
-                                          {account.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Supplier */}
-                            <FormField
-                              name="contactId"
-                              control={control}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>{strings.SupplierName}</FormLabel>
-                                  <Select onValueChange={field.onChange} value={field.value}>
-                                    <FormControl>
-                                      <SelectTrigger className="rounded-lg">
-                                        <SelectValue
-                                          placeholder={`${strings.Select} ${strings.SupplierName}`}
+                                          {strings.Goods}
+                                        </label>
+                                      </>
+                                    )}
+                                  />
+                                </div>
+                              </FormGroup>
+                              <FormGroup check inline>
+                                <div className="custom-radio custom-control">
+                                  <Controller
+                                    name="productType"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <>
+                                        <Input
+                                          className="custom-control-input"
+                                          type="radio"
+                                          id="producttypetwo"
+                                          name="productType"
+                                          value="SERVICE"
+                                          onChange={e => {
+                                            field.onChange(e.target.value);
+                                            setExciseTaxCheck(false);
+                                            setValue('exciseTaxId', '');
+                                          }}
+                                          checked={field.value === 'SERVICE'}
                                         />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {tmpSupplier_list?.map((supplier, index) => (
-                                        <SelectItem
-                                          key={`supplier-${supplier.value}-${index}`}
-                                          value={String(supplier.value)}
+                                        <label
+                                          className="custom-control-label"
+                                          htmlFor="producttypetwo"
                                         >
-                                          {supplier.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                                          {strings.Service}
+                                        </label>
+                                      </>
+                                    )}
+                                  />
+                                </div>
+                              </FormGroup>
+                            </FormGroup>
+                          </Col>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Inventory Purchase Price */}
-                            <FormField
-                              name="inventoryPurchasePrice"
-                              control={control}
-                              render={({ field, fieldState }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    <span className="text-red-500">* </span>
-                                    {strings.PurchasePrice}
-                                  </FormLabel>
-                                  <FormControl>
+                          <Col lg={4}>
+                            {!(isParentComponentPresent && isParentComponentPresent === true) && (
+                              <FormGroup check inline className="mb-3">
+                                <Label className="productlabel">
+                                  <span className="text-danger">* </span>
+                                  {strings.Status}
+                                </Label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <FormGroup check inline>
+                                  <div className="custom-radio custom-control">
                                     <Input
-                                      {...field}
-                                      type="text"
-                                      maxLength={14}
-                                      autoComplete="off"
-                                      placeholder={`${strings.Enter} ${strings.PurchasePrice}`}
+                                      className="custom-control-input"
+                                      type="radio"
+                                      id="inline-radio1"
+                                      name="active"
+                                      checked={selectedStatus}
+                                      value={true}
                                       onChange={e => {
-                                        if (
-                                          e.target.value === '' ||
-                                          regDecimal.test(e.target.value)
-                                        ) {
-                                          field.onChange(e);
+                                        if (e.target.value === 'true') {
+                                          setSelectedStatus(true);
+                                          setProductActive(true);
                                         }
                                       }}
-                                      className={cn(
-                                        'rounded-lg',
-                                        fieldState?.error && 'border-red-500'
+                                    />
+                                    <label className="custom-control-label" htmlFor="inline-radio1">
+                                      {strings.Active}
+                                    </label>
+                                  </div>
+                                </FormGroup>
+                                <FormGroup check inline>
+                                  <div className="custom-radio custom-control">
+                                    <input
+                                      className="custom-control-input"
+                                      type="radio"
+                                      id="inline-radio2"
+                                      name="active"
+                                      value={false}
+                                      checked={!selectedStatus}
+                                      onChange={e => {
+                                        if (e.target.value === 'false') {
+                                          setSelectedStatus(false);
+                                          setProductActive(false);
+                                        }
+                                      }}
+                                    />
+                                    <label className="custom-control-label" htmlFor="inline-radio2">
+                                      {strings.Inactive}
+                                    </label>
+                                  </div>
+                                </FormGroup>
+                              </FormGroup>
+                            )}
+                          </Col>
+                        </Row>
+                        <hr></hr>
+                        <Row>
+                          <Col lg={4}>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="productName">
+                                <span className="text-danger">* </span>
+                                {strings.ProductName}
+                              </Label>
+                              <Controller
+                                name="productName"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    type="text"
+                                    maxLength="100"
+                                    id="productName"
+                                    autoComplete="Off"
+                                    onChange={e => {
+                                      if (e.target.value === '' || regExBoth.test(e.target.value)) {
+                                        field.onChange(e);
+                                      }
+                                      validationCheck(e.target.value);
+                                    }}
+                                    placeholder={strings.Enter + strings.ProductName}
+                                    className={
+                                      errors.productName && touchedFields.productName
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
+                                  />
+                                )}
+                              />
+                              {errors.productName && touchedFields.productName && (
+                                <div className="invalid-feedback">{errors.productName.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+
+                          <Col lg={4}>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="productCode">
+                                <span className="text-danger">* </span>
+                                {strings.ProductCode}
+                                <HelpCircle id="ProductCodeTooltip" className="h-4 w-4 inline" />
+                                <UncontrolledTooltip placement="right" target="ProductCodeTooltip">
+                                  Product Code - Unique identifier code for the product
+                                </UncontrolledTooltip>
+                              </Label>
+                              <Controller
+                                name="productCode"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    type="text"
+                                    maxLength="50"
+                                    id="productCode"
+                                    disabled
+                                    placeholder={strings.Enter + strings.ProductCode}
+                                    onChange={e => {
+                                      if (e.target.value === '' || regExBoth.test(e.target.value)) {
+                                        field.onChange(e);
+                                      }
+                                      ProductvalidationCheck(e.target.value);
+                                    }}
+                                    className={
+                                      errors.productCode && touchedFields.productCode
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
+                                  />
+                                )}
+                              />
+                              {errors.productCode && touchedFields.productCode && (
+                                <div className="invalid-feedback">{errors.productCode.message}</div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col lg={4}>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="productCategoryId">{strings.ProductCategory}</Label>
+                              <Controller
+                                name="productCategoryId"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    {...field}
+                                    styles={selectStyles}
+                                    className="select-default-width"
+                                    options={
+                                      product_category_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'label',
+                                            'value',
+                                            product_category_list,
+                                            'Product Category'
+                                          )
+                                        : []
+                                    }
+                                    id="productCategoryId"
+                                    placeholder={strings.Select + strings.ProductCategory}
+                                    onChange={option => {
+                                      field.onChange(option || '');
+                                    }}
+                                    isClearable
+                                  />
+                                )}
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col lg={4}>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="vatCategoryId">
+                                <span className="text-danger">* </span>
+                                {strings.VATType}
+                              </Label>
+                              <Controller
+                                name="vatCategoryId"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    {...field}
+                                    styles={selectStyles}
+                                    isDisabled={companyDetails && !companyDetails.isRegisteredVat}
+                                    options={
+                                      vat_list
+                                        ? selectOptionsFactory.renderOptions(
+                                            'name',
+                                            'id',
+                                            vat_list,
+                                            'VAT'
+                                          )
+                                        : []
+                                    }
+                                    id="vatCategoryId"
+                                    placeholder={strings.Select + 'VAT Type'}
+                                    onChange={option => {
+                                      field.onChange(option || '');
+                                    }}
+                                    className={
+                                      errors.vatCategoryId && touchedFields.vatCategoryId
+                                        ? 'is-invalid'
+                                        : ''
+                                    }
+                                  />
+                                )}
+                              />
+                              {errors.vatCategoryId && touchedFields.vatCategoryId && (
+                                <div className="invalid-feedback">
+                                  {errors.vatCategoryId.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col lg={4}>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="unitTypeId">{strings.unit_type}</Label>
+                              <Controller
+                                name="unitTypeId"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    {...field}
+                                    styles={selectStyles}
+                                    options={
+                                      unitTypeList
+                                        ? selectOptionsFactory.renderOptions(
+                                            'unitType',
+                                            'unitTypeId',
+                                            unitTypeList,
+                                            'Unit Type'
+                                          )
+                                        : []
+                                    }
+                                    id="unitTypeId"
+                                    placeholder={strings.Select + strings.unit_type}
+                                    onChange={option => {
+                                      field.onChange(option || '');
+                                    }}
+                                    isClearable
+                                  />
+                                )}
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row
+                          style={{ display: watchedValues.productType !== 'SERVICE' ? '' : 'none' }}
+                        >
+                          <Col lg={4}>
+                            <FormGroup check inline className="mb-3">
+                              <Label className="form-check-label" check htmlFor="exciseTaxCheck">
+                                <Input
+                                  type="checkbox"
+                                  id="exciseTaxCheck"
+                                  name="exciseTaxCheck"
+                                  onChange={event => {
+                                    if (exciseTaxCheck === true) {
+                                      setExciseTaxCheck(false);
+                                      setValue('exciseTaxId', '');
+                                    } else {
+                                      setExciseTaxCheck(true);
+                                    }
+                                  }}
+                                  checked={exciseTaxCheck}
+                                />
+                                {strings.excise_product}
+                                <HelpCircle id="ExciseTooltip" className="h-4 w-4 inline" />
+                                <UncontrolledTooltip placement="right" target="ExciseTooltip">
+                                  Note: It is not possible to switch from Excise Goods to Non-Excise
+                                  Goods or vice versa once any document is created using this
+                                  product.
+                                </UncontrolledTooltip>
+                              </Label>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          {exciseTaxCheck === true && (
+                            <Col
+                              style={{
+                                display: watchedValues.productType !== 'SERVICE' ? '' : 'none',
+                              }}
+                              lg={4}
+                            >
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="exciseTaxId">
+                                  <span className="text-danger">* </span>
+                                  {strings.excise_tax_type}
+                                </Label>
+                                <Controller
+                                  name="exciseTaxId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={selectStyles}
+                                      options={
+                                        exciseTaxList
+                                          ? selectOptionsFactory.renderOptions(
+                                              'name',
+                                              'id',
+                                              exciseTaxList,
+                                              'Excise Tax Slab'
+                                            )
+                                          : []
+                                      }
+                                      id="exciseTaxId"
+                                      placeholder={strings.Select + strings.excise_tax_slab}
+                                      onChange={option => {
+                                        field.onChange(option || '');
+                                      }}
+                                      className={
+                                        errors.exciseTaxId && touchedFields.exciseTaxId
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                  )}
+                                />
+                                {errors.exciseTaxId && touchedFields.exciseTaxId && (
+                                  <div className="invalid-feedback">
+                                    {errors.exciseTaxId.message}
+                                  </div>
+                                )}
+                              </FormGroup>
+                            </Col>
+                          )}
+                        </Row>
+                        <hr></hr>
+                        <Row>
+                          <Col lg={8}>
+                            <FormGroup check inline className="mb-3">
+                              <Label
+                                className="form-check-label"
+                                check
+                                htmlFor="productPriceTypeOne"
+                              >
+                                <Controller
+                                  name="productPriceType"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Input
+                                      type="checkbox"
+                                      maxLength="14,2"
+                                      id="productPriceTypeOne"
+                                      name="productPriceTypeOne"
+                                      onChange={event => {
+                                        if (income !== true) {
+                                          if (field.value.includes('SALES')) {
+                                            const nextValue = field.value.filter(
+                                              value => value !== 'SALES'
+                                            );
+                                            field.onChange(nextValue);
+                                          } else {
+                                            const nextValue = field.value.concat('SALES');
+                                            field.onChange(nextValue);
+                                          }
+                                        }
+                                      }}
+                                      checked={field.value.includes('SALES')}
+                                      className={
+                                        errors.productPriceType && touchedFields.productPriceType
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                  )}
+                                />
+                                {strings.SalesInformation}
+                                {errors.productPriceType && touchedFields.productPriceType && (
+                                  <div className="invalid-feedback">
+                                    {errors.productPriceType.message}
+                                  </div>
+                                )}
+                              </Label>
+                            </FormGroup>
+                            <Row>
+                              <Col>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="salesUnitPrice">
+                                    <span className="text-danger">* </span> {strings.SellingPrice}
+                                    <HelpCircle id="SalesTooltip" className="h-4 w-4 inline" />
+                                    <UncontrolledTooltip placement="right" target="SalesTooltip">
+                                      Selling price – Price at which your product is sold
+                                    </UncontrolledTooltip>
+                                  </Label>
+                                  <Controller
+                                    name="salesUnitPrice"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Input
+                                        {...field}
+                                        type="text"
+                                        maxLength="14,2"
+                                        id="salesUnitPrice"
+                                        autoComplete="Off"
+                                        placeholder={strings.Enter + strings.SellingPrice}
+                                        readOnly={
+                                          watchedValues.productPriceType.includes('SALES')
+                                            ? false
+                                            : true
+                                        }
+                                        onChange={e => {
+                                          if (
+                                            e.target.value === '' ||
+                                            regDecimal.test(e.target.value)
+                                          ) {
+                                            field.onChange(e);
+                                          }
+                                        }}
+                                        className={
+                                          errors.salesUnitPrice && touchedFields.salesUnitPrice
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
+                                    )}
+                                  />
+                                  {errors.salesUnitPrice && touchedFields.salesUnitPrice && (
+                                    <div className="invalid-feedback">
+                                      {errors.salesUnitPrice.message}
+                                    </div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="transactionCategoryId">
+                                    <span className="text-danger">* </span> {strings.Account}
+                                  </Label>
+                                  <Controller
+                                    name="salesTransactionCategoryId"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Select
+                                        {...field}
+                                        styles={selectStyles}
+                                        isDisabled={
+                                          watchedValues.productPriceType.includes('SALES')
+                                            ? false
+                                            : true
+                                        }
+                                        options={salesCategory ? salesCategory : []}
+                                        id="salesTransactionCategoryId"
+                                        onChange={option => {
+                                          field.onChange(option || '');
+                                        }}
+                                        className={
+                                          errors.salesTransactionCategoryId &&
+                                          touchedFields.salesTransactionCategoryId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
+                                    )}
+                                  />
+                                  {errors.salesTransactionCategoryId &&
+                                    touchedFields.salesTransactionCategoryId && (
+                                      <div className="invalid-feedback">
+                                        {errors.salesTransactionCategoryId.message}
+                                      </div>
+                                    )}
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <FormGroup className="">
+                              <Label htmlFor="salesDescription">{strings.Description}</Label>
+                              <Controller
+                                name="salesDescription"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    readOnly={
+                                      watchedValues.productPriceType.includes('SALES')
+                                        ? false
+                                        : true
+                                    }
+                                    type="textarea"
+                                    maxLength="2000"
+                                    id="salesDescription"
+                                    rows="3"
+                                    placeholder={strings.Description}
+                                  />
+                                )}
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col lg={8}>
+                            <FormGroup check inline className="mb-3">
+                              <Label
+                                className="form-check-label"
+                                check
+                                htmlFor="productPriceTypetwo"
+                              >
+                                <Controller
+                                  name="productPriceType"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Input
+                                      type="checkbox"
+                                      id="productPriceTypetwo"
+                                      maxLength="14,2"
+                                      name="productPriceTypetwo"
+                                      onChange={event => {
+                                        if (income !== false) {
+                                          if (field.value.includes('PURCHASE')) {
+                                            const nextValue = field.value.filter(
+                                              value => value !== 'PURCHASE'
+                                            );
+                                            field.onChange(nextValue);
+                                          } else {
+                                            const nextValue = field.value.concat('PURCHASE');
+                                            field.onChange(nextValue);
+                                          }
+                                        }
+                                      }}
+                                      checked={field.value.includes('PURCHASE')}
+                                      className={
+                                        errors.productPriceType && touchedFields.productPriceType
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                  )}
+                                />
+                                {strings.PurchaseInformation}
+                                {errors.productPriceType && touchedFields.productPriceType && (
+                                  <div className="invalid-feedback">
+                                    {errors.productPriceType.message}
+                                  </div>
+                                )}
+                              </Label>
+                            </FormGroup>
+                            <Row>
+                              <Col>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="salesUnitPrice">
+                                    <span className="text-danger">* </span> {strings.PurchasePrice}
+                                    <HelpCircle id="PurchaseTooltip" className="h-4 w-4 inline" />
+                                    <UncontrolledTooltip placement="right" target="PurchaseTooltip">
+                                      Purchase price – Amount of money you paid for the product
+                                    </UncontrolledTooltip>
+                                  </Label>
+                                  <Controller
+                                    name="purchaseUnitPrice"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Input
+                                        {...field}
+                                        type="text"
+                                        maxLength="14,2"
+                                        id="purchaseUnitPrice"
+                                        autoComplete="Off"
+                                        placeholder={strings.Enter + strings.PurchasePrice}
+                                        onChange={e => {
+                                          if (
+                                            e.target.value === '' ||
+                                            regDecimal.test(e.target.value)
+                                          ) {
+                                            field.onChange(e);
+                                          }
+                                        }}
+                                        readOnly={
+                                          watchedValues.productPriceType.includes('PURCHASE')
+                                            ? false
+                                            : true
+                                        }
+                                        className={
+                                          errors.purchaseUnitPrice &&
+                                          touchedFields.purchaseUnitPrice
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
+                                    )}
+                                  />
+                                  {errors.purchaseUnitPrice && touchedFields.purchaseUnitPrice && (
+                                    <div className="invalid-feedback">
+                                      {errors.purchaseUnitPrice.message}
+                                    </div>
+                                  )}
+                                </FormGroup>
+                              </Col>
+                              <Col>
+                                <FormGroup className="mb-3">
+                                  <Label htmlFor="salesUnitPrice">
+                                    <span className="text-danger">* </span> {strings.Account}
+                                  </Label>
+                                  <Controller
+                                    name="purchaseTransactionCategoryId"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Select
+                                        {...field}
+                                        styles={selectStyles}
+                                        isDisabled={
+                                          watchedValues.productPriceType.includes('PURCHASE')
+                                            ? false
+                                            : true
+                                        }
+                                        options={purchaseCategory ? purchaseCategory : []}
+                                        id="purchaseTransactionCategoryId"
+                                        onChange={option => {
+                                          field.onChange(option || '');
+                                        }}
+                                        className={
+                                          errors.purchaseTransactionCategoryId &&
+                                          touchedFields.purchaseTransactionCategoryId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
+                                    )}
+                                  />
+                                  {errors.purchaseTransactionCategoryId &&
+                                    touchedFields.purchaseTransactionCategoryId && (
+                                      <div className="invalid-feedback">
+                                        {errors.purchaseTransactionCategoryId.message}
+                                      </div>
+                                    )}
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <FormGroup className="">
+                              <Label htmlFor="purchaseDescription">{strings.Description}</Label>
+                              <Controller
+                                name="purchaseDescription"
+                                control={control}
+                                render={({ field }) => (
+                                  <Input
+                                    {...field}
+                                    readOnly={
+                                      watchedValues.productPriceType.includes('PURCHASE')
+                                        ? false
+                                        : true
+                                    }
+                                    type="textarea"
+                                    maxLength="2000"
+                                    autoComplete="Off"
+                                    id="purchaseDescription"
+                                    rows="3"
+                                    placeholder={strings.Description}
+                                  />
+                                )}
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+
+                        <hr></hr>
+
+                        <Row
+                          style={{
+                            display:
+                              watchedValues.productPriceType.includes('PURCHASE') &&
+                              watchedValues.productType !== 'SERVICE'
+                                ? ''
+                                : 'none',
+                          }}
+                        >
+                          {config.INVENTORY_MODULE && (
+                            <Col lg={8}>
+                              <FormGroup check inline className="mb-3">
+                                <Label
+                                  className="form-check-label"
+                                  check
+                                  htmlFor="isInventoryEnabled"
+                                >
+                                  <Controller
+                                    name="isInventoryEnabled"
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id="isInventoryEnabled"
+                                        onChange={e => field.onChange(e.target.checked)}
+                                        checked={field.value}
+                                      />
+                                    )}
+                                  />
+                                  {strings.EnableInventory}
+                                  {errors.productPriceType && touchedFields.productPriceType && (
+                                    <div className="invalid-feedback">
+                                      {errors.productPriceType.message}
+                                    </div>
+                                  )}
+                                  <HelpCircle id="EnventoryTooltip" className="h-4 w-4 inline" />
+                                  <UncontrolledTooltip placement="right" target="EnventoryTooltip">
+                                    Inventory cannot be enabled or disabled once a document has been
+                                    created using this product.
+                                  </UncontrolledTooltip>
+                                </Label>
+                              </FormGroup>
+
+                              <Row
+                                style={{
+                                  display: watchedValues.isInventoryEnabled === false ? 'none' : '',
+                                }}
+                              >
+                                <Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="salesUnitPrice">
+                                      <span className="text-danger">* </span>{' '}
+                                      {strings.InventoryAccount}
+                                    </Label>
+                                    <Controller
+                                      name="transactionCategoryId"
+                                      control={control}
+                                      render={({ field }) => (
+                                        <Select
+                                          {...field}
+                                          styles={selectStyles}
+                                          options={inventoryAccount ? inventoryAccount : []}
+                                          id="transactionCategoryId"
+                                          onChange={option => {
+                                            field.onChange(option || '');
+                                          }}
+                                          className={
+                                            errors.transactionCategoryId &&
+                                            touchedFields.transactionCategoryId
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
                                       )}
                                     />
-                                  </FormControl>
-                                  {fieldState?.error && (
-                                    <FormMessage>{fieldState.error.message}</FormMessage>
-                                  )}
-                                  <p className="text-sm text-muted-foreground mt-1">
-                                    {strings.inventory_note}
-                                  </p>
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* Opening Balance Quantity */}
-                            <FormField
-                              name="inventoryQty"
-                              control={control}
-                              render={({ field, fieldState }) => (
-                                <FormItem>
-                                  <FormLabel>
-                                    <span className="text-red-500">* </span>
-                                    {strings.OpeningBalanceQuantity}
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      type="text"
-                                      maxLength={10}
-                                      autoComplete="off"
-                                      placeholder={`${strings.Enter} ${strings.OpeningBalanceQuantity}`}
-                                      onChange={e => {
-                                        if (e.target.value === '' || regEx.test(e.target.value)) {
-                                          field.onChange(e);
-                                        }
-                                      }}
-                                      className={cn(
-                                        'rounded-lg',
-                                        fieldState?.error && 'border-red-500'
+                                    {errors.transactionCategoryId &&
+                                      touchedFields.transactionCategoryId && (
+                                        <div className="invalid-feedback">
+                                          {errors.transactionCategoryId.message}
+                                        </div>
+                                      )}
+                                  </FormGroup>
+                                </Col>
+                                <Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="contactId">{strings.SupplierName}</Label>
+                                    <Controller
+                                      name="contactId"
+                                      control={control}
+                                      render={({ field }) => (
+                                        <Select
+                                          {...field}
+                                          styles={selectStyles}
+                                          id="contactId"
+                                          placeholder={strings.Select + strings.SupplierName}
+                                          options={
+                                            tmpSupplier_list
+                                              ? selectOptionsFactory.renderOptions(
+                                                  'label',
+                                                  'value',
+                                                  tmpSupplier_list,
+                                                  'Supplier Name'
+                                                )
+                                              : []
+                                          }
+                                          onChange={option => {
+                                            field.onChange(option || '');
+                                          }}
+                                          className={
+                                            errors.contactId && touchedFields.contactId
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                          isClearable
+                                        />
                                       )}
                                     />
-                                  </FormControl>
-                                  {fieldState?.error && (
-                                    <FormMessage>{fieldState.error.message}</FormMessage>
-                                  )}
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Reorder Level */}
-                            <FormField
-                              name="inventoryReorderLevel"
-                              control={control}
-                              render={({ field, fieldState }) => (
-                                <FormItem>
-                                  <FormLabel>{strings.ReOrderLevel}</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      {...field}
-                                      type="text"
-                                      maxLength={10}
-                                      autoComplete="off"
-                                      placeholder={`${strings.Enter} ${strings.InventoryReorderLevel}`}
-                                      onChange={e => {
-                                        if (
-                                          e.target.value === '' ||
-                                          regDecimal5.test(e.target.value)
-                                        ) {
-                                          field.onChange(e);
-                                        }
-                                      }}
-                                      className="rounded-lg"
+                                    {errors.contactId && touchedFields.contactId && (
+                                      <div className="invalid-feedback">
+                                        {errors.contactId.message}
+                                      </div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row
+                                style={{
+                                  display: watchedValues.isInventoryEnabled === false ? 'none' : '',
+                                }}
+                              >
+                                <Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="inventoryPurchasePrice">
+                                      <span className="text-danger">* </span>{' '}
+                                      {strings.PurchasePrice}
+                                    </Label>
+                                    <Controller
+                                      name="inventoryPurchasePrice"
+                                      control={control}
+                                      render={({ field }) => (
+                                        <Input
+                                          {...field}
+                                          type="text"
+                                          min="0"
+                                          maxLength="14,2"
+                                          id="inventoryPurchasePrice"
+                                          autoComplete="Off"
+                                          placeholder={strings.Enter + strings.PurchasePrice}
+                                          onChange={e => {
+                                            if (
+                                              e.target.value === '' ||
+                                              regDecimal.test(e.target.value)
+                                            ) {
+                                              field.onChange(e);
+                                            }
+                                          }}
+                                          className={
+                                            errors.inventoryPurchasePrice &&
+                                            touchedFields.inventoryPurchasePrice
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      )}
                                     />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
+                                    {errors.inventoryPurchasePrice &&
+                                      touchedFields.inventoryPurchasePrice && (
+                                        <div className="invalid-feedback">
+                                          {errors.inventoryPurchasePrice.message}
+                                        </div>
+                                      )}
+                                    <i>{strings.inventory_note}</i>
+                                  </FormGroup>
+                                </Col>
+                                <Col>
+                                  <FormGroup className="mb-3">
+                                    <Label htmlFor="inventoryQty">
+                                      <span className="text-danger">* </span>{' '}
+                                      {strings.OpeningBalanceQuantity}
+                                    </Label>
+                                    <Controller
+                                      name="inventoryQty"
+                                      control={control}
+                                      render={({ field }) => (
+                                        <Input
+                                          {...field}
+                                          type="text"
+                                          min="0"
+                                          maxLength="10"
+                                          id="inventoryQty"
+                                          autoComplete="Off"
+                                          placeholder={
+                                            strings.Enter + strings.OpeningBalanceQuantity
+                                          }
+                                          onChange={e => {
+                                            if (
+                                              e.target.value === '' ||
+                                              regEx.test(e.target.value)
+                                            ) {
+                                              field.onChange(e);
+                                            }
+                                          }}
+                                          className={
+                                            errors.inventoryQty && touchedFields.inventoryQty
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      )}
+                                    />
+                                    {errors.inventoryQty && touchedFields.inventoryQty && (
+                                      <div className="invalid-feedback">
+                                        {errors.inventoryQty.message}
+                                      </div>
+                                    )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                              <Row
+                                style={{
+                                  display: watchedValues.isInventoryEnabled === false ? 'none' : '',
+                                }}
+                              >
+                                <Col lg={6}>
+                                  <FormGroup className="">
+                                    <Label htmlFor="inventoryReorderLevel">
+                                      {strings.ReOrderLevel}
+                                    </Label>
+                                    <Controller
+                                      name="inventoryReorderLevel"
+                                      control={control}
+                                      render={({ field }) => (
+                                        <Input
+                                          {...field}
+                                          type="text"
+                                          min="0"
+                                          max="1000"
+                                          maxLength="10"
+                                          id="inventoryReorderLevel"
+                                          autoComplete="Off"
+                                          rows="3"
+                                          placeholder={
+                                            strings.Enter + strings.InventoryReorderLevel
+                                          }
+                                          onChange={e => {
+                                            if (
+                                              e.target.value === '' ||
+                                              regDecimal5.test(e.target.value)
+                                            ) {
+                                              field.onChange(e);
+                                            }
+                                          }}
+                                          className={
+                                            errors.inventoryReorderLevel &&
+                                            touchedFields.inventoryReorderLevel
+                                              ? 'is-invalid'
+                                              : ''
+                                          }
+                                        />
+                                      )}
+                                    />
+                                    {errors.inventoryReorderLevel &&
+                                      touchedFields.inventoryReorderLevel && (
+                                        <div className="invalid-feedback">
+                                          {errors.inventoryReorderLevel.message}
+                                        </div>
+                                      )}
+                                  </FormGroup>
+                                </Col>
+                              </Row>
+                            </Col>
+                          )}
+                        </Row>
 
-                {/* Action Buttons */}
-                <div
-                  className="flex justify-end gap-3 mt-8 pt-6 border-t"
-                  style={{ borderColor: theme.border }}
-                >
-                  <Button
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => {
-                      trigger().then(isValid => {
-                        if (!isValid || Object.keys(errors).length !== 0) {
-                          commonActions.fillManDatoryDetails();
-                        }
-                      });
-                      setCreateMore(false);
-                      handleSubmit(onSubmit)();
-                    }}
-                    className="rounded-lg"
-                    style={{
-                      background: theme.primary,
-                    }}
-                  >
-                    <CircleDot className="h-4 w-4" />
-                    {disabled ? 'Creating...' : strings.Create}
-                  </Button>
-                  {!(isParentComponentPresent && isParentComponentPresent === true) && (
-                    <Button
-                      type="button"
-                      disabled={disabled}
-                      onClick={() => {
-                        trigger().then(isValid => {
-                          if (!isValid || Object.keys(errors).length !== 0) {
-                            commonActions.fillManDatoryDetails();
-                          }
-                        });
-                        setCreateMore(true);
-                        handleSubmit(onSubmit)();
-                      }}
-                      className="rounded-lg"
-                      style={{
-                        background: theme.primary,
-                      }}
-                    >
-                      <RefreshCw className="h-4 w-4" />
-                      {disabled ? 'Creating...' : strings.CreateandMore}
-                    </Button>
-                  )}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="rounded-lg"
-                    onClick={() => {
-                      if (isParentComponentPresent && isParentComponentPresent === true) {
-                        closeModal(true);
-                      } else {
-                        history.push('/admin/master/product');
-                      }
-                    }}
-                    style={{
-                      border: `1px solid ${theme.border}`,
-                    }}
-                  >
-                    <Ban className="h-4 w-4" />
-                    {strings.Cancel}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+                        <Row>
+                          <Col lg={12} className="mt-5">
+                            <FormGroup className="text-right" disabled={disabled}>
+                              <Button
+                                type="button"
+                                color="primary"
+                                className="btn-square mr-3"
+                                disabled={disabled}
+                                onClick={() => {
+                                  trigger();
+                                  if (errors && Object.keys(errors).length !== 0) {
+                                    commonActions.fillManDatoryDetails();
+                                  } else {
+                                    setCreateMore(false);
+                                    handleSubmit(onSubmit)();
+                                  }
+                                }}
+                              >
+                                <CircleDot className="h-4 w-4" />{' '}
+                                {disabled ? 'Creating...' : strings.Create}
+                              </Button>
+                              {!(isParentComponentPresent && isParentComponentPresent === true) && (
+                                <Button
+                                  name="button"
+                                  color="primary"
+                                  className="btn-square mr-3"
+                                  disabled={disabled}
+                                  onClick={() => {
+                                    trigger();
+                                    if (errors && Object.keys(errors).length !== 0) {
+                                      commonActions.fillManDatoryDetails();
+                                    } else {
+                                      setCreateMore(true);
+                                      handleSubmit(onSubmit)();
+                                    }
+                                  }}
+                                >
+                                  <RefreshCw className="h-4 w-4" />{' '}
+                                  {disabled ? 'Creating...' : strings.CreateandMore}
+                                </Button>
+                              )}
+                              <Button
+                                color="secondary"
+                                className="btn-square"
+                                onClick={() => {
+                                  if (
+                                    isParentComponentPresent &&
+                                    isParentComponentPresent === true
+                                  ) {
+                                    closeModal(true);
+                                  } else {
+                                    history.push('/admin/master/product');
+                                  }
+                                }}
+                              >
+                                <Ban className="h-4 w-4" />
+                                {strings.Cancel}
+                              </Button>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+
+        <WareHouseModal openModal={openWarehouseModal} closeWarehouseModal={closeWarehouseModal} />
       </div>
-
-      <WareHouseModal openModal={openWarehouseModal} closeWarehouseModal={closeWarehouseModal} />
-      {!disableLeavePage && <LeavePage />}
+      {disableLeavePage ? '' : <LeavePage />}
     </div>
   );
 };

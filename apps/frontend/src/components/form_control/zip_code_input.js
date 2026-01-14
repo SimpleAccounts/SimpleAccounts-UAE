@@ -35,7 +35,7 @@ function ZipCodeInput(props) {
   return (
     <div className="mb-3">
       <Label htmlFor={zipCodeName} className="mb-2 block">
-        {required && <span className="text-red-500">* </span>}
+        {required && <span className="text-destructive">* </span>}
         {label}
       </Label>
       <input
@@ -63,7 +63,7 @@ function ZipCodeInput(props) {
         data-testid="zip-code-input"
       />
       {zipCodeError && zipCodeTouched && (
-        <div className="text-sm text-red-500 mt-1">{zipCodeError}</div>
+        <div className="text-sm text-destructive mt-1">{zipCodeError}</div>
       )}
     </div>
   );

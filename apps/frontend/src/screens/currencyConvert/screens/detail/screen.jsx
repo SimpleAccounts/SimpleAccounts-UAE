@@ -1,59 +1,48 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Banknote, HelpCircle, Trash2, CircleDot, Ban, ChevronRight, Home } from 'lucide-react';
-
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { selectCurrencyFactory, selectStyles } from 'utils';
 import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Input,
   Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-
+  FormGroup,
+  Label,
+  Row,
+  Col,
+} from 'components/migration';
 import { LeavePage, Loader, ConfirmDeleteModal } from 'components';
+import Select from 'react-select';
 import { CommonActions, AuthActions } from 'services/global';
+import './style.scss';
 import * as DetailCurrencyConvertAction from './actions';
 import * as CurrencyConvertActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
+import { Banknote, Trash2, CircleDot, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
-strings.setLanguage(localStorage.getItem('language') || 'en');
 
-// Corporate theme constants
-const theme = {
-  bg: '#f8f9fa',
-  bgWhite: '#ffffff',
-  primary: '#2064d8',
-  textPrimary: '#111827',
-  textSecondary: '#4b5563',
-  textMuted: '#9ca3af',
-  border: '#e5e7eb',
-  danger: '#ef4444',
-};
+if (localStorage.getItem('language') == null) {
+  strings.setLanguage('en');
+} else {
+  strings.setLanguage(localStorage.getItem('language'));
+}
 
 // Zod validation schema
 const detailCurrencyConvertSchema = z.object({
-  currencyCode: z.string().min(1, 'Exchange currency is required'),
+  currencyCode: z
+    .number({
+      required_error: 'Exchange currency is required',
+      invalid_type_error: 'Exchange currency is required',
+    })
+    .positive('Exchange currency is required'),
   currencyIsoCode: z.string().optional(),
   exchangeRate: z
     .string()
@@ -61,42 +50,46 @@ const detailCurrencyConvertSchema = z.object({
     .refine(val => parseFloat(val) > 0, {
       message: 'Exchange rate should be greater than 0',
     }),
-  isActive: z.boolean().default(true),
 });
 
-const mapStateToProps = state => ({
-  currencyList: state.currencyConvert.currency_list,
-  currency_list: state.common.currency_list,
-});
+const mapStateToProps = state => {
+  return {
+    currencyList: state.currencyConvert.currency_list,
+    currency_list: state.common.currency_list,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
-  commonActions: bindActionCreators(CommonActions, dispatch),
-  detailCurrencyConvertAction: bindActionCreators(DetailCurrencyConvertAction, dispatch),
-  authActions: bindActionCreators(AuthActions, dispatch),
-  currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-});
+const mapDispatchToProps = dispatch => {
+  return {
+    commonActions: bindActionCreators(CommonActions, dispatch),
+    detailCurrencyConvertAction: bindActionCreators(DetailCurrencyConvertAction, dispatch),
+    authActions: bindActionCreators(AuthActions, dispatch),
+    currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
+  };
+};
 
 const DetailCurrencyConvert = ({
   commonActions,
   detailCurrencyConvertAction,
   authActions,
   currencyConvertActions,
+  history,
+  location,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [dialog, setDialog] = useState(null);
   const [current_currency_convert_id, setCurrentCurrencyConvertId] = useState(null);
-  const [basecurrency, setBasecurrency] = useState({});
+  const [basecurrency, setBasecurrency] = useState([]);
   const [currency_list, setCurrencyList] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [disabled1, setDisabled1] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [deletebutton, setDeletebutton] = useState(0);
 
-  const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$/;
+  const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
 
   const form = useForm({
     resolver: zodResolver(detailCurrencyConvertSchema),
@@ -104,30 +97,21 @@ const DetailCurrencyConvert = ({
       currencyCode: '',
       currencyIsoCode: '',
       exchangeRate: '',
-      isActive: true,
     },
     mode: 'onChange',
   });
 
-  const { reset, watch } = form;
-  const currencyIsoCode = watch('currencyIsoCode');
-
-  const getCompanyCurrency = useCallback(() => {
-    currencyConvertActions
-      .getCompanyCurrency()
-      .then(res => {
-        if (res.status === 200) {
-          setBasecurrency(res.data);
-        }
-      })
-      .catch(err => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
-        setLoading(false);
-      });
-  }, [currencyConvertActions, commonActions]);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+    trigger,
+  } = form;
 
   useEffect(() => {
-    if (location.state?.id) {
+    if (location.state && location.state.id) {
       authActions
         .getCurrencylist()
         .then(res => {
@@ -136,7 +120,10 @@ const DetailCurrencyConvert = ({
           }
         })
         .catch(err => {
-          commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+          commonActions.tostifyAlert(
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
+          );
           setLoading(false);
         });
 
@@ -151,46 +138,79 @@ const DetailCurrencyConvert = ({
             });
 
             setCurrentCurrencyConvertId(location.state.id);
+            setIsActive(res.data ? res.data.isActive : '');
+            setSelectedStatus(res.data ? res.data.isActive : '');
 
             reset({
-              currencyCode: res.data.currencyCode?.toString() || '',
-              exchangeRate: res.data.exchangeRate?.toString() || '',
-              currencyIsoCode: res.data.currencyIsoCode || '',
-              isActive: res.data.isActive ?? true,
+              currencyCode:
+                res.data.currencyCode && res.data.currencyCode !== null
+                  ? res.data.currencyCode
+                  : '',
+              exchangeRate:
+                res.data.exchangeRate && res.data.exchangeRate !== null
+                  ? res.data.exchangeRate
+                  : '',
+              currencyIsoCode:
+                res.data.currencyIsoCode && res.data.currencyIsoCode !== null
+                  ? res.data.currencyIsoCode
+                  : '',
             });
 
             setLoading(false);
           }
         })
-        .catch(() => {
+        .catch(err => {
           setLoading(false);
-          navigate('/admin/master/CurrencyConvert');
+          history.push('/admin/master/CurrencyConvert');
         });
     } else {
-      navigate('/admin/master/CurrencyConvert');
+      history.push('/admin/master/CurrencyConvert');
     }
-  }, [
-    location.state,
-    authActions,
-    detailCurrencyConvertAction,
-    commonActions,
-    navigate,
-    reset,
-    getCompanyCurrency,
-  ]);
+  }, [location.state, authActions, detailCurrencyConvertAction, commonActions, history, reset]);
+
+  const getCompanyCurrency = () => {
+    currencyConvertActions
+      .getCompanyCurrency()
+      .then(res => {
+        if (res.status === 200) {
+          setBasecurrency(res.data);
+        }
+      })
+      .catch(err => {
+        commonActions.tostifyAlert(
+          'error',
+          err && err.data ? err.data.message : 'Something Went Wrong'
+        );
+        setLoading(false);
+      });
+  };
+
+  const getData = data => {
+    let temp = {};
+    for (let item in data) {
+      if (typeof data[`${item}`] !== 'object') {
+        temp[`${item}`] = data[`${item}`];
+      } else {
+        temp[`${item}`] = data[`${item}`].value;
+      }
+    }
+    return temp;
+  };
 
   const onSubmit = data => {
     setDisabled(true);
 
-    const postData = {
-      id: current_currency_convert_id,
-      currencyCode: parseInt(data.currencyCode),
+    const obj = {
+      currencyCode: data.currencyCode,
       exchangeRate: data.exchangeRate,
-      isActive: data.isActive,
+      isActive: isActive,
     };
 
+    let postData = getData(obj);
+    postData = { ...postData, ...{ id: current_currency_convert_id } };
+
     setLoading(true);
-    setDisableLeavePage(true);
+    setDisableLeavePage(false);
     setLoadingMsg('Updating Currency Conversion...');
 
     detailCurrencyConvertAction
@@ -201,9 +221,9 @@ const DetailCurrencyConvert = ({
           setLoading(false);
           commonActions.tostifyAlert(
             'success',
-            res.data?.message || 'Currency Conversion Updated Successfully'
+            res.data ? res.data.message : 'Currency Conversion Updated Successfully'
           );
-          navigate('/admin/master/CurrencyConvert');
+          history.push('/admin/master/CurrencyConvert');
         }
       })
       .catch(err => {
@@ -211,19 +231,26 @@ const DetailCurrencyConvert = ({
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err?.data?.message || 'Currency Conversion Updated Unsuccessfully'
+          err.data ? err.data.message : 'Currency Conversion Updated Unsuccessfully'
         );
       });
   };
 
   const deleteCurrencyConvert = () => {
+    const message1 = (
+      <text>
+        <b>Delete Currency Conversion?</b>
+      </text>
+    );
+    const message =
+      'This Currency Conversion will be deleted permanently and cannot be recovered. ';
     setDialog(
       <ConfirmDeleteModal
         isOpen={true}
         okHandler={removeCurrencyConvert}
-        cancelHandler={() => setDialog(null)}
-        message="This Currency Conversion will be deleted permanently and cannot be recovered."
-        message1={<b>Delete Currency Conversion?</b>}
+        cancelHandler={removeDialog}
+        message={message}
+        message1={message1}
       />
     );
   };
@@ -239,20 +266,22 @@ const DetailCurrencyConvert = ({
         if (res.status === 200) {
           commonActions.tostifyAlert(
             'success',
-            res.data?.message || 'Currency Conversion Deleted Successfully'
+            res.data ? res.data.message : 'Currency Conversion Deleted Successfully'
           );
-          navigate('/admin/master/CurrencyConvert');
+          history.push('/admin/master/CurrencyConvert');
           setLoading(false);
         }
       })
       .catch(err => {
-        setDisabled1(false);
-        setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err?.data?.message || 'Currency Conversion Deleted Unsuccessfully'
+          err && err.data ? err.data.message : 'Currency Conversion Deleted Unsuccessfully'
         );
       });
+  };
+
+  const removeDialog = () => {
+    setDialog(null);
   };
 
   if (loading) {
@@ -260,285 +289,258 @@ const DetailCurrencyConvert = ({
   }
 
   return (
-    <div style={{ background: theme.bg, minHeight: '100%' }}>
-      {dialog}
-
-      {/* Page Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
-              Edit Currency Conversion
-            </h1>
-            <div
-              className="flex items-center gap-2 mt-1 text-sm"
-              style={{ color: theme.textMuted }}
-            >
-              <Home className="w-4 h-4" />
-              <span
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => navigate('/admin/dashboard')}
-              >
-                Home
-              </span>
-              <ChevronRight className="w-4 h-4" />
-              <span
-                className="cursor-pointer hover:text-blue-600"
-                onClick={() => navigate('/admin/master/CurrencyConvert')}
-              >
-                Currency Rate
-              </span>
-              <ChevronRight className="w-4 h-4" />
-              <span>Edit</span>
-            </div>
-          </div>
-          {current_currency_convert_id !== 10000 && deletebutton === 0 && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={deleteCurrencyConvert}
-              disabled={disabled1}
-              className="h-10 px-4"
-              style={{ borderColor: theme.danger, color: theme.danger }}
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              {disabled1 ? 'Deleting...' : strings.Delete || 'Delete'}
-            </Button>
-          )}
+    <div>
+      <div className="detail-vat-code-screen">
+        <div className="animated fadeIn">
+          {dialog}
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <CardHeader>
+                  <div className="h4 mb-0 d-flex align-items-center">
+                    <Banknote className="h-4 w-4" />
+                    <span className="ml-2"> {strings.UpdateCurrencyConversion} </span>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col lg={10}>
+                      <Form onSubmit={handleSubmit(onSubmit)} name="simpleForm">
+                        <Row>
+                          <Col>
+                            <FormGroup className="mb-3">
+                              <Label htmlFor="active">
+                                <span className="text-danger">* </span> {strings.Status}
+                              </Label>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <FormGroup check inline>
+                                <div className="custom-radio custom-control">
+                                  <input
+                                    className="custom-control-input"
+                                    type="radio"
+                                    id="inline-radio1"
+                                    name="active"
+                                    checked={selectedStatus}
+                                    value={true}
+                                    onChange={e => {
+                                      if (e.target.value === 'true') {
+                                        setSelectedStatus(true);
+                                        setIsActive(true);
+                                      }
+                                    }}
+                                  />
+                                  <label className="custom-control-label" htmlFor="inline-radio1">
+                                    {strings.Active}
+                                  </label>
+                                </div>
+                              </FormGroup>
+                              <FormGroup check inline>
+                                <div className="custom-radio custom-control">
+                                  <input
+                                    className="custom-control-input"
+                                    type="radio"
+                                    id="inline-radio2"
+                                    name="active"
+                                    value={false}
+                                    checked={!selectedStatus}
+                                    onChange={e => {
+                                      if (e.target.value === 'false') {
+                                        setSelectedStatus(false);
+                                        setIsActive(false);
+                                      }
+                                    }}
+                                  />
+                                  <label className="custom-control-label" htmlFor="inline-radio2">
+                                    {strings.Inactive}
+                                  </label>
+                                </div>
+                              </FormGroup>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col lg={1}>
+                            <FormGroup className="mt-2">
+                              <Label>{strings.Value}</Label>
+                              <Input
+                                disabled
+                                id="1"
+                                name="1"
+                                value={
+                                  1 +
+                                  ' ' +
+                                  (watch('currencyIsoCode') ? watch('currencyIsoCode') : '')
+                                }
+                              />
+                            </FormGroup>
+                          </Col>
+                          <Col lg={4}>
+                            <FormGroup className="mt-2">
+                              <Label htmlFor="currencyCode">{strings.ExchangeCurrency}</Label>
+                              <Controller
+                                name="currencyCode"
+                                control={control}
+                                render={({ field: { onChange, value, ...field } }) => (
+                                  <Select
+                                    {...field}
+                                    options={
+                                      currency_list
+                                        ? selectCurrencyFactory.renderOptions(
+                                            'currencyName',
+                                            'currencyCode',
+                                            currency_list,
+                                            'Currency'
+                                          )
+                                        : []
+                                    }
+                                    value={
+                                      currency_list &&
+                                      selectCurrencyFactory
+                                        .renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_list,
+                                          'Currency'
+                                        )
+                                        .find(option => option.value === value)
+                                    }
+                                    onChange={option => {
+                                      if (option && option.value) {
+                                        onChange(option.value);
+                                      } else {
+                                        onChange('');
+                                      }
+                                    }}
+                                    placeholder={strings.Select + strings.Currency}
+                                    styles={selectStyles}
+                                    className={errors.currencyCode ? 'is-invalid' : ''}
+                                    isClearable
+                                  />
+                                )}
+                              />
+                              {errors.currencyCode && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.currencyCode.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <FormGroup className="mt-5">
+                            <label>
+                              <b>=</b>
+                            </label>
+                          </FormGroup>
+                          <Col lg={3}>
+                            <FormGroup className="mt-2">
+                              <Label htmlFor="exchangeRate">{strings.Exchangerate}</Label>
+                              <Controller
+                                name="exchangeRate"
+                                control={control}
+                                render={({ field: { onChange, value, ...field } }) => (
+                                  <Input
+                                    {...field}
+                                    type="text"
+                                    maxLength="20"
+                                    id="exchangeRate"
+                                    placeholder={strings.Enter + strings.Exchangerate}
+                                    onChange={e => {
+                                      if (
+                                        e.target.value === '' ||
+                                        regDecimal.test(e.target.value)
+                                      ) {
+                                        onChange(e.target.value);
+                                      }
+                                    }}
+                                    value={value}
+                                    className={errors.exchangeRate ? 'is-invalid' : ''}
+                                  />
+                                )}
+                              />
+                              {errors.exchangeRate && (
+                                <div className="invalid-feedback">
+                                  {errors.exchangeRate.message}
+                                </div>
+                              )}
+                            </FormGroup>
+                          </Col>
+                          <Col lg={3}>
+                            <FormGroup className="mt-2">
+                              <Label htmlFor="currencyName"> {strings.BaseCurrency}</Label>
+                              <Input
+                                disabled
+                                type="text"
+                                id="currencyName"
+                                name="currencyName"
+                                value={basecurrency.currencyName}
+                              />
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <span style={{ fontWeight: 'bold' }}>
+                          Note: If a currency is associated with any bank, contact or document, it
+                          cannot be deleted.
+                        </span>
+                        <Row>
+                          <Col
+                            lg={10}
+                            className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
+                          >
+                            {current_currency_convert_id !== 10000 && deletebutton === 0 && (
+                              <FormGroup className="text-right">
+                                <Button
+                                  type="button"
+                                  name="button"
+                                  color="danger"
+                                  className="btn-square"
+                                  disabled={disabled1}
+                                  onClick={deleteCurrencyConvert}
+                                >
+                                  <Trash2 className="h-4 w-4" />{' '}
+                                  {disabled1 ? 'Deleting...' : strings.Delete}
+                                </Button>
+                              </FormGroup>
+                            )}
+                            <FormGroup className="text-right">
+                              {current_currency_convert_id !== 10000 && (
+                                <Button
+                                  type="submit"
+                                  name="submit"
+                                  color="primary"
+                                  className="btn-square mr-3"
+                                  disabled={disabled}
+                                  onClick={() => {
+                                    trigger();
+                                    if (errors && Object.keys(errors).length != 0) {
+                                      commonActions.fillManDatoryDetails();
+                                    }
+                                  }}
+                                >
+                                  <CircleDot className="h-4 w-4" />{' '}
+                                  {disabled ? 'Updating...' : strings.Update}
+                                </Button>
+                              )}
+                              <Button
+                                type="button"
+                                color="secondary"
+                                className="btn-square"
+                                onClick={() => {
+                                  history.push('/admin/master/CurrencyConvert');
+                                }}
+                              >
+                                <Ban className="h-4 w-4" /> {strings.Cancel}
+                              </Button>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </div>
-
-      {/* Form Card */}
-      <Card
-        className="rounded-xl"
-        style={{
-          background: theme.bgWhite,
-          border: `1px solid ${theme.border}`,
-          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <CardHeader className="border-b" style={{ borderColor: theme.border }}>
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center"
-              style={{ background: '#eff6ff' }}
-            >
-              <Banknote className="w-5 h-5" style={{ color: theme.primary }} />
-            </div>
-            <CardTitle className="text-lg font-semibold" style={{ color: theme.textPrimary }}>
-              {strings.UpdateCurrencyConversion || 'Update Currency Conversion'}
-            </CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
-              {/* Status */}
-              <FormField
-                control={form.control}
-                name="isActive"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className="flex items-center gap-1"
-                      style={{ color: theme.textPrimary }}
-                    >
-                      <span className="text-red-500">*</span>
-                      {strings.Status || 'Status'}
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        value={field.value ? 'active' : 'inactive'}
-                        onValueChange={value => field.onChange(value === 'active')}
-                        className="flex gap-6"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="active" id="active" />
-                          <Label htmlFor="active" className="cursor-pointer">
-                            {strings.Active || 'Active'}
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="inactive" id="inactive" />
-                          <Label htmlFor="inactive" className="cursor-pointer">
-                            {strings.Inactive || 'Inactive'}
-                          </Label>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Currency Conversion Row */}
-              <div className="flex items-end gap-4 flex-wrap">
-                {/* Value Display */}
-                <div className="w-20">
-                  <FormLabel style={{ color: theme.textPrimary }}>
-                    {strings.Value || 'Value'}
-                  </FormLabel>
-                  <Input
-                    disabled
-                    value={`1 ${currencyIsoCode || ''}`}
-                    className="h-11 mt-2"
-                    style={{ borderColor: theme.border, background: '#f9fafb' }}
-                  />
-                </div>
-
-                {/* Exchange Currency */}
-                <FormField
-                  control={form.control}
-                  name="currencyCode"
-                  render={({ field }) => (
-                    <FormItem className="flex-1 min-w-[200px]">
-                      <FormLabel
-                        className="flex items-center gap-1"
-                        style={{ color: theme.textPrimary }}
-                      >
-                        <span className="text-red-500">*</span>
-                        {strings.ExchangeCurrency || 'Exchange Currency'}
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <HelpCircle
-                                className="w-4 h-4 cursor-help"
-                                style={{ color: theme.textMuted }}
-                              />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Select the currency to convert from</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={value => {
-                          field.onChange(value);
-                          const selectedCurrency = currency_list.find(
-                            c => c.currencyCode.toString() === value
-                          );
-                          if (selectedCurrency) {
-                            form.setValue(
-                              'currencyIsoCode',
-                              selectedCurrency.currencyIsoCode || ''
-                            );
-                          }
-                        }}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="h-11" style={{ borderColor: theme.border }}>
-                            <SelectValue
-                              placeholder={`${strings.Select || 'Select'} ${strings.Currency || 'Currency'}`}
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {currency_list.map(currency => (
-                            <SelectItem
-                              key={currency.currencyCode}
-                              value={currency.currencyCode.toString()}
-                            >
-                              {currency.currencyName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Equals Sign */}
-                <div className="flex items-center h-11 mb-1">
-                  <span className="text-xl font-bold" style={{ color: theme.textSecondary }}>
-                    =
-                  </span>
-                </div>
-
-                {/* Exchange Rate */}
-                <FormField
-                  control={form.control}
-                  name="exchangeRate"
-                  render={({ field }) => (
-                    <FormItem className="flex-1 min-w-[150px]">
-                      <FormLabel
-                        className="flex items-center gap-1"
-                        style={{ color: theme.textPrimary }}
-                      >
-                        <span className="text-red-500">*</span>
-                        {strings.Exchangerate || 'Exchange Rate'}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={`${strings.Enter || 'Enter'} ${strings.Exchangerate || 'Exchange Rate'}`}
-                          maxLength={20}
-                          value={field.value}
-                          onChange={e => {
-                            if (e.target.value === '' || regDecimal.test(e.target.value)) {
-                              field.onChange(e.target.value);
-                            }
-                          }}
-                          className="h-11"
-                          style={{ borderColor: theme.border }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Base Currency */}
-                <div className="flex-1 min-w-[150px]">
-                  <FormLabel style={{ color: theme.textPrimary }}>
-                    {strings.BaseCurrency || 'Base Currency'}
-                  </FormLabel>
-                  <Input
-                    disabled
-                    value={basecurrency.currencyName || ''}
-                    className="h-11 mt-2"
-                    style={{ borderColor: theme.border, background: '#f9fafb' }}
-                  />
-                </div>
-              </div>
-
-              <p className="text-sm" style={{ color: theme.textMuted }}>
-                Note: If a currency is associated with any bank, contact or document, it cannot be
-                deleted.
-              </p>
-
-              {/* Action Buttons */}
-              <div
-                className="flex items-center justify-end gap-3 pt-4 border-t"
-                style={{ borderColor: theme.border }}
-              >
-                {current_currency_convert_id !== 10000 && (
-                  <Button
-                    type="submit"
-                    disabled={disabled}
-                    className="h-10 px-4"
-                    style={{ background: theme.primary }}
-                  >
-                    <CircleDot className="w-4 h-4 mr-2" />
-                    {disabled ? 'Updating...' : strings.Update || 'Update'}
-                  </Button>
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate('/admin/master/CurrencyConvert')}
-                  className="h-10 px-4"
-                  style={{ borderColor: theme.border, color: theme.textSecondary }}
-                >
-                  <Ban className="w-4 h-4 mr-2" />
-                  {strings.Cancel || 'Cancel'}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
       {!disableLeavePage && <LeavePage />}
     </div>
   );

@@ -16,7 +16,7 @@ function RadioButton(props) {
       <div className="mb-3">
         {label && (
           <Label className="mb-2 block">
-            <span className="text-red-500">* </span>
+            <span className="text-destructive">* </span>
             {label}
           </Label>
         )}
