@@ -72,6 +72,7 @@ public class ContactController {
 	private final BankAccountService bankAccountService;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getContactList")
 	public ResponseEntity<PaginationResponseModel> getContactList(ContactRequestFilterModel filterModel,
 			HttpServletRequest request) {
