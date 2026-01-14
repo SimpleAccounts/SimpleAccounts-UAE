@@ -597,7 +597,9 @@ const DetailContact = ({
             {strings.Contact || 'Contacts'}
           </a>
           <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="text-corp-text-primary font-medium">{strings.UpdateContact}</span>
+          <span className="text-corp-text-primary font-medium">
+            {strings.UpdateContact || 'Update Contact'}
+          </span>
         </nav>
 
         {/* Page Header */}
@@ -605,7 +607,7 @@ const DetailContact = ({
           <div>
             <h1 className="text-2xl font-semibold text-corp-text-primary flex items-center gap-2">
               <IdCard className="h-6 w-6" style={{ color: theme.primary }} />
-              {strings.UpdateContact}
+              {strings.UpdateContact || 'Update Contact'}
             </h1>
             <p className="text-sm text-corp-text-muted mt-1">
               Update contact information and details

@@ -217,9 +217,10 @@ describe('DetailContact Component', () => {
   it('should render detail contact form', async () => {
     renderComponent();
 
-    // Wait for form to load - use exact text to avoid multiple matches
+    // Wait for form to load - use getAllByText since "Update Contact" appears in breadcrumb and header
     await waitFor(() => {
-      expect(screen.getByText('Update Contact')).toBeInTheDocument();
+      const updateContactElements = screen.getAllByText('Update Contact');
+      expect(updateContactElements.length).toBeGreaterThan(0);
     });
   });
 
@@ -265,9 +266,10 @@ describe('DetailContact Component', () => {
 
     renderComponent();
 
-    // Wait for component to load
+    // Wait for component to load - use getAllByText since "Update Contact" appears in breadcrumb and header
     await waitFor(() => {
-      expect(screen.getByText('Update Contact')).toBeInTheDocument();
+      const updateContactElements = screen.getAllByText('Update Contact');
+      expect(updateContactElements.length).toBeGreaterThan(0);
     });
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
