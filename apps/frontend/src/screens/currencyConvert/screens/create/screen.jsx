@@ -1,47 +1,59 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { selectCurrencyFactory, selectStyles } from 'utils';
+import { useNavigate } from 'react-router-dom';
+import { Banknote, HelpCircle, CircleDot, RefreshCw, Ban, ChevronRight, Home } from 'lucide-react';
+
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Input,
-  FormGroup,
-  Label,
-  Row,
-  Col,
-} from 'components/migration';
-import Select from 'react-select';
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormControl,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+
 import { LeavePage, Loader } from 'components';
 import { AuthActions, CommonActions } from 'services/global';
-import './style.scss';
 import * as CreateCurrencyConvertActions from './actions';
 import * as CurrencyConvertActions from '../../actions';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Banknote, CircleDot, RefreshCw, Ban } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
+strings.setLanguage(localStorage.getItem('language') || 'en');
 
-if (localStorage.getItem('language') == null) {
-  strings.setLanguage('en');
-} else {
-  strings.setLanguage(localStorage.getItem('language'));
-}
+// Corporate theme constants
+const theme = {
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  primary: '#2064d8',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  danger: '#ef4444',
+};
 
 // Zod validation schema
 const createCurrencyConvertSchema = z.object({
-  currencyCode: z
-    .number({
-      required_error: 'Exchange currency is required',
-      invalid_type_error: 'Exchange currency is required',
-    })
-    .positive('Exchange currency is required'),
+  currencyCode: z.string().min(1, 'Exchange currency is required'),
   currencyIsoCode: z.string().optional(),
   exchangeRate: z
     .string()
@@ -49,42 +61,37 @@ const createCurrencyConvertSchema = z.object({
     .refine(val => parseFloat(val) > 0, {
       message: 'Exchange rate should be greater than 0',
     }),
+  isActive: z.boolean().default(true),
 });
 
-const mapStateToProps = state => {
-  return {
-    currency_list: state.common.currency_list,
-  };
-};
+const mapStateToProps = state => ({
+  currency_list: state.common.currency_list,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
-    createCurrencyConvertActions: bindActionCreators(CreateCurrencyConvertActions, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch),
-    authActions: bindActionCreators(AuthActions, dispatch),
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  currencyConvertActions: bindActionCreators(CurrencyConvertActions, dispatch),
+  createCurrencyConvertActions: bindActionCreators(CreateCurrencyConvertActions, dispatch),
+  commonActions: bindActionCreators(CommonActions, dispatch),
+  authActions: bindActionCreators(AuthActions, dispatch),
+});
 
 const CreateCurrencyConvert = ({
   currencyConvertActions,
   createCurrencyConvertActions,
   commonActions,
   authActions,
-  history,
 }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [createDisabled, setCreateDisabled] = useState(false);
-  const [basecurrency, setBasecurrency] = useState([]);
+  const [basecurrency, setBasecurrency] = useState({});
   const [createMore, setCreateMore] = useState(false);
   const [currency_list, setCurrencyList] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState(true);
-  const [isActive, setIsActive] = useState(true);
   const [disableLeavePage, setDisableLeavePage] = useState(false);
   const [exist, setExist] = useState(false);
 
-  const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$$/;
+  const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,6}$/;
 
   const form = useForm({
     resolver: zodResolver(createCurrencyConvertSchema),
@@ -92,22 +99,14 @@ const CreateCurrencyConvert = ({
       currencyCode: '',
       currencyIsoCode: '',
       exchangeRate: '',
+      isActive: true,
     },
     mode: 'onChange',
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setError,
-    clearErrors,
-    watch,
-    trigger,
-  } = form;
-
-  const _currencyCode = watch('currencyCode');
+  const { setError, clearErrors, watch, reset } = form;
+  const selectedCurrencyCode = watch('currencyCode');
+  const currencyIsoCode = watch('currencyIsoCode');
 
   useEffect(() => {
     authActions
@@ -118,10 +117,7 @@ const CreateCurrencyConvert = ({
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert(
-          'error',
-          err && err.data ? err.data.message : 'Something Went Wrong'
-        );
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
   }, [authActions, commonActions]);
@@ -135,10 +131,7 @@ const CreateCurrencyConvert = ({
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert(
-          'error',
-          err && err.data ? err.data.message : 'Something Went Wrong'
-        );
+        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         setLoading(false);
       });
   }, [currencyConvertActions, commonActions]);
@@ -182,9 +175,9 @@ const CreateCurrencyConvert = ({
     setCreateDisabled(true);
 
     const obj = {
-      currencyCode: data.currencyCode,
+      currencyCode: parseInt(data.currencyCode),
       exchangeRate: data.exchangeRate,
-      isActive: isActive,
+      isActive: data.isActive,
     };
 
     setLoading(true);
@@ -199,7 +192,7 @@ const CreateCurrencyConvert = ({
           setLoading(false);
           commonActions.tostifyAlert(
             'success',
-            res.data ? res.data.message : 'Currency Convert Created Successfully'
+            res.data?.message || 'Currency Convert Created Successfully'
           );
 
           if (createMore) {
@@ -207,7 +200,7 @@ const CreateCurrencyConvert = ({
             setCreateMore(false);
             setDisableLeavePage(false);
           } else {
-            history.push('/admin/master/CurrencyConvert');
+            navigate('/admin/master/CurrencyConvert');
           }
         }
       })
@@ -216,13 +209,9 @@ const CreateCurrencyConvert = ({
         setLoading(false);
         commonActions.tostifyAlert(
           'error',
-          err.data ? err.data.message : 'Currency Convert Created Unsuccessfully'
+          err?.data?.message || 'Currency Convert Created Unsuccessfully'
         );
       });
-  };
-
-  const handleCreateAndMore = () => {
-    setCreateMore(true);
   };
 
   if (loading) {
@@ -230,250 +219,273 @@ const CreateCurrencyConvert = ({
   }
 
   return (
-    <div>
-      <div className="vat-code-create-screen">
-        <div className="animated fadeIn">
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <CardHeader>
-                  <div className="h4 mb-0 d-flex align-items-center">
-                    <Banknote className="h-5 w-5" />
-                    <span className="ml-2"> {strings.NewCurrencyConversion}</span>
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  <Row>
-                    <Col lg={10}>
-                      <form onSubmit={handleSubmit(onSubmit)}>
-                        <Row>
-                          <Col>
-                            <FormGroup className="mb-3">
-                              <Label htmlFor="active">
-                                <span className="text-danger">* </span>
-                                {strings.Status}
-                              </Label>
-                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <FormGroup check inline>
-                                <div className="custom-radio custom-control">
-                                  <input
-                                    className="custom-control-input"
-                                    type="radio"
-                                    id="inline-radio1"
-                                    name="active"
-                                    checked={selectedStatus}
-                                    value={true}
-                                    onChange={e => {
-                                      if (e.target.value === 'true') {
-                                        setSelectedStatus(true);
-                                        setIsActive(true);
-                                      }
-                                    }}
-                                  />
-                                  <label className="custom-control-label" htmlFor="inline-radio1">
-                                    {strings.Active}
-                                  </label>
-                                </div>
-                              </FormGroup>
-                              <FormGroup check inline>
-                                <div className="custom-radio custom-control">
-                                  <input
-                                    className="custom-control-input"
-                                    type="radio"
-                                    id="inline-radio2"
-                                    name="active"
-                                    value={false}
-                                    checked={!selectedStatus}
-                                    onChange={e => {
-                                      if (e.target.value === 'false') {
-                                        setSelectedStatus(false);
-                                        setIsActive(false);
-                                      }
-                                    }}
-                                  />
-                                  <label className="custom-control-label" htmlFor="inline-radio2">
-                                    {strings.Inactive}
-                                  </label>
-                                </div>
-                              </FormGroup>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg={1}>
-                            <FormGroup className="mt-2">
-                              <Label>{strings.Value}</Label>
-                              <Input
-                                disabled
-                                id="1"
-                                name="1"
-                                value={
-                                  1 +
-                                  ' ' +
-                                  (watch('currencyIsoCode') ? watch('currencyIsoCode') : '')
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col lg={4}>
-                            <FormGroup className="mt-2">
-                              <Label htmlFor="currencyCode">{strings.ExchangeCurrency}</Label>
-                              <Controller
-                                name="currencyCode"
-                                control={control}
-                                render={({ field: { onChange, value, ...field } }) => (
-                                  <Select
-                                    {...field}
-                                    options={
-                                      currency_list
-                                        ? selectCurrencyFactory.renderOptions(
-                                            'currencyName',
-                                            'currencyCode',
-                                            currency_list,
-                                            'Currency'
-                                          )
-                                        : []
-                                    }
-                                    value={
-                                      currency_list &&
-                                      selectCurrencyFactory
-                                        .renderOptions(
-                                          'currencyName',
-                                          'currencyCode',
-                                          currency_list,
-                                          'Currency'
-                                        )
-                                        .find(option => option.value === value)
-                                    }
-                                    onChange={option => {
-                                      if (option && option.value) {
-                                        onChange(option.value);
-                                        form.setValue('currencyIsoCode', option.iso);
-                                        validationCheck(option.value);
-                                      } else {
-                                        onChange('');
-                                        form.setValue('currencyIsoCode', '');
-                                      }
-                                    }}
-                                    placeholder={strings.Select + strings.Currency}
-                                    styles={selectStyles}
-                                    className={errors.currencyCode ? 'is-invalid' : ''}
-                                    isClearable
-                                  />
-                                )}
-                              />
-                              {errors.currencyCode && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.currencyCode.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <FormGroup className="mt-5">
-                            <label>
-                              <b>=</b>
-                            </label>
-                          </FormGroup>
-                          <Col lg={3}>
-                            <FormGroup className="mt-2">
-                              <Label htmlFor="exchangeRate">{strings.Exchangerate}</Label>
-                              <Controller
-                                name="exchangeRate"
-                                control={control}
-                                render={({ field: { onChange, value, ...field } }) => (
-                                  <Input
-                                    {...field}
-                                    type="text"
-                                    maxLength="20"
-                                    id="exchangeRate"
-                                    placeholder={strings.Enter + strings.Exchangerate}
-                                    onChange={e => {
-                                      if (
-                                        e.target.value === '' ||
-                                        regDecimal.test(e.target.value)
-                                      ) {
-                                        onChange(e.target.value);
-                                      }
-                                    }}
-                                    value={value}
-                                    className={errors.exchangeRate ? 'is-invalid' : ''}
-                                  />
-                                )}
-                              />
-                              {errors.exchangeRate && (
-                                <div className="invalid-feedback">
-                                  {errors.exchangeRate.message}
-                                </div>
-                              )}
-                            </FormGroup>
-                          </Col>
-                          <Col lg={3}>
-                            <FormGroup className="mt-2">
-                              <Label htmlFor="currencyName">{strings.BaseCurrency}</Label>
-                              <Input
-                                disabled
-                                type="text"
-                                id="currencyName"
-                                name="currencyName"
-                                value={basecurrency.currencyName}
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <span style={{ fontWeight: 'bold' }}>
-                          Note: If a currency is associated with any bank, contact or document, it
-                          cannot be deleted.
-                        </span>
-                        <FormGroup className="text-right mt-5">
-                          <Button
-                            type="submit"
-                            name="submit"
-                            color="primary"
-                            className="btn-square mr-3"
-                            disabled={createDisabled}
-                            onClick={() => {
-                              trigger();
-                              if (errors && Object.keys(errors).length !== 0) {
-                                commonActions.fillManDatoryDetails();
-                              }
-                            }}
-                          >
-                            <CircleDot className="h-4 w-4" />{' '}
-                            {createDisabled ? 'Creating...' : strings.Create}
-                          </Button>
-
-                          <Button
-                            type="submit"
-                            name="button"
-                            color="primary"
-                            className="btn-square mr-3"
-                            disabled={createDisabled}
-                            onClick={handleCreateAndMore}
-                          >
-                            <RefreshCw className="h-4 w-4" />{' '}
-                            {createDisabled ? 'Creating...' : strings.CreateandMore}
-                          </Button>
-
-                          <Button
-                            type="button"
-                            color="secondary"
-                            className="btn-square"
-                            onClick={() => {
-                              history.push('/admin/master/CurrencyConvert');
-                            }}
-                          >
-                            <Ban className="h-4 w-4" /> {strings.Cancel}
-                          </Button>
-                        </FormGroup>
-                      </form>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+    <div style={{ background: theme.bg, minHeight: '100%' }}>
+      {/* Page Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
+          Add Currency Conversion
+        </h1>
+        <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: theme.textMuted }}>
+          <Home className="w-4 h-4" />
+          <span
+            className="cursor-pointer hover:text-blue-600"
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            Home
+          </span>
+          <ChevronRight className="w-4 h-4" />
+          <span
+            className="cursor-pointer hover:text-blue-600"
+            onClick={() => navigate('/admin/master/CurrencyConvert')}
+          >
+            Currency Rate
+          </span>
+          <ChevronRight className="w-4 h-4" />
+          <span>Add Currency Conversion</span>
         </div>
       </div>
+
+      {/* Form Card */}
+      <Card
+        className="rounded-xl"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <CardHeader className="border-b" style={{ borderColor: theme.border }}>
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: '#eff6ff' }}
+            >
+              <Banknote className="w-5 h-5" style={{ color: theme.primary }} />
+            </div>
+            <CardTitle className="text-lg font-semibold" style={{ color: theme.textPrimary }}>
+              {strings.NewCurrencyConversion || 'New Currency Conversion'}
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl">
+              {/* Status */}
+              <FormField
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className="flex items-center gap-1"
+                      style={{ color: theme.textPrimary }}
+                    >
+                      <span className="text-red-500">*</span>
+                      {strings.Status || 'Status'}
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        value={field.value ? 'active' : 'inactive'}
+                        onValueChange={value => field.onChange(value === 'active')}
+                        className="flex gap-6"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="active" id="active" />
+                          <Label htmlFor="active" className="cursor-pointer">
+                            {strings.Active || 'Active'}
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="inactive" id="inactive" />
+                          <Label htmlFor="inactive" className="cursor-pointer">
+                            {strings.Inactive || 'Inactive'}
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Currency Conversion Row */}
+              <div className="flex items-end gap-4 flex-wrap">
+                {/* Value Display */}
+                <div className="w-20">
+                  <FormLabel style={{ color: theme.textPrimary }}>
+                    {strings.Value || 'Value'}
+                  </FormLabel>
+                  <Input
+                    disabled
+                    value={`1 ${currencyIsoCode || ''}`}
+                    className="h-11 mt-2"
+                    style={{ borderColor: theme.border, background: '#f9fafb' }}
+                  />
+                </div>
+
+                {/* Exchange Currency */}
+                <FormField
+                  control={form.control}
+                  name="currencyCode"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 min-w-[200px]">
+                      <FormLabel
+                        className="flex items-center gap-1"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span className="text-red-500">*</span>
+                        {strings.ExchangeCurrency || 'Exchange Currency'}
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <HelpCircle
+                                className="w-4 h-4 cursor-help"
+                                style={{ color: theme.textMuted }}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Select the currency to convert from</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={value => {
+                          field.onChange(value);
+                          const selectedCurrency = currency_list.find(
+                            c => c.currencyCode.toString() === value
+                          );
+                          if (selectedCurrency) {
+                            form.setValue(
+                              'currencyIsoCode',
+                              selectedCurrency.currencyIsoCode || ''
+                            );
+                            validationCheck(parseInt(value));
+                          }
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="h-11" style={{ borderColor: theme.border }}>
+                            <SelectValue
+                              placeholder={`${strings.Select || 'Select'} ${strings.Currency || 'Currency'}`}
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {currency_list.map(currency => (
+                            <SelectItem
+                              key={currency.currencyCode}
+                              value={currency.currencyCode.toString()}
+                            >
+                              {currency.currencyName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Equals Sign */}
+                <div className="flex items-center h-11 mb-1">
+                  <span className="text-xl font-bold" style={{ color: theme.textSecondary }}>
+                    =
+                  </span>
+                </div>
+
+                {/* Exchange Rate */}
+                <FormField
+                  control={form.control}
+                  name="exchangeRate"
+                  render={({ field }) => (
+                    <FormItem className="flex-1 min-w-[150px]">
+                      <FormLabel
+                        className="flex items-center gap-1"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span className="text-red-500">*</span>
+                        {strings.Exchangerate || 'Exchange Rate'}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder={`${strings.Enter || 'Enter'} ${strings.Exchangerate || 'Exchange Rate'}`}
+                          maxLength={20}
+                          value={field.value}
+                          onChange={e => {
+                            if (e.target.value === '' || regDecimal.test(e.target.value)) {
+                              field.onChange(e.target.value);
+                            }
+                          }}
+                          className="h-11"
+                          style={{ borderColor: theme.border }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Base Currency */}
+                <div className="flex-1 min-w-[150px]">
+                  <FormLabel style={{ color: theme.textPrimary }}>
+                    {strings.BaseCurrency || 'Base Currency'}
+                  </FormLabel>
+                  <Input
+                    disabled
+                    value={basecurrency.currencyName || ''}
+                    className="h-11 mt-2"
+                    style={{ borderColor: theme.border, background: '#f9fafb' }}
+                  />
+                </div>
+              </div>
+
+              <p className="text-sm" style={{ color: theme.textMuted }}>
+                Note: If a currency is associated with any bank, contact or document, it cannot be
+                deleted.
+              </p>
+
+              {/* Action Buttons */}
+              <div
+                className="flex items-center justify-end gap-3 pt-4 border-t"
+                style={{ borderColor: theme.border }}
+              >
+                <Button
+                  type="submit"
+                  disabled={createDisabled}
+                  onClick={() => setCreateMore(false)}
+                  className="h-10 px-4"
+                  style={{ background: theme.primary }}
+                >
+                  <CircleDot className="w-4 h-4 mr-2" />
+                  {createDisabled ? 'Creating...' : strings.Create || 'Create'}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={createDisabled}
+                  onClick={() => setCreateMore(true)}
+                  className="h-10 px-4"
+                  style={{ background: theme.primary }}
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  {createDisabled ? 'Creating...' : strings.CreateandMore || 'Create and More'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate('/admin/master/CurrencyConvert')}
+                  className="h-10 px-4"
+                  style={{ borderColor: theme.border, color: theme.textSecondary }}
+                >
+                  <Ban className="w-4 h-4 mr-2" />
+                  {strings.Cancel || 'Cancel'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
       {!disableLeavePage && <LeavePage />}
     </div>
   );

@@ -84,6 +84,7 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
 			HttpServletRequest request) {

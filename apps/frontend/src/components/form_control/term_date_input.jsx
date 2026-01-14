@@ -53,7 +53,7 @@ function TermDateInput(props) {
         <div className="lg:col-span-3">
           <div className="mb-3">
             <Label htmlFor="term" className="mb-2 block">
-              {term.required && <span className="text-destructive">* </span>}
+              {term.required && <span className="text-red-500">* </span>}
               {term.label}{' '}
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -88,10 +88,10 @@ function TermDateInput(props) {
                   onChange('term', '');
                 }
               }}
-              className={term.errors && term.touched ? 'border-destructive' : ''}
+              className={term.errors && term.touched ? 'border-red-500' : ''}
             />
             {term.errors && term.touched && (
-              <div className="text-sm text-destructive mt-1">{term.errors}</div>
+              <div className="text-sm text-red-500 mt-1">{term.errors}</div>
             )}
           </div>
         </div>
@@ -100,7 +100,7 @@ function TermDateInput(props) {
         <div className="lg:col-span-3">
           <div className="mb-3">
             <Label htmlFor={invoiceDate.name} className="mb-2 block">
-              <span className="text-destructive">* </span>
+              <span className="text-red-500">* </span>
               {invoiceDate.label}
             </Label>
             <DatePicker
@@ -120,11 +120,11 @@ function TermDateInput(props) {
                 onChange('invoiceDueDate', dueDateValue);
               }}
               className={`input-transition w-full border rounded px-3 py-2 ${
-                invoiceDate.errors && invoiceDate.touched ? 'border-destructive' : ''
+                invoiceDate.errors && invoiceDate.touched ? 'border-red-500' : ''
               }`}
             />
             {invoiceDate.errors && invoiceDate.touched && (
-              <div className="text-sm text-destructive mt-1">{invoiceDate.errors}</div>
+              <div className="text-sm text-red-500 mt-1">{invoiceDate.errors}</div>
             )}
           </div>
         </div>

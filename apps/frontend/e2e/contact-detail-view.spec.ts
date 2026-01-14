@@ -7,18 +7,22 @@ const LOGIN_PASSWORD = process.env.E2E_PASSWORD || '';
 test.describe('Contact Detail Page - shadcn/ui Migration Verification', () => {
   let authToken: string;
 
+  test.beforeEach(async ({ page }) => {
+    test.skip(!LOGIN_EMAIL || !LOGIN_PASSWORD, 'E2E_USERNAME and E2E_PASSWORD must be set');
+  });
+
   test('View contact detail page and verify shadcn/ui Select components', async ({ page }) => {
     test.setTimeout(180000); // 3 minutes
 
     // ============ STEP 1: LOGIN via UI ============
     console.log('=== STEP 1: LOGIN ===');
     await page.goto(`${BASE_URL}/login`);
-    await page.waitForSelector('input[type="email"], input[name="email"], #email', {
+    await page.waitForSelector('#email-input', {
       timeout: 15000,
     });
-    await page.fill('input[type="email"], input[name="email"], #email', LOGIN_EMAIL);
-    await page.fill('input[type="password"], input[name="password"], #password', LOGIN_PASSWORD);
-    await page.click('button[type="submit"]');
+    await page.locator('#email-input').fill(LOGIN_EMAIL);
+    await page.locator('#password-input').fill(LOGIN_PASSWORD);
+    await page.locator('button[type="submit"]').click();
     await page.waitForURL(url => !url.toString().includes('/login'), { timeout: 15000 });
     console.log('✓ Logged in via UI');
 
@@ -44,15 +48,29 @@ test.describe('Contact Detail Page - shadcn/ui Migration Verification', () => {
     // Take screenshot of contact list
     await page.screenshot({ path: 'test-results/contact-list-before-detail.png', fullPage: true });
 
-    // ============ STEP 3: Click on First Contact ============
+    // ============ STEP 3: Open Contact Edit/Detail Page ============
     console.log('\n=== STEP 3: OPEN CONTACT DETAIL PAGE ===');
 
-    // Click on the first row in the table
-    const firstRow = page.locator('table tbody tr').first();
-    await firstRow.click();
+    // Click on the actions menu (three dots) for the first row
+    const actionsButton = page.locator('table tbody button[aria-haspopup="menu"]').first();
+    await actionsButton.click();
+    await page.waitForTimeout(500);
 
-    // Wait for navigation to detail page
-    await page.waitForURL('**/contact/detail**', { timeout: 15000 });
+    // Click Edit from the dropdown menu
+    const editMenuItem = page.getByRole('menuitem', { name: 'Edit' });
+    await editMenuItem.waitFor({ state: 'visible', timeout: 5000 });
+    await editMenuItem.click();
+
+    // Wait for navigation to detail/edit page (URL pattern: /contact/detail/{id})
+    await page.waitForURL(
+      url => {
+        const urlStr = url.toString();
+        return (
+          urlStr.includes('/contact/') && !urlStr.endsWith('/contact') && !urlStr.includes('/view')
+        );
+      },
+      { timeout: 15000 }
+    );
     await page.waitForLoadState('networkidle', { timeout: 60000 });
     await page.waitForTimeout(3000); // Allow time for all data to load
 

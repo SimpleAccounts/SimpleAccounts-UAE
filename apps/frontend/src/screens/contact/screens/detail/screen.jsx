@@ -233,6 +233,19 @@ const DetailContact = ({
     initializeData();
   }, []);
 
+  // Initialize countryList when Redux country_list is populated
+  useEffect(() => {
+    if (country_list && country_list.length > 0 && countryList.length === 0) {
+      const list = selectOptionsFactory.renderOptions(
+        'countryName',
+        'countryCode',
+        country_list,
+        'Country'
+      );
+      setCountryList(list);
+    }
+  }, [country_list]);
+
   const initializeData = () => {
     if (location?.state?.id) {
       contactActions.getContactTypeList();
@@ -473,6 +486,7 @@ const DetailContact = ({
   };
 
   const removeContact = () => {
+    setDialog(null);
     setDisabled1(true);
     setLoading(true);
     setLoadingMsg('Deleting Contact...');
@@ -493,6 +507,8 @@ const DetailContact = ({
           'error',
           err.data ? err.data.message : 'Contact Deleted Unsuccessfully'
         );
+        setLoading(false);
+        setDisabled1(false);
       });
   };
 

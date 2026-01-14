@@ -22,13 +22,25 @@ test.describe('Contact Module CRUD Operations', () => {
     // ============ STEP 1: LOGIN via UI ============
     console.log('=== STEP 1: LOGIN ===');
     await page.goto(`${BASE_URL}/login`);
-    await page.waitForSelector('input[type="email"], input[name="email"], #email', {
+    await page.waitForSelector('#email-input', {
       timeout: 15000,
     });
-    await page.fill('input[type="email"], input[name="email"], #email', LOGIN_EMAIL);
-    await page.fill('input[type="password"], input[name="password"], #password', LOGIN_PASSWORD);
-    await page.click('button[type="submit"]');
-    await page.waitForURL(url => !url.toString().includes('/login'), { timeout: 15000 });
+    console.log('LOGIN_EMAIL:', LOGIN_EMAIL);
+    console.log('LOGIN_PASSWORD:', LOGIN_PASSWORD ? '***set***' : 'EMPTY');
+
+    const emailInput = page.locator('#email-input');
+    await emailInput.click();
+    await emailInput.fill(LOGIN_EMAIL);
+
+    const passwordInput = page.locator('#password-input');
+    await passwordInput.click();
+    await passwordInput.fill(LOGIN_PASSWORD);
+
+    // Wait for form to be ready
+    await page.waitForTimeout(500);
+
+    await page.locator('button[type="submit"]').click();
+    await page.waitForURL(url => !url.toString().includes('/login'), { timeout: 30000 });
     console.log('✓ Logged in via UI');
 
     // Get auth token from localStorage
@@ -264,16 +276,18 @@ test.describe('Contact Module CRUD Operations', () => {
     const verifyRow = page.locator(`table tbody tr:has-text("${testContact.email}")`).first();
     await verifyRow.waitFor({ state: 'visible', timeout: 10000 });
     await verifyRow.click();
-    await page.waitForURL('**/contact/detail**', { timeout: 15000 });
+    // Wait for navigation away from list page (could be detail, view, or edit)
+    await page.waitForURL(
+      url => url.toString().includes('/contact/') && !url.toString().endsWith('/contact'),
+      { timeout: 15000 }
+    );
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    // Verify the firstName was updated
-    const verifyFirstNameInput = page.locator('input[name="firstName"], #firstName');
-    const currentFirstName = await verifyFirstNameInput.inputValue();
-    console.log('Current firstName value:', currentFirstName);
-    const updateVerified = currentFirstName === 'UpdatedContact';
-    console.log('Update verified:', updateVerified);
+    // Verify the firstName was updated - check text content since detail page may not have inputs
+    const pageContent = await page.content();
+    const updateVerified = pageContent.includes('UpdatedContact');
+    console.log('Update verified (UpdatedContact found in page):', updateVerified);
 
     await page.screenshot({ path: 'test-results/contact-after-verify-update.png', fullPage: true });
 

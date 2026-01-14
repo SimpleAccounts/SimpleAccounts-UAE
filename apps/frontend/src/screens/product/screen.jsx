@@ -89,8 +89,10 @@ function Product() {
     productActions
       .getProductList(postData)
       .then(res => {
-        if (res.status === 200) {
-          setLoading(false);
+        setLoading(false);
+        // Check if RTK thunk was rejected
+        if (res.meta?.requestStatus === 'rejected') {
+          commonActions.tostifyAlert('error', res.payload?.message || 'Something Went Wrong');
         }
       })
       .catch(err => {

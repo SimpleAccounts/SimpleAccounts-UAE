@@ -1,74 +1,48 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Receipt, HelpCircle, CircleDot, Ban, Trash2, ChevronRight, Home } from 'lucide-react';
+import { NumericFormat } from 'react-number-format';
+
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Button,
-  Input,
   Form,
-  FormGroup,
-  Label,
-  Row,
-  Col,
-  UncontrolledTooltip,
-} from 'components/migration';
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormControl,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
 import { Loader, ConfirmDeleteModal } from 'components';
 import { CommonActions } from 'services/global';
-import './style.scss';
 import * as VatDetailActions from './actions';
 import * as VatActions from '../../actions';
-import { NumericFormat } from 'react-number-format';
-import PropTypes from 'prop-types';
-import { Input as ShadcnInput } from '@/components/ui/input';
+
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { Ban, CircleDot, HelpCircle, Trash2 } from 'lucide-react';
 
-function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
+const strings = new LocalizedStrings(data);
+strings.setLanguage(localStorage.getItem('language') || 'en');
 
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      suffix="%"
-    />
-  );
-}
-
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+// Corporate theme constants
+const theme = {
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  primary: '#2064d8',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  danger: '#ef4444',
 };
-
-const mapStateToProps = state => {
-  return {
-    vat_row: state.vat.vat_row,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    commonActions: bindActionCreators(CommonActions, dispatch),
-    vatDetailActions: bindActionCreators(VatDetailActions, dispatch),
-    vatActions: bindActionCreators(VatActions, dispatch),
-  };
-};
-
-let strings = new LocalizedStrings(data);
 
 // Zod validation schema
 const updateVatCodeSchema = z.object({
@@ -83,9 +57,21 @@ const updateVatCodeSchema = z.object({
     .regex(/^(100(\.00?)?|[1-9]?\d(\.\d\d?)?)$/, 'Invalid percentage value'),
 });
 
-const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, location }) => {
-  const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const [loading, setLoading] = useState(false);
+const mapStateToProps = state => ({
+  vat_row: state.vat.vat_row,
+});
+
+const mapDispatchToProps = dispatch => ({
+  commonActions: bindActionCreators(CommonActions, dispatch),
+  vatDetailActions: bindActionCreators(VatDetailActions, dispatch),
+  vatActions: bindActionCreators(VatActions, dispatch),
+});
+
+const DetailVatCode = ({ vatDetailActions, vatActions, commonActions }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [loading, setLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
   const [currentVatId, setCurrentVatId] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -100,21 +86,14 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
     mode: 'onChange',
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = form;
+  const { reset } = form;
 
   useEffect(() => {
-    strings.setLanguage(language);
     initializeData();
   }, []);
 
   const initializeData = () => {
-    if (location.state && location.state.id) {
-      setLoading(true);
+    if (location.state?.id) {
       vatDetailActions
         .getVatByID(location.state.id)
         .then(res => {
@@ -124,11 +103,11 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
             reset(res.data);
           }
         })
-        .catch(err => {
-          history.push('/admin/master/vat-category');
+        .catch(() => {
+          navigate('/admin/master/vat-category');
         });
     } else {
-      history.push('/admin/master/vat-category');
+      navigate('/admin/master/vat-category');
     }
   };
 
@@ -139,37 +118,31 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
       .then(res => {
         if (res.status === 200) {
           setDisabled(false);
-          commonActions.tostifyAlert('success', res.data.message);
-          history.push('/admin/master/vat-category');
+          commonActions.tostifyAlert(
+            'success',
+            res.data?.message || 'VAT Category Updated Successfully'
+          );
+          navigate('/admin/master/vat-category');
         }
       })
       .catch(err => {
         setDisabled(false);
-        commonActions.tostifyAlert('error', err.data.message);
+        commonActions.tostifyAlert('error', err?.data?.message || 'Update failed');
       });
   };
 
   const deleteVat = () => {
     vatActions.getVatCount(currentVatId).then(res => {
       if (res.data > 0) {
-        commonActions.tostifyAlert(
-          'error',
-          'This Tax catogery is in use ,Cannot delete this Tax Catogery'
-        );
+        commonActions.tostifyAlert('error', 'This Tax category is in use, cannot delete');
       } else {
-        const message1 = (
-          <text>
-            <b>Delete Tax Category?</b>
-          </text>
-        );
-        const message = 'This Tax Category will be deleted permanently and cannot be recovered. ';
         setDialog(
           <ConfirmDeleteModal
             isOpen={true}
             okHandler={removeVat}
-            cancelHandler={removeDialog}
-            message={message}
-            message1={message1}
+            cancelHandler={() => setDialog(null)}
+            message="This Tax Category will be deleted permanently and cannot be recovered."
+            message1={<b>Delete Tax Category?</b>}
           />
         );
       }
@@ -182,169 +155,220 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
       .deleteVat(currentVatId)
       .then(res => {
         if (res.status === 200) {
-          commonActions.tostifyAlert('success', res.data.message);
-          history.push('/admin/master/vat-category');
+          commonActions.tostifyAlert(
+            'success',
+            res.data?.message || 'VAT Category Deleted Successfully'
+          );
+          navigate('/admin/master/vat-category');
         }
       })
       .catch(err => {
         setDisabled1(false);
-        commonActions.tostifyAlert('error', err.data.message);
+        commonActions.tostifyAlert('error', err?.data?.message || 'Delete failed');
       });
-  };
-
-  const removeDialog = () => {
-    setDialog(null);
   };
 
   const vatCode = /[a-zA-Z0-9 ]+$/;
   const regExPercentage = /^(100(\.00?)?|[1-9]?\d(\.\d\d?)?)$/;
 
-  return loading === true ? (
-    <Loader />
-  ) : (
-    <div>
-      <div className="detail-vat-code-screen">
-        <div className="animated fadeIn">
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <CardHeader>
-                  <div className="h4 mb-0 d-flex align-items-center">
-                    <i className="nav-icon icon-briefcase" />
-                    <span className="ml-2">Update Tax Category</span>
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  {dialog}
-                  {loading ? (
-                    <Loader></Loader>
-                  ) : (
-                    <Row>
-                      <Col lg={6}>
-                        <Form onSubmit={handleSubmit(onSubmit)} name="simpleForm">
-                          <FormGroup>
-                            <Label htmlFor="name">
-                              <span className="text-danger">* </span>
-                              Tax Category Name
-                              <HelpCircle id="VatCodeTooltip" className="h-4 w-4 inline" />
-                              <UncontrolledTooltip placement="right" target="VatCodeTooltip">
-                                Tax Category Name – Unique identifier Tax category name
-                              </UncontrolledTooltip>
-                            </Label>
-                            <Controller
-                              name="name"
-                              control={control}
-                              render={({ field }) => (
-                                <Input
-                                  type="text"
-                                  maxLength="30"
-                                  id="name"
-                                  placeholder="Enter Tax Category Name"
-                                  {...field}
-                                  onChange={e => {
-                                    if (e.target.value === '' || vatCode.test(e.target.value)) {
-                                      field.onChange(e);
-                                    }
-                                  }}
-                                  className={errors.name ? 'is-invalid' : ''}
-                                />
-                              )}
-                            />
-                            {errors.name && (
-                              <div className="invalid-feedback d-block">{errors.name.message}</div>
-                            )}
-                          </FormGroup>
-                          <FormGroup>
-                            <Label htmlFor="vat">
-                              <span className="text-danger">* </span>
-                              Percentage %
-                              <HelpCircle id="VatPercentTooltip" className="h-4 w-4 inline" />
-                              <UncontrolledTooltip placement="right" target="VatPercentTooltip">
-                                Percentage – Tx percentage charged by your country
-                              </UncontrolledTooltip>
-                            </Label>
-                            <Controller
-                              name="vat"
-                              control={control}
-                              render={({ field }) => (
-                                <div className="w-full">
-                                  <NumericFormat
-                                    customInput={ShadcnInput}
-                                    type="text"
-                                    id="vat"
-                                    placeholder="Enter Tax Percentage"
-                                    {...field}
-                                    className={errors.vat ? 'border-red-500' : ''}
-                                    onValueChange={values => {
-                                      if (
-                                        values.value === '' ||
-                                        regExPercentage.test(values.value)
-                                      ) {
-                                        field.onChange(values.value);
-                                      }
-                                    }}
-                                    thousandSeparator
-                                    suffix="%"
-                                    maxLength={5}
-                                  />
-                                </div>
-                              )}
-                            />
-                            {errors.vat && (
-                              <div className="invalid-feedback d-block">{errors.vat.message}</div>
-                            )}
-                          </FormGroup>
-                          <Row>
-                            <Col
-                              lg={12}
-                              className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
-                            >
-                              <FormGroup>
-                                <Button
-                                  type="button"
-                                  color="danger"
-                                  className="btn-square"
-                                  disabled={disabled1}
-                                  onClick={deleteVat}
-                                >
-                                  <Trash2 className="h-4 w-4" />{' '}
-                                  {disabled1 ? 'Deleting...' : strings.Delete}
-                                </Button>
-                              </FormGroup>
-                              <FormGroup className="text-right">
-                                <Button
-                                  type="submit"
-                                  name="submit"
-                                  color="primary"
-                                  className="btn-square mr-3"
-                                  disabled={disabled}
-                                >
-                                  <CircleDot className="h-4 w-4" />{' '}
-                                  {disabled ? 'Updating...' : strings.Update}
-                                </Button>
-                                <Button
-                                  type="button"
-                                  color="secondary"
-                                  className="btn-square"
-                                  onClick={() => {
-                                    history.push('/admin/master/vat-category');
-                                  }}
-                                >
-                                  <Ban className="h-4 w-4" /> {strings.Cancel}
-                                </Button>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                        </Form>
-                      </Col>
-                    </Row>
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <div style={{ background: theme.bg, minHeight: '100%' }}>
+      {dialog}
+
+      {/* Page Header */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>
+              Edit VAT Category
+            </h1>
+            <div
+              className="flex items-center gap-2 mt-1 text-sm"
+              style={{ color: theme.textMuted }}
+            >
+              <Home className="w-4 h-4" />
+              <span
+                className="cursor-pointer hover:text-blue-600"
+                onClick={() => navigate('/admin/dashboard')}
+              >
+                Home
+              </span>
+              <ChevronRight className="w-4 h-4" />
+              <span
+                className="cursor-pointer hover:text-blue-600"
+                onClick={() => navigate('/admin/master/vat-category')}
+              >
+                VAT Category
+              </span>
+              <ChevronRight className="w-4 h-4" />
+              <span>Edit</span>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={deleteVat}
+            disabled={disabled1}
+            className="h-10 px-4"
+            style={{ borderColor: theme.danger, color: theme.danger }}
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            {disabled1 ? 'Deleting...' : strings.Delete || 'Delete'}
+          </Button>
         </div>
       </div>
+
+      {/* Form Card */}
+      <Card
+        className="rounded-xl"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <CardHeader className="border-b" style={{ borderColor: theme.border }}>
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: '#eff6ff' }}
+            >
+              <Receipt className="w-5 h-5" style={{ color: theme.primary }} />
+            </div>
+            <CardTitle className="text-lg font-semibold" style={{ color: theme.textPrimary }}>
+              Update Tax Category
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
+              {/* VAT Category Name */}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className="flex items-center gap-1"
+                      style={{ color: theme.textPrimary }}
+                    >
+                      <span className="text-red-500">*</span>
+                      Tax Category Name
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle
+                              className="w-4 h-4 cursor-help"
+                              style={{ color: theme.textMuted }}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Unique identifier Tax category name</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter Tax Category Name"
+                        maxLength={30}
+                        value={field.value}
+                        onChange={e => {
+                          if (e.target.value === '' || vatCode.test(e.target.value)) {
+                            field.onChange(e.target.value);
+                          }
+                        }}
+                        className="h-11"
+                        style={{ borderColor: theme.border }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* VAT Percentage */}
+              <FormField
+                control={form.control}
+                name="vat"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel
+                      className="flex items-center gap-1"
+                      style={{ color: theme.textPrimary }}
+                    >
+                      <span className="text-red-500">*</span>
+                      Percentage %
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle
+                              className="w-4 h-4 cursor-help"
+                              style={{ color: theme.textMuted }}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Tax percentage charged by your country</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FormLabel>
+                    <FormControl>
+                      <NumericFormat
+                        customInput={Input}
+                        placeholder="Enter Tax Percentage"
+                        value={field.value}
+                        onValueChange={values => {
+                          if (values.value === '' || regExPercentage.test(values.value)) {
+                            field.onChange(values.value);
+                          }
+                        }}
+                        thousandSeparator
+                        suffix="%"
+                        maxLength={6}
+                        className="h-11"
+                        style={{ borderColor: theme.border }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Action Buttons */}
+              <div
+                className="flex items-center justify-end gap-3 pt-4 border-t"
+                style={{ borderColor: theme.border }}
+              >
+                <Button
+                  type="submit"
+                  disabled={disabled}
+                  className="h-10 px-4"
+                  style={{ background: theme.primary }}
+                >
+                  <CircleDot className="w-4 h-4 mr-2" />
+                  {disabled ? 'Updating...' : strings.Update || 'Update'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate('/admin/master/vat-category')}
+                  className="h-10 px-4"
+                  style={{ borderColor: theme.border, color: theme.textSecondary }}
+                >
+                  <Ban className="w-4 h-4 mr-2" />
+                  {strings.Cancel || 'Cancel'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

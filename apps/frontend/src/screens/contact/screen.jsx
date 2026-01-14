@@ -194,21 +194,6 @@ function Contact() {
         cell: ({ row }) => <span style={{ color: theme.textSecondary }}>{row.original.email}</span>,
       },
       {
-        accessorKey: 'telephone',
-        header: strings.Telephone || 'Telephone',
-        cell: ({ row }) => (
-          <span style={{ color: theme.textSecondary }}>{row.original.telephone || '-'}</span>
-        ),
-      },
-      {
-        accessorKey: 'mobileNumber',
-        header: strings.MOBILENUMBER,
-        cell: ({ row }) => {
-          const mobile = row.original.mobileNumber;
-          return <span style={{ color: theme.textSecondary }}>{mobile ? `+${mobile}` : '-'}</span>;
-        },
-      },
-      {
         accessorKey: 'dueAmount',
         header: strings.DueAmount || 'Due Amount',
         cell: ({ row }) => {

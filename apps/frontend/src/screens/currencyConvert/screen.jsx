@@ -1,17 +1,33 @@
-import { useState, useEffect, useMemo } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { Card, CardHeader, CardBody, Button, Row, Col } from 'components/migration';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Banknote, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+
+import { DataTable } from '@/components/ui/data-table';
 import { Loader } from 'components';
 import * as CurrencyConvertActions from './actions';
 import { data as languageData } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import config from 'constants/config';
-import { DataTable } from '@/components/ui/data-table';
-import { useNavigate } from 'react-router-dom';
-import { Banknote, Plus } from 'lucide-react';
 
 const strings = new LocalizedStrings(languageData);
+
+// Corporate theme constants
+const theme = {
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  primary: '#2064d8',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
+};
 
 const CurrencyConvert = () => {
   const dispatch = useDispatch();
@@ -21,7 +37,7 @@ const CurrencyConvert = () => {
     currency_converstion_list: state.currencyConvert.currency_converstion_list,
   }));
 
-  const [language] = useState(window['localStorage'].getItem('language'));
+  const [language] = useState(() => window.localStorage.getItem('language') || 'en');
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -36,14 +52,9 @@ const CurrencyConvert = () => {
 
   useEffect(() => {
     strings.setLanguage(language);
-    initializeData();
   }, [language]);
 
-  useEffect(() => {
-    initializeData();
-  }, [pagination, sorting]);
-
-  const initializeData = () => {
+  const initializeData = useCallback(() => {
     setLoading(true);
     const paginationData = {
       pageNo: pagination.pageIndex,
@@ -63,46 +74,68 @@ const CurrencyConvert = () => {
       })
       .catch(err => {
         setLoading(false);
-        toast.error(err && err.data ? err.data.message : 'Something Went Wrong');
+        toast.error(err?.data?.message || 'Something Went Wrong');
       });
-  };
+  }, [dispatch, pagination, sorting, filterData]);
+
+  useEffect(() => {
+    initializeData();
+  }, []);
+
+  useEffect(() => {
+    initializeData();
+  }, [pagination, sorting]);
 
   const goToDetail = row => {
     if (!config.ADD_CURRENCY) return;
     if (row.currencyConversionId === 10000) {
       toast.error('Cannot Edit Base Currency');
     } else {
-      navigate(`/admin/master/currencyConvert/detail`, { state: { id: row.currencyConversionId } });
+      navigate('/admin/master/currencyConvert/detail', { state: { id: row.currencyConversionId } });
     }
   };
 
   const renderCurrency = value => {
     if (value) {
-      return <label className="badge label-currency mb-0">{value}</label>;
+      return (
+        <span
+          className="px-2 py-1 rounded text-xs font-medium"
+          style={{ background: '#eff6ff', color: theme.primary }}
+        >
+          {value}
+        </span>
+      );
     } else {
-      return <label className="badge badge-danger mb-0">No Specified</label>;
+      return (
+        <span
+          className="px-2 py-1 rounded text-xs font-medium"
+          style={{ background: '#fef2f2', color: theme.danger }}
+        >
+          No Specified
+        </span>
+      );
     }
   };
 
   const renderStatus = isActive => {
-    let classname = '';
     if (isActive === true) {
-      classname = 'label-success';
+      return (
+        <span
+          className="px-2 py-1 rounded text-xs font-medium"
+          style={{ background: '#ecfdf5', color: theme.secondary }}
+        >
+          Active
+        </span>
+      );
     } else {
-      classname = 'label-due';
-    }
-    return (
-      <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-        {isActive === true ? 'Active' : 'InActive'}
-      </span>
-    );
-  };
-
-  const renderBaseCurrency = value => {
-    if (value) {
-      return <label className="badge label-currency mb-0">{value}</label>;
-    } else {
-      return <label className="badge badge-danger mb-0">No Specified</label>;
+      return (
+        <span
+          className="px-2 py-1 rounded text-xs font-medium"
+          style={{ background: '#fef3c7', color: theme.warning }}
+        >
+          Inactive
+        </span>
+      );
     }
   };
 
@@ -110,21 +143,24 @@ const CurrencyConvert = () => {
     () => [
       {
         accessorKey: 'currencyName',
-        header: strings.CURRENCYNAME,
+        header: strings.CURRENCYNAME || 'Currency Name',
         cell: ({ getValue }) => renderCurrency(getValue()),
       },
       {
         accessorKey: 'description',
-        header: strings.CURRENCYNAMECONVERTEDTO,
-        cell: ({ getValue }) => renderBaseCurrency(getValue()),
+        header: strings.CURRENCYNAMECONVERTEDTO || 'Converted To',
+        cell: ({ getValue }) => renderCurrency(getValue()),
       },
       {
         accessorKey: 'exchangeRate',
-        header: strings.EXCHANGERATE,
+        header: strings.EXCHANGERATE || 'Exchange Rate',
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.exchangeRate}</span>
+        ),
       },
       {
         accessorKey: 'isActive',
-        header: strings.Status,
+        header: strings.Status || 'Status',
         cell: ({ getValue }) => renderStatus(getValue()),
       },
     ],
@@ -136,55 +172,80 @@ const CurrencyConvert = () => {
   }
 
   return (
-    <div className="vat-code-screen">
-      <div className="animated fadeIn">
-        <Card>
-          <CardHeader>
-            <div className="h4 mb-0 d-flex align-items-center">
-              <Banknote className="h-4 w-4" />
-              <span className="ml-2"> {strings.CurrencyRate}</span>
+    <div className="currency-convert-screen" style={{ background: theme.bg, minHeight: '100%' }}>
+      {/* Page Header Card */}
+      <div
+        className="rounded-xl p-6 mb-6"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Title Section */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
+              style={{ background: '#eff6ff' }}
+            >
+              <Banknote className="w-6 h-6" style={{ color: theme.primary }} />
             </div>
-          </CardHeader>
-          <CardBody>
-            <Row>
-              <Col lg={12}>
-                <div className="d-flex justify-content-end">
-                  {config.ADD_CURRENCY && (
-                    <Button
-                      color="primary"
-                      className="btn-square pull-right"
-                      style={{ marginBottom: '10px' }}
-                      onClick={() => navigate(`/admin/master/CurrencyConvert/create`)}
-                    >
-                      <Plus className="h-4 w-4" />
-                      {strings.AddNewCurrencyConversion}
-                    </Button>
-                  )}
-                </div>
+            <div>
+              <h1 className="text-xl font-bold m-0" style={{ color: theme.textPrimary }}>
+                {strings.CurrencyRate || 'Currency Rate'}
+              </h1>
+              <p className="text-sm m-0" style={{ color: theme.textMuted }}>
+                Manage currency exchange rates
+              </p>
+            </div>
+          </div>
 
-                <DataTable
-                  data={currency_converstion_list?.data || []}
-                  columns={columns}
-                  manualPagination={true}
-                  pageCount={
-                    currency_converstion_list?.count
-                      ? Math.ceil(currency_converstion_list.count / pagination.pageSize)
-                      : 0
-                  }
-                  onPaginationChange={setPagination}
-                  pagination={pagination}
-                  manualSorting={true}
-                  onSortingChange={setSorting}
-                  sorting={sorting}
-                  onRowClick={goToDetail}
-                />
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
+          {/* Actions Section */}
+          {config.ADD_CURRENCY && (
+            <button
+              onClick={() => navigate('/admin/master/CurrencyConvert/create')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
+              style={{ background: theme.primary }}
+            >
+              <Plus className="w-4 h-4" />
+              {strings.AddNewCurrencyConversion || 'Add New Currency'}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Data Table Card */}
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <div className="p-6">
+          <DataTable
+            data={currency_converstion_list?.data || []}
+            columns={columns}
+            manualPagination={true}
+            pageCount={
+              currency_converstion_list?.count
+                ? Math.ceil(currency_converstion_list.count / pagination.pageSize)
+                : 0
+            }
+            onPaginationChange={setPagination}
+            pagination={pagination}
+            manualSorting={true}
+            onSortingChange={setSorting}
+            sorting={sorting}
+            onRowClick={goToDetail}
+            totalCount={currency_converstion_list?.count || 0}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default connect()(CurrencyConvert);
+export default CurrencyConvert;

@@ -2,10 +2,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Briefcase } from 'lucide-react';
+import { Plus, Receipt } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 
 import { Loader, ConfirmDeleteModal } from 'components';
@@ -19,9 +17,25 @@ import './style.scss';
 
 const strings = new LocalizedStrings(data);
 
+// Corporate theme constants
+const theme = {
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  primary: '#2064d8',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
+};
+
 /**
  * Modern VAT Code Screen
- * Uses functional components, shadcn/ui, and TanStack Table
+ * Uses functional components with Corporate design
  */
 function VatCode() {
   const navigate = useNavigate();
@@ -148,12 +162,16 @@ function VatCode() {
       {
         accessorKey: 'name',
         header: strings.VATNAME || 'VAT Name',
-        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+        cell: ({ row }) => (
+          <span className="font-semibold" style={{ color: theme.textPrimary }}>
+            {row.original.name}
+          </span>
+        ),
       },
       {
         accessorKey: 'vat',
         header: strings.VATPERCENTAGE || 'VAT Percentage',
-        cell: ({ row }) => `${row.original.vat} %`,
+        cell: ({ row }) => <span style={{ color: theme.textSecondary }}>{row.original.vat} %</span>,
       },
     ],
     []
@@ -162,7 +180,6 @@ function VatCode() {
   // Transform data for table (filter out specific IDs)
   const tableData = useMemo(() => {
     if (!vat_list?.data) return [];
-    // Filter out IDs 3, 4, and 10
     return vat_list.data
       .filter(item => ![3, 4, 10].includes(item.id))
       .map(item => ({
@@ -182,30 +199,75 @@ function VatCode() {
   }
 
   return (
-    <div className="vat-code-screen">
-      <div className="space-y-6">
-        {dialog}
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Briefcase className="h-6 w-6 text-primary" />
-                <CardTitle className="text-xl">VAT Category</CardTitle>
-              </div>
-              <div className="flex gap-2">
-                {companyDetails && companyDetails.isRegisteredVat !== true && (
-                  <Button onClick={() => navigate('/admin/master/vat-category/create')}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    {strings.AddNewVat || 'Add New VAT'}
-                  </Button>
-                )}
-              </div>
+    <div className="vat-code-screen" style={{ background: theme.bg, minHeight: '100%' }}>
+      {dialog}
+
+      {/* Page Header Card */}
+      <div
+        className="rounded-xl p-6 mb-6"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Title Section */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
+              style={{ background: '#eff6ff' }}
+            >
+              <Receipt className="w-6 h-6" style={{ color: theme.primary }} />
             </div>
-          </CardHeader>
-          <CardContent>
-            <DataTable columns={columns} data={tableData} onRowClick={handleRowClick} />
-          </CardContent>
-        </Card>
+            <div>
+              <h1 className="text-xl font-bold m-0" style={{ color: theme.textPrimary }}>
+                {strings.VATCategory || 'VAT Category'}
+              </h1>
+              <p className="text-sm m-0" style={{ color: theme.textMuted }}>
+                Manage VAT categories
+              </p>
+            </div>
+          </div>
+
+          {/* Actions Section */}
+          {companyDetails && companyDetails.isRegisteredVat !== true && (
+            <button
+              onClick={() => navigate('/admin/master/vat-category/create')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
+              style={{ background: theme.primary }}
+            >
+              <Plus className="w-4 h-4" />
+              {strings.AddNewVat || 'Add New VAT'}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Data Table Card */}
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <div className="p-6">
+          <DataTable
+            columns={columns}
+            data={tableData}
+            manualPagination
+            pageCount={Math.ceil((vat_list?.count || 0) / pagination.pageSize)}
+            onPaginationChange={setPagination}
+            pagination={pagination}
+            manualSorting
+            onSortingChange={setSorting}
+            sorting={sorting}
+            onRowClick={handleRowClick}
+            totalCount={vat_list?.count || 0}
+          />
+        </div>
       </div>
     </div>
   );
