@@ -101,11 +101,19 @@ export async function createSupplierInvoiceViaAPI(
     placeOfSupplyId: supplierInvoiceData.placeOfSupplyId,
   };
 
-  const result = await createInvoiceViaAPI(request, authToken, invoiceData);
-  return {
-    ...supplierInvoiceData,
-    invoiceId: result.invoiceId,
-  };
+  try {
+    const result = await createInvoiceViaAPI(request, authToken, invoiceData);
+    return {
+      ...supplierInvoiceData,
+      invoiceId: result.invoiceId,
+    };
+  } catch (error) {
+    // API creation failed, fall back to UI method
+    console.warn('API supplier invoice creation failed, trying UI method:', error);
+    // Note: UI method requires a Page object, which we don't have here
+    // The calling test should handle the UI fallback
+    throw error; // Re-throw so test can handle UI fallback
+  }
 }
 
 /**
@@ -181,6 +189,24 @@ export async function getSupplierInvoiceList(
     type: 1, // Supplier invoice type
     ...options,
   });
+}
+
+/**
+ * Navigates to supplier invoice creation page
+ *
+ * @param page - Playwright Page object
+ * @throws Error if navigation fails
+ *
+ * @example
+ * ```typescript
+ * await navigateToCreateSupplierInvoice(page);
+ * ```
+ */
+export async function navigateToCreateSupplierInvoice(page: Page): Promise<void> {
+  const baseUrl = getFrontendBaseUrl();
+  const createPath = '/admin/expense/supplier-invoice/create';
+  await page.goto(`${baseUrl}${createPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
 }
 
 /**

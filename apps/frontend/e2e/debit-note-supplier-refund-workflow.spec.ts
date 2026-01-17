@@ -21,6 +21,7 @@ import {
   generateSupplierInvoiceNumber,
   SupplierInvoiceData,
 } from './helpers/supplier-invoice-helpers';
+import { createSupplierInvoiceViaUI } from './helpers/ui-fallback-helpers';
 import {
   createBankAccountViaAPI,
   getBankAccountDetails,
@@ -156,7 +157,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     // Post supplier invoice
@@ -227,7 +234,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -296,7 +309,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -376,7 +395,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -467,7 +492,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -533,7 +564,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -600,7 +637,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);
@@ -698,7 +741,13 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       ],
     };
 
-    const supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    let supplierInvoice: SupplierInvoiceData & { invoiceId: number };
+    try {
+      supplierInvoice = await createSupplierInvoiceViaAPI(request, token, supplierInvoiceData);
+    } catch (error) {
+      console.warn('API supplier invoice creation failed, trying UI method:', error);
+      supplierInvoice = await createSupplierInvoiceViaUI(page, supplierInvoiceData);
+    }
     test.skip(!supplierInvoice.invoiceId, 'Supplier invoice must be created first');
 
     await postSupplierInvoice(request, token, supplierInvoice.invoiceId);

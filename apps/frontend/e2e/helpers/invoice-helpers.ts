@@ -78,16 +78,27 @@ export async function createInvoiceViaAPI(
 ): Promise<InvoiceData & { invoiceId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
-  // This is the format Spring Boot can parse by default without @DateTimeFormat annotation
-  const formattedDate =
-    invoiceData.invoiceDate ||
-    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  const dueDate = new Date(today);
-  dueDate.setDate(dueDate.getDate() + 30);
-  const formattedDueDate =
-    invoiceData.dueDate ||
-    `${dueDate.getFullYear()}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${String(dueDate.getDate()).padStart(2, '0')}`;
+  today.setHours(0, 0, 0, 0);
+
+  // Spring Boot's default property editor for java.util.Date can parse ISO 8601 format
+  // Format: "2026-01-14T00:00:00.000Z" or "2026-01-14T00:00:00"
+  // This is the most reliable format that Spring Boot can parse by default
+  const getDateValue = (dateInput: string | Date | undefined, defaultDate: Date): Date => {
+    const d = dateInput ? new Date(dateInput) : defaultDate;
+    d.setHours(0, 0, 0, 0);
+    return d;
+  };
+
+  const formattedDate = getDateValue(invoiceData.invoiceDate, today);
+  const dueDate = getDateValue(
+    invoiceData.dueDate,
+    (() => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + 30);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    })()
+  );
 
   // Calculate totals from line items
   let totalNet = 0;
@@ -165,10 +176,10 @@ export async function createInvoiceViaAPI(
       ? invoiceData.taxType
       : invoiceData.taxType === 2 || invoiceData.taxType === true;
 
-  const payload = {
+  const payload: Record<string, any> = {
     referenceNumber: invoiceData.referenceNumber || generateInvoiceNumber(),
-    invoiceDate: formattedDate,
-    invoiceDueDate: formattedDueDate,
+    invoiceDate: formattedDate, // Date object - will be sent as-is
+    invoiceDueDate: dueDate, // Date object - will be sent as-is
     contactId: invoiceData.contactId,
     currencyCode: invoiceData.currencyCode || 150, // AED default
     type: String(invoiceData.type || 2), // Must be string: 1 = Supplier, 2 = Customer, 6 = Supplier (frontend uses 6)
@@ -183,22 +194,32 @@ export async function createInvoiceViaAPI(
     term: invoiceData.term || 'NET_30', // Default term (InvoiceDuePeriodEnum)
   };
 
-  // Use FormData (multipart) to match frontend behavior
-  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
-  // Send dates as ISO format strings which Spring Boot can parse by default
+  // Use FormData (multipart) to match frontend behavior exactly
+  // Frontend sends Date objects directly - browser FormData converts them
+  // Send Date objects directly and let Playwright handle the conversion
+  // Playwright's multipart might handle Date objects differently than browser FormData
   const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      // All values are sent as strings (dates are already formatted as ISO yyyy-MM-dd)
-      formData.append(key, String(value));
+      if (key === 'invoiceDate' || key === 'invoiceDueDate') {
+        // Send Date objects directly - matches frontend behavior
+        formData.append(key, value as Date);
+      } else {
+        formData.append(key, String(value));
+      }
     }
   });
 
   // Convert FormData to plain object for Playwright's multipart option
-  // Playwright expects a plain object, not FormData instance
-  const multipartData: Record<string, string | number> = {};
+  // Keep Date objects - Playwright's multipart might serialize them correctly
+  const multipartData: Record<string, string | number | Date> = {};
   for (const [key, value] of formData.entries()) {
-    multipartData[key] = value as string | number;
+    if (key === 'invoiceDate' || key === 'invoiceDueDate') {
+      // Keep as Date object
+      multipartData[key] = value as Date;
+    } else {
+      multipartData[key] = value as string | number;
+    }
   }
 
   const response = await request.post(`${apiUrl}/rest/invoice/save`, {
@@ -210,6 +231,12 @@ export async function createInvoiceViaAPI(
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
+    // Log the full error for debugging
+    console.error('Invoice creation failed:', {
+      status: response.status(),
+      error: errorText,
+      payload: { ...payload, invoiceDate: formattedDate, invoiceDueDate: dueDate },
+    });
     throw new Error(`Failed to create invoice: ${response.status()} ${errorText}`);
   }
 

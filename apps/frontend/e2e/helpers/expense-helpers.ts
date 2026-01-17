@@ -58,15 +58,20 @@ export async function createExpenseViaAPI(
 ): Promise<ExpenseData & { expenseId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
-  // This is the format Spring Boot can parse by default without @DateTimeFormat annotation
-  const formattedDate =
-    expenseData.expenseDate ||
-    `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  today.setHours(0, 0, 0, 0);
+
+  // Spring Boot's default property editor for java.util.Date can parse ISO 8601 format
+  const getDateString = (dateInput: string | Date | undefined, defaultDate: Date): string => {
+    const d = dateInput ? new Date(dateInput) : defaultDate;
+    d.setHours(0, 0, 0, 0);
+    return d.toISOString();
+  };
+
+  const formattedDate = getDateString(expenseData.expenseDate, today);
 
   const payload: any = {
     expenseNumber: expenseData.expenseNumber || generateExpenseNumber(),
-    expenseDate: formattedDate,
+    expenseDate: formattedDate, // ISO 8601 format string
     amount: expenseData.amount,
     expenseCategory: expenseData.expenseCategory || '',
     vatId: expenseData.vatId || '',
@@ -81,12 +86,10 @@ export async function createExpenseViaAPI(
   };
 
   // Use FormData (multipart) to match frontend behavior
-  // Spring Boot's default date parsing for @ModelAttribute uses ISO 8601 format (yyyy-MM-dd)
-  // Send dates as ISO format strings which Spring Boot can parse by default
+  // Dates are in Date.toString() format (e.g., "Wed Jan 14 2026 00:00:00 GMT+0400")
   const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
-      // All values are sent as strings (dates are already formatted as ISO yyyy-MM-dd)
       formData.append(key, String(value));
     }
   });

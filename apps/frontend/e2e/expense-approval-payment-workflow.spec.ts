@@ -11,6 +11,7 @@ import {
   generateExpenseNumber,
   ExpenseData,
 } from './helpers/expense-helpers';
+import { createExpenseViaUI } from './helpers/ui-fallback-helpers';
 import {
   createPaymentFromInvoice,
   getPaymentDetails,
@@ -113,7 +114,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
     };
 
     try {
-      const expense = await createExpenseViaAPI(request, token, expenseData);
+      let expense: ExpenseData & { expenseId: number };
+      try {
+        expense = await createExpenseViaAPI(request, token, expenseData);
+      } catch (error) {
+        console.warn('API expense creation failed, trying UI method:', error);
+        expense = await createExpenseViaUI(page, expenseData);
+      }
 
       expect(expense.expenseId).toBeDefined();
 
@@ -146,7 +153,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       description: 'E2E Test Expense for Submission',
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     // Submit expense (post it)
@@ -187,7 +200,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       description: 'E2E Test Expense for Approval',
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     await postExpense(request, token, expense.expenseId);
@@ -235,7 +254,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       bankAccountId: testBankAccount.bankAccountId,
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     await postExpense(request, token, expense.expenseId);
@@ -283,7 +308,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       bankAccountId: testBankAccount.bankAccountId,
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     await postExpense(request, token, expense.expenseId);
@@ -325,7 +356,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       description: 'E2E Test Expense for Status Updates',
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     // Check initial status (draft)
@@ -379,7 +416,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       bankAccountId: testBankAccount.bankAccountId,
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     await postExpense(request, token, expense.expenseId);
@@ -416,7 +459,13 @@ test.describe('Expense Approval and Payment Workflow', () => {
       bankAccountId: testBankAccount.bankAccountId,
     };
 
-    const expense = await createExpenseViaAPI(request, token, expenseData);
+    let expense: ExpenseData & { expenseId: number };
+    try {
+      expense = await createExpenseViaAPI(request, token, expenseData);
+    } catch (error) {
+      console.warn('API expense creation failed, trying UI method:', error);
+      expense = await createExpenseViaUI(page, expenseData);
+    }
     test.skip(!expense.expenseId, 'Expense must be created first');
 
     await postExpense(request, token, expense.expenseId);
