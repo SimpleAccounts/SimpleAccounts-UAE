@@ -282,6 +282,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 					MessageUtil.getMessage("invoice.created.successful.msg.0045"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(ERROR, e);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);

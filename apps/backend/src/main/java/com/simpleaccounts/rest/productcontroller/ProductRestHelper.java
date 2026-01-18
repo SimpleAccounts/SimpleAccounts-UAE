@@ -336,27 +336,40 @@ public class ProductRestHelper {
 		ProductPriceModel productModel = new ProductPriceModel();
 		productModel.setId(product.getProductID());
 		productModel.setName(product.getProductName());
-		if (product.getUnitType()!=null) {
-			productModel.setUnitTypeId(product.getUnitType().getUnitTypeId());
-			productModel.setUnitType(product.getUnitType().getUnitTypeCode());
-		}else
-		{
+		// UnitType is often lazily loaded; avoid LazyInitializationException which breaks dropdown APIs.
+		try {
+			if (product.getUnitType() != null) {
+				productModel.setUnitTypeId(product.getUnitType().getUnitTypeId());
+				productModel.setUnitType(product.getUnitType().getUnitTypeCode());
+			} else {
+				productModel.setUnitTypeId(40);
+				productModel.setUnitType("OTH");
+			}
+		} catch (org.hibernate.LazyInitializationException e) {
 			productModel.setUnitTypeId(40);
 			productModel.setUnitType("OTH");
 		}
 		if (product.getExciseTax()!=null){
-			productModel.setIsExciseTaxExclusive(product.getExciseType());
-			productModel.setExciseAmount(product.getExciseAmount());
-			productModel.setExcisePercentage(product.getExciseTax().getExcisePercentage().toString());
-			productModel.setExciseTaxId(product.getExciseTax().getId());
+			try {
+				productModel.setIsExciseTaxExclusive(product.getExciseType());
+				productModel.setExciseAmount(product.getExciseAmount());
+				productModel.setExcisePercentage(product.getExciseTax().getExcisePercentage().toString());
+				productModel.setExciseTaxId(product.getExciseTax().getId());
+			} catch (org.hibernate.LazyInitializationException e) {
+				// Leave excise fields at defaults when lazy proxy isn't available.
+			}
 		}
 		productModel.setDiscountType("FIXED");
 		if (product.getIsInventoryEnabled()!=null && product.getIsInventoryEnabled()){
 			productModel.setIsInventoryEnabled(product.getIsInventoryEnabled());
 		}
 		if (product.getVatCategory() != null) {
-			productModel.setVatCategoryId(product.getVatCategory().getId());
-			productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+			try {
+				productModel.setVatCategoryId(product.getVatCategory().getId());
+				productModel.setVatPercentage(product.getVatCategory().getVatLabel());
+			} catch (org.hibernate.LazyInitializationException e) {
+				// Keep VAT fields unset when lazy proxy isn't available.
+			}
 		}
 		if(product.getProductType()!=null){
 			productModel.setProductType(product.getProductType().toString());

@@ -185,6 +185,7 @@ public class ProductRestController {
 					MessageUtil.getMessage("product.created.successful.msg.0036"), false);
 					return new ResponseEntity<>(message,HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(ERROR, e);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
