@@ -10,7 +10,7 @@ const ImportTransactionReducer = (state = initState, action) => {
     case IMPORT_TRANSACTION.DATE_FORMAT_LIST:
       return {
         ...state,
-        date_format_list: Object.assign([], payload),
+        date_format_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

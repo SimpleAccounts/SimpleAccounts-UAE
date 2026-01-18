@@ -131,7 +131,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -246,7 +246,7 @@ export const getSupplierList = id => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.SUPPLIER_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

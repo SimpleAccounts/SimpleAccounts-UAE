@@ -16,37 +16,37 @@ const TempReducer = (state = initState, action) => {
     case TEMP.ACCOUNT_BALANCE_REPORT:
       return {
         ...state,
-        account_balance_report: Object.assign([], payload.data),
+        account_balance_report: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case TEMP.CUSTOMER_INVOICE_REPORT:
       return {
         ...state,
-        customer_invoice_report: Object.assign([], payload.data),
+        customer_invoice_report: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case TEMP.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case TEMP.ACCOUNT_TYPE_LIST:
       return {
         ...state,
-        account_type_list: Object.assign([], payload.data),
+        account_type_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case TEMP.TRANSACTION_TYPE_LIST:
       return {
         ...state,
-        transaction_type_list: Object.assign([], payload.data),
+        transaction_type_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case TEMP.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload.data),
+        transaction_category_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     default:

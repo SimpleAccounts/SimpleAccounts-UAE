@@ -13,17 +13,17 @@ const TempReducer = (state = initState, action) => {
     case RECEIPT.RECEIPT_LIST:
       return {
         ...state,
-        receipt_list: Object.assign([], payload),
+        receipt_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case RECEIPT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload),
+        contact_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case RECEIPT.INVOICE_LIST:
       return {
         ...state,
-        invoice_list: Object.assign([], payload),
+        invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     default:
       return state;

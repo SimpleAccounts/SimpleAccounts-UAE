@@ -17,37 +17,37 @@ const PaymentReducer = (state = initState, action) => {
     case PAYMENT.PAYMENT_LIST:
       return {
         ...state,
-        payment_list: Object.assign([], payload.data),
+        payment_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.BANK_LIST:
       return {
         ...state,
-        bank_list: Object.assign([], payload.data),
+        bank_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.INVOICE_LIST:
       return {
         ...state,
-        invoice_list: Object.assign([], payload.data),
+        invoice_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload.data),
+        country_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     default:
       return state;

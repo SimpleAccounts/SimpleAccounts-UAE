@@ -130,7 +130,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -245,7 +245,7 @@ export const getSupplierList = id => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.SUPPLIER_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -265,7 +265,7 @@ export const getRFQList = id => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.RFQ_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

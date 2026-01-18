@@ -20,19 +20,19 @@ const ExpenseReducer = (state = initState, action) => {
     case EXPENSE.EXPENSE_LIST:
       return {
         ...state,
-        expense_list: Object.assign([], payload),
+        expense_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.EXPENSE_DETAIL:
       return {
         ...state,
-        expense_detail: Object.assign({}, payload),
+        expense_detail: payload?.data || payload || {},
       };
 
     case EXPENSE.BANK_LIST:
       return {
         ...state,
-        bank_list: Object.assign([], payload.data),
+        bank_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case EXPENSE.CURRENCY_LIST:
@@ -42,7 +42,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case EXPENSE.PROJECT_LIST:
@@ -52,7 +52,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        project_list: Object.assign([], payload),
+        project_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.SUPPLIER_LIST:
@@ -62,7 +62,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        supplier_list: Object.assign([], payload),
+        supplier_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.EMPLOYEE_LIST:
@@ -72,7 +72,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        employee_list: Object.assign([], payload),
+        employee_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.PAYMENT_LIST:
@@ -82,7 +82,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        payment_list: Object.assign([], payload),
+        payment_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.VAT_LIST:
@@ -92,7 +92,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case EXPENSE.EXPENSE_CATEGORIES_LIST:
@@ -102,7 +102,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        expense_categories_list: Object.assign([], payload),
+        expense_categories_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EXPENSE.PAY_MODE: {
@@ -114,7 +114,7 @@ const ExpenseReducer = (state = initState, action) => {
         });
       return {
         ...state,
-        pay_mode_list: Object.assign([], list1),
+        pay_mode_list: Array.isArray(list1) ? list1 : list1?.data || [],
       };
     }
 
@@ -126,14 +126,16 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        user_list: Object.assign([], payload),
+        user_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EXPENSE.PAY_TO_LIST: {
       let list = payload;
-      list.unshift({ value: 'Company Expense', label: 'Company Expense' });
+      if (Array.isArray(list)) {
+        list.unshift({ value: 'Company Expense', label: 'Company Expense' });
+      }
       return {
         ...state,
-        pay_to_list: Object.assign([], list),
+        pay_to_list: Array.isArray(list) ? list : list?.data || [],
       };
     }
 

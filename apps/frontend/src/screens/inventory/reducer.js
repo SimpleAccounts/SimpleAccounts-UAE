@@ -11,7 +11,7 @@ const InventoryReducer = (state = initState, action) => {
     case INVENTORY.SUMMARY_LIST:
       return {
         ...state,
-        summary_list: Object.assign([], payload),
+        summary_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

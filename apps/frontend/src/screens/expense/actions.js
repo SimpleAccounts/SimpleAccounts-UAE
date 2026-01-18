@@ -261,7 +261,7 @@ export const getBankList = () => {
         if (res.status === 200) {
           dispatch({
             type: EXPENSE.BANK_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

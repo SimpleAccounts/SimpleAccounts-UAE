@@ -13,7 +13,7 @@ const EmployeeReducer = (state = initState, action) => {
     case SALARY_STRUCTURE.SALARY_STRUCTURE_LIST:
       return {
         ...state,
-        salaryStructure_list: Object.assign([], payload),
+        salaryStructure_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

@@ -84,7 +84,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
           return res;
         }
@@ -153,7 +153,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

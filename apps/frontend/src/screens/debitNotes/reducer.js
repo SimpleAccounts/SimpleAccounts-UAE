@@ -19,46 +19,46 @@ const CustomerInvoiceReducer = (state = initState, action) => {
     case DEBIT_NOTE.DEBIT_NOTE_LIST:
       return {
         ...state,
-        debit_note_list: Object.assign([], payload.data),
+        debit_note_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case DEBIT_NOTE.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case DEBIT_NOTE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case DEBIT_NOTE.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case DEBIT_NOTE.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case DEBIT_NOTE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case DEBIT_NOTE.PLACE_OF_SUPPLY:
       return {
         ...state,
-        place_of_supply: Object.assign([], payload),
+        place_of_supply: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case DEBIT_NOTE.INVOICE_LIST_FOR_DROPDOWN:
       return {
         ...state,
-        invoice_list: Object.assign([], payload),
+        invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

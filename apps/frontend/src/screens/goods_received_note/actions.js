@@ -142,7 +142,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -256,7 +256,7 @@ export const getSupplierList = id => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.SUPPLIER_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -497,7 +497,7 @@ export const getPurchaseOrderListForDropdown = id => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.PO_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

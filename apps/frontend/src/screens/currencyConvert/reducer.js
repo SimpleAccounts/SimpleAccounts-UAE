@@ -14,24 +14,24 @@ const CurrencyConReducer = (state = initState, action) => {
     case CURRENCYCONVERT.CURRENCY_CONVERT_LIST:
       return {
         ...state,
-        currency_convert_list: Object.assign([], payload),
+        currency_convert_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case CURRENCYCONVERT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload),
+        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case CURRENCYCONVERT.CURRENCY_CONVERTION_LIST:
       return {
         ...state,
-        currency_converstion_list: Object.assign([], payload),
+        currency_converstion_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     // Vat Data By ID
     // case VAT.VAT_ROW:
     //   return {
     //     ...state,
-    //     vat_row: Object.assign([], payload)
+    //     vat_row: (Array.isArray(payload) ? payload : (payload?.data || []))
     //   }
 
     default:

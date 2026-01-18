@@ -12,13 +12,13 @@ const OpeningBalanceReducer = (state = initState, action) => {
     case OPENING_BALANCE.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload.data),
+        transaction_category_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case OPENING_BALANCE.OPENING_BALANCE_LIST:
       return {
         ...state,
-        opening_balance_list: Object.assign([], payload),
+        opening_balance_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     default:
       return state;

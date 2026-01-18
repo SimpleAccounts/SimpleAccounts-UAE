@@ -19,34 +19,36 @@ const PayrollRunReducer = (state = initState, action) => {
     case EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST:
       return {
         ...state,
-        payroll_employee_list: Object.assign([], payload),
+        payroll_employee_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN:
       return {
         ...state,
-        employee_list_dropdown: Object.assign([], payload),
+        employee_list_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST:
       return {
         ...state,
-        incompleteEmployeeList: Object.assign([], payload),
+        incompleteEmployeeList: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.PAYROLL_LIST:
       return {
         ...state,
-        payroll_list: Object.assign([], payload),
+        payroll_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.APPROVER_DROPDOWN:
       return {
         ...state,
-        approver_dropdown_list: Object.assign([], payload),
+        approver_dropdown_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN:
       return {
         ...state,
-        user_approver_generater_dropdown_list: Object.assign([], payload),
+        user_approver_generater_dropdown_list: Array.isArray(payload)
+          ? payload
+          : payload?.data || [],
       };
 
     default:

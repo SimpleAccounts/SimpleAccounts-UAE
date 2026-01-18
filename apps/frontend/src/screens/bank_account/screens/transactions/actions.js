@@ -194,7 +194,7 @@ export const getVendorList = bankId => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

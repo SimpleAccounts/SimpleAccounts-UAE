@@ -12,13 +12,13 @@ const EmployeeReducer = (state = initState, action) => {
     case EMPLOYEE.EMPLOYEE_LIST:
       return {
         ...state,
-        employee_list: Object.assign([], payload),
+        employee_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     default:

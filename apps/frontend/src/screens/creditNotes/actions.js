@@ -154,7 +154,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
           return res;
         }
@@ -269,7 +269,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -568,7 +568,7 @@ export const getInvoiceListForDropdown = id => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
-            payload: res,
+            payload: res.data,
           });
         }
       })

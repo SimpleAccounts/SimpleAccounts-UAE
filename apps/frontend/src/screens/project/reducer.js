@@ -15,31 +15,31 @@ const ProjectReducer = (state = initState, action) => {
     case PROJECT.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload),
+        project_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case PROJECT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload),
+        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case PROJECT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case PROJECT.TITLE_LIST:
       return {
         ...state,
-        title_list: Object.assign([], payload),
+        title_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case PROJECT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload),
+        contact_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

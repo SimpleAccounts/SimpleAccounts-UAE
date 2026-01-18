@@ -10,7 +10,7 @@ const RoleReducer = (state = initState, action) => {
     case USERS_ROLES.USER_ROLE_LIST:
       return {
         ...state,
-        user_role_list: Object.assign([], payload),
+        user_role_list: (Array.isArray(payload) ? payload : (payload?.data || [])),
       };
 
     default:

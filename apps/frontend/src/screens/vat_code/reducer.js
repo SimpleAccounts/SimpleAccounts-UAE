@@ -13,14 +13,14 @@ const VatReducer = (state = initState, action) => {
     case VAT.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload),
+        vat_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     // Vat Data By ID
     case VAT.VAT_ROW:
       return {
         ...state,
-        vat_row: Object.assign({}, payload),
+        vat_row: payload?.data || payload || {},
       };
 
     default:

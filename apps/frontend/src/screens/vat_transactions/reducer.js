@@ -11,7 +11,7 @@ const VatTransactionsReducer = (state = initState, action) => {
     case VAT_TRANSACTIONS.VAT_TRANSACTION_LIST:
       return {
         ...state,
-        vat_transaction_list: Object.assign([], payload.data),
+        vat_transaction_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     default:
       return state;

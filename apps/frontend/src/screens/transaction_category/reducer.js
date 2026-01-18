@@ -13,14 +13,14 @@ const TransactionReducer = (state = initState, action) => {
     case TRANSACTION.TRANSACTION_LIST:
       return {
         ...state,
-        transaction_list: Object.assign([], payload),
+        transaction_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     // TRANSACTION Data By ID
     case TRANSACTION.TRANSACTION_ROW:
       return {
         ...state,
-        transaction_row: Object.assign({}, payload),
+        transaction_row: payload?.data || payload || {},
       };
 
     default:

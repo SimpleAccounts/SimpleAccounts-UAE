@@ -22,63 +22,63 @@ const PayrollEmployeeReducer = (state = initState, action) => {
     case EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST:
       return {
         ...state,
-        payroll_employee_list: Object.assign([], payload),
+        payroll_employee_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.DESIGNATION_DROPDOWN:
       return {
         ...state,
-        designation_dropdown: Object.assign([], payload),
+        designation_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN:
       return {
         ...state,
-        employee_list_dropdown: Object.assign([], payload),
+        employee_list_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.STATE_LIST:
       return {
         ...state,
-        state_list: Object.assign([], payload),
+        state_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     case EMPLOYEEPAYROLL.SALARY_ROLE_DROPDOWN:
       return {
         ...state,
-        salary_role_dropdown: Object.assign([], payload),
+        salary_role_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.SALARY_STRUCTURE_DROPDOWN:
       return {
         ...state,
-        salary_structure_dropdown: Object.assign([], payload),
+        salary_structure_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.SALARY_COMPONENT_FIXED_DROPDOWN:
       return {
         ...state,
-        salary_component_fixed_dropdown: Object.assign([], payload),
+        salary_component_fixed_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.SALARY_COMPONENT_VARAIBLE_DROPDOWN:
       return {
         ...state,
-        salary_component_varaible_dropdown: Object.assign([], payload),
+        salary_component_varaible_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.SALARY_COMPONENT_DEDUCTION_DROPDOWN:
       return {
         ...state,
-        salary_component_deduction_dropdown: Object.assign([], payload),
+        salary_component_deduction_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST:
       return {
         ...state,
-        incompleteEmployeeList: Object.assign([], payload),
+        incompleteEmployeeList: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

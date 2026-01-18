@@ -13,7 +13,7 @@ const SalaryRoleReducer = (state = initState, action) => {
     case SALARY_ROLES.SALARY_ROLES_LIST:
       return {
         ...state,
-        salaryRole_list: Object.assign([], payload),
+        salaryRole_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

@@ -14,7 +14,7 @@ export const getReceivableInvoiceDetail = postData => {
         if (res.status === 200) {
           // dispatch({
           //   type: EMPLOYEE.CURRENCY_LIST,
-          //   payload: res
+          //   payload: res.data
           // })
           return res;
         }

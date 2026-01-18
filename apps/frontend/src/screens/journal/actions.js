@@ -28,7 +28,7 @@ export const getJournalList = obj => {
         if (!obj.paginationDisable) {
           dispatch({
             type: JOURNAL.JOURNAL_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
         return res;
@@ -50,7 +50,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: JOURNAL.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
           return res;
         }
@@ -72,7 +72,7 @@ export const getTransactionCategoryList = obj => {
       .then(res => {
         dispatch({
           type: JOURNAL.TRANSACTION_CATEGORY_LIST,
-          payload: res,
+          payload: res.data,
         });
         return res;
       })
@@ -94,7 +94,7 @@ export const getContactList = () => {
         if (res.status === 200) {
           dispatch({
             type: JOURNAL.CONTACT_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
         return res;
@@ -116,7 +116,7 @@ export const getVatList = () => {
       .then(res => {
         dispatch({
           type: JOURNAL.VAT_LIST,
-          payload: res,
+          payload: res.data,
         });
         return res;
       })

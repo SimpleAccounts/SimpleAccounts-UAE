@@ -11,7 +11,7 @@ const ImportReducer = (state = initState, action) => {
     case IMPORT.FILE_DATA_LIST:
       return {
         ...state,
-        file_data_list: Object.assign([], payload),
+        file_data_list: (Array.isArray(payload) ? payload : (payload?.data || [])),
       };
 
     default:

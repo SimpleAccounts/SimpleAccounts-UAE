@@ -12,13 +12,13 @@ const OrganizationReducer = (state = initState, action) => {
     case ORGANIZATION.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case ORGANIZATION.INDUSTRY_TYPE_LIST:
       return {
         ...state,
-        industry_type_list: Object.assign([], payload),
+        industry_type_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:

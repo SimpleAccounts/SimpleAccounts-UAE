@@ -11,7 +11,7 @@ const CurrencyReducer = (state = initState, action) => {
     case CURRENCY.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     default:

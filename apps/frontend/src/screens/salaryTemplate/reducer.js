@@ -13,19 +13,19 @@ const SalaryTemplateReducer = (state = initState, action) => {
     case SALARY_TEMPLATE.TEMPLATE_LIST:
       return {
         ...state,
-        template_list: Object.assign([], payload),
+        template_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case SALARY_TEMPLATE.SALARY_STRUCTURE_DROPDOWN:
       return {
         ...state,
-        salary_structure_dropdown: Object.assign([], payload.data),
+        salary_structure_dropdown: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SALARY_TEMPLATE.SALARY_ROLE_DROPDOWN:
       return {
         ...state,
-        salary_role_dropdown: Object.assign([], payload.data),
+        salary_role_dropdown: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     default:

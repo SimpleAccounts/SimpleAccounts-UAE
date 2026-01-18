@@ -13,19 +13,19 @@ const ChartAccountReducer = (state = initState, action) => {
     case CHART_ACCOUNT.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload),
+        transaction_category_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case CHART_ACCOUNT.TRANSACTION_TYPES:
       return {
         ...state,
-        transaction_type_list: Object.assign([], payload),
+        transaction_type_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     case CHART_ACCOUNT.SUB_TRANSACTION_TYPES:
       return {
         ...state,
-        sub_transaction_type_list: Object.assign([], payload),
+        sub_transaction_type_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
 
     default:
