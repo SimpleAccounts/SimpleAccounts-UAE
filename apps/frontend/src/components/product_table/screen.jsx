@@ -157,7 +157,74 @@ const ProductTable = ({
                 }
                 onChange={e => {
                   if (e && e.label !== 'Select Product') {
-                    // productValue logic ...
+                    const selectedId = e?.value ?? e;
+                    const selectedProduct =
+                      product_list?.find(p => p.id === +selectedId) ||
+                      product_list?.find(p => p.id === selectedId);
+
+                    const itemIndex = data.findIndex(obj => obj.id === row.original.id);
+                    const idx = getIndex(row.original.id);
+                    if (itemIndex === -1) return;
+
+                    const newData = [...data];
+                    const exchange = exchangeRate ? parseFloat(String(exchangeRate)) || 1 : 1;
+
+                    newData[itemIndex].productId = selectedId;
+                    newData[itemIndex].quantity = newData[itemIndex].quantity || 1;
+
+                    if (selectedProduct) {
+                      newData[itemIndex].description =
+                        selectedProduct.description || selectedProduct.name || '';
+
+                      if (selectedProduct.unitPrice !== undefined && selectedProduct.unitPrice !== null) {
+                        const unitPrice = Number(selectedProduct.unitPrice);
+                        newData[itemIndex].unitPrice =
+                          exchange !== 0 ? (unitPrice * (1 / exchange)).toFixed(2) : String(unitPrice);
+                      }
+
+                      newData[itemIndex].unitType = selectedProduct.unitType || '';
+                      newData[itemIndex].unitTypeId = selectedProduct.unitTypeId || '';
+                      newData[itemIndex].exciseTaxId = selectedProduct.exciseTaxId || '';
+                      newData[itemIndex].isExciseTaxExclusive =
+                        selectedProduct.isExciseTaxExclusive ?? false;
+                      newData[itemIndex].transactionCategoryId =
+                        selectedProduct.transactionCategoryId || '';
+                      newData[itemIndex].transactionCategoryLabel =
+                        selectedProduct.transactionCategoryLabel || '';
+
+                      if (!disableVat) {
+                        newData[itemIndex].vatCategoryId = selectedProduct.vatCategoryId
+                          ? String(selectedProduct.vatCategoryId)
+                          : '';
+                      } else {
+                        // When VAT is disabled (company not VAT registered / invoice before VAT reg),
+                        // keep a safe default so invoice validation doesn't block submission.
+                        newData[itemIndex].vatCategoryId = newData[itemIndex].vatCategoryId || '10';
+                      }
+                    }
+
+                    setData(newData);
+                    setValue(`lineItemsString.${idx}.productId`, selectedId, { shouldValidate: true });
+                    setValue(`lineItemsString.${idx}.description`, newData[itemIndex].description, {
+                      shouldValidate: true,
+                    });
+                    setValue(`lineItemsString.${idx}.unitPrice`, newData[itemIndex].unitPrice, {
+                      shouldValidate: true,
+                    });
+                    setValue(`lineItemsString.${idx}.unitType`, newData[itemIndex].unitType, {
+                      shouldValidate: false,
+                    });
+                    setValue(`lineItemsString.${idx}.unitTypeId`, newData[itemIndex].unitTypeId, {
+                      shouldValidate: false,
+                    });
+                    setValue(`lineItemsString.${idx}.vatCategoryId`, newData[itemIndex].vatCategoryId, {
+                      shouldValidate: true,
+                    });
+                    setValue(`lineItemsString.${idx}.exciseTaxId`, newData[itemIndex].exciseTaxId, {
+                      shouldValidate: false,
+                    });
+
+                    updateAmountAndAddRow(newData);
                   }
                 }}
               />

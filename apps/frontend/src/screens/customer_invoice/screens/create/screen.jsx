@@ -121,12 +121,13 @@ const createCustomerInvoiceSchema = z
       ),
     currencyCode: z.union([
       z.string().min(1, 'Currency is required'),
-      z.object({ value: z.string(), label: z.string() }),
+      z.number().positive('Currency is required'),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
     ]),
     invoiceDate: z
       .union([z.string(), z.date()])
       .refine(val => val !== '', { message: 'Invoice date is required' }),
-    invoiceDueDate: z.string().optional(),
+    invoiceDueDate: z.union([z.string(), z.date()]).optional(),
     placeOfSupplyId: z
       .union([z.string(), z.object({ value: z.string(), label: z.string() })])
       .optional(),
