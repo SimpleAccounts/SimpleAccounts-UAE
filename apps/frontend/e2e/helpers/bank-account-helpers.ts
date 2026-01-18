@@ -266,3 +266,423 @@ export async function createTestBankAccount(
     } as BankAccountData & { bankAccountId: number };
   }
 }
+
+/**
+ * Transaction data structure for creation
+ */
+export interface TransactionData {
+  bankId: number;
+  transactionDate: string; // Format: DD-MM-YYYY
+  transactionAmount: number;
+  transactionType: string; // 'DEPOSIT' or 'WITHDRAWAL'
+  description?: string;
+  referenceNumber?: string;
+  chartOfAccountId?: number;
+  transactionCategoryId?: number;
+  coaCategoryId?: number;
+}
+
+/**
+ * Creates a deposit transaction via API
+ *
+ * @param request - Playwright APIRequestContext for making API calls
+ * @param authToken - Authentication token
+ * @param transactionData - Transaction data
+ * @returns Created transaction response
+ *
+ * @example
+ * ```typescript
+ * const deposit = await createDepositTransaction(request, token, {
+ *   bankId: 1,
+ *   transactionDate: '01-01-2024',
+ *   transactionAmount: 1000
+ * });
+ * ```
+ */
+export async function createDepositTransaction(
+  request: APIRequestContext,
+  authToken: string,
+  transactionData: Partial<TransactionData> & { bankId: number; transactionAmount: number }
+): Promise<any> {
+  const apiUrl = getApiBaseUrl();
+  const today = new Date();
+  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+
+  const payload = {
+    bankId: transactionData.bankId,
+    transactionDate: transactionData.transactionDate || formattedDate,
+    transactionAmount: transactionData.transactionAmount,
+    transactionType: 'DEPOSIT',
+    description: transactionData.description || `Test Deposit ${Date.now()}`,
+    referenceNumber: transactionData.referenceNumber || `DEP-${Date.now()}`,
+    chartOfAccountId: transactionData.chartOfAccountId || '',
+    transactionCategoryId: transactionData.transactionCategoryId || '',
+    coaCategoryId: transactionData.coaCategoryId || '',
+  };
+
+  const formData = new URLSearchParams();
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      formData.append(key, String(value));
+    }
+  });
+
+  const response = await request.post(`${apiUrl}/rest/transaction/save`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    data: formData.toString(),
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to create deposit transaction: ${response.status()} ${errorText}`);
+  }
+
+  return await response.text();
+}
+
+/**
+ * Creates a withdrawal transaction via API
+ *
+ * @param request - Playwright APIRequestContext for making API calls
+ * @param authToken - Authentication token
+ * @param transactionData - Transaction data
+ * @returns Created transaction response
+ *
+ * @example
+ * ```typescript
+ * const withdrawal = await createWithdrawalTransaction(request, token, {
+ *   bankId: 1,
+ *   transactionDate: '01-01-2024',
+ *   transactionAmount: 500
+ * });
+ * ```
+ */
+export async function createWithdrawalTransaction(
+  request: APIRequestContext,
+  authToken: string,
+  transactionData: Partial<TransactionData> & { bankId: number; transactionAmount: number }
+): Promise<any> {
+  const apiUrl = getApiBaseUrl();
+  const today = new Date();
+  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+
+  const payload = {
+    bankId: transactionData.bankId,
+    transactionDate: transactionData.transactionDate || formattedDate,
+    transactionAmount: transactionData.transactionAmount,
+    transactionType: 'WITHDRAWAL',
+    description: transactionData.description || `Test Withdrawal ${Date.now()}`,
+    referenceNumber: transactionData.referenceNumber || `WD-${Date.now()}`,
+    chartOfAccountId: transactionData.chartOfAccountId || '',
+    transactionCategoryId: transactionData.transactionCategoryId || '',
+    coaCategoryId: transactionData.coaCategoryId || '',
+  };
+
+  const formData = new URLSearchParams();
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      formData.append(key, String(value));
+    }
+  });
+
+  const response = await request.post(`${apiUrl}/rest/transaction/save`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    data: formData.toString(),
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to create withdrawal transaction: ${response.status()} ${errorText}`);
+  }
+
+  return await response.text();
+}
+
+/**
+ * Gets transaction list for a bank account
+ *
+ * @param request - Playwright APIRequestContext for making API calls
+ * @param authToken - Authentication token
+ * @param bankId - Bank account ID
+ * @param options - Optional filters
+ * @returns Transaction list response
+ *
+ * @example
+ * ```typescript
+ * const transactions = await getTransactionList(request, token, 1, {
+ *   transactionType: 'DEPOSIT'
+ * });
+ * ```
+ */
+export async function getTransactionList(
+  request: APIRequestContext,
+  authToken: string,
+  bankId: number,
+  options: {
+    transactionType?: string;
+    transactionDate?: string;
+    chartOfAccountId?: number;
+    pageNo?: number;
+    pageSize?: number;
+    paginationDisable?: boolean;
+  } = {}
+): Promise<any> {
+  const apiUrl = getApiBaseUrl();
+  let url = `${apiUrl}/rest/transaction/list?bankId=${bankId}`;
+
+  if (options.transactionType) {
+    url += `&transactionType=${options.transactionType}`;
+  }
+  if (options.transactionDate) {
+    url += `&transactionDate=${options.transactionDate}`;
+  }
+  if (options.chartOfAccountId) {
+    url += `&chartOfAccountId=${options.chartOfAccountId}`;
+  }
+  if (options.pageNo) {
+    url += `&pageNo=${options.pageNo}`;
+  }
+  if (options.pageSize) {
+    url += `&pageSize=${options.pageSize}`;
+  }
+  if (options.paginationDisable) {
+    url += `&paginationDisable=${options.paginationDisable}`;
+  }
+
+  const response = await request.get(url, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to get transaction list: ${response.status()} ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+/**
+ * Gets bank account details including current balance
+ *
+ * @param request - Playwright APIRequestContext for making API calls
+ * @param authToken - Authentication token
+ * @param bankId - Bank account ID
+ * @returns Bank account details
+ *
+ * @example
+ * ```typescript
+ * const account = await getBankAccountDetails(request, token, 1);
+ * const balance = account.currentBalance;
+ * ```
+ */
+export async function getBankAccountDetails(
+  request: APIRequestContext,
+  authToken: string,
+  bankId: number
+): Promise<any> {
+  const apiUrl = getApiBaseUrl();
+  const response = await request.get(`${apiUrl}/rest/bank/${bankId}`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to get bank account details: ${response.status()} ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+/**
+ * Verifies bank account balance matches expected amount
+ *
+ * @param request - Playwright APIRequestContext for making API calls
+ * @param authToken - Authentication token
+ * @param bankId - Bank account ID
+ * @param expectedBalance - Expected balance amount
+ * @returns True if balance matches, throws error otherwise
+ *
+ * @example
+ * ```typescript
+ * await verifyBankAccountBalance(request, token, 1, 5000);
+ * ```
+ */
+export async function verifyBankAccountBalance(
+  request: APIRequestContext,
+  authToken: string,
+  bankId: number,
+  expectedBalance: number
+): Promise<boolean> {
+  const account = await getBankAccountDetails(request, authToken, bankId);
+  const currentBalance = parseFloat(account.currentBalance || account.balance || 0);
+
+  if (Math.abs(currentBalance - expectedBalance) > 0.01) {
+    throw new Error(
+      `Bank account balance mismatch. Expected: ${expectedBalance}, Actual: ${currentBalance}`
+    );
+  }
+
+  return true;
+}
+
+/**
+ * Navigates to bank account transactions page
+ *
+ * @param page - Playwright Page object
+ * @param bankId - Bank account ID
+ * @throws Error if navigation fails
+ *
+ * @example
+ * ```typescript
+ * await navigateToBankTransactions(page, 1);
+ * ```
+ */
+export async function navigateToBankTransactions(page: Page, bankId: number): Promise<void> {
+  const baseUrl = getFrontendBaseUrl();
+  const transactionsPath = `/admin/banking/accounts/${bankId}/transactions`;
+  await page.goto(`${baseUrl}${transactionsPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
+}
+
+/**
+ * Navigates to bank statement page
+ *
+ * @param page - Playwright Page object
+ * @param bankId - Bank account ID
+ * @throws Error if navigation fails
+ *
+ * @example
+ * ```typescript
+ * await navigateToBankStatement(page, 1);
+ * ```
+ */
+export async function navigateToBankStatement(page: Page, bankId: number): Promise<void> {
+  const baseUrl = getFrontendBaseUrl();
+  const statementPath = `/admin/banking/accounts/${bankId}/statement`;
+  await page.goto(`${baseUrl}${statementPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
+}
+
+/**
+ * Creates a deposit transaction via UI (fallback method)
+ *
+ * @param page - Playwright Page object
+ * @param transactionData - Transaction data
+ * @throws Error if creation fails
+ *
+ * @example
+ * ```typescript
+ * await createDepositTransactionViaUI(page, {
+ *   bankId: 1,
+ *   transactionAmount: 1000
+ * });
+ * ```
+ */
+export async function createDepositTransactionViaUI(
+  page: Page,
+  transactionData: Partial<TransactionData> & { bankId: number; transactionAmount: number }
+): Promise<void> {
+  const baseUrl = getFrontendBaseUrl();
+  const createPath = `/admin/banking/accounts/${transactionData.bankId}/transactions/create`;
+
+  await page.goto(`${baseUrl}${createPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
+
+  // Select transaction type as DEPOSIT
+  const transactionTypeSelect = page
+    .locator('select[name*="transactionType"], select[name*="type"]')
+    .first();
+  if (await transactionTypeSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await transactionTypeSelect.selectOption('DEPOSIT');
+  }
+
+  // Fill in amount
+  const amountInput = page.locator('input[name*="amount"], input[id*="amount"]').first();
+  if (await amountInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await amountInput.fill(String(transactionData.transactionAmount));
+  }
+
+  // Fill in description if provided
+  if (transactionData.description) {
+    const descInput = page
+      .locator('textarea[name*="description"], input[name*="description"]')
+      .first();
+    if (await descInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await descInput.fill(transactionData.description);
+    }
+  }
+
+  // Submit the form
+  const submitButton = page.getByRole('button', { name: /save|submit|create/i });
+  if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await submitButton.click();
+    await page.waitForTimeout(2000);
+  }
+}
+
+/**
+ * Creates a withdrawal transaction via UI (fallback method)
+ *
+ * @param page - Playwright Page object
+ * @param transactionData - Transaction data
+ * @throws Error if creation fails
+ *
+ * @example
+ * ```typescript
+ * await createWithdrawalTransactionViaUI(page, {
+ *   bankId: 1,
+ *   transactionAmount: 500
+ * });
+ * ```
+ */
+export async function createWithdrawalTransactionViaUI(
+  page: Page,
+  transactionData: Partial<TransactionData> & { bankId: number; transactionAmount: number }
+): Promise<void> {
+  const baseUrl = getFrontendBaseUrl();
+  const createPath = `/admin/banking/accounts/${transactionData.bankId}/transactions/create`;
+
+  await page.goto(`${baseUrl}${createPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
+
+  // Select transaction type as WITHDRAWAL
+  const transactionTypeSelect = page
+    .locator('select[name*="transactionType"], select[name*="type"]')
+    .first();
+  if (await transactionTypeSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await transactionTypeSelect.selectOption('WITHDRAWAL');
+  }
+
+  // Fill in amount
+  const amountInput = page.locator('input[name*="amount"], input[id*="amount"]').first();
+  if (await amountInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await amountInput.fill(String(transactionData.transactionAmount));
+  }
+
+  // Fill in description if provided
+  if (transactionData.description) {
+    const descInput = page
+      .locator('textarea[name*="description"], input[name*="description"]')
+      .first();
+    if (await descInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await descInput.fill(transactionData.description);
+    }
+  }
+
+  // Submit the form
+  const submitButton = page.getByRole('button', { name: /save|submit|create/i });
+  if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await submitButton.click();
+    await page.waitForTimeout(2000);
+  }
+}

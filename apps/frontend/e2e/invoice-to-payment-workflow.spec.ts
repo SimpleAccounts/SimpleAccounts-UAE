@@ -79,7 +79,7 @@ test.describe('Invoice-to-Payment Workflow', () => {
   test.beforeAll(async ({ browser }) => {
     // Skip if credentials are not set
     test.skip(
-      !username || !password || username === 'test@example.com',
+      !username || !password,
       'E2E_USERNAME and E2E_PASSWORD must be set with valid credentials'
     );
 
@@ -132,10 +132,7 @@ test.describe('Invoice-to-Payment Workflow', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    test.skip(
-      !username || !password || username === 'test@example.com',
-      'E2E_USERNAME and E2E_PASSWORD must be set'
-    );
+    test.skip(!username || !password, 'E2E_USERNAME and E2E_PASSWORD must be set');
     await loginTestUser(page, username, password);
   });
 
