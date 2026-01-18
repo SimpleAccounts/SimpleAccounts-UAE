@@ -6,7 +6,10 @@ import { loginTestUser } from './test-user-helpers';
  * Generates a unique product code using the pattern: PRD-${Date.now()}
  */
 export function generateProductCode(): string {
-  return `PRD-${Date.now()}`;
+  // Backend parses the numeric suffix into an Integer (see ProductRestHelper),
+  // so we must keep it within 32-bit int range.
+  const suffix = Date.now() % 1_000_000_000; // < 1e9
+  return `PRD-${suffix}`;
 }
 
 /**
@@ -20,14 +23,18 @@ export function generateProductName(prefix: string = 'Test Product'): string {
 export interface ProductData {
   productName: string;
   productCode: string;
-  productType?: 'PRODUCT' | 'SERVICE';
-  productPriceType?: 'FIXED' | 'VARIABLE';
+  productType?: 'GOODS' | 'SERVICE';
+  productPriceType?: 'SALES' | 'PURCHASE' | 'BOTH';
   vatCategoryId?: number;
   productCategoryId?: number;
   salesUnitPrice?: number;
   purchaseUnitPrice?: number;
   salesDescription?: string;
   purchaseDescription?: string;
+  salesTransactionCategoryId?: number;
+  purchaseTransactionCategoryId?: number;
+  transactionCategoryId?: number;
+  exciseTaxId?: number;
   isActive?: boolean;
   vatIncluded?: boolean;
   isInventoryEnabled?: boolean;
@@ -48,11 +55,14 @@ export async function createProductViaAPI(
   const defaultData: ProductData = {
     productName: productData.productName || generateProductName(),
     productCode: productData.productCode || generateProductCode(),
-    productType: productData.productType || 'PRODUCT',
-    productPriceType: productData.productPriceType || 'FIXED',
+    productType: productData.productType || 'GOODS',
+    productPriceType: productData.productPriceType || 'SALES',
     vatCategoryId: productData.vatCategoryId || 1,
     salesUnitPrice: productData.salesUnitPrice || 100,
     purchaseUnitPrice: productData.purchaseUnitPrice || 80,
+    salesTransactionCategoryId: productData.salesTransactionCategoryId || 84, // "Sales"
+    purchaseTransactionCategoryId: productData.purchaseTransactionCategoryId || 49, // "Cost of Goods Sold"
+    transactionCategoryId: productData.transactionCategoryId || 150, // "Inventory Asset"
     isActive: productData.isActive ?? true,
     vatIncluded: productData.vatIncluded ?? false,
     isInventoryEnabled: productData.isInventoryEnabled ?? false,
@@ -66,18 +76,27 @@ export async function createProductViaAPI(
     productPriceType: defaultData.productPriceType,
     vatCategoryId: defaultData.vatCategoryId,
     productCategoryId: productData.productCategoryId || null,
+    transactionCategoryId: defaultData.transactionCategoryId,
     salesUnitPrice: defaultData.salesUnitPrice,
     purchaseUnitPrice: defaultData.purchaseUnitPrice,
     salesDescription:
       productData.salesDescription || `Sales description for ${defaultData.productName}`,
     purchaseDescription:
       productData.purchaseDescription || `Purchase description for ${defaultData.productName}`,
+    salesTransactionCategoryId: defaultData.salesTransactionCategoryId,
+    purchaseTransactionCategoryId: defaultData.purchaseTransactionCategoryId,
     isActive: defaultData.isActive,
     vatIncluded: defaultData.vatIncluded,
     isInventoryEnabled: defaultData.isInventoryEnabled,
     unitTypeId: defaultData.unitTypeId,
     ...productData,
   };
+
+  // Only include excise fields when explicitly configured; passing `0` triggers backend lookups and can NPE.
+  if (productData.exciseTaxId && productData.exciseTaxId > 0) {
+    (payload as any).exciseTaxId = productData.exciseTaxId;
+    (payload as any).exciseTaxCheck = true;
+  }
 
   const response = await request.post(`${apiUrl}/rest/product/save`, {
     headers: {
