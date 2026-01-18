@@ -12,9 +12,7 @@ export const getCTSettings = () => {
       .then(res => {
         dispatch({
           type: REPORTS.SETTING_LIST,
-          payload: {
-            data: res.data,
-          },
+          payload: res.data,
         });
         return res;
       })
@@ -73,9 +71,7 @@ export const getCorporateTaxList = postObj => {
       .then(res => {
         dispatch({
           type: REPORTS.CTREPORT_LIST,
-          payload: {
-            data: res.data,
-          },
+          payload: res.data,
         });
         return res;
       })
@@ -168,9 +164,7 @@ export const getCTPaymentHistoryList = () => {
         if (res.status === 200) {
           dispatch({
             type: REPORTS.PAYMENT_HISTORY,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
         return res;

@@ -36,9 +36,7 @@ export const getGRNList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: GOODS_RECEVED_NOTE.GOODS_RECEVED_NOTE_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -61,9 +59,7 @@ export const getProjectList = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.PROJECT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -119,9 +115,7 @@ export const getContactList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -163,9 +157,7 @@ export const getVatList = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.VAT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -186,9 +178,7 @@ export const getDepositList = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.DEPOSIT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -209,9 +199,7 @@ export const getPaymentMode = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.PAY_MODE,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -232,9 +220,7 @@ export const getProductList = () => {
         if (res.status === 200) {
           dispatch({
             type: GOODS_RECEVED_NOTE.PRODUCT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

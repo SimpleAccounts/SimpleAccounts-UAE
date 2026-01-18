@@ -57,9 +57,7 @@ export const getSalaryStructureForDropdown = () => {
         if (res.status === 200) {
           dispatch({
             type: SALARY_TEMPLATE.SALARY_STRUCTURE_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -80,9 +78,7 @@ export const getSalaryRolesForDropdown = () => {
         if (res.status === 200) {
           dispatch({
             type: SALARY_TEMPLATE.SALARY_ROLE_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

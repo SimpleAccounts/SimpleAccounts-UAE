@@ -446,6 +446,19 @@ const commonSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // Helper to ensure we get an array and preserve count for pagination
+    const getArray = val => {
+      if (Array.isArray(val)) return val;
+      if (Array.isArray(val?.data)) {
+        const arr = val.data;
+        if (val.count !== undefined) {
+          arr.count = val.count;
+        }
+        return arr;
+      }
+      return [];
+    };
+
     builder
       // getSimpleAccountsVersion
       .addCase(getSimpleAccountsVersion.fulfilled, (state, action) => {
@@ -453,7 +466,7 @@ const commonSlice = createSlice({
       })
       // getRoleList
       .addCase(getRoleList.fulfilled, (state, action) => {
-        state.user_role_list = action.payload;
+        state.user_role_list = getArray(action.payload);
       })
       // getCompanyCurrency
       .addCase(getCompanyCurrency.fulfilled, (state, action) => {
@@ -461,28 +474,27 @@ const commonSlice = createSlice({
       })
       // getCurrencyConversionList
       .addCase(getCurrencyConversionList.fulfilled, (state, action) => {
-        // Thunk already returns res.data || res, so payload is the data array directly
-        state.currency_convert_list = action.payload || [];
+        state.currency_convert_list = getArray(action.payload);
       })
       // getStateList
       .addCase(getStateList.fulfilled, (state, action) => {
-        state.state_list = action.payload;
+        state.state_list = getArray(action.payload);
       })
       // getCountryList
       .addCase(getCountryList.fulfilled, (state, action) => {
-        state.country_list = action.payload;
+        state.country_list = getArray(action.payload);
       })
       // getCompanyTypeListRegister
       .addCase(getCompanyTypeListRegister.fulfilled, (state, action) => {
-        state.company_type_list = action.payload;
+        state.company_type_list = getArray(action.payload);
       })
       // getCurrencyList
       .addCase(getCurrencyList.fulfilled, (state, action) => {
-        state.universal_currency_list = action.payload;
+        state.universal_currency_list = getArray(action.payload);
       })
       // getCurrencylist
       .addCase(getCurrencylist.fulfilled, (state, action) => {
-        state.currency_list = action.payload;
+        state.currency_list = getArray(action.payload);
       })
       // getCompany
       .addCase(getCompany.fulfilled, (state, action) => {
@@ -490,27 +502,27 @@ const commonSlice = createSlice({
       })
       // getTaxTreatmentList
       .addCase(getTaxTreatmentList.fulfilled, (state, action) => {
-        state.tax_treatment_list = action.payload;
+        state.tax_treatment_list = getArray(action.payload);
       })
       // getVatList
       .addCase(getVatList.fulfilled, (state, action) => {
-        state.vat_list = action.payload;
+        state.vat_list = getArray(action.payload);
       })
       // getProductList
       .addCase(getProductList.fulfilled, (state, action) => {
-        state.product_list = action.payload;
+        state.product_list = getArray(action.payload);
       })
       // getExciseList
       .addCase(getExciseList.fulfilled, (state, action) => {
-        state.excise_list = action.payload;
+        state.excise_list = getArray(action.payload);
       })
       // getCustomerList
       .addCase(getCustomerList.fulfilled, (state, action) => {
-        state.customer_list = action.payload;
+        state.customer_list = getArray(action.payload);
       })
       // getPaymentMode
       .addCase(getPaymentMode.fulfilled, (state, action) => {
-        state.pay_mode = action.payload;
+        state.pay_mode = getArray(action.payload);
       })
       // getCompanyDetails
       .addCase(getCompanyDetails.fulfilled, (state, action) => {
@@ -518,7 +530,7 @@ const commonSlice = createSlice({
       })
       // getSalaryComponentList
       .addCase(getSalaryComponentList.fulfilled, (state, action) => {
-        state.salary_component_list = action.payload;
+        state.salary_component_list = getArray(action.payload);
       })
       // Backward compatibility with old action types
       .addCase(COMMON.START_LOADING, state => {
@@ -543,55 +555,55 @@ const commonSlice = createSlice({
         };
       })
       .addCase(COMMON.UNIVERSAL_CURRENCY_LIST, (state, action) => {
-        state.universal_currency_list = action.payload?.data || action.payload;
+        state.universal_currency_list = getArray(action.payload);
       })
       .addCase(COMMON.CURRENCY_LIST, (state, action) => {
-        state.currency_list = action.payload?.data || action.payload;
+        state.currency_list = getArray(action.payload);
       })
       .addCase(COMMON.USER_ROLE_LIST, (state, action) => {
-        state.user_role_list = action.payload || [];
+        state.user_role_list = getArray(action.payload);
       })
       .addCase(COMMON.COMPANY_PROFILE, (state, action) => {
         state.company_profile = action.payload?.data || action.payload;
       })
       .addCase(COMMON.COUNTRY_LIST, (state, action) => {
-        state.country_list = action.payload || [];
+        state.country_list = getArray(action.payload);
       })
       .addCase(COMMON.STATE_LIST, (state, action) => {
-        state.state_list = action.payload || [];
+        state.state_list = getArray(action.payload);
       })
       .addCase(COMMON.COMPANY_TYPE, (state, action) => {
-        state.company_type_list = action.payload || [];
+        state.company_type_list = getArray(action.payload);
       })
       .addCase(COMMON.CURRENCY_CONVERT_LIST, (state, action) => {
-        state.currency_convert_list = action.payload?.data || action.payload;
+        state.currency_convert_list = getArray(action.payload);
       })
       .addCase(COMMON.TAX_TREATMENT_LIST, (state, action) => {
-        state.tax_treatment_list = action.payload?.data || action.payload;
+        state.tax_treatment_list = getArray(action.payload);
       })
       .addCase(COMMON.VAT_LIST, (state, action) => {
-        state.vat_list = action.payload?.data || action.payload;
+        state.vat_list = getArray(action.payload);
       })
       .addCase(COMMON.PRODUCT_LIST, (state, action) => {
-        state.product_list = action.payload?.data || action.payload;
+        state.product_list = getArray(action.payload);
       })
       .addCase(COMMON.EXCISE_LIST, (state, action) => {
-        state.excise_list = action.payload?.data || action.payload;
+        state.excise_list = getArray(action.payload);
       })
       .addCase(COMMON.CUSTOMER_LIST, (state, action) => {
-        state.customer_list = action.payload?.data || action.payload;
+        state.customer_list = getArray(action.payload);
       })
       .addCase(COMMON.PAY_MODE, (state, action) => {
-        state.pay_mode = action.payload?.data || action.payload;
+        state.pay_mode = getArray(action.payload);
       })
       .addCase(COMMON.COMPANY_DETAILS, (state, action) => {
         state.company_details = action.payload?.data || action.payload;
       })
       .addCase(COMMON.SALARY_COMPONENT_LIST, (state, action) => {
-        state.salary_component_list = action.payload?.data || action.payload;
+        state.salary_component_list = getArray(action.payload);
       })
       .addCase(COMMON.COMPANY_CURRENCY, (state, action) => {
-        state.companyCurrency = action.payload || [];
+        state.companyCurrency = getArray(action.payload);
       });
   },
 });

@@ -101,9 +101,7 @@ export const getFileData = obj => {
         if (res.status === 200) {
           dispatch({
             type: IMPORT.FILE_DATA_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
 
           return res;

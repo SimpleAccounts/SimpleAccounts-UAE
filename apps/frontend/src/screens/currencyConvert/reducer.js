@@ -7,6 +7,19 @@ const initState = {
 };
 
 const CurrencyConReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return val;
+    if (Array.isArray(val?.data)) {
+      const arr = val.data;
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
@@ -31,7 +44,7 @@ const CurrencyConReducer = (state = initState, action) => {
     // case VAT.VAT_ROW:
     //   return {
     //     ...state,
-    //     vat_row: (Array.isArray(payload) ? payload : (payload?.data || []))
+    //     vat_row: getArray(payload)
     //   }
 
     default:

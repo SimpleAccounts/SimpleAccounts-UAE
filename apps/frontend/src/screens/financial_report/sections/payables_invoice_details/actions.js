@@ -54,9 +54,7 @@ export const getCompany = () => {
         if (res.status === 200) {
           dispatch({
             type: REPORTS.COMPANY_PROFILE,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

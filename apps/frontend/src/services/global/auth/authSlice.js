@@ -367,7 +367,7 @@ export const getCompanyCount = () => {
         }
         // Non-200 status: return response with data: 0 to allow registration
         const response = { ...res, data: 0, status: res.status };
-        dispatch(getCompanyCountThunk.fulfilled({ payload: { data: 0, status: res.status } }));
+        dispatch(getCompanyCountThunk.fulfilled({ data: 0, status: res.status }));
         return response;
       })
       .catch(err => {
@@ -381,7 +381,7 @@ export const getCompanyCount = () => {
           status: err && err.status ? err.status : 500,
         };
         // Update state
-        dispatch(getCompanyCountThunk.fulfilled({ payload: response }));
+        dispatch(getCompanyCountThunk.fulfilled(response));
         // Return response instead of throwing - this allows register screen to work
         // Login screen's .catch() won't execute, but .then() will with data: 0
         return response;

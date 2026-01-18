@@ -36,9 +36,7 @@ export const getRFQList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: REQUEST_FOR_QUOTATION.REQUEST_FOR_QUOTATION_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -61,9 +59,7 @@ export const getProjectList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.PROJECT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -84,9 +80,7 @@ export const getExciseList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.EXCISE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -108,9 +102,7 @@ export const getContactList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -152,9 +144,7 @@ export const getVatList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.VAT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -176,9 +166,7 @@ export const getDepositList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.DEPOSIT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -199,9 +187,7 @@ export const getPaymentMode = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.PAY_MODE,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -222,9 +208,7 @@ export const getProductList = () => {
         if (res.status === 200) {
           dispatch({
             type: REQUEST_FOR_QUOTATION.PRODUCT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
