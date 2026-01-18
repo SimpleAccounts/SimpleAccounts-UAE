@@ -176,10 +176,15 @@ const ProductTable = ({
                       newData[itemIndex].description =
                         selectedProduct.description || selectedProduct.name || '';
 
-                      if (selectedProduct.unitPrice !== undefined && selectedProduct.unitPrice !== null) {
+                      if (
+                        selectedProduct.unitPrice !== undefined &&
+                        selectedProduct.unitPrice !== null
+                      ) {
                         const unitPrice = Number(selectedProduct.unitPrice);
                         newData[itemIndex].unitPrice =
-                          exchange !== 0 ? (unitPrice * (1 / exchange)).toFixed(2) : String(unitPrice);
+                          exchange !== 0
+                            ? (unitPrice * (1 / exchange)).toFixed(2)
+                            : String(unitPrice);
                       }
 
                       newData[itemIndex].unitType = selectedProduct.unitType || '';
@@ -204,7 +209,9 @@ const ProductTable = ({
                     }
 
                     setData(newData);
-                    setValue(`lineItemsString.${idx}.productId`, selectedId, { shouldValidate: true });
+                    setValue(`lineItemsString.${idx}.productId`, selectedId, {
+                      shouldValidate: true,
+                    });
                     setValue(`lineItemsString.${idx}.description`, newData[itemIndex].description, {
                       shouldValidate: true,
                     });
@@ -217,9 +224,13 @@ const ProductTable = ({
                     setValue(`lineItemsString.${idx}.unitTypeId`, newData[itemIndex].unitTypeId, {
                       shouldValidate: false,
                     });
-                    setValue(`lineItemsString.${idx}.vatCategoryId`, newData[itemIndex].vatCategoryId, {
-                      shouldValidate: true,
-                    });
+                    setValue(
+                      `lineItemsString.${idx}.vatCategoryId`,
+                      newData[itemIndex].vatCategoryId,
+                      {
+                        shouldValidate: true,
+                      }
+                    );
                     setValue(`lineItemsString.${idx}.exciseTaxId`, newData[itemIndex].exciseTaxId, {
                       shouldValidate: false,
                     });

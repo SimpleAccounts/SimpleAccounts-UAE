@@ -692,10 +692,10 @@ function CustomerInvoice() {
               manualPagination
               pageCount={Math.ceil(
                 (Array.isArray(customer_invoice_list)
-                  ? customer_invoice_list?.count ??
+                  ? (customer_invoice_list?.count ??
                     (Array.isArray(customer_invoice_list?.data)
                       ? customer_invoice_list.data.length
-                      : customer_invoice_list.length)
+                      : customer_invoice_list.length))
                   : customer_invoice_list?.count || 0) / pagination.pageSize
               )}
               onPaginationChange={setPagination}

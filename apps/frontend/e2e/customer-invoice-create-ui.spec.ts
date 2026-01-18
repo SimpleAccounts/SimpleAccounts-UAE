@@ -1,6 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
-import { createProductViaAPI, generateProductCode, generateProductName } from './helpers/product-helpers';
+import {
+  createProductViaAPI,
+  generateProductCode,
+  generateProductName,
+} from './helpers/product-helpers';
 
 const CREATE_PATH = '/admin/income/customer-invoice/create';
 const LIST_PATH = '/admin/income/customer-invoice';
@@ -103,9 +107,12 @@ test.describe('Customer Invoice - UI create', () => {
 
     // Ensure product list has loaded (otherwise the react-select menu can be empty/not render).
     await page
-      .waitForResponse(r => r.url().includes('/rest/datalist/product?priceType=SALES') && r.status() === 200, {
-        timeout: 60_000,
-      })
+      .waitForResponse(
+        r => r.url().includes('/rest/datalist/product?priceType=SALES') && r.status() === 200,
+        {
+          timeout: 60_000,
+        }
+      )
       .catch(() => {
         // If already cached/loaded before we started waiting, continue.
       });
@@ -202,4 +209,3 @@ test.describe('Customer Invoice - UI create', () => {
     await expect(page.locator('body')).toContainText(/customer invoice/i, { timeout: 60_000 });
   });
 });
-
