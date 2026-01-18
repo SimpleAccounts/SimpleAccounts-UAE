@@ -669,10 +669,16 @@ public class InvoiceRestHelper {
 				model.setId(invoice.getId());
 				contact(invoice, model);
 
-				model.setCurrencyName(
-						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyName() : "-");
-				model.setCurrencySymbol(
-						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
+				try {
+					model.setCurrencyName(
+							invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyName() : "-");
+					model.setCurrencySymbol(
+							invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
+				} catch (org.hibernate.LazyInitializationException e) {
+					// Avoid breaking invoice listing when Currency is a lazy proxy outside session.
+					model.setCurrencyName("-");
+					model.setCurrencySymbol("-");
+				}
 
 				model.setReferenceNumber(invoice.getReferenceNumber());
 				invoiceDate(invoice, model);
@@ -689,7 +695,12 @@ public class InvoiceRestHelper {
 				}
 				model.setStatusEnum(CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
 				if (invoice.getContact() != null) {
-					model.setContactId(invoice.getContact().getContactId());
+					try {
+						// Proxy id access is usually safe, but guard anyway.
+						model.setContactId(invoice.getContact().getContactId());
+					} catch (org.hibernate.LazyInitializationException e) {
+						// leave as null
+					}
 				}
 				model.setCnCreatedOnPaidInvoice(invoice.getCnCreatedOnPaidInvoice());
 				model.setDueAmount(invoice.getDueAmount() == null ? invoice.getTotalAmount() : invoice.getDueAmount());
@@ -740,12 +751,20 @@ public class InvoiceRestHelper {
 	}
 
 	private void contact(Invoice invoice, InvoiceListModel model) {
-		if (invoice.getContact() != null) {
+		if (invoice.getContact() == null) return;
+		try {
 			if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty() ) {
 				model.setName(invoice.getContact().getOrganization());
 			}
 			else {
 				model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+			}
+		} catch (org.hibernate.LazyInitializationException e) {
+			// Avoid breaking invoice listing when Contact is a lazy proxy outside session.
+			try {
+				model.setName("Contact #" + invoice.getContact().getContactId());
+			} catch (Exception ignored) {
+				model.setName("-");
 			}
 		}
 	}
