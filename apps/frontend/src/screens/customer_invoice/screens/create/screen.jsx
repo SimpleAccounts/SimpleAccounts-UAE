@@ -381,12 +381,17 @@ const CreateCustomerInvoice = ({
 
   const validationCheck = useCallback(
     value => {
+      const referenceToValidate = value ? `${prefix || ''}${value}` : value;
       const validationData = {
         moduleType: 6,
-        name: value,
+        name: referenceToValidate,
       };
       customerInvoiceCreateActions.checkValidation(validationData).then(response => {
-        if (response.data === 'Invoice Number Already Exists') {
+        if (
+          response.data === 'Invoice Number Already Exists' ||
+          response.data === 'Invoice Number Already Exist.' ||
+          response.data === 'Invoice Number Already Exist'
+        ) {
           setExist(true);
           setError('invoice_number', {
             type: 'manual',
@@ -1251,7 +1256,7 @@ const CreateCustomerInvoice = ({
                           <hr />
                           <Row>
                             <Col>
-                              <FormGroup check inline className="mb-3">
+                              <FormGroup check className="mb-3 form-check-inline">
                                 <div>
                                   <Controller
                                     name="changeShippingAddress"
@@ -1340,22 +1345,12 @@ const CreateCustomerInvoice = ({
                                 <span className="mr-4">{strings.Exclusive}</span>
                               )}
                               <Switch
-                                value={taxType}
                                 checked={taxType}
-                                onChange={newTaxType => {
-                                  setTaxType(newTaxType);
+                                onCheckedChange={newTaxType => {
+                                  setTaxType(!!newTaxType);
                                   updateAmount(data);
                                 }}
-                                onColor="#1e6eff"
-                                onHandleColor="#2693e6"
-                                handleDiameter={25}
-                                uncheckedIcon={false}
-                                checkedIcon={false}
-                                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                height={20}
-                                width={48}
-                                className="react-switch "
+                                className="react-switch"
                               />
                               {taxType === true ? (
                                 <span style={{ color: '#0069d9' }} className="ml-4">

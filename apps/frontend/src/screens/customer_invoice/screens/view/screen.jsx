@@ -14,10 +14,9 @@ import {
 } from '@/components/ui/table';
 import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
-import ReactToPrint from 'react-to-print';
+import { useReactToPrint } from 'react-to-print';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -25,7 +24,7 @@ import { Currency, InvoiceViewJournalEntries } from 'components';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
 import dayjs from '@/utils/date';
-import { FileText, Printer, X } from 'lucide-react';
+import { Printer, X } from 'lucide-react';
 
 const strings = new LocalizedStrings(data);
 
@@ -66,8 +65,10 @@ const ViewCustomerInvoice = props => {
   const [contactData, setContactData] = useState({});
   const [companyData, setCompanyData] = useState({});
 
-  const pdfExportComponent = useRef(null);
   const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const termList = [
     { label: 'Net 7', value: 'NET_7' },
@@ -162,10 +163,6 @@ const ViewCustomerInvoice = props => {
     }
   };
 
-  const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
-  };
-
   const redirectToCreditNote = creditNote => {
     const commonParams = {
       CI_id: location?.state?.id,
@@ -204,22 +201,14 @@ const ViewCustomerInvoice = props => {
             />
           </div>
           <div className="pull-right">
+            {/* Removed Kendo PDFExport (premium/licensing). Use browser print-to-PDF instead. */}
             <Button
-              className="btn-lg mb-1 print-btn-cont"
-              onClick={() => {
-                exportPDFWithComponent();
-              }}
+              type="button"
+              className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
+              onClick={() => handlePrint?.()}
             >
-              <FileText className="h-4 w-4" />
+              <Printer className="h-4 w-4" />
             </Button>
-            <ReactToPrint
-              trigger={() => (
-                <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                  <Printer className="h-4 w-4" />
-                </Button>
-              )}
-              content={() => componentRef.current}
-            />
             <Button
               type="button"
               className="close-btn mb-1 btn-lg print-btn-cont"
@@ -255,23 +244,16 @@ const ViewCustomerInvoice = props => {
             </Button>
           </div>
           <div>
-            <PDFExport
-              ref={pdfExportComponent}
-              scale={0.8}
-              paperSize="A3"
-              fileName={invoiceData.referenceNumber + '.pdf'}
-            >
-              <InvoiceTemplate
-                invoiceData={invoiceData}
-                contactData={contactData}
-                isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                status={location?.state?.status}
-                currencyData={currencyData}
-                ref={componentRef}
-                totalNet={totalNet}
-                companyData={companyData}
-              />
-            </PDFExport>
+            <InvoiceTemplate
+              invoiceData={invoiceData}
+              contactData={contactData}
+              isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+              status={location?.state?.status}
+              currencyData={currencyData}
+              ref={componentRef}
+              totalNet={totalNet}
+              companyData={companyData}
+            />
           </div>
         </div>
         <div style={{ display: creditNoteDataList.creditNoteId ? '' : 'none' }}>

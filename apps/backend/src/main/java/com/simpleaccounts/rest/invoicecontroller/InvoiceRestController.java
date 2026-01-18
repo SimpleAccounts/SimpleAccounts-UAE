@@ -19,6 +19,7 @@ import com.simpleaccounts.helper.ExpenseRestHelper;
 import com.simpleaccounts.model.EarningDetailsModel;
 import com.simpleaccounts.model.OverDueAmountDetailsModel;
 import com.simpleaccounts.model.PlaceOfSupplyResponseModel;
+import com.simpleaccounts.repository.InvoiceRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.QuotationInvoiceRepository;
 import com.simpleaccounts.rest.AbstractDoubleEntryRestController;
@@ -110,6 +111,8 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final PlaceOfSupplyService placeOfSupplyService;
 
 	private final FileAttachmentService fileAttachmentService;
+
+	private final InvoiceRepository invoiceRepository;
 
 	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
@@ -224,8 +227,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@GetMapping(value = "/getInvoiceById")
+	@Transactional(readOnly = true)
 	public ResponseEntity<InvoiceRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
-		Invoice invoice = invoiceService.findByPK(id);
+		// Use a fetch-join query so the returned invoice is safe to map outside a Hibernate session.
+		Invoice invoice = invoiceRepository.findInvoiceForViewById(id).orElse(null);
 		if (invoice == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {

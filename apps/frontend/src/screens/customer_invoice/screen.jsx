@@ -560,9 +560,13 @@ function CustomerInvoice() {
 
   // Transform data for table
   const tableData = useMemo(() => {
-    // Handle both array and object with data property
+    // Handle both:
+    // - legacy reducer shape: Array with `.data` + `.count` attached as properties
+    // - modern shape: Object with `.data` array
     const invoiceList = Array.isArray(customer_invoice_list)
-      ? customer_invoice_list
+      ? Array.isArray(customer_invoice_list?.data)
+        ? customer_invoice_list.data
+        : customer_invoice_list
       : customer_invoice_list?.data || [];
 
     if (!invoiceList || invoiceList.length === 0) return [];
@@ -688,7 +692,10 @@ function CustomerInvoice() {
               manualPagination
               pageCount={Math.ceil(
                 (Array.isArray(customer_invoice_list)
-                  ? customer_invoice_list.length
+                  ? customer_invoice_list?.count ??
+                    (Array.isArray(customer_invoice_list?.data)
+                      ? customer_invoice_list.data.length
+                      : customer_invoice_list.length)
                   : customer_invoice_list?.count || 0) / pagination.pageSize
               )}
               onPaginationChange={setPagination}

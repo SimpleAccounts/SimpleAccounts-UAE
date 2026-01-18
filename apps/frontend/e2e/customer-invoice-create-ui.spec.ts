@@ -41,6 +41,8 @@ async function openReactSelectByLabel(page: Page, labelText: RegExp) {
 test.describe('Customer Invoice - UI create', () => {
   test('should create a customer invoice via UI', async ({ page }) => {
     const { username, password } = getTestUserCredentials();
+    const invoiceSuffix = Date.now() % 1_000_000_000; // < 1e9
+    const expectedRef = String(invoiceSuffix);
 
     // Login
     await loginTestUser(page, username, password);
@@ -68,8 +70,7 @@ test.describe('Customer Invoice - UI create', () => {
     await expect(page.locator('#invoice_number')).toBeVisible({ timeout: 30_000 });
 
     // Fill invoice number with an int-safe suffix (backend parses numeric suffix into Integer).
-    const invoiceSuffix = Date.now() % 1_000_000_000; // < 1e9
-    await page.locator('#invoice_number').fill(String(invoiceSuffix));
+    await page.locator('#invoice_number').fill(expectedRef);
 
     // Select customer
     // The label text is localized but defaults to English in most dev setups.
@@ -175,8 +176,30 @@ test.describe('Customer Invoice - UI create', () => {
     expect(saveResp).toBeTruthy();
     expect(saveResp!.status()).toBe(200);
 
-    // UI should navigate back to list after successful creation
-    await page.waitForURL(url => url.toString().includes(LIST_PATH), { timeout: 60_000 });
+    // Some builds keep you on the create screen (or "Create and More" flow). To validate visibility,
+    // explicitly go to the list page and assert our invoice exists there.
+    await page.goto(LIST_PATH, { waitUntil: 'domcontentloaded' });
+    const listResp = await page.waitForResponse(
+      r => r.url().includes('/rest/invoice/getList?') && r.status() === 200,
+      { timeout: 60_000 }
+    );
+
+    // Assert the backend response includes our invoice reference number
+    const listJson = await listResp.json().catch(() => null);
+    const listData = listJson && Array.isArray(listJson.data) ? listJson.data : [];
+    expect(listData.some(r => String(r.referenceNumber) === expectedRef)).toBeTruthy();
+
+    // Assert UI shows it as well
+    await expect(page.locator('body')).toContainText(expectedRef, { timeout: 60_000 });
+
+    // Click "View" from row actions to ensure view page renders (guards against undefined component crashes).
+    const row = page.locator(`tr:has-text("${expectedRef}")`).first();
+    await expect(row).toBeVisible({ timeout: 60_000 });
+    await row.getByRole('button', { name: /open menu/i }).click();
+    await page.getByRole('menuitem', { name: /^view$/i }).click();
+
+    // If view screen renders correctly, it should include "Customer Invoice" text somewhere.
+    await expect(page.locator('body')).toContainText(/customer invoice/i, { timeout: 60_000 });
   });
 });
 
