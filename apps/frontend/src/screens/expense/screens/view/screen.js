@@ -8,7 +8,6 @@ import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
@@ -116,20 +115,11 @@ class ViewExpense extends React.Component {
                 />
               </div>
               <div className="pull-right">
-                <Button
-                  className="btn-lg mb-1 print-btn-cont"
-                  onClick={() => {
-                    this.exportPDFWithComponent();
-                  }}
-                >
-                  <FileText className="h-4 w-4" />
-                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button
                       type="button"
                       className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
-                      onClick={() => window.print()}
                     >
                       <Printer className="h-4 w-4" />
                     </Button>
@@ -169,18 +159,11 @@ class ViewExpense extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
-                  ref={component => (this.pdfExportComponent = component)}
-                  scale={0.8}
-                  paperSize="A3"
-                  fileName="Expense.pdf"
-                >
-                  <ExpenseTemplate
-                    expenseData={expenseData}
-                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                    ref={el => (this.componentRef = el)}
-                  />
-                </PDFExport>
+                <ExpenseTemplate
+                  expenseData={expenseData}
+                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                  ref={el => (this.componentRef = el)}
+                />
               </div>
               <div>
                 {expenseStatus && expenseStatus !== 'Draft' && (

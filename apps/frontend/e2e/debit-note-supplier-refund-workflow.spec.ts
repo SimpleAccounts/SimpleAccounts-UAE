@@ -22,14 +22,11 @@ import {
   SupplierInvoiceData,
 } from './helpers/supplier-invoice-helpers';
 import { createSupplierInvoiceViaUI } from './helpers/ui-fallback-helpers';
-import {
-  createBankAccountViaAPI,
-  getBankAccountDetails,
-  BankAccountData,
-} from './helpers/bank-account-helpers';
+import { createBankAccountViaAPI, getBankAccountDetails, BankAccountData } from './helpers/bank-account-helpers';
+import { createProductViaAPI } from './helpers/product-helpers';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
 import { getApiBaseUrl } from './helpers/test-setup-helpers';
-import { createTestContact } from './helpers/contact-helpers';
+import { createContactViaAPI, createTestContact } from './helpers/contact-helpers';
 
 /**
  * Epic #561: Debit Note and Supplier Refund Workflow E2E Tests
@@ -59,6 +56,7 @@ const DEBIT_NOTE_PATH = process.env.E2E_DEBIT_NOTE_PATH || '/admin/expense/debit
 let authToken: string;
 let testSupplier: { contactId: number };
 let testBankAccount: BankAccountData & { bankAccountId: number };
+let testProduct: { productId: number; productName: string };
 
 /**
  * Helper to get authentication token from page localStorage
@@ -90,9 +88,9 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       await loginTestUser(page, username, password);
       authToken = await getAuthToken(page);
 
-      // Create test supplier
+      // Create test supplier via API
       const timestamp = Date.now();
-      await createTestContact(
+      testSupplier = await createTestContact(
         page,
         `TestSupplierFirst${timestamp}`,
         `TestSupplierLast${timestamp}`,
@@ -101,22 +99,6 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
           contactType: 'SUPPLIER',
         }
       );
-      await page.waitForTimeout(2000);
-
-      // Get supplier ID from API
-      const contactListResponse = await page.request.get(
-        `${getApiBaseUrl()}/rest/contact/list?paginationDisable=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      const contacts = await contactListResponse.json();
-      const testContact = contacts.data?.find((c: any) =>
-        c.email?.includes(`supplier${timestamp}@example.com`)
-      );
-      testSupplier = { contactId: testContact?.contactId || testContact?.id || 1 };
 
       // Create test bank account
       const bankAccountData: Partial<BankAccountData> = {
@@ -125,6 +107,21 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
         openingBalance: 0,
       };
       testBankAccount = await createBankAccountViaAPI(page.request, authToken, bankAccountData);
+      if (!testBankAccount.bankAccountId) {
+        throw new Error('Failed to create bank account: ID is missing');
+      }
+
+      // Create test product
+      const productData = {
+        productName: `E2E Debit Note Test Product ${timestamp}`,
+        productCode: String(timestamp).slice(-9),
+        salesUnitPrice: 1000,
+        purchaseUnitPrice: 800,
+      };
+      testProduct = await createProductViaAPI(page.request, authToken, productData);
+      if (!testProduct.productId) {
+        throw new Error('Failed to create product: ID is missing');
+      }
     } finally {
       await context.close();
     }
@@ -150,9 +147,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       referenceNumber: generateSupplierInvoiceNumber(),
       lineItems: [
         {
-          description: 'E2E Test Product for Debit Note',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 1000,
+          vatId: 1,
         },
       ],
     };
@@ -178,9 +177,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
         debitNoteNumber: generateDebitNoteNumber(),
         lineItems: [
           {
-            description: 'E2E Test Product Debit Note',
+            productId: testProduct.productId,
+            description: testProduct.productName,
             quantity: 1,
             unitPrice: 500,
+            vatId: 1,
           },
         ],
       };
@@ -227,9 +228,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Posting',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 2000,
+          vatId: 1,
         },
       ],
     };
@@ -251,9 +254,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Posting',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 800,
+          vatId: 1,
         },
       ],
     };
@@ -302,9 +307,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Application',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 3000,
+          vatId: 1,
         },
       ],
     };
@@ -327,9 +334,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Application',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 1000,
+          vatId: 1,
         },
       ],
     };
@@ -388,9 +397,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Balance Update',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 5000,
+          vatId: 1,
         },
       ],
     };
@@ -421,9 +432,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Balance',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 2000,
+          vatId: 1,
         },
       ],
     };
@@ -485,9 +498,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Refund',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 4000,
+          vatId: 1,
         },
       ],
     };
@@ -509,9 +524,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Refund',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 1500,
+          vatId: 1,
         },
       ],
     };
@@ -557,9 +574,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Refund Recording',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 6000,
+          vatId: 1,
         },
       ],
     };
@@ -581,9 +600,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Refund Recording',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 2000,
+          vatId: 1,
         },
       ],
     };
@@ -630,9 +651,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for AP Update',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 7000,
+          vatId: 1,
         },
       ],
     };
@@ -655,9 +678,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for AP',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 2500,
+          vatId: 1,
         },
       ],
     };
@@ -734,9 +759,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Bank Update',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 8000,
+          vatId: 1,
         },
       ],
     };
@@ -758,9 +785,11 @@ test.describe('Debit Note and Supplier Refund Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product Debit Note for Bank',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 3000,
+          vatId: 1,
         },
       ],
     };

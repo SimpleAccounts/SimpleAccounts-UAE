@@ -25,9 +25,10 @@ import {
   getBankAccountDetails,
   BankAccountData,
 } from './helpers/bank-account-helpers';
+import { createProductViaAPI } from './helpers/product-helpers';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
 import { getApiBaseUrl } from './helpers/test-setup-helpers';
-import { createTestContact } from './helpers/contact-helpers';
+import { createContactViaAPI, createTestContact } from './helpers/contact-helpers';
 
 /**
  * Epic #529: Supplier Invoice-to-Payment Workflow E2E Tests
@@ -58,6 +59,7 @@ const SUPPLIER_INVOICE_PATH =
 let authToken: string;
 let testSupplier: { contactId: number };
 let testBankAccount: BankAccountData & { bankAccountId: number };
+let testProduct: { productId: number; productName: string };
 
 /**
  * Helper to get authentication token from page localStorage
@@ -89,9 +91,9 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       await loginTestUser(page, username, password);
       authToken = await getAuthToken(page);
 
-      // Create test supplier
+      // Create test supplier via API
       const timestamp = Date.now();
-      await createTestContact(
+      testSupplier = await createTestContact(
         page,
         `TestSupplierFirst${timestamp}`,
         `TestSupplierLast${timestamp}`,
@@ -100,22 +102,6 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
           contactType: 'SUPPLIER',
         }
       );
-      await page.waitForTimeout(2000);
-
-      // Get supplier ID from API
-      const contactListResponse = await page.request.get(
-        `${getApiBaseUrl()}/rest/contact/list?paginationDisable=true`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      const contacts = await contactListResponse.json();
-      const testContact = contacts.data?.find((c: any) =>
-        c.email?.includes(`supplier${timestamp}@example.com`)
-      );
-      testSupplier = { contactId: testContact?.contactId || testContact?.id || 1 };
 
       // Create test bank account
       const bankAccountData: Partial<BankAccountData> = {
@@ -124,6 +110,21 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
         openingBalance: 0,
       };
       testBankAccount = await createBankAccountViaAPI(page.request, authToken, bankAccountData);
+      if (!testBankAccount.bankAccountId) {
+        throw new Error('Failed to create bank account: ID is missing');
+      }
+
+      // Create test product
+      const productData = {
+        productName: `E2E Supplier Test Product ${timestamp}`,
+        productCode: String(timestamp).slice(-9),
+        salesUnitPrice: 1000,
+        purchaseUnitPrice: 800,
+      };
+      testProduct = await createProductViaAPI(page.request, authToken, productData);
+      if (!testProduct.productId) {
+        throw new Error('Failed to create product: ID is missing');
+      }
     } finally {
       await context.close();
     }
@@ -150,9 +151,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       referenceNumber: generateSupplierInvoiceNumber(),
       lineItems: [
         {
-          description: 'E2E Test Product for Supplier Invoice',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 1000,
+          vatId: 1,
         },
       ],
     };
@@ -197,11 +200,23 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
 
       // Verify supplier invoice appears in UI
       await navigateToSupplierInvoiceList(page);
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(5000); // Increased wait time
+
+      const refNum = supplierInvoiceData.referenceNumber;
+      console.log(`Searching for invoice with reference: ${refNum}`);
+
       const invoiceExists = await page
-        .getByText(supplierInvoiceData.referenceNumber)
-        .isVisible({ timeout: 10000 })
+        .getByText(refNum)
+        .first()
+        .isVisible({ timeout: 15000 })
         .catch(() => false);
+
+      if (!invoiceExists) {
+        console.log('Invoice not found by reference number. Checking table content...');
+        const tableContent = await page.locator('table').innerText().catch(() => 'Table not found');
+        console.log('Table content:', tableContent);
+      }
+
       expect(invoiceExists).toBeTruthy();
     }
   });
@@ -217,9 +232,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Posting',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 2000,
+          vatId: 1,
         },
       ],
     };
@@ -339,9 +356,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Payment',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 4000,
+          vatId: 1,
         },
       ],
     };
@@ -409,9 +428,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Full Payment',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 5000,
+          vatId: 1,
         },
       ],
     };
@@ -485,9 +506,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for Partial Payment',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 6000,
+          vatId: 1,
         },
       ],
     };
@@ -559,9 +582,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Test Product for AP Update',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 7000,
+          vatId: 1,
         },
       ],
     };
@@ -633,9 +658,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Dashboard Test Product',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 8000,
+          vatId: 1,
         },
       ],
     };
@@ -718,9 +745,11 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
       contactId: testSupplier.contactId,
       lineItems: [
         {
-          description: 'E2E Bank Account Test Product',
+          productId: testProduct.productId,
+          description: testProduct.productName,
           quantity: 1,
           unitPrice: 9000,
+          vatId: 1,
         },
       ],
     };

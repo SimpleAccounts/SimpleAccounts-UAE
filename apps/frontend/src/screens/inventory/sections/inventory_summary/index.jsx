@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, FormGroup, Form, ButtonGroup } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { Loader } from 'components';
 import * as ProductActions from '../../../product/actions';
 import * as InventoryActions from '../../actions';
@@ -193,7 +192,7 @@ const InventorySummary = () => {
     <div className="transactions-report-screen">
       <div className="animated fadeIn">
         <div id="section-to-print">
-          <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
+          <div>
             <br />
             <br />
             <div
@@ -264,7 +263,7 @@ const InventorySummary = () => {
               {' '}
               {strings.PoweredBy} <b>SimpleAccounts</b>
             </div>
-          </PDFExport>
+          </div>
         </div>
 
         <InventoryHistoryModal

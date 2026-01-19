@@ -23,6 +23,7 @@ import {
   getBankAccountDetails,
   BankAccountData,
 } from './helpers/bank-account-helpers';
+import { createProductViaAPI } from './helpers/product-helpers';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
 import { getApiBaseUrl } from './helpers/test-setup-helpers';
 
@@ -52,6 +53,7 @@ const EXPENSE_PATH = process.env.E2E_EXPENSE_PATH || '/admin/expense/expense';
 
 let authToken: string;
 let testBankAccount: BankAccountData & { bankAccountId: number };
+let testProduct: { productId: number; productName: string };
 
 /**
  * Helper to get authentication token from page localStorage
@@ -91,6 +93,21 @@ test.describe('Expense Approval and Payment Workflow', () => {
         openingBalance: 0,
       };
       testBankAccount = await createBankAccountViaAPI(page.request, authToken, bankAccountData);
+      if (!testBankAccount.bankAccountId) {
+        throw new Error('Failed to create bank account: ID is missing');
+      }
+
+      // Create test product
+      const productData = {
+        productName: `E2E Expense Test Product ${timestamp}`,
+        productCode: String(timestamp).slice(-9),
+        salesUnitPrice: 1000,
+        purchaseUnitPrice: 800,
+      };
+      testProduct = await createProductViaAPI(page.request, authToken, productData);
+      if (!testProduct.productId) {
+        throw new Error('Failed to create product: ID is missing');
+      }
     } finally {
       await context.close();
     }
@@ -110,7 +127,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     const expenseData: ExpenseData = {
       expenseNumber: generateExpenseNumber(),
       amount: 1000,
-      description: 'E2E Test Expense',
+      description: testProduct.productName,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     try {
@@ -150,7 +169,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create expense first
     const expenseData: ExpenseData = {
       amount: 2000,
-      description: 'E2E Test Expense for Submission',
+      description: testProduct.productName,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -197,7 +218,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create and post expense first
     const expenseData: ExpenseData = {
       amount: 3000,
-      description: 'E2E Test Expense for Approval',
+      description: testProduct.productName,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -250,8 +273,10 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create and post expense first
     const expenseData: ExpenseData = {
       amount: 4000,
-      description: 'E2E Test Expense for Payment',
+      description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -304,8 +329,10 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create and post expense
     const expenseData: ExpenseData = {
       amount: 5000,
-      description: 'E2E Test Expense for Payment Recording',
+      description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -353,7 +380,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create expense
     const expenseData: ExpenseData = {
       amount: 6000,
-      description: 'E2E Test Expense for Status Updates',
+      description: testProduct.productName,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -412,8 +441,10 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create and post expense
     const expenseData: ExpenseData = {
       amount: 7000,
-      description: 'E2E Test Expense for Bank Account',
+      description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };
@@ -455,8 +486,10 @@ test.describe('Expense Approval and Payment Workflow', () => {
     // Create and post expense
     const expenseData: ExpenseData = {
       amount: 8000,
-      description: 'E2E Dashboard Test Expense',
+      description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
+      expenseCategory: 49,
+      vatCategoryId: 1,
     };
 
     let expense: ExpenseData & { expenseId: number };

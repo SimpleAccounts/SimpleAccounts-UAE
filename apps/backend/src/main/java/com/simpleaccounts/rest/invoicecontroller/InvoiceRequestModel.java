@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
@@ -18,7 +19,9 @@ public class InvoiceRequestModel {
     private String referenceNumber;
     private Integer projectId;
     private Integer contactId;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date invoiceDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date invoiceDueDate;
     private Integer placeOfSupplyId;
 

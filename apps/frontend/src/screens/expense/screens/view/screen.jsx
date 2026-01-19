@@ -4,16 +4,15 @@ import { bindActionCreators } from 'redux';
 import { Button, Row, Col } from 'components/migration';
 import * as ExpenseDetailsAction from '../detail/actions';
 import * as ExpenseActions from '../../actions';
-import ReactToPrint from 'react-to-print';
+import { useReactToPrint } from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
 import { InvoiceViewJournalEntries } from 'components';
 import { StatusActionList } from 'utils';
-import { FileText, Printer, X } from 'lucide-react';
+import { Printer, X } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -38,8 +37,10 @@ const ViewExpense = props => {
   const [actionList, setActionList] = useState([]);
   const [companyData, setCompanyData] = useState({});
 
-  const pdfExportComponent = useRef(null);
   const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const termList = [
     { label: 'Net 7', value: 'NET_7' },
@@ -108,25 +109,12 @@ const ViewExpense = props => {
             </div>
             <div className="pull-right">
               <Button
-                className="btn-lg mb-1 print-btn-cont"
-                onClick={() => {
-                  exportPDFWithComponent();
-                }}
+                type="button"
+                className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
+                onClick={() => handlePrint?.()}
               >
-                <FileText className="h-4 w-4" />
+                <Printer className="h-4 w-4" />
               </Button>
-              <ReactToPrint
-                trigger={() => (
-                  <Button
-                    type="button"
-                    className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
-                    onClick={() => window.print()}
-                  >
-                    <Printer className="h-4 w-4" />
-                  </Button>
-                )}
-                content={() => componentRef.current}
-              />
               <Button
                 className="close-btn mb-1 btn-lg print-btn-cont"
                 onClick={() => {
@@ -159,13 +147,11 @@ const ViewExpense = props => {
               </Button>
             </div>
             <div>
-              <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A3" fileName="Expense.pdf">
-                <ExpenseTemplate
-                  expenseData={expenseData}
-                  companyData={companyData}
-                  ref={componentRef}
-                />
-              </PDFExport>
+              <ExpenseTemplate
+                expenseData={expenseData}
+                companyData={companyData}
+                ref={componentRef}
+              />
             </div>
             <div>
               {expenseStatus && expenseStatus !== 'Draft' && (

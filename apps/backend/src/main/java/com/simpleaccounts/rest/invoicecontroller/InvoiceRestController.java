@@ -50,6 +50,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -283,11 +284,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				poQuatationService.update(quatation);
 
 			}
-			message = new SimpleAccountsMessage("0045",
-					MessageUtil.getMessage("invoice.created.successful.msg.0045"), false);
-			return new ResponseEntity<>(message,HttpStatus.OK);
+			return new ResponseEntity<>(invoice.getId(), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error(ERROR, e);
+			logger.error("Error in InvoiceRestController.save: ", e);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);

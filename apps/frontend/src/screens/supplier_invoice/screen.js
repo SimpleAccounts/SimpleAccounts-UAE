@@ -98,10 +98,10 @@ class SupplierInvoice extends React.Component {
         invoiceDueDate: '',
         amount: '',
         status: '',
-        contactType: 1,
+        contactType: 6,
       },
       selectedRows: [],
-      contactType: 1,
+      contactType: 6,
       openInvoicePreviewModal: false,
       selectedId: '',
       csvData: [],
@@ -629,9 +629,13 @@ class SupplierInvoice extends React.Component {
       this.state;
     const { supplier_list, supplier_invoice_list } = this.props;
 
+    const invoiceList = Array.isArray(supplier_invoice_list)
+      ? supplier_invoice_list
+      : supplier_invoice_list?.data || [];
+
     const supplier_invoice_data =
-      supplier_invoice_list && supplier_invoice_list.data
-        ? this.props.supplier_invoice_list.data.map(supplier => ({
+      invoiceList.length > 0 && typeof invoiceList.map === 'function'
+        ? invoiceList.map(supplier => ({
             id: supplier.id,
             status: supplier.status,
             statusEnum: supplier.statusEnum,
@@ -652,14 +656,21 @@ class SupplierInvoice extends React.Component {
         : [];
 
     let tmpSupplier_list = [];
-    supplier_list.map(item => {
-      let obj = { label: item.label.contactName, value: item.value };
-      tmpSupplier_list.push(obj);
-    });
+    if (Array.isArray(supplier_list)) {
+      supplier_list.map(item => {
+        let obj = { label: item.label.contactName, value: item.value };
+        tmpSupplier_list.push(obj);
+      });
+    } else if (supplier_list && Array.isArray(supplier_list.data)) {
+      supplier_list.data.map(item => {
+        let obj = { label: item.label.contactName, value: item.value };
+        tmpSupplier_list.push(obj);
+      });
+    }
 
-    const pageCount = supplier_invoice_list.count
+    const pageCount = supplier_invoice_list?.count
       ? Math.ceil(supplier_invoice_list.count / pagination.pageSize)
-      : 0;
+      : Math.ceil((Array.isArray(supplier_invoice_list) ? supplier_invoice_list.length : 0) / pagination.pageSize);
 
     return loading === true ? (
       <Loader loadingMsg={loadingMsg} />
@@ -802,7 +813,12 @@ class SupplierInvoice extends React.Component {
                       columns={this.getColumns()}
                       data={supplier_invoice_data}
                       pageCount={pageCount}
-                      totalCount={supplier_invoice_list.count || 0}
+                      totalCount={
+                        supplier_invoice_list?.count ??
+                        (Array.isArray(supplier_invoice_list)
+                          ? supplier_invoice_list.length
+                          : 0)
+                      }
                       pagination={pagination}
                       onPaginationChange={updater => {
                         const newPagination =

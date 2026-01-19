@@ -16,7 +16,6 @@ import {
 import dayjs from '@/utils/date';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -1235,7 +1234,7 @@ class BalanceSheet extends React.Component {
                     {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

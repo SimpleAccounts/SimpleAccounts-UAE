@@ -49,7 +49,7 @@ export async function createProductViaAPI(
   request: APIRequestContext,
   authToken: string,
   productData: Partial<ProductData> = {}
-): Promise<ProductData & { productID: number }> {
+): Promise<ProductData & { productId: number }> {
   const apiUrl = getApiBaseUrl();
 
   const defaultData: ProductData = {
@@ -108,15 +108,61 @@ export async function createProductViaAPI(
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
+    console.error('Product creation failed:', {
+      status: response.status(),
+      error: errorText,
+      payload: payload,
+    });
     throw new Error(`Failed to create product: ${response.status()} ${errorText}`);
   }
 
   const responseData = await response.json().catch(() => ({}));
+  console.log('Product creation response:', responseData);
+  let productId = responseData?.productId || responseData?.id || responseData?.productID || 0;
+
+  // If ID is missing, fetch it from the list by name
+  if (!productId) {
+    console.log('Product ID not in response, fetching from list...');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      // Try both endpoints
+      const urls = [
+        `${apiUrl}/rest/product/getList?paginationDisable=true&name=${encodeURIComponent(payload.productName)}`,
+        `${apiUrl}/rest/datalist/product?priceType=${payload.productPriceType || 'BOTH'}`,
+      ];
+
+      for (const url of urls) {
+        const listResponse = await request.get(url, {
+          headers: { Authorization: `Bearer ${authToken}` },
+        });
+        if (listResponse.ok()) {
+          const listData = await listResponse.json();
+          console.log(`Product list received from ${url}, count:`, Array.isArray(listData) ? listData.length : listData.data?.length);
+          const items = Array.isArray(listData) ? listData : listData.data || [];
+          const product = items.find(
+            (p: any) => p.name === payload.productName || p.productName === payload.productName
+          );
+          if (product) {
+            productId = product.id || product.productId || product.productID || 0;
+            console.log('Found product in list, ID:', productId);
+            if (productId) break;
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Could not retrieve product ID after creation:', error);
+    }
+  }
+
+  if (!productId) {
+    throw new Error(`Product was created but could not retrieve its ID: ${payload.productName}`);
+  }
+
   return {
     ...defaultData,
     ...productData,
-    productID: (responseData && (responseData.productID || responseData.id)) || 0,
-  } as ProductData & { productID: number };
+    productId: productId,
+  } as ProductData & { productId: number };
 }
 
 export async function createTestProduct(
@@ -124,7 +170,7 @@ export async function createTestProduct(
   page: Page,
   authToken?: string,
   productData: Partial<ProductData> = {}
-): Promise<ProductData & { productID: number }> {
+): Promise<ProductData & { productId: number }> {
   let token = authToken;
   if (!token) {
     await loginTestUser(page);
@@ -139,6 +185,6 @@ export async function createTestService(
   page: Page,
   authToken?: string,
   serviceData: Partial<ProductData> = {}
-): Promise<ProductData & { productID: number }> {
+): Promise<ProductData & { productId: number }> {
   return createTestProduct(request, page, authToken, { ...serviceData, productType: 'SERVICE' });
 }

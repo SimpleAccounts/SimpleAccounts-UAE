@@ -145,6 +145,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 					MessageUtil.getMessage("expense.created.successful.msg.0065"), false);
 			return new ResponseEntity<>(message,HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error("Error in ExpenseRestController.save: ", e);
 			SimpleAccountsMessage message = null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
@@ -188,6 +189,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getExpenseById")
 	public ResponseEntity<ExpenseModel> getExpenseById(@RequestParam("expenseId") Integer expenseId) {
 		try {

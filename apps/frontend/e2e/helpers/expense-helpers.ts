@@ -3,14 +3,6 @@ import { getApiBaseUrl, getFrontendBaseUrl } from './test-setup-helpers';
 
 /**
  * Generates a unique expense reference number using the pattern: EXP-${Date.now()}
- *
- * @returns A unique expense reference number
- *
- * @example
- * ```typescript
- * const expenseNumber = generateExpenseNumber();
- * // Returns: EXP-1234567890
- * ```
  */
 export function generateExpenseNumber(): string {
   return `EXP-${Date.now()}`;
@@ -21,35 +13,26 @@ export function generateExpenseNumber(): string {
  */
 export interface ExpenseData {
   expenseNumber?: string;
-  expenseDate?: string; // Format: DD-MM-YYYY
-  contactId?: number; // Supplier/Vendor contact ID (optional)
+  expenseDate?: string; // Format: dd/MM/yyyy
+  payee?: string; // "Company Expense" or vendor name
   amount: number; // Expense amount
   expenseCategory?: number; // Transaction category ID
-  vatId?: number; // VAT code ID
+  vatCategoryId?: number; // VAT code ID
   currencyCode?: number; // Currency code (default: 150 for AED)
-  taxType?: number; // Tax type: 1 = Exclusive, 2 = Inclusive (default: 1)
   exclusiveVat?: boolean; // If true, VAT is exclusive (default: true)
   description?: string;
   notes?: string;
-  bankAccountId?: number; // Bank account ID (transaction category)
-  expenseType?: number; // Expense type ID
+  bankAccountId?: number; // Bank account ID
+  employeeId?: number; // Employee ID
+  projectId?: number; // Project ID
+  taxTreatmentId?: number;
+  placeOfSupplyId?: number;
+  isReverseChargeEnabled?: boolean;
+  expenseType?: boolean;
 }
 
 /**
  * Creates an expense via API
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param expenseData - Expense data
- * @returns Created expense data including expenseId
- *
- * @example
- * ```typescript
- * const expense = await createExpenseViaAPI(request, token, {
- *   amount: 1000,
- *   description: 'Test Expense'
- * });
- * ```
  */
 export async function createExpenseViaAPI(
   request: APIRequestContext,
@@ -58,47 +41,47 @@ export async function createExpenseViaAPI(
 ): Promise<ExpenseData & { expenseId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
-  // Spring Boot's default property editor for java.util.Date can parse ISO 8601 format
-  const getDateString = (dateInput: string | Date | undefined, defaultDate: Date): string => {
+  const getFormattedDate = (dateInput: string | Date | undefined, defaultDate: Date): string => {
     const d = dateInput ? new Date(dateInput) : defaultDate;
-    d.setHours(0, 0, 0, 0);
-    return d.toISOString();
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  const formattedDate = getDateString(expenseData.expenseDate, today);
+  const formattedDate = getFormattedDate(expenseData.expenseDate, today);
 
   const payload: any = {
     expenseNumber: expenseData.expenseNumber || generateExpenseNumber(),
-    expenseDate: formattedDate, // ISO 8601 format string
-    amount: expenseData.amount,
-    expenseCategory: expenseData.expenseCategory || '',
-    vatId: expenseData.vatId || '',
-    currencyCode: expenseData.currencyCode || 150, // AED default
-    taxType: expenseData.taxType || 1, // Exclusive VAT default
+    expenseDate: formattedDate,
+    expenseAmount: expenseData.amount,
+    expenseDescription: expenseData.description || 'E2E Test Expense',
+    expenseCategory: expenseData.expenseCategory || null,
+    vatCategoryId: expenseData.vatCategoryId || null,
+    currencyCode: expenseData.currencyCode || 150,
     exclusiveVat: expenseData.exclusiveVat !== undefined ? expenseData.exclusiveVat : true,
-    description: expenseData.description || '',
-    notes: expenseData.notes || '',
-    bankId: expenseData.bankAccountId || '',
-    expenseType: expenseData.expenseType || '',
-    contactId: expenseData.contactId || '',
+    payee: expenseData.payee || 'Company Expense',
+    bankAccountId: expenseData.bankAccountId || null,
+    employeeId: expenseData.employeeId || null,
+    projectId: expenseData.projectId || null,
+    taxTreatmentId: expenseData.taxTreatmentId || null,
+    placeOfSupplyId: expenseData.placeOfSupplyId || null,
+    isReverseChargeEnabled: expenseData.isReverseChargeEnabled || false,
+    expenseType: expenseData.expenseType || false,
+    isVatClaimable: true,
+    delivaryNotes: expenseData.notes || '',
+    receiptNumber: '',
+    receiptAttachmentDescription: '',
+    exchangeRate: 1,
   };
 
-  // Use FormData (multipart) to match frontend behavior
-  // Dates are in Date.toString() format (e.g., "Wed Jan 14 2026 00:00:00 GMT+0400")
-  const formData = new FormData();
+  const multipartData: Record<string, string | number | boolean> = {};
   Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      formData.append(key, String(value));
+    if (value !== undefined && value !== null) {
+      multipartData[key] = typeof value === 'boolean' ? value : String(value);
     }
   });
-
-  // Convert FormData entries to plain object for Playwright's multipart option
-  const multipartData: Record<string, string | number> = {};
-  for (const [key, value] of formData.entries()) {
-    multipartData[key] = value as string | number;
-  }
 
   const response = await request.post(`${apiUrl}/rest/expense/save`, {
     headers: {
@@ -109,12 +92,16 @@ export async function createExpenseViaAPI(
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
+    console.error('Expense creation failed:', {
+      status: response.status(),
+      error: errorText,
+      payload: payload,
+    });
     throw new Error(`Failed to create expense: ${response.status()} ${errorText}`);
   }
 
   const responseData = await response.json();
-  // The API returns a message, so we need to get the expense ID from the list
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Wait a bit for DB to sync
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   try {
     const expenseListResponse = await request.get(
@@ -128,10 +115,7 @@ export async function createExpenseViaAPI(
 
     if (expenseListResponse.ok()) {
       const listData = await expenseListResponse.json();
-      const expense = listData.data?.find(
-        (e: any) =>
-          e.expenseNumber === payload.expenseNumber || e.expenseNumber === payload.expenseNumber
-      );
+      const expense = listData.data?.find((e: any) => e.expenseNumber === payload.expenseNumber);
       if (expense) {
         return {
           ...expenseData,
@@ -140,11 +124,9 @@ export async function createExpenseViaAPI(
       }
     }
   } catch (error) {
-    // If we can't find it, continue with fallback
     console.warn('Could not retrieve expense ID:', error);
   }
 
-  // Fallback: return with 0 ID if we can't find it
   return {
     ...expenseData,
     expenseId: responseData.id || responseData.expenseId || 0,
@@ -153,16 +135,6 @@ export async function createExpenseViaAPI(
 
 /**
  * Gets expense details by ID
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param expenseId - Expense ID
- * @returns Expense details
- *
- * @example
- * ```typescript
- * const expense = await getExpenseDetails(request, token, 1);
- * ```
  */
 export async function getExpenseDetails(
   request: APIRequestContext,
@@ -170,14 +142,11 @@ export async function getExpenseDetails(
   expenseId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.get(
-    `${apiUrl}/rest/expense/getExpenseById?expenseId=${expenseId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    }
-  );
+  const response = await request.get(`${apiUrl}/rest/expense/getExpenseById?expenseId=${expenseId}`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
@@ -189,18 +158,6 @@ export async function getExpenseDetails(
 
 /**
  * Gets expense list
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param options - Optional filters
- * @returns Expense list response
- *
- * @example
- * ```typescript
- * const expenses = await getExpenseList(request, token, {
- *   pageNo: 1
- * });
- * ```
  */
 export async function getExpenseList(
   request: APIRequestContext,
@@ -216,23 +173,12 @@ export async function getExpenseList(
   const apiUrl = getApiBaseUrl();
   let url = `${apiUrl}/rest/expense/getList?`;
 
-  if (options.contactId) {
-    url += `contactId=${options.contactId}&`;
-  }
-  if (options.status) {
-    url += `status=${options.status}&`;
-  }
-  if (options.pageNo) {
-    url += `pageNo=${options.pageNo}&`;
-  }
-  if (options.pageSize) {
-    url += `pageSize=${options.pageSize}&`;
-  }
-  if (options.paginationDisable) {
-    url += `paginationDisable=${options.paginationDisable}&`;
-  }
+  if (options.contactId) url += `contactId=${options.contactId}&`;
+  if (options.status) url += `status=${options.status}&`;
+  if (options.pageNo) url += `pageNo=${options.pageNo}&`;
+  if (options.pageSize) url += `pageSize=${options.pageSize}&`;
+  if (options.paginationDisable) url += `paginationDisable=${options.paginationDisable}&`;
 
-  // Remove trailing &
   url = url.replace(/&$/, '');
 
   const response = await request.get(url, {
@@ -250,17 +196,7 @@ export async function getExpenseList(
 }
 
 /**
- * Posts/submits an expense (makes it final/active)
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param expenseId - Expense ID to post
- * @returns Posting response
- *
- * @example
- * ```typescript
- * await postExpense(request, token, expenseId);
- * ```
+ * Posts/submits an expense
  */
 export async function postExpense(
   request: APIRequestContext,
@@ -268,17 +204,15 @@ export async function postExpense(
   expenseId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-
-  const payload = {
-    postingRefId: expenseId,
-  };
-
   const response = await request.post(`${apiUrl}/rest/expense/posting`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
-    data: payload,
+    data: {
+      postingRefId: expenseId,
+      postingRefType: 'EXPENSE',
+    },
   });
 
   if (!response.ok()) {
@@ -290,17 +224,7 @@ export async function postExpense(
 }
 
 /**
- * Approves an expense (if approval workflow exists)
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param expenseId - Expense ID to approve
- * @returns Approval response
- *
- * @example
- * ```typescript
- * await approveExpense(request, token, expenseId);
- * ```
+ * Approves an expense
  */
 export async function approveExpense(
   request: APIRequestContext,
@@ -308,27 +232,17 @@ export async function approveExpense(
   expenseId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-
-  // Note: Approval endpoint might vary based on workflow implementation
-  // This is a placeholder - adjust based on actual API
-  const payload = {
-    expenseId: expenseId,
-    status: 'approved',
-  };
-
   const response = await request.post(`${apiUrl}/rest/expense/approve`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
-    data: payload,
+    data: { expenseId: expenseId, status: 'approved' },
   });
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
-    // Approval might not be implemented, so we'll just log a warning
     console.warn(`Expense approval failed: ${response.status()} ${errorText}`);
-    // Return a success response anyway since approval workflow might not exist
     return { success: true };
   }
 
@@ -337,55 +251,27 @@ export async function approveExpense(
 
 /**
  * Navigates to expense creation page
- *
- * @param page - Playwright Page object
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToCreateExpense(page);
- * ```
  */
 export async function navigateToCreateExpense(page: Page): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const createPath = '/admin/expense/expense/create';
-  await page.goto(`${baseUrl}${createPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/expense/expense/create`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2000);
 }
 
 /**
  * Navigates to expense list page
- *
- * @param page - Playwright Page object
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToExpenseList(page);
- * ```
  */
 export async function navigateToExpenseList(page: Page): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const listPath = '/admin/expense/expense';
-  await page.goto(`${baseUrl}${listPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/expense/expense`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2000);
 }
 
 /**
  * Navigates to expense detail page
- *
- * @param page - Playwright Page object
- * @param expenseId - Expense ID
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToExpenseDetail(page, 1);
- * ```
  */
 export async function navigateToExpenseDetail(page: Page, expenseId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const detailPath = `/admin/expense/expense/${expenseId}`;
-  await page.goto(`${baseUrl}${detailPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/expense/expense/${expenseId}`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2000);
 }

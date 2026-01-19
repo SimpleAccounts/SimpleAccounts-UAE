@@ -18,7 +18,6 @@ import dayjs from '@/utils/date';
 // import 'react-select/dist/react-select.css'
 import './style.scss';
 import { CommonActions } from 'services/global';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -1495,7 +1494,7 @@ class VatReturnsReport extends React.Component {
                   <div style={{ textAlignLast: 'center', marginTop: '10px' }}>
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

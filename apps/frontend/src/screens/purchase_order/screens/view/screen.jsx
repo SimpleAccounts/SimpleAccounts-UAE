@@ -11,7 +11,6 @@ import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 
 import { RFQTemplate } from './sections';
 import * as RequestForQuotationViewAction from '../../../request_for_quotation/screens/view/actions';
@@ -168,7 +167,7 @@ const ViewPurchaseOrder = ({
                   contactData={contactData}
                   status={location.state?.status}
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

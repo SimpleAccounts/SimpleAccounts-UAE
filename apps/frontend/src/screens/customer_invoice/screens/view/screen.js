@@ -7,7 +7,6 @@ import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index';
@@ -222,25 +221,6 @@ class ViewCustomerInvoice extends React.Component {
                 />
               </div>
               <div className="pull-right">
-                {/* <Button
-									className="btn btn-sm edit-btn"
-									onClick={() => {
-										this.props.history.push(
-											'/admin/revenue/customer-invoice/detail',
-											{ id },
-										);
-									}}
-								>
-									<Pencil className="h-4 w-4" />
-								</Button> */}
-                <Button
-                  className="btn-lg mb-1 print-btn-cont"
-                  onClick={() => {
-                    this.exportPDFWithComponent();
-                  }}
-                >
-                  <FileText className="h-4 w-4" />
-                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -293,23 +273,16 @@ class ViewCustomerInvoice extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
-                  ref={component => (this.pdfExportComponent = component)}
-                  scale={0.8}
-                  paperSize="A3"
-                  fileName={invoiceData.referenceNumber + '.pdf'}
-                >
-                  <InvoiceTemplate
-                    invoiceData={invoiceData}
-                    contactData={contactData}
-                    isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                    status={this.props.location.state.status}
-                    currencyData={currencyData}
-                    ref={el => (this.componentRef = el)}
-                    totalNet={this.state.totalNet}
-                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                  />
-                </PDFExport>
+                <InvoiceTemplate
+                  invoiceData={invoiceData}
+                  contactData={contactData}
+                  isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+                  status={this.props.location.state.status}
+                  currencyData={currencyData}
+                  ref={el => (this.componentRef = el)}
+                  totalNet={this.state.totalNet}
+                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                />
               </div>
             </Col>
           </Row>

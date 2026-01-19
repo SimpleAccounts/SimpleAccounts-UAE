@@ -9,7 +9,7 @@ export const getSupplierInvoiceList = postObj => {
   let invoiceDueDate = postObj.invoiceDueDate ? postObj.invoiceDueDate : '';
   let amount = postObj.amount ? postObj.amount : '';
   let status = postObj.status ? postObj.status.value : '';
-  let contactType = 1; //postObj.contactType ? postObj.contactType : ''
+  let contactType = postObj.contactType ? postObj.contactType : 6;
   let pageNo = postObj?.pageNo ? postObj.pageNo : '';
   let pageSize = postObj?.pageSize ? postObj.pageSize : '';
   let order = postObj?.order ? postObj.order : '';

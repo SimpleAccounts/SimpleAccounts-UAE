@@ -115,13 +115,52 @@ export async function createBankAccountViaAPI(
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
+    console.error('Bank account creation failed:', {
+      status: response.status(),
+      error: errorText,
+      payload: finalPayload,
+    });
     throw new Error(`Failed to create bank account: ${response.status()} ${errorText}`);
   }
 
-  const responseData = await response.json();
+  const responseData = await response.json().catch(() => ({}));
+  console.log('Bank account creation response:', responseData);
+  let bankAccountId = responseData.bankAccountId || responseData.id || 0;
+
+  if (!bankAccountId) {
+    console.log('Bank account ID not in response, fetching from list...');
+    // Wait for DB sync if needed
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      const listResponse = await request.get(
+        `${apiUrl}/rest/bank/list?paginationDisable=true&bankAccountName=${encodeURIComponent(payload.bankAccountName)}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+      if (listResponse.ok()) {
+        const listData = await listResponse.json();
+        console.log('Bank account list received for filter, count:', listData.data?.length || listData.length);
+        const items = Array.isArray(listData) ? listData : listData.data || [];
+        const account = items.find(
+          (a: any) => 
+            a.bankAccountName === payload.bankAccountName || 
+            a.name === payload.bankAccountName ||
+            a.accounName === payload.bankAccountName
+        );
+        if (account) {
+          bankAccountId = account.bankAccountId || account.id || 0;
+          console.log('Found bank account in filtered list, ID:', bankAccountId);
+        }
+      }
+    } catch (error) {
+      console.warn('Could not retrieve bank account ID after creation:', error);
+    }
+  }
+
   return {
     ...payload,
-    bankAccountId: responseData.bankAccountId || responseData.id,
+    bankAccountId: bankAccountId,
   };
 }
 
@@ -499,7 +538,7 @@ export async function getBankAccountDetails(
   bankId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.get(`${apiUrl}/rest/bank/${bankId}`, {
+  const response = await request.get(`${apiUrl}/rest/bank/getbyid?id=${bankId}`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

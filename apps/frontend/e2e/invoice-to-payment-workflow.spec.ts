@@ -106,7 +106,7 @@ test.describe('Invoice-to-Payment Workflow', () => {
       // Get customer ID from API (simplified - in real scenario, you'd get it from the created contact)
       // For now, we'll create it via API or get from list
       const contactListResponse = await page.request.get(
-        `${getApiBaseUrl()}/rest/contact/list?paginationDisable=true`,
+        `${getApiBaseUrl()}/rest/contact/getContactList?paginationDisable=true`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

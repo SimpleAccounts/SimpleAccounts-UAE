@@ -32,6 +32,8 @@ public class PaymentRestHelper {
 
 	private final Logger logger = LoggerFactory.getLogger(PaymentRestHelper.class);
 
+	private static final String JSON_KEY_DELETE_FLAG = "deleteFlag";
+
 	private final ContactService contactService;
 
 	private final TransactionCategoryService transactionCategoryService;
@@ -244,8 +246,16 @@ public class PaymentRestHelper {
 		Payment payment = paymentService.findByPK(postingRequestModel.getPostingRefId());
 		Map<String, Object> map = new HashMap<>();
 		map.put("contact",payment.getInvoice().getContact());
-		map.put("contactType", payment.getInvoice().getType());
-		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
+		map.put("contactType", 1);
+		map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
+		List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
+		if (relations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " + 
+					payment.getInvoice().getContact().getContactId() + ", contactType: 1");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " + 
+					payment.getInvoice().getContact().getContactId());
+		}
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 		BigDecimal invoiceExchangeRate = payment.getInvoice().getExchangeRate();
 		journalLineItem1.setDebitAmount(postingRequestModel.getAmount().multiply(invoiceExchangeRate));

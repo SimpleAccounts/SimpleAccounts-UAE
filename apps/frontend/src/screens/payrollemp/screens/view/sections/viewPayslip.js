@@ -15,7 +15,6 @@ import { toast } from 'sonner';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import '../style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import dayjs from '@/utils/date';
 import { Currency } from 'components';
 // Use import instead of require for Vite compatibility
@@ -719,7 +718,7 @@ class PaySlipModal extends React.Component {
                         <div className="text-center" style={{ color: '#979b9f', margin: '20px' }}>
                           {strings.PayslipNote}
                         </div>
-                      </PDFExport>
+                      </div>
                     </div>
                   </Col>
                 </Row>

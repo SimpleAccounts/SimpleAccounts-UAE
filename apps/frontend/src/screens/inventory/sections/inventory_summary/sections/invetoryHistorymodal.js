@@ -15,7 +15,6 @@ import {
 import dayjs from '@/utils/date';
 import { data } from '../../../../Language/index';
 import LocalizedStrings from 'react-localization';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { Currency } from 'components';
 import { DataTable } from '@/components/ui/data-table';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
@@ -148,7 +147,7 @@ const InventoryHistoryModal = ({
                     </Button>
                   </div>
                   <div>
-                    <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
+                    <div>
                       <CardHeader>
                         <Row>
                           <Col lg={12}>
@@ -162,7 +161,7 @@ const InventoryHistoryModal = ({
                         </Row>
                       </CardHeader>
                       <CardBody id="section-to-print">
-                        <PDFExport ref={pdfExportComponent} scale={0.8} paperSize="A4">
+                        <div>
                           <div>
                             <Form name="simpleForm">
                               <div className="flex-wrap d-flex justify-content-end">
@@ -235,9 +234,9 @@ const InventoryHistoryModal = ({
                               onSortingChange={setSorting}
                             />
                           </div>
-                        </PDFExport>
+                        </div>
                       </CardBody>
-                    </PDFExport>
+                    </div>
                   </div>
                 </Col>
               </Row>

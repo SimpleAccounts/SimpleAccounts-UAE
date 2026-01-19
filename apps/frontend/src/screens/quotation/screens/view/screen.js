@@ -9,7 +9,6 @@ import * as PurchaseOrderDetailsAction from '../detail/actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
 
@@ -187,7 +186,7 @@ class ViewQuotation extends React.Component {
                     companyData={this.state && this.state.companyData ? this.state.companyData : ''}
                     contactData={this.state.contactData}
                   />
-                </PDFExport>
+                </div>
               </div>
             </Col>
           </Row>

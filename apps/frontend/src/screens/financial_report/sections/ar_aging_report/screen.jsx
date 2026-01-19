@@ -12,7 +12,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -251,7 +250,7 @@ const ArAgingReport = () => {
                 <div style={{ textAlignLast: 'center' }}>
                   {strings.PoweredBy} <b>SimpleAccounts</b>
                 </div>
-              </PDFExport>
+              </div>
             </CardBody>
           </div>
         </Card>

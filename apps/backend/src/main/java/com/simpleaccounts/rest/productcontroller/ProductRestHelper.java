@@ -77,12 +77,18 @@ public class ProductRestHelper {
 		product.setProductCode(productModel.getProductCode());
 
 		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(9);
-		if (productModel.getProductID() == null){
+		if (productModel.getProductID() == null && template != null){
 			String suffix = invoiceNumberUtil.fetchSuffixFromString(productModel.getProductCode());
-			template.setSuffix(Integer.parseInt(suffix));
-			String prefix = product.getProductCode().substring(0, product.getProductCode().lastIndexOf(suffix));
-			template.setPrefix(prefix);
-			customizeInvoiceTemplateService.persist(template);
+			if (suffix != null && !suffix.isEmpty()) {
+				try {
+					template.setSuffix(Integer.parseInt(suffix));
+					String prefix = product.getProductCode().substring(0, product.getProductCode().lastIndexOf(suffix));
+					template.setPrefix(prefix);
+					customizeInvoiceTemplateService.persist(template);
+				} catch (NumberFormatException e) {
+					log.warn("Could not parse suffix {} from product code {}", suffix, productModel.getProductCode());
+				}
+			}
 		}
 
 		if (productModel.getProductWarehouseId() != null) {
@@ -103,11 +109,11 @@ public class ProductRestHelper {
 		product.setCreatedBy(productModel.getCreatedBy());
 		product.setPriceType(productModel.getProductPriceType());
 		product.setAvgPurchaseCost(productModel.getPurchaseUnitPrice());
-		if(productModel.getExciseTaxId()!=null){
+		if(productModel.getExciseTaxId()!=null && productModel.getExciseTaxId() > 0){
 			ExciseTax exciseTax=exciseTaxRepository.findById(productModel.getExciseTaxId());
 			product.setExciseTax(exciseTax);
 
-			if(productModel.getExciseType()!=null){
+			if(exciseTax != null && productModel.getExciseType()!=null){
 				product.setExciseType(productModel.getExciseType());
 				BigDecimal finalexciseAmount=BigDecimal.ZERO;
 
@@ -274,30 +280,52 @@ public class ProductRestHelper {
 		ProductListModel productModel = new ProductListModel();
 		productModel.setId(product.getProductID());
 		productModel.setName(product.getProductName());
-		if (product.getVatCategory() != null) {
-			productModel.setVatCategoryId(product.getVatCategory().getId());
-			productModel.setVatPercentage(product.getVatCategory().getName());
-		}
-		if (product.getProductCategory() != null) {
-			productModel.setProductCategoryId(product.getProductCategory().getId());
-		}
-		if (product.getProductWarehouse() != null) {
-			productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
-		}
-		for (ProductLineItem lineItem : product.getLineItemList()) {
-			if (!lineItem.getPriceType().equals(ProductPriceType.PURCHASE)) {
-				productModel.setDescription(product.getDescription());
-				productModel.setUnitPrice(product.getUnitPrice());
+		try {
+			if (product.getVatCategory() != null) {
+				productModel.setVatCategoryId(product.getVatCategory().getId());
+				productModel.setVatPercentage(product.getVatCategory().getName());
 			}
+		} catch (Exception e) {
+			log.warn("Lazy loading issue for VatCategory in getListModel: {}", e.getMessage());
+		}
+		try {
+			if (product.getProductCategory() != null) {
+				productModel.setProductCategoryId(product.getProductCategory().getId());
+			}
+		} catch (Exception e) {
+			log.warn("Lazy loading issue for ProductCategory in getListModel: {}", e.getMessage());
+		}
+		try {
+			if (product.getProductWarehouse() != null) {
+				productModel.setProductWarehouseId(product.getProductWarehouse().getWarehouseId());
+			}
+		} catch (Exception e) {
+			log.warn("Lazy loading issue for ProductWarehouse in getListModel: {}", e.getMessage());
+		}
+		try {
+			if (product.getLineItemList() != null) {
+				for (ProductLineItem lineItem : product.getLineItemList()) {
+					if (!lineItem.getPriceType().equals(ProductPriceType.PURCHASE)) {
+						productModel.setDescription(product.getDescription());
+						productModel.setUnitPrice(product.getUnitPrice());
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.warn("Lazy loading issue for LineItemList in getListModel: {}", e.getMessage());
 		}
 		productModel.setProductType(String.valueOf(product.getProductType()));
 		productModel.setIsInventoryEnabled(product.getIsInventoryEnabled());
 		productModel.setIsActive(product.getIsActive());
 		productModel.setProductCode(product.getProductCode());
 		productModel.setVatIncluded(product.getVatIncluded());
-		if(product.getExciseTax() !=null) {
-			productModel.setExciseTax(product.getExciseTax().getName());
-			productModel.setExciseTaxId(product.getExciseTax().getId());
+		try {
+			if(product.getExciseTax() !=null) {
+				productModel.setExciseTax(product.getExciseTax().getName());
+				productModel.setExciseTaxId(product.getExciseTax().getId());
+			}
+		} catch (Exception e) {
+			log.warn("Lazy loading issue for ExciseTax in getListModel: {}", e.getMessage());
 		}
 		return productModel;
 	}

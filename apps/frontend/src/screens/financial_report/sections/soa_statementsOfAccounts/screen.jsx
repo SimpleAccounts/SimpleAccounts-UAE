@@ -20,7 +20,6 @@ import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import './style.scss';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader, Currency } from 'components';
 import { DataTable } from '@/components/ui/data-table';
@@ -548,7 +547,7 @@ const SOAReport = () => {
                 </div>
               </CardBody>
             </Card>
-          </PDFExport>
+          </div>
         )}
       </div>
     </div>

@@ -1,4 +1,136 @@
-import { Page } from '@playwright/test';
+import { Page, APIRequestContext } from '@playwright/test';
+import { getApiBaseUrl } from './test-setup-helpers';
+import { loginTestUser } from './test-user-helpers';
+
+export interface ContactData {
+  contactId?: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  contactType?: 'CUSTOMER' | 'SUPPLIER';
+  currencyCode?: number;
+  taxTreatmentId?: number;
+  organization?: string;
+  phone?: string;
+  mobileNumber?: string;
+  website?: string;
+  vatRegistrationNumber?: string;
+  isActive?: boolean;
+  isBillingAndShippingAddressSame?: boolean;
+  billingAddress?: {
+    address: string;
+    city: string;
+    countryId: number;
+    stateId: number;
+    postZipCode: string;
+    telephone?: string;
+    fax?: string;
+  };
+  shippingAddress?: {
+    address: string;
+    city: string;
+    countryId: number;
+    stateId: number;
+    postZipCode: string;
+    telephone?: string;
+    fax?: string;
+  };
+}
+
+/**
+ * Creates a contact via API
+ */
+export async function createContactViaAPI(
+  request: APIRequestContext,
+  authToken: string,
+  contactData: Partial<ContactData> = {}
+): Promise<ContactData & { contactId: number }> {
+  const apiUrl = getApiBaseUrl();
+  const payload = {
+    firstName: contactData.firstName,
+    lastName: contactData.lastName,
+    email: contactData.email,
+    contactType: contactData.contactType === 'SUPPLIER' ? 1 : 2,
+    currencyCode: contactData.currencyCode || 150, // Default to AED
+    taxTreatmentId: contactData.taxTreatmentId || 6, // Default to GCC NON-VAT REGISTERED
+    organization: contactData.organization || '',
+    telephone: contactData.phone || '',
+    mobileNumber: contactData.mobileNumber || '',
+    website: contactData.website || '',
+    vatRegistrationNumber: contactData.vatRegistrationNumber || '',
+    isActive: contactData.isActive ?? true,
+    isBillingAndShippingAddressSame: contactData.isBillingAndShippingAddressSame ?? true,
+    billingAddress: contactData.billingAddress || {
+      address: 'Test Billing Address',
+      city: 'Dubai',
+      countryId: 229,
+      stateId: 1,
+      postZipCode: '12345',
+    },
+    shippingAddress: contactData.shippingAddress || {
+      address: 'Test Shipping Address',
+      city: 'Dubai',
+      countryId: 229,
+      stateId: 1,
+      postZipCode: '12345',
+    },
+  };
+
+  const response = await request.post(`${apiUrl}/rest/contact/save`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'application/json',
+    },
+    data: payload,
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to create contact: ${response.status()} ${errorText}`);
+  }
+
+  const responseData = await response.json().catch(() => ({}));
+  console.log('Contact creation response:', responseData);
+  let contactId = responseData?.contactId || responseData?.id || 0;
+
+  if (!contactId) {
+    console.log('Contact ID not in response, fetching from list...');
+    // Wait for DB sync if needed
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      const listResponse = await request.get(
+        `${apiUrl}/rest/contact/getContactList?paginationDisable=true&email=${encodeURIComponent(payload.email)}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+      if (listResponse.ok()) {
+        const listData = await listResponse.json();
+        console.log('Contact list received, count:', listData.data?.length || listData.length);
+        const contact = (listData.data || []).find((c: any) => c.email === payload.email);
+        if (contact) {
+          contactId = contact.contactId || contact.id || 0;
+          console.log('Found contact in list, ID:', contactId);
+        } else {
+          console.warn('Contact not found in list by email:', payload.email);
+        }
+      } else {
+        console.error('Failed to fetch contact list:', listResponse.status());
+      }
+    } catch (error) {
+      console.warn('Could not retrieve contact ID after creation:', error);
+    }
+  }
+
+  if (!contactId) {
+    throw new Error(`Contact was created but could not retrieve its ID: ${payload.email}`);
+  }
+
+  return {
+    ...payload,
+    contactId: contactId,
+  } as ContactData & { contactId: number };
+}
 
 /**
  * Helper to create a test contact with all required fields
@@ -13,7 +145,43 @@ export async function createTestContact(
     phone?: string;
     organization?: string;
   }
-) {
+): Promise<ContactData & { contactId: number }> {
+  const authToken = await page.evaluate(() => localStorage.getItem('accessToken'));
+  
+  const contactData: Partial<ContactData> = {
+    firstName,
+    lastName,
+    email,
+    contactType: options?.contactType,
+    organization: options?.organization,
+    phone: options?.phone,
+  };
+
+  if (authToken) {
+    try {
+      return await createContactViaAPI(page.request, authToken, contactData);
+    } catch (error) {
+      console.warn('API contact creation failed, trying UI method:', error);
+    }
+  }
+
+  return await createContactViaUI(page, firstName, lastName, email, options);
+}
+
+/**
+ * Helper to create a test contact via UI
+ */
+export async function createContactViaUI(
+  page: Page,
+  firstName: string,
+  lastName: string,
+  email: string,
+  options?: {
+    contactType?: 'CUSTOMER' | 'SUPPLIER';
+    phone?: string;
+    organization?: string;
+  }
+): Promise<ContactData & { contactId: number }> {
   const contactType = options?.contactType || 'CUSTOMER';
 
   await page.goto('/admin/master/contact/create', { waitUntil: 'networkidle' });
@@ -274,7 +442,39 @@ export async function createTestContact(
     .getByRole('button', { name: /save|create|submit/i })
     .first()
     .click();
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3000);
+
+  // Try to extract ID from URL if redirected to detail page
+  const currentUrl = page.url();
+  const idMatch = currentUrl.match(/\/contact\/(\d+)/);
+  let contactId = idMatch ? parseInt(idMatch[1]) : 0;
+
+  if (!contactId) {
+    // If not redirected, find in list
+    await goToContactList(page);
+    await page.waitForTimeout(3000);
+    // Click on the contact to get to the detail page and extract ID
+    const contactRow = page.getByText(email).first();
+    if (await contactRow.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await contactRow.click();
+      await page.waitForTimeout(2000);
+      const detailUrl = page.url();
+      const idMatch2 = detailUrl.match(/\/contact\/(\d+)/);
+      if (idMatch2) {
+        contactId = parseInt(idMatch2[1]);
+      }
+    }
+  }
+
+  return {
+    firstName,
+    lastName,
+    email,
+    contactType: options?.contactType,
+    organization: options?.organization,
+    phone: options?.phone,
+    contactId: contactId,
+  } as ContactData & { contactId: number };
 }
 
 /**

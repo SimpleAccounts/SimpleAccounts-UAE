@@ -13,7 +13,6 @@ import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import { CommonActions } from 'services/global';
 
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 
 import './style.scss';
 import { RFQTemplate } from './sections';
@@ -234,7 +233,7 @@ class ViewPurchaseOrder extends React.Component {
 										contactData={this.state.contactData}
 										status={this.props.location.state.status}
 									/>
-								</PDFExport>
+								</div>
 							</div>
 						</Col>
 					</Row>

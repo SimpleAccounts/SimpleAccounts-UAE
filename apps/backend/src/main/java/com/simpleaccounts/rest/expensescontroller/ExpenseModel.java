@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -24,6 +25,7 @@ public class ExpenseModel {
 	private BigDecimal expenseAmount;
 	private BigDecimal expenseVatAmount;
 	private BigDecimal amount;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date expenseDate;
 	private String expenseDescription;
 	private String receiptNumber;

@@ -86,7 +86,7 @@ export async function createSupplierInvoiceViaAPI(
     dueDate: supplierInvoiceData.dueDate,
     contactId: supplierInvoiceData.contactId,
     currencyCode: supplierInvoiceData.currencyCode,
-    type: 1, // Supplier invoice type
+    type: 6, // Modern Supplier invoice type
     taxType: supplierInvoiceData.taxType,
     lineItems: supplierInvoiceData.lineItems.map(item => ({
       productId: item.productId,

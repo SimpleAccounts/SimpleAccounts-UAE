@@ -8,7 +8,6 @@ import ReactToPrint from 'react-to-print';
 import { CommonActions } from 'services/global';
 import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { CreditNoteTemplate } from './sections';
 import { data } from '../../../Language/index';
@@ -286,7 +285,7 @@ class ViewCreditNote extends React.Component {
                         : false
                     }
                   />
-                </PDFExport>
+                </div>
               </div>
             </Col>
           </Row>
