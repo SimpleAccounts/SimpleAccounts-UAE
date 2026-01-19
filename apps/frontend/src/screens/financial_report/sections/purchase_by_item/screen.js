@@ -141,7 +141,7 @@ class PurchaseByitem extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   renderAverageAmount = (cell, row, extraData) => {
@@ -314,7 +314,7 @@ class PurchaseByitem extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={1}
                   paperSize="auto"

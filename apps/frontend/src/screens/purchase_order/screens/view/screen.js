@@ -141,7 +141,7 @@ class ViewPurchaseOrder extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -195,7 +195,7 @@ class ViewPurchaseOrder extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"

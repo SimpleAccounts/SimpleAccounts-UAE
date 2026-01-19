@@ -91,7 +91,7 @@ const ViewQuotation = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   return (
@@ -116,6 +116,14 @@ const ViewQuotation = props => {
               />
             </div>
             <div className="pull-right">
+              <Button
+                className="btn-lg mb-1 print-btn-cont"
+                onClick={() => {
+                  exportPDFWithComponent();
+                }}
+              >
+                <FileText className="h-4 w-4" />
+              </Button>
               <ReactToPrint
                 trigger={() => (
                   <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -136,14 +144,21 @@ const ViewQuotation = props => {
               </Button>
             </div>
             <div>
-              <RFQTemplate
-                QuotationData={QuotationData}
-                currencyData={currencyData}
-                ref={componentRef}
-                totalNet={totalNet}
-                companyData={companyData}
-                contactData={contactData}
-              />
+              <div
+                ref={pdfExportComponent}
+                scale={0.8}
+                paperSize="A3"
+                fileName={QuotationData.quotationNumber + '.pdf'}
+              >
+                <RFQTemplate
+                  QuotationData={QuotationData}
+                  currencyData={currencyData}
+                  ref={componentRef}
+                  totalNet={totalNet}
+                  companyData={companyData}
+                  contactData={contactData}
+                />
+              </div>
             </div>
           </Col>
         </Row>

@@ -169,7 +169,7 @@ class ViewCustomerInvoice extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   redirectToCreditNote = creditNote => {
     const commonParams = {
@@ -221,6 +221,25 @@ class ViewCustomerInvoice extends React.Component {
                 />
               </div>
               <div className="pull-right">
+                {/* <Button
+									className="btn btn-sm edit-btn"
+									onClick={() => {
+										this.props.history.push(
+											'/admin/revenue/customer-invoice/detail',
+											{ id },
+										);
+									}}
+								>
+									<Pencil className="h-4 w-4" />
+								</Button> */}
+                <Button
+                  className="btn-lg mb-1 print-btn-cont"
+                  onClick={() => {
+                    this.exportPDFWithComponent();
+                  }}
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -273,16 +292,23 @@ class ViewCustomerInvoice extends React.Component {
                 </Button>
               </div>
               <div>
-                <InvoiceTemplate
-                  invoiceData={invoiceData}
-                  contactData={contactData}
-                  isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                  status={this.props.location.state.status}
-                  currencyData={currencyData}
-                  ref={el => (this.componentRef = el)}
-                  totalNet={this.state.totalNet}
-                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                />
+                <div
+                  ref={component => (this.pdfExportComponent = component)}
+                  scale={0.8}
+                  paperSize="A3"
+                  fileName={invoiceData.referenceNumber + '.pdf'}
+                >
+                  <InvoiceTemplate
+                    invoiceData={invoiceData}
+                    contactData={contactData}
+                    isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+                    status={this.props.location.state.status}
+                    currencyData={currencyData}
+                    ref={el => (this.componentRef = el)}
+                    totalNet={this.state.totalNet}
+                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                  />
+                </div>
               </div>
             </Col>
           </Row>

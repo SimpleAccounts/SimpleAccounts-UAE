@@ -151,7 +151,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   generateReport = value => {
@@ -291,7 +291,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={1}
                   paperSize="auto"

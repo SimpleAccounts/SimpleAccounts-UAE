@@ -160,7 +160,7 @@ class CustomerAccountStatement extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   hideExportOptionsFunctionality = val => {
     this.setState({ hideExportOptions: val });
@@ -285,7 +285,7 @@ class CustomerAccountStatement extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   // paperSize="A3"

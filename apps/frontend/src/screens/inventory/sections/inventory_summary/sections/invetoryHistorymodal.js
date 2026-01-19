@@ -147,7 +147,7 @@ const InventoryHistoryModal = ({
                     </Button>
                   </div>
                   <div>
-                    <div>
+                    <div ref={pdfExportComponent} scale={0.8} paperSize="A4">
                       <CardHeader>
                         <Row>
                           <Col lg={12}>
@@ -161,7 +161,7 @@ const InventoryHistoryModal = ({
                         </Row>
                       </CardHeader>
                       <CardBody id="section-to-print">
-                        <div>
+                        <div ref={pdfExportComponent} scale={0.8} paperSize="A4">
                           <div>
                             <Form name="simpleForm">
                               <div className="flex-wrap d-flex justify-content-end">

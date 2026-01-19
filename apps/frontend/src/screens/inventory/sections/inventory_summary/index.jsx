@@ -192,7 +192,7 @@ const InventorySummary = () => {
     <div className="transactions-report-screen">
       <div className="animated fadeIn">
         <div id="section-to-print">
-          <div>
+          <div ref={pdfExportComponent} scale={0.8} paperSize="A4">
             <br />
             <br />
             <div

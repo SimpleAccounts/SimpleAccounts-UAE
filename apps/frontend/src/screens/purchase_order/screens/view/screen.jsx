@@ -117,7 +117,7 @@ const ViewPurchaseOrder = ({
 
   const exportPDFWithComponent = () => {
     if (pdfExportComponent.current) {
-      pdfExportComponent.current.save();
+      // pdfExportComponent.current.save();
     }
   };
 
@@ -152,7 +152,7 @@ const ViewPurchaseOrder = ({
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"

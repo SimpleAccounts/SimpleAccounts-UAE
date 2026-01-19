@@ -104,7 +104,7 @@ const ViewRequestForQuotation = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   strings.setLanguage(language);
@@ -115,6 +115,14 @@ const ViewRequestForQuotation = props => {
         <Row>
           <Col lg={12} className="mx-auto">
             <div className="pull-right">
+              <Button
+                className="btn-lg mb-1 print-btn-cont"
+                onClick={() => {
+                  exportPDFWithComponent();
+                }}
+              >
+                <FileText className="h-4 w-4" />
+              </Button>
               <ReactToPrint
                 trigger={() => (
                   <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -135,15 +143,22 @@ const ViewRequestForQuotation = props => {
               </Button>
             </div>
             <div>
-              <RFQTemplate
-                RFQData={RFQData}
-                currencyData={currencyData}
-                status={props.location.state?.status}
-                ref={componentRef}
-                totalNet={totalNet}
-                companyData={companyData}
-                contactData={contactData}
-              />
+              <div
+                ref={pdfExportComponent}
+                scale={0.8}
+                paperSize="A3"
+                fileName={RFQData.rfqNumber + '.pdf'}
+              >
+                <RFQTemplate
+                  RFQData={RFQData}
+                  currencyData={currencyData}
+                  status={props.location.state?.status}
+                  ref={componentRef}
+                  totalNet={totalNet}
+                  companyData={companyData}
+                  contactData={contactData}
+                />
+              </div>
             </div>
           </Col>
         </Row>

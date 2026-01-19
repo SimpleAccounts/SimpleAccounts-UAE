@@ -89,7 +89,7 @@ class PaySlipModal extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   companyMobileNumber = number => {
@@ -178,7 +178,7 @@ class PaySlipModal extends React.Component {
                       </Button>
                     </div>
                     <div className="mt-3">
-                      <PDFExport
+                      <div
                         ref={component => (this.pdfExportComponent = component)}
                         scale={0.8}
                         paperSize="A3"

@@ -170,7 +170,7 @@ class ViewCreditNote extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -212,6 +212,14 @@ class ViewCreditNote extends React.Component {
                 />
               </div>
               <div className="pull-right">
+                <Button
+                  className="btn-lg mb-1 print-btn-cont"
+                  onClick={() => {
+                    this.exportPDFWithComponent();
+                  }}
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -243,22 +251,29 @@ class ViewCreditNote extends React.Component {
                 </Button>
               </div>
               <div>
-                <CreditNoteTemplate
-                  invoiceData={invoiceData}
-                  currencyData={currencyData}
-                  status={this.props.location.state.status}
-                  isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
-                  ref={el => (this.componentRef = el)}
-                  totalNet={this.state.totalNet}
-                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                  contactData={contactData}
-                  isCNWithoutProduct={
-                    this.props.location.state.isCNWithoutProduct &&
-                    this.props.location.state.isCNWithoutProduct === true
-                      ? true
-                      : false
-                  }
-                />
+                <div
+                  ref={component => (this.pdfExportComponent = component)}
+                  scale={0.8}
+                  paperSize="A3"
+                  fileName={this.state.invoiceData.creditNoteNumber + '.pdf'}
+                >
+                  <CreditNoteTemplate
+                    invoiceData={invoiceData}
+                    currencyData={currencyData}
+                    status={this.props.location.state.status}
+                    isBillingAndShippingAddressSame={isBillingAndShippingAddressSame}
+                    ref={el => (this.componentRef = el)}
+                    totalNet={this.state.totalNet}
+                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                    contactData={contactData}
+                    isCNWithoutProduct={
+                      this.props.location.state.isCNWithoutProduct &&
+                      this.props.location.state.isCNWithoutProduct === true
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
               </div>
             </Col>
           </Row>

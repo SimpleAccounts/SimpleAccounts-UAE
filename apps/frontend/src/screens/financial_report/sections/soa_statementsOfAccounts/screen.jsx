@@ -143,7 +143,9 @@ const SOAReport = () => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const viewFilter = () => setView(!view);
-  const exportPDFWithComponent = () => pdfExportComponent.current.save();
+  const exportPDFWithComponent = () => {
+    /* pdfExportComponent.current.save() */
+  };
 
   const renderDate = cell => {
     if (cell.invoiceNumber === 'Total Balance Due') return '';
@@ -421,7 +423,7 @@ const SOAReport = () => {
         </Card>
 
         {soa_data.length !== 0 && (
-          <PDFExport
+          <div
             ref={pdfExportComponent}
             scale={0.8}
             paperSize="A3"

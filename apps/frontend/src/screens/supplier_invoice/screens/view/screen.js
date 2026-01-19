@@ -141,7 +141,7 @@ class ViewInvoice extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   redirectToDebitNote = debiteNote => {
     // this.props.history.push('/admin/expense/debit-notes/view', {
@@ -192,6 +192,25 @@ class ViewInvoice extends React.Component {
                 />
               </div>
               <div className="pull-right">
+                {/* <Button
+									className="btn btn-sm edit-btn"
+									onClick={() => {
+										this.props.history.push(
+											'/admin/revenue/customer-invoice/detail',
+											{ id },
+										);
+									}}
+								>
+									<Pencil className="h-4 w-4" />
+								</Button> */}
+                <Button
+                  className="btn-lg mb-1 print-btn-cont"
+                  onClick={() => {
+                    this.exportPDFWithComponent();
+                  }}
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -243,15 +262,22 @@ class ViewInvoice extends React.Component {
                 </Button>
               </div>
               <div>
-                <InvoiceTemplate
-                  status={this.props.location.state.status}
-                  invoiceData={invoiceData}
-                  currencyData={currencyData}
-                  ref={el => (this.componentRef = el)}
-                  totalNet={this.state.totalNet}
-                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                  contactData={contactData}
-                />
+                <div
+                  ref={component => (this.pdfExportComponent = component)}
+                  scale={0.8}
+                  paperSize="A3"
+                  fileName={invoiceData.referenceNumber + '.pdf'}
+                >
+                  <InvoiceTemplate
+                    status={this.props.location.state.status}
+                    invoiceData={invoiceData}
+                    currencyData={currencyData}
+                    ref={el => (this.componentRef = el)}
+                    totalNet={this.state.totalNet}
+                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                    contactData={contactData}
+                  />
+                </div>
               </div>
             </Col>
           </Row>

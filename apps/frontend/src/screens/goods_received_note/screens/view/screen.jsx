@@ -83,7 +83,7 @@ const ViewGoodsReceivedNote = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   return (
@@ -120,7 +120,7 @@ const ViewGoodsReceivedNote = props => {
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"

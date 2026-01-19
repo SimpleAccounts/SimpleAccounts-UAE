@@ -164,7 +164,7 @@ class ViewDebitNote extends React.Component {
     }
   };
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   render() {
     strings.setLanguage(this.state.language);
@@ -205,6 +205,25 @@ class ViewDebitNote extends React.Component {
                 />
               </div>
               <div className="pull-right">
+                {/* <Button
+									className="btn btn-sm edit-btn"
+									onClick={() => {
+										this.props.history.push(
+											'/admin/revenue/customer-invoice/detail',
+											{ id },
+										);
+									}}
+								>
+									<Pencil className="h-4 w-4" />
+								</Button> */}
+                <Button
+                  className="btn-lg mb-1 print-btn-cont"
+                  onClick={() => {
+                    this.exportPDFWithComponent();
+                  }}
+                >
+                  <FileText className="h-4 w-4" />
+                </Button>
                 <ReactToPrint
                   trigger={() => (
                     <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
@@ -237,21 +256,28 @@ class ViewDebitNote extends React.Component {
                 </Button>
               </div>
               <div>
-                <DebitNoteTemplate
-                  debitNoteData={debitNoteData}
-                  currencyData={currencyData}
-                  status={this.props.location.state.status}
-                  ref={el => (this.componentRef = el)}
-                  totalNet={this.state.totalNet}
-                  companyData={this.state && this.state.companyData ? this.state.companyData : ''}
-                  contactData={contactData}
-                  isCNWithoutProduct={
-                    this.props.location.state.isCNWithoutProduct &&
-                    this.props.location.state.isCNWithoutProduct == true
-                      ? true
-                      : false
-                  }
-                />
+                <div
+                  ref={component => (this.pdfExportComponent = component)}
+                  scale={0.8}
+                  paperSize="A3"
+                  fileName={this.state.debitNoteData.creditNoteNumber + '.pdf'}
+                >
+                  <DebitNoteTemplate
+                    debitNoteData={debitNoteData}
+                    currencyData={currencyData}
+                    status={this.props.location.state.status}
+                    ref={el => (this.componentRef = el)}
+                    totalNet={this.state.totalNet}
+                    companyData={this.state && this.state.companyData ? this.state.companyData : ''}
+                    contactData={contactData}
+                    isCNWithoutProduct={
+                      this.props.location.state.isCNWithoutProduct &&
+                      this.props.location.state.isCNWithoutProduct == true
+                        ? true
+                        : false
+                    }
+                  />
+                </div>
               </div>
             </Col>
           </Row>

@@ -113,7 +113,9 @@ const InvoiceDetails = () => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const viewFilter = () => setView(!view);
-  const exportPDFWithComponent = () => pdfExportComponent.current.save();
+  const exportPDFWithComponent = () => {
+    /* pdfExportComponent.current.save() */
+  };
 
   return (
     <div className="transactions-report-screen">
@@ -200,7 +202,7 @@ const InvoiceDetails = () => {
               <FilterComponent2 viewFilter={viewFilter} generateReport={generateReport} />{' '}
             </div>
             <CardBody id="section-to-print">
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
