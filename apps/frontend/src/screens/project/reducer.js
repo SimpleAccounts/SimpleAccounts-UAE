@@ -28,31 +28,31 @@ const ProjectReducer = (state = initState, action) => {
     case PROJECT.PROJECT_LIST:
       return {
         ...state,
-        project_list: Array.isArray(payload) ? payload : payload?.data || [],
+        project_list: getArray(payload),
       };
 
     case PROJECT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_list: getArray(payload),
       };
 
     case PROJECT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     case PROJECT.TITLE_LIST:
       return {
         ...state,
-        title_list: Array.isArray(payload) ? payload : payload?.data || [],
+        title_list: getArray(payload),
       };
 
     case PROJECT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Array.isArray(payload) ? payload : payload?.data || [],
+        contact_list: getArray(payload),
       };
 
     default:
