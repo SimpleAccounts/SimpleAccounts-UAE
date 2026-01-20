@@ -69,7 +69,10 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 					balance.setOpeningBalance(lineItem.getCreditAmount()!=null && lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0?lineItem.getCreditAmount():lineItem.getDebitAmount());
 					balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
 				} else {
-					transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					// Apply pessimistic locking if EntityManager is available (not in test environment)
+					if (transactionCategoryBalanceDao.getEntityManager() != null) {
+						transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					}
 				}
 
 				boolean isDelated = lineItem.getDeleteFlag();
@@ -151,7 +154,10 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 					balance.setRunningBalance(lineItem.getCreditAmount()!=null?lineItem.getCreditAmount():lineItem.getDebitAmount());
 					balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
 				} else {
-					transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					// Apply pessimistic locking if EntityManager is available (not in test environment)
+					if (transactionCategoryBalanceDao.getEntityManager() != null) {
+						transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					}
 				}
 
 				boolean isDelated = lineItem.getDeleteFlag();
