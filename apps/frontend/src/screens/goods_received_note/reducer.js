@@ -35,72 +35,72 @@ const RequestForQuotationReducer = (state = initState, action) => {
     case GOODS_RECEVED_NOTE.PROJECT_LIST:
       return {
         ...state,
-        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        project_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        contact_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.STATUS_LIST:
       return {
         ...state,
-        status_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        status_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        currency_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        supplier_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.VAT_LIST:
       return {
         ...state,
-        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        vat_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.PAY_MODE:
       return {
         ...state,
-        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
+        pay_mode: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        product_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        deposit_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.GOODS_RECEVED_NOTE_LIST:
       return {
         ...state,
-        goods_received_note_list: Array.isArray(payload) ? payload : payload?.data || [],
+        goods_received_note_list: getArray(payload),
       };
     case GOODS_RECEVED_NOTE.PO_LIST:
       return {
         ...state,
-        po_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        po_list: getArray(payload),
       };
     default:
       return state;
