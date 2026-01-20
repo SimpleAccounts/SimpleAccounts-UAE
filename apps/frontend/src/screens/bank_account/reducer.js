@@ -46,25 +46,25 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.BANK_TRANSACTION_LIST:
       return {
         ...state,
-        bank_transaction_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        bank_transaction_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.ACCOUNT_TYPE_LIST:
       return {
         ...state,
-        account_type_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        account_type_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        currency_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        country_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST:
@@ -76,7 +76,7 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.VENDOR_LIST:
       return {
         ...state,
-        vendor_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        vendor_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.PROJECT_LIST:
@@ -134,13 +134,13 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.VAT_LIST:
       return {
         ...state,
-        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        vat_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.UNPAID_PAYROLLS:
       return {
         ...state,
-        UnPaidPayrolls_List: Array.isArray(payload.data) ? payload.data : payload || [],
+        UnPaidPayrolls_List: getArray(payload),
       };
 
     default:
