@@ -704,8 +704,8 @@ const CreateCustomerInvoice = ({
       'referenceNumber',
       formData.invoice_number !== null ? prefix + formData.invoice_number : ''
     );
-    postFormData.append('invoiceDueDate', formData.invoiceDueDate ? formData.invoiceDueDate : null);
-    postFormData.append('invoiceDate', formData.invoiceDate ? formData.invoiceDate : null);
+    postFormData.append('invoiceDueDate', formData.invoiceDueDate ? dayjs(formData.invoiceDueDate).format('DD/MM/YYYY') : null);
+    postFormData.append('invoiceDate', formData.invoiceDate ? dayjs(formData.invoiceDate).format('DD/MM/YYYY') : null);
     postFormData.append(
       'receiptNumber',
       formData.receiptNumber !== null ? formData.receiptNumber : ''
