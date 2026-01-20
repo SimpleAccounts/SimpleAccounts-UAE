@@ -227,7 +227,7 @@ describe('Employee Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: [] },
+        payload: [],
       });
     });
   });

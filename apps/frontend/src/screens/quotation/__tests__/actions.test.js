@@ -102,9 +102,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.EXCISE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({

@@ -400,7 +400,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { id: 1, ...mockSupplierData }
+        data: { id: 1, ...mockSupplierData },
       });
 
       const result = await store.dispatch(actions.createSupplier(mockSupplierData));
@@ -421,7 +421,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { message: 'Deleted successfully' }
+        data: { message: 'Deleted successfully' },
       });
 
       const result = await store.dispatch(actions.removeBulk(mockIds));
@@ -472,7 +472,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { id: 1, ...mockInvoiceData }
+        data: { id: 1, ...mockInvoiceData },
       });
 
       const result = await store.dispatch(actions.postInvoice(mockInvoiceData));
@@ -493,7 +493,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { message: 'Unposted successfully' }
+        data: { message: 'Unposted successfully' },
       });
 
       const result = await store.dispatch(actions.unPostInvoice(mockData));
@@ -514,7 +514,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { message: 'Deleted successfully' }
+        data: { message: 'Deleted successfully' },
       });
 
       const result = await store.dispatch(actions.deleteInvoice(invoiceId));
@@ -559,7 +559,7 @@ describe('SupplierInvoice Actions', () => {
 
       authApi.mockResolvedValue({
         status: 200,
-        data: { message: 'Email sent successfully' }
+        data: { message: 'Email sent successfully' },
       });
 
       const result = await store.dispatch(actions.sendMail(invoiceId));
