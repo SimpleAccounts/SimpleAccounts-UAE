@@ -256,7 +256,7 @@ describe('Employee Bank Details Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toEqual([]);
+      expect(dispatchedActions[0].payload).toEqual([]);
     });
 
     it('should fetch currencies for bank details dropdown', async () => {
