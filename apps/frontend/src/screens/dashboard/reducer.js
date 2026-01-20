@@ -38,21 +38,21 @@ const DashboardReducer = (state = initState, action) => {
     case DASHBOARD.BANK_ACCOUNT_GRAPH:
       return {
         ...state,
-        bank_account_graph: payload?.data || payload || {},
+        bank_account_graph: payload || {},
       };
 
     // Cash Flow
     case DASHBOARD.CASH_FLOW_GRAPH:
       return {
         ...state,
-        cash_flow_graph: payload?.data || payload || {},
+        cash_flow_graph: payload || {},
       };
 
     // Invoice
     case DASHBOARD.INVOICE_GRAPH:
       return {
         ...state,
-        invoice_graph: payload?.data || payload || {},
+        invoice_graph: payload || {},
       };
 
     // Profit and Loss
