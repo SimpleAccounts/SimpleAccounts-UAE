@@ -142,7 +142,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.CURRENCY_LIST,
-        payload: { status: 200, data: mockCurrencies },
+        payload: mockCurrencies,
       });
 
       expect(result.status).toBe(200);
