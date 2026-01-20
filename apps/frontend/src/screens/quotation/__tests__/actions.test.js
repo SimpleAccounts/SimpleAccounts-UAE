@@ -63,9 +63,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.QUOTATION_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
