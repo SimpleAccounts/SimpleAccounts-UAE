@@ -33,7 +33,7 @@ const ExpenseReducer = (state = initState, action) => {
     case EXPENSE.EXPENSE_LIST:
       return {
         ...state,
-        expense_list: Array.isArray(payload) ? payload : payload?.data || [],
+        expense_list: getArray(payload),
       };
 
     case EXPENSE.EXPENSE_DETAIL:
@@ -65,7 +65,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        project_list: Array.isArray(payload) ? payload : payload?.data || [],
+        project_list: getArray(payload),
       };
 
     case EXPENSE.SUPPLIER_LIST:
@@ -75,7 +75,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        supplier_list: Array.isArray(payload) ? payload : payload?.data || [],
+        supplier_list: getArray(payload),
       };
 
     case EXPENSE.EMPLOYEE_LIST:
@@ -85,7 +85,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        employee_list: Array.isArray(payload) ? payload : payload?.data || [],
+        employee_list: getArray(payload),
       };
 
     case EXPENSE.PAYMENT_LIST:
@@ -95,7 +95,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        payment_list: Array.isArray(payload) ? payload : payload?.data || [],
+        payment_list: getArray(payload),
       };
 
     case EXPENSE.VAT_LIST:
@@ -115,7 +115,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        expense_categories_list: Array.isArray(payload) ? payload : payload?.data || [],
+        expense_categories_list: getArray(payload),
       };
 
     case EXPENSE.PAY_MODE: {
@@ -139,7 +139,7 @@ const ExpenseReducer = (state = initState, action) => {
 
       return {
         ...state,
-        user_list: Array.isArray(payload) ? payload : payload?.data || [],
+        user_list: getArray(payload),
       };
     case EXPENSE.PAY_TO_LIST: {
       let list = payload;
