@@ -117,7 +117,7 @@ describe('ContactReducer', () => {
 
     const expectedState = {
       ...initialState,
-      currency_list: mockCities, // Note: There's a bug in the reducer where CITY_LIST updates currency_list
+      city_list: mockCities,
     };
 
     expect(ContactReducer(initialState, action)).toEqual(expectedState);
