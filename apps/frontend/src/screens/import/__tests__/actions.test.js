@@ -260,9 +260,7 @@ describe('Import Actions', () => {
       expect(dispatchedActions).toHaveLength(1);
       expect(dispatchedActions[0]).toEqual({
         type: IMPORT.FILE_DATA_LIST,
-        payload: {
-          data: mockFileData,
-        },
+        payload: mockFileData,
       });
 
       expect(authApi).toHaveBeenCalledWith({
