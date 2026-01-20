@@ -48,7 +48,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-        payload: { data: mockInvoices },
+        payload: mockInvoices,
       });
     });
 
@@ -122,7 +122,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.PROJECT_LIST,
-        payload: { data: mockProjects },
+        payload: mockProjects,
       });
     });
 
@@ -157,7 +157,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.CUSTOMER_LIST,
-        payload: { data: mockCustomers },
+        payload: mockCustomers,
       });
 
       expect(result.status).toBe(200);
@@ -198,7 +198,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.PLACE_OF_SUPPLY,
-        payload: { data: mockPlaces },
+        payload: mockPlaces,
       });
     });
   });
@@ -254,7 +254,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.VAT_LIST,
-        payload: { data: mockVatList },
+        payload: mockVatList,
       });
 
       expect(result.status).toBe(200);
@@ -283,7 +283,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.EXCISE_LIST,
-        payload: { data: mockExciseList },
+        payload: mockExciseList,
       });
     });
   });
@@ -310,7 +310,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.PRODUCT_LIST,
-        payload: { data: mockProducts },
+        payload: mockProducts,
       });
 
       expect(result.status).toBe(200);
@@ -339,7 +339,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.DEPOSIT_LIST,
-        payload: { data: mockDeposits },
+        payload: mockDeposits,
       });
     });
   });
@@ -466,7 +466,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.PAY_MODE,
-        payload: { data: mockPayModes },
+        payload: mockPayModes,
       });
     });
   });
