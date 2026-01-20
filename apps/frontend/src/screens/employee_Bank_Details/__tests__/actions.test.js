@@ -203,7 +203,7 @@ describe('Employee Bank Details Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
 
