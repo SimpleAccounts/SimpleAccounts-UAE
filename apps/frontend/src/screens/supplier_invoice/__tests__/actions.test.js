@@ -23,8 +23,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getSupplierInvoiceList', () => {
     it('should fetch supplier invoice list successfully', async () => {
       const mockInvoices = [
-        { id: 1, invoiceNumber: 'SI-001', amount: 5000 }
-        { id: 2, invoiceNumber: 'SI-002', amount: 3000 }
+        { id: 1, invoiceNumber: 'SI-001', amount: 5000 },
+        { id: 2, invoiceNumber: 'SI-002', amount: 3000 },
       ];
 
       authApi.mockResolvedValue({
@@ -33,7 +33,7 @@ describe('SupplierInvoice Actions', () => {
       });
 
       const params = {
-        supplierId: { value: 'supplier1' }
+        supplierId: { value: 'supplier1' },
         referenceNumber: 'REF-001',
         pageNo: 1,
         pageSize: 10,
@@ -48,7 +48,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
-        payload: mockInvoices }
+        payload: mockInvoices,
       });
     });
 
@@ -56,12 +56,12 @@ describe('SupplierInvoice Actions', () => {
       authApi.mockResolvedValue({ status: 200, data: [] });
 
       const params = {
-        supplierId: { value: '123' }
+        supplierId: { value: '123' },
         referenceNumber: 'REF-001',
         invoiceDate: '2023-12-01',
         invoiceDueDate: '2023-12-31',
         amount: '5000',
-        status: { value: 'approved' }
+        status: { value: 'approved' },
         pageNo: 2,
         pageSize: 20,
         paginationDisable: false,
@@ -98,8 +98,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getProjectList', () => {
     it('should fetch project list successfully', async () => {
       const mockProjects = [
-        { id: 1, projectName: 'Project Alpha' }
-        { id: 2, projectName: 'Project Beta' }
+        { id: 1, projectName: 'Project Alpha' },
+        { id: 2, projectName: 'Project Beta' },
       ];
 
       authApi.mockResolvedValue({
@@ -117,7 +117,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PROJECT_LIST,
-        payload: mockProjects }
+        payload: mockProjects,
       });
     });
 
@@ -133,8 +133,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getContactList', () => {
     it('should fetch contact list with contact type', async () => {
       const mockContacts = [
-        { contactId: 1, firstName: 'John', lastName: 'Doe' }
-        { contactId: 2, firstName: 'Jane', lastName: 'Smith' }
+        { contactId: 1, firstName: 'John', lastName: 'Doe' },
+        { contactId: 2, firstName: 'Jane', lastName: 'Smith' },
       ];
 
       authApi.mockResolvedValue({
@@ -152,7 +152,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.CONTACT_LIST,
-        payload: mockContacts }
+        payload: mockContacts,
       });
     });
 
@@ -172,8 +172,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getStatusList', () => {
     it('should fetch status list successfully', async () => {
       const mockStatuses = [
-        { id: 1, name: 'Draft' }
-        { id: 2, name: 'Approved' }
+        { id: 1, name: 'Draft' },
+        { id: 2, name: 'Approved' },
       ];
 
       authApi.mockResolvedValue({
@@ -191,7 +191,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.STATUS_LIST,
-        payload: mockStatuses }
+        payload: mockStatuses,
       });
     });
   });
@@ -199,8 +199,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getCurrencyList', () => {
     it('should fetch currency list successfully', async () => {
       const mockCurrencies = [
-        { code: 'USD', name: 'US Dollar' }
-        { code: 'AED', name: 'UAE Dirham' }
+        { code: 'USD', name: 'US Dollar' },
+        { code: 'AED', name: 'UAE Dirham' },
       ];
 
       authApi.mockResolvedValue({
@@ -218,7 +218,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.CURRENCY_LIST,
-        payload: mockCurrencies }
+        payload: mockCurrencies,
       });
 
       expect(result.status).toBe(200);
@@ -228,8 +228,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getVatList', () => {
     it('should fetch VAT list successfully', async () => {
       const mockVatList = [
-        { id: 1, name: 'Standard Rate', percentage: 5 }
-        { id: 2, name: 'Zero Rate', percentage: 0 }
+        { id: 1, name: 'Standard Rate', percentage: 5 },
+        { id: 2, name: 'Zero Rate', percentage: 0 },
       ];
 
       authApi.mockResolvedValue({
@@ -247,7 +247,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.VAT_LIST,
-        payload: mockVatList }
+        payload: mockVatList,
       });
 
       expect(result.status).toBe(200);
@@ -257,8 +257,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getExciseList', () => {
     it('should fetch excise list successfully', async () => {
       const mockExciseList = [
-        { id: 1, name: 'Excise Tax A', rate: 50 }
-        { id: 2, name: 'Excise Tax B', rate: 100 }
+        { id: 1, name: 'Excise Tax A', rate: 50 },
+        { id: 2, name: 'Excise Tax B', rate: 100 },
       ];
 
       authApi.mockResolvedValue({
@@ -276,7 +276,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.EXCISE_LIST,
-        payload: mockExciseList }
+        payload: mockExciseList,
       });
     });
   });
@@ -284,8 +284,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getDepositList', () => {
     it('should fetch deposit list successfully', async () => {
       const mockDeposits = [
-        { id: 1, amount: 1000 }
-        { id: 2, amount: 2000 }
+        { id: 1, amount: 1000 },
+        { id: 2, amount: 2000 },
       ];
 
       authApi.mockResolvedValue({
@@ -303,7 +303,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.DEPOSIT_LIST,
-        payload: mockDeposits }
+        payload: mockDeposits,
       });
     });
   });
@@ -311,8 +311,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getPaymentMode', () => {
     it('should fetch payment mode successfully', async () => {
       const mockPayModes = [
-        { id: 1, label: 'Cash' }
-        { id: 2, label: 'Card' }
+        { id: 1, label: 'Cash' },
+        { id: 2, label: 'Card' },
       ];
 
       authApi.mockResolvedValue({
@@ -330,7 +330,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PAY_MODE,
-        payload: mockPayModes }
+        payload: mockPayModes,
       });
     });
   });
@@ -338,8 +338,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getProductList', () => {
     it('should fetch product list successfully', async () => {
       const mockProducts = [
-        { id: 1, productName: 'Product A', price: 100 }
-        { id: 2, productName: 'Product B', price: 200 }
+        { id: 1, productName: 'Product A', price: 100 },
+        { id: 2, productName: 'Product B', price: 200 },
       ];
 
       authApi.mockResolvedValue({
@@ -357,7 +357,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PRODUCT_LIST,
-        payload: mockProducts }
+        payload: mockProducts,
       });
 
       expect(result.status).toBe(200);
@@ -367,8 +367,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getSupplierList', () => {
     it('should fetch supplier list successfully', async () => {
       const mockSuppliers = [
-        { id: 1, name: 'Supplier A' }
-        { id: 2, name: 'Supplier B' }
+        { id: 1, name: 'Supplier A' },
+        { id: 2, name: 'Supplier B' },
       ];
 
       authApi.mockResolvedValue({
@@ -386,7 +386,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.SUPPLIER_LIST,
-        payload: mockSuppliers }
+        payload: mockSuppliers,
       });
     });
   });
@@ -439,8 +439,8 @@ describe('SupplierInvoice Actions', () => {
   describe('getCountryList', () => {
     it('should fetch country list successfully', async () => {
       const mockCountries = [
-        { code: 'US', name: 'United States' }
-        { code: 'AE', name: 'United Arab Emirates' }
+        { code: 'US', name: 'United States' },
+        { code: 'AE', name: 'United Arab Emirates' },
       ];
 
       authApi.mockResolvedValue({

@@ -43,7 +43,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.CURRENCY_LIST,
-        payload: mockCurrencies },
+        payload: mockCurrencies,
       });
     });
 
@@ -78,7 +78,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.BANK_LIST,
-        payload: mockBanks },
+        payload: mockBanks,
       });
     });
 
@@ -112,7 +112,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.SUPPLIER_LIST,
-        payload: mockSuppliers },
+        payload: mockSuppliers,
       });
     });
 
@@ -147,7 +147,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.INVOICE_LIST,
-        payload: mockInvoices },
+        payload: mockInvoices,
       });
     });
 
@@ -182,7 +182,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.PROJECT_LIST,
-        payload: mockProjects },
+        payload: mockProjects,
       });
     });
 
@@ -221,7 +221,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.PAYMENT_LIST,
-        payload: mockPayments },
+        payload: mockPayments,
       });
     });
 
@@ -409,7 +409,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.COUNTRY_LIST,
-        payload: mockCountries },
+        payload: mockCountries,
       });
     });
 
@@ -495,7 +495,7 @@ describe('Payment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: PAYMENT.PAYMENT_LIST,
-        payload: [] },
+        payload: [],
       });
     });
 
