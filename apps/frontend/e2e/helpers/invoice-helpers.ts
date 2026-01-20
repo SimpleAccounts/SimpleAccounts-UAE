@@ -175,10 +175,31 @@ export async function createInvoiceViaAPI(
     throw new Error(`Failed to create invoice: ${response.status()} ${errorText}`);
   }
 
-  const responseData = await response.json();
+  const responseData = await response.json().catch(() => ({}));
+  let invoiceId = responseData.invoiceId || responseData.id;
+
+  if (!invoiceId) {
+    const listResponse = await getInvoiceList(request, authToken, {
+      type,
+      contactId: invoiceData.contactId,
+      paginationDisable: true,
+      referenceNumber: refNum,
+    });
+    const list = Array.isArray(listResponse?.data) ? listResponse.data : [];
+    const matched = list.find((invoice: any) => {
+      const ref = invoice.referenceNumber || invoice.invoiceNumber;
+      return ref === refNum;
+    });
+    invoiceId = matched?.invoiceId || matched?.id;
+  }
+
+  if (!invoiceId) {
+    throw new Error(`Invoice ID not returned for reference ${refNum}`);
+  }
+
   return {
     ...invoiceData,
-    invoiceId: responseData.invoiceId || responseData.id,
+    invoiceId,
   };
 }
 
@@ -191,24 +212,42 @@ export async function postInvoice(
   invoiceId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.post(`${apiUrl}/rest/invoice/posting`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'application/json',
-    },
-    data: {
-      postingRefId: invoiceId,
-      postingRefType: 'INVOICE',
-      markAsSent: false, // Default to false for tests
-    },
-  });
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const response = await request.post(`${apiUrl}/rest/invoice/posting`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        postingRefId: invoiceId,
+        postingRefType: 'INVOICE',
+        markAsSent: false, // Default to false for tests
+      },
+    });
 
-  if (!response.ok()) {
-    const errorText = await response.text().catch(() => 'Unknown error');
-    throw new Error(`Failed to post invoice: ${response.status()} ${errorText}`);
+    if (!response.ok()) {
+      const errorText = await response.text().catch(() => 'Unknown error');
+      const retryable =
+        /Unexpected row count|No rows were returned from JDBC query for versioned entity/i.test(
+          errorText
+        );
+      if (retryable && attempt < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+        continue;
+      }
+      throw new Error(`Failed to post invoice: ${response.status()} ${errorText}`);
+    }
+
+    const responseText = await response.text();
+    try {
+      return responseText ? JSON.parse(responseText) : { message: 'Invoice posted successfully' };
+    } catch (error) {
+      return { message: responseText || 'Invoice posted successfully' };
+    }
   }
 
-  return await response.json();
+  throw new Error('Failed to post invoice after retries');
 }
 
 /**
@@ -247,13 +286,15 @@ export async function getInvoiceList(
     pageNo?: number;
     pageSize?: number;
     paginationDisable?: boolean;
+    referenceNumber?: string;
   } = {}
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  let url = `${apiUrl}/rest/invoice/list?`;
+  let url = `${apiUrl}/rest/invoice/getList?`;
 
   if (options.type) url += `type=${options.type}&`;
-  if (options.contactId) url += `contactId=${options.contactId}&`;
+  if (options.contactId) url += `contact=${options.contactId}&`;
+  if (options.referenceNumber) url += `referenceNumber=${encodeURIComponent(options.referenceNumber)}&`;
   if (options.status) url += `status=${options.status}&`;
   if (options.pageNo) url += `pageNo=${options.pageNo}&`;
   if (options.pageSize) url += `pageSize=${options.pageSize}&`;

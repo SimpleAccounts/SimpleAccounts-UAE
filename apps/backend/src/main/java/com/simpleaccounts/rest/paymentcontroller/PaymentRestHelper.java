@@ -69,18 +69,23 @@ public class PaymentRestHelper {
 		}
 		//This ll retriew the Invoice From Str
 		ObjectMapper mapper = new ObjectMapper();
-		try {
-			List<InvoiceDueAmountModel> itemModels = mapper.readValue(paymentModel.getPaidInvoiceListStr(),
-					new TypeReference<List<InvoiceDueAmountModel>>() {
-					});
-			paymentModel.setPaidInvoiceList(itemModels);
-		} catch (IOException ex) {
-			logger.error("Error", ex);
+		String paidInvoiceListStr = paymentModel.getPaidInvoiceListStr();
+		if (paidInvoiceListStr != null && !paidInvoiceListStr.isBlank()) {
+			try {
+				List<InvoiceDueAmountModel> itemModels = mapper.readValue(paidInvoiceListStr,
+						new TypeReference<List<InvoiceDueAmountModel>>() {
+						});
+				paymentModel.setPaidInvoiceList(itemModels);
+			} catch (IOException ex) {
+				logger.error("Error", ex);
+			}
 		}
-		for (InvoiceDueAmountModel invoiceDueAmountModel:paymentModel.getPaidInvoiceList()){
-			Invoice invoice=invoiceService.findByPK(invoiceDueAmountModel.getId());
-			if (invoice!=null){
-				payment.setInvoice(invoice);
+		if (paymentModel.getPaidInvoiceList() != null) {
+			for (InvoiceDueAmountModel invoiceDueAmountModel : paymentModel.getPaidInvoiceList()) {
+				Invoice invoice = invoiceService.findByPK(invoiceDueAmountModel.getId());
+				if (invoice != null) {
+					payment.setInvoice(invoice);
+				}
 			}
 		}
 		payment.setInvoiceAmount(paymentModel.getAmount());
@@ -196,6 +201,9 @@ public class PaymentRestHelper {
 				logger.error("Error", ex);
 			}
 
+			if (paymentPersistModel.getPaidInvoiceList() == null) {
+				return new ArrayList<>();
+			}
 			List<SupplierInvoicePayment> receiptList = new ArrayList<>();
 			for (InvoiceDueAmountModel dueAmountModel : paymentPersistModel.getPaidInvoiceList()) {
 				SupplierInvoicePayment receipt = new SupplierInvoicePayment();
@@ -260,7 +268,7 @@ public class PaymentRestHelper {
 		BigDecimal invoiceExchangeRate = payment.getInvoice().getExchangeRate();
 		journalLineItem1.setDebitAmount(postingRequestModel.getAmount().multiply(invoiceExchangeRate));
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
-		journalLineItem1.setReferenceId(transactionId);
+		journalLineItem1.setReferenceId(transactionId != null ? transactionId : postingRequestModel.getPostingRefId());
 		journalLineItem1.setExchangeRate(invoiceExchangeRate);
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
@@ -272,7 +280,7 @@ public class PaymentRestHelper {
 		journalLineItem2.setTransactionCategory(depositeToTransactionCategory);
 		journalLineItem2.setCreditAmount(postingRequestModel.getAmount().multiply(invoiceExchangeRate));
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
-		journalLineItem2.setReferenceId(transactionId);
+		journalLineItem2.setReferenceId(transactionId != null ? transactionId : postingRequestModel.getPostingRefId());
 		journalLineItem2.setExchangeRate(invoiceExchangeRate);
 		journalLineItem2.setCreatedBy(userId);
 		journalLineItem2.setJournal(journal);

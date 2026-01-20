@@ -56,7 +56,7 @@ export async function createProductViaAPI(
     productName: productData.productName || generateProductName(),
     productCode: productData.productCode || generateProductCode(),
     productType: productData.productType || 'GOODS',
-    productPriceType: productData.productPriceType || 'SALES',
+    productPriceType: productData.productPriceType || 'BOTH',
     vatCategoryId: productData.vatCategoryId || 1,
     salesUnitPrice: productData.salesUnitPrice || 100,
     purchaseUnitPrice: productData.purchaseUnitPrice || 80,
@@ -151,6 +151,35 @@ export async function createProductViaAPI(
       }
     } catch (error) {
       console.warn('Could not retrieve product ID after creation:', error);
+    }
+  }
+
+  if (!productId) {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const listResponse = await request.get(
+        `${apiUrl}/rest/product/getList?paginationDisable=true`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
+      if (listResponse.ok()) {
+        const listData = await listResponse.json();
+        const items = Array.isArray(listData) ? listData : listData.data || [];
+        const product = items.find(
+          (p: any) =>
+            p.productName === payload.productName ||
+            p.name === payload.productName ||
+            p.productCode === payload.productCode ||
+            p.code === payload.productCode
+        );
+        if (product) {
+          productId = product.id || product.productId || product.productID || 0;
+          console.log('Found product in full list, ID:', productId);
+        }
+      }
+    } catch (error) {
+      console.warn('Could not retrieve product ID from full list:', error);
     }
   }
 

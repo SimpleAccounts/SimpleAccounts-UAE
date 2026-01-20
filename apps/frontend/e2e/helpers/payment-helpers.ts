@@ -1,5 +1,6 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import { getApiBaseUrl, getFrontendBaseUrl } from './test-setup-helpers';
+import { getInvoiceDetails } from './invoice-helpers';
 
 /**
  * Generates a unique payment reference number using the pattern: PAY-${Date.now()}
@@ -21,7 +22,7 @@ export function generatePaymentNumber(): string {
  */
 export interface PaymentData {
   paymentNo?: string;
-  paymentDate?: string; // Format: DD-MM-YYYY
+  paymentDate?: string; // Format: dd/MM/yyyy
   contactId: number; // Supplier contact ID
   amount: number; // Payment amount
   payMode?: string; // Payment mode: 'CASH', 'BANK', 'CHEQUE' (default: 'BANK')
@@ -66,7 +67,7 @@ export async function createPaymentViaAPI(
 ): Promise<PaymentData & { paymentId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
 
   const payload: any = {
     paymentNo: paymentData.paymentNo || generatePaymentNumber(),
@@ -83,8 +84,8 @@ export async function createPaymentViaAPI(
   if (paymentData.invoiceMappings && paymentData.invoiceMappings.length > 0) {
     payload.paidInvoiceListStr = JSON.stringify(
       paymentData.invoiceMappings.map(mapping => ({
-        invoiceId: mapping.invoiceId,
-        amount: mapping.amount,
+        id: mapping.invoiceId,
+        dueAmount: mapping.amount,
       }))
     );
   }
@@ -109,11 +110,50 @@ export async function createPaymentViaAPI(
     throw new Error(`Failed to create payment: ${response.status()} ${errorText}`);
   }
 
-  const responseData = await response.json();
-  // The API might return paymentId in the response or we need to get it from list
+  const responseText = await response.text();
+  let responseData: any = {};
+  if (responseText) {
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (error) {
+      responseData = {};
+    }
+  }
+
+  let paymentId = responseData.paymentId || responseData.id || 0;
+  if (!paymentId && payload.paymentNo) {
+    const listResponse = await getPaymentList(request, authToken, {
+      contactId: payload.contactId,
+      paginationDisable: true,
+    });
+    const list = Array.isArray(listResponse?.data) ? listResponse.data : [];
+    const match = list.find((item: any) => item.paymentNo === payload.paymentNo);
+    paymentId = match?.paymentId || match?.id || 0;
+  }
+
+  if (!paymentId && paymentData.invoiceMappings?.length) {
+    const invoiceId = paymentData.invoiceMappings[0].invoiceId;
+    const invoiceDetails = await getInvoiceDetails(request, authToken, invoiceId).catch(() => null);
+    const invoiceNumber = invoiceDetails?.referenceNumber;
+    if (invoiceNumber) {
+      for (let attempt = 0; attempt < 3 && !paymentId; attempt += 1) {
+        const listResponse = await getPaymentList(request, authToken, {
+          contactId: payload.contactId,
+          paginationDisable: true,
+        });
+        const list = Array.isArray(listResponse?.data) ? listResponse.data : [];
+        const match = list.find((item: any) => item.invoiceNumber === invoiceNumber);
+        paymentId = match?.paymentId || match?.id || 0;
+        if (!paymentId) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
   return {
     ...paymentData,
-    paymentId: responseData.paymentId || responseData.id || 0,
+    paymentId,
   };
 }
 

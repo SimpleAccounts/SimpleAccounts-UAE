@@ -9,7 +9,6 @@ import com.simpleaccounts.repository.ExciseTaxRepository;
 import com.simpleaccounts.repository.UnitTypesRepository;
 import com.simpleaccounts.rest.customizeinvoiceprefixsuffixccontroller.CustomizeInvoiceTemplateService;
 import com.simpleaccounts.service.*;
-import com.simpleaccounts.utils.InvoiceNumberUtil;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDate;
@@ -53,8 +52,6 @@ public class ProductRestHelper {
 
 	private final CustomizeInvoiceTemplateService customizeInvoiceTemplateService;
 
-	private final InvoiceNumberUtil invoiceNumberUtil;
-
 	private final ExciseTaxRepository exciseTaxRepository;
 	public Product getEntity(ProductRequestModel productModel) {
 		Product product = new Product();
@@ -76,20 +73,8 @@ public class ProductRestHelper {
 		}
 		product.setProductCode(productModel.getProductCode());
 
-		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(9);
-		if (productModel.getProductID() == null && template != null){
-			String suffix = invoiceNumberUtil.fetchSuffixFromString(productModel.getProductCode());
-			if (suffix != null && !suffix.isEmpty()) {
-				try {
-					template.setSuffix(Integer.parseInt(suffix));
-					String prefix = product.getProductCode().substring(0, product.getProductCode().lastIndexOf(suffix));
-					template.setPrefix(prefix);
-					customizeInvoiceTemplateService.persist(template);
-				} catch (NumberFormatException e) {
-					log.warn("Could not parse suffix {} from product code {}", suffix, productModel.getProductCode());
-				}
-			}
-		}
+		// Avoid updating invoice template from product creation to prevent optimistic locking
+		// conflicts during concurrent E2E runs.
 
 		if (productModel.getProductWarehouseId() != null) {
 			ProductWarehouse productWarehouse = productWarehouseService.findByPK(productModel.getProductWarehouseId());

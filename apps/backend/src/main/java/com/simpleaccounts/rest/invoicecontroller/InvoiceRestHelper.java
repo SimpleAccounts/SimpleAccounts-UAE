@@ -3145,7 +3145,8 @@ public class InvoiceRestHelper {
 	}
 
 	private void getPostZipCode(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getContact() != null && !invoice.getContact().getPostZipCode().isEmpty()) {
+		if (invoice.getContact() != null && invoice.getContact().getPostZipCode() != null
+				&& !invoice.getContact().getPostZipCode().isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = invoice.getContact();
 			if (c.getPostZipCode() != null && !c.getPostZipCode().isEmpty()) {
@@ -3159,7 +3160,7 @@ public class InvoiceRestHelper {
 
 	}
 	private void getPostZipCode(Contact contact, Map<String, String> invoiceDataMap, String value) {
-		if (contact != null && !contact.getPostZipCode().isEmpty()) {
+		if (contact != null && contact.getPostZipCode() != null && !contact.getPostZipCode().isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = contact;
 			if (c.getPostZipCode() != null && !c.getPostZipCode().isEmpty()) {

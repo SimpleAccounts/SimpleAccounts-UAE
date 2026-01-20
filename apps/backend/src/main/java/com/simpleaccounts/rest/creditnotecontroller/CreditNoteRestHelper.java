@@ -224,6 +224,10 @@ public class CreditNoteRestHelper {
             creditNote.setCreditNoteDate(dateFormtUtil.convertToOffsetDateTime(creditNoteRequestModel.getCreditNoteDate()));
         }
 
+        if (creditNote.getIsCNWithoutProduct() == null) {
+            creditNote.setIsCNWithoutProduct(Boolean.FALSE);
+        }
+
         return creditNote;
     }
 
@@ -1736,15 +1740,21 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             requestModel.setCreditNoteNumber(creditNote.getCreditNoteNumber());
             if (creditNote.getContact() != null) {
                 requestModel.setContactId(creditNote.getContact().getContactId());
+            }
+            if (creditNote.getCurrency() != null) {
                 requestModel.setCurrencyCode(creditNote.getCurrency().getCurrencyCode());
             }
             requestModel.setDueAmount(creditNote.getDueAmount());
-            requestModel.setTaxTreatment(creditNote.getContact().getTaxTreatment().getTaxTreatment());
+            if (creditNote.getContact() != null && creditNote.getContact().getTaxTreatment() != null) {
+                requestModel.setTaxTreatment(creditNote.getContact().getTaxTreatment().getTaxTreatment());
+            }
             requestModel.setTotalAmount(creditNote.getTotalAmount());
             requestModel.setContactId(creditNote.getContact().getContactId());
             requestModel.setContactName(creditNote.getContact().getFirstName());
             requestModel.setTotalVatAmount(creditNote.getTotalVatAmount());
-            requestModel.setVatCategoryId(creditNote.getVatCategory().getId());
+            if (creditNote.getVatCategory() != null) {
+                requestModel.setVatCategoryId(creditNote.getVatCategory().getId());
+            }
             if(creditNote.getNotes()!=null){
                 requestModel.setNotes(creditNote.getNotes());
             }

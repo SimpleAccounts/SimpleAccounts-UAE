@@ -84,6 +84,7 @@ public class PaymentController {
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getlist")
 	public ResponseEntity<PaginationResponseModel> getPaymentList(PaymentRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -129,6 +130,7 @@ public class PaymentController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getpaymentbyid")
 	public ResponseEntity<PaymentPersistModel> getPaymentById(@RequestParam("paymentId") Integer paymentId) {
 		try {
@@ -252,10 +254,13 @@ public class PaymentController {
 				}
 			}
 			// save data in Mapping Table
-			List<SupplierInvoicePayment> supplierInvoicePaymentList = paymentRestHelper
-					.getSupplierInvoicePaymentEntity(paymentModel);
-			for (SupplierInvoicePayment supplierInvoicePayment : supplierInvoicePaymentList) {
-				supplierInvoicePayment.setTransaction(transaction);
+            List<SupplierInvoicePayment> supplierInvoicePaymentList = paymentRestHelper
+                    .getSupplierInvoicePaymentEntity(paymentModel);
+            boolean hasPersistedTransaction = transaction.getTransactionId() != null;
+            for (SupplierInvoicePayment supplierInvoicePayment : supplierInvoicePaymentList) {
+                if (hasPersistedTransaction) {
+                    supplierInvoicePayment.setTransaction(transaction);
+                }
 				supplierInvoicePayment.setPayment(payment);
 				supplierInvoicePayment.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(paymentModel.getContactId());

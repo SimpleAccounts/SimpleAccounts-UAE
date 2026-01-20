@@ -124,6 +124,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel,
 			HttpServletRequest request) {

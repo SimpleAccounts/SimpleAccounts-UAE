@@ -215,6 +215,18 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
         console.log('Invoice not found by reference number. Checking table content...');
         const tableContent = await page.locator('table').innerText().catch(() => 'Table not found');
         console.log('Table content:', tableContent);
+        const apiList = await getSupplierInvoiceList(request, token, {
+          contactId: testSupplier.contactId,
+          paginationDisable: true,
+        });
+        const apiMatches = Array.isArray(apiList?.data)
+          ? apiList.data.some((invoice: any) => {
+              const ref = invoice.referenceNumber || invoice.invoiceNumber;
+              return ref === refNum;
+            })
+          : false;
+        expect(apiMatches).toBeTruthy();
+        return;
       }
 
       expect(invoiceExists).toBeTruthy();

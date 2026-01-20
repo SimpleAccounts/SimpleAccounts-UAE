@@ -328,6 +328,7 @@ public class CreditNoteRestController {
             return null;
     }
     @LogRequest
+    @Transactional(readOnly = true)
     @GetMapping(value = "/getCreditNoteByInvoiceId")
     public ResponseEntity<CreditNoteRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
         try {

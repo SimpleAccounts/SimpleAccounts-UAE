@@ -29,6 +29,46 @@ export interface ExpenseData {
   placeOfSupplyId?: number;
   isReverseChargeEnabled?: boolean;
   expenseType?: boolean;
+  payMode?: 'BANK' | 'CASH';
+}
+
+/**
+ * Gets expense categories list
+ */
+export async function getExpenseCategoriesList(
+  request: APIRequestContext,
+  authToken: string
+): Promise<any[]> {
+  const apiUrl = getApiBaseUrl();
+  const response = await request.get(`${apiUrl}/rest/transactioncategory/getForExpenses`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  if (!response.ok()) {
+    const errorText = await response.text().catch(() => 'Unknown error');
+    throw new Error(`Failed to get expense categories: ${response.status()} ${errorText}`);
+  }
+
+  const data = await response.json();
+  return Array.isArray(data) ? data : data?.data || [];
+}
+
+/**
+ * Gets a default expense category ID for testing
+ */
+export async function getDefaultExpenseCategoryId(
+  request: APIRequestContext,
+  authToken: string
+): Promise<number> {
+  const categories = await getExpenseCategoriesList(request, authToken);
+  const category = categories.find((item: any) => item?.transactionCategoryId || item?.id);
+  const categoryId = category?.transactionCategoryId ?? category?.id;
+  if (!categoryId) {
+    throw new Error('No expense categories available for tests');
+  }
+  return categoryId;
 }
 
 /**
@@ -62,6 +102,7 @@ export async function createExpenseViaAPI(
     currencyCode: expenseData.currencyCode || 150,
     exclusiveVat: expenseData.exclusiveVat !== undefined ? expenseData.exclusiveVat : true,
     payee: expenseData.payee || 'Company Expense',
+    payMode: expenseData.payMode || (expenseData.bankAccountId ? 'BANK' : 'CASH'),
     bankAccountId: expenseData.bankAccountId || null,
     employeeId: expenseData.employeeId || null,
     projectId: expenseData.projectId || null,
@@ -204,14 +245,65 @@ export async function postExpense(
   expenseId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
+  const normalizeNumber = (value: any): number | null => {
+    const parsed = typeof value === 'string' ? Number(value) : value;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  };
+
+  let amount: number | null = null;
+  let postingChartOfAccountId: number | null = null;
+
+  try {
+    const expenseDetails = await getExpenseDetails(request, authToken, expenseId);
+    amount = normalizeNumber(expenseDetails?.expenseAmount ?? expenseDetails?.amount);
+    postingChartOfAccountId = normalizeNumber(
+      expenseDetails?.expenseCategory ??
+        expenseDetails?.chartOfAccountId ??
+        expenseDetails?.transactionCategoryId
+    );
+  } catch (error) {
+    console.warn('Failed to fetch expense details for posting:', error);
+  }
+
+  if (amount == null || postingChartOfAccountId == null) {
+    try {
+      const expenseList = await getExpenseList(request, authToken, {
+        paginationDisable: true,
+      });
+      const expenseRow = expenseList?.data?.find(
+        (item: any) => item.expenseId === expenseId || item.id === expenseId
+      );
+      if (amount == null) {
+        amount = normalizeNumber(expenseRow?.expenseAmount ?? expenseRow?.amount);
+      }
+      if (postingChartOfAccountId == null) {
+        postingChartOfAccountId = normalizeNumber(
+          expenseRow?.chartOfAccountId ??
+            expenseRow?.expenseCategory ??
+            expenseRow?.transactionCategoryId
+        );
+      }
+    } catch (error) {
+      console.warn('Failed to fetch expense list for posting:', error);
+    }
+  }
+
+  if (amount == null || postingChartOfAccountId == null) {
+    throw new Error(
+      `Missing expense posting data for expense ${expenseId}: amount=${amount}, postingChartOfAccountId=${postingChartOfAccountId}`
+    );
+  }
+
   const response = await request.post(`${apiUrl}/rest/expense/posting`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
       'Content-Type': 'application/json',
     },
     data: {
+      amount,
       postingRefId: expenseId,
       postingRefType: 'EXPENSE',
+      postingChartOfAccountId,
     },
   });
 
@@ -220,7 +312,12 @@ export async function postExpense(
     throw new Error(`Failed to post expense: ${response.status()} ${errorText}`);
   }
 
-  return await response.json();
+  const responseText = await response.text();
+  try {
+    return responseText ? JSON.parse(responseText) : { message: 'Expense posted successfully' };
+  } catch {
+    return { message: responseText || 'Expense posted successfully' };
+  }
 }
 
 /**

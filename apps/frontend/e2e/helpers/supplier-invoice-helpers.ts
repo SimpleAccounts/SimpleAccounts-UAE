@@ -186,7 +186,7 @@ export async function getSupplierInvoiceList(
   } = {}
 ): Promise<any> {
   return getInvoiceList(request, authToken, {
-    type: 1, // Supplier invoice type
+    type: 6, // Supplier invoice type
     ...options,
   });
 }

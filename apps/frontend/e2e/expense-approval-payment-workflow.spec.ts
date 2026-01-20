@@ -1,6 +1,7 @@
 import { test, expect, Page, APIRequestContext } from '@playwright/test';
 import {
   createExpenseViaAPI,
+  getDefaultExpenseCategoryId,
   getExpenseDetails,
   getExpenseList,
   postExpense,
@@ -54,6 +55,7 @@ const EXPENSE_PATH = process.env.E2E_EXPENSE_PATH || '/admin/expense/expense';
 let authToken: string;
 let testBankAccount: BankAccountData & { bankAccountId: number };
 let testProduct: { productId: number; productName: string };
+let expenseCategoryId: number;
 
 /**
  * Helper to get authentication token from page localStorage
@@ -84,6 +86,7 @@ test.describe('Expense Approval and Payment Workflow', () => {
     try {
       await loginTestUser(page, username, password);
       authToken = await getAuthToken(page);
+      expenseCategoryId = await getDefaultExpenseCategoryId(page.request, authToken);
 
       // Create test bank account
       const timestamp = Date.now();
@@ -128,7 +131,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
       expenseNumber: generateExpenseNumber(),
       amount: 1000,
       description: testProduct.productName,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      bankAccountId: testBankAccount.bankAccountId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -170,7 +175,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     const expenseData: ExpenseData = {
       amount: 2000,
       description: testProduct.productName,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      bankAccountId: testBankAccount.bankAccountId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -219,7 +226,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     const expenseData: ExpenseData = {
       amount: 3000,
       description: testProduct.productName,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      bankAccountId: testBankAccount.bankAccountId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -275,7 +284,8 @@ test.describe('Expense Approval and Payment Workflow', () => {
       amount: 4000,
       description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -331,7 +341,8 @@ test.describe('Expense Approval and Payment Workflow', () => {
       amount: 5000,
       description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -381,7 +392,9 @@ test.describe('Expense Approval and Payment Workflow', () => {
     const expenseData: ExpenseData = {
       amount: 6000,
       description: testProduct.productName,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      bankAccountId: testBankAccount.bankAccountId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -443,7 +456,8 @@ test.describe('Expense Approval and Payment Workflow', () => {
       amount: 7000,
       description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 
@@ -488,7 +502,8 @@ test.describe('Expense Approval and Payment Workflow', () => {
       amount: 8000,
       description: testProduct.productName,
       bankAccountId: testBankAccount.bankAccountId,
-      expenseCategory: 49,
+      expenseCategory: expenseCategoryId,
+      payMode: 'BANK',
       vatCategoryId: 1,
     };
 

@@ -71,6 +71,7 @@ public class ExpenseRestController extends AbstractDoubleEntryRestController {
 
     private final InvoiceRestHelper invoiceRestHelper;
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getExpenseList(ExpenseRequestFilterModel expenseRequestFilterModel,
 																  HttpServletRequest request) {
