@@ -26,7 +26,7 @@ const EmployeeReducer = (state = initState, action) => {
     case SALARY_STRUCTURE.SALARY_STRUCTURE_LIST:
       return {
         ...state,
-        salaryStructure_list: Array.isArray(payload) ? payload : payload?.data || [],
+        salaryStructure_list: getArray(payload),
       };
 
     default:
