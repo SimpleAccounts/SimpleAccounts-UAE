@@ -85,7 +85,7 @@ describe('Currency Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toEqual([]);
+      expect(dispatchedActions[0].payload).toEqual([]);
     });
 
     it('should handle API errors gracefully', async () => {
@@ -135,7 +135,7 @@ describe('Currency Actions', () => {
       const result = await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toHaveLength(150);
+      expect(dispatchedActions[0].payload).toHaveLength(150);
     });
 
     it('should handle currency data with all properties', async () => {
@@ -161,9 +161,9 @@ describe('Currency Actions', () => {
       const result = await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data[0]).toHaveProperty('code', 'AED');
-      expect(dispatchedActions[0].payload.data[0]).toHaveProperty('rate', 1.0);
-      expect(dispatchedActions[0].payload.data[0]).toHaveProperty('isActive', true);
+      expect(dispatchedActions[0].payload[0]).toHaveProperty('code', 'AED');
+      expect(dispatchedActions[0].payload[0]).toHaveProperty('rate', 1.0);
+      expect(dispatchedActions[0].payload[0]).toHaveProperty('isActive', true);
     });
 
     it('should handle currency data with null values', async () => {
@@ -184,7 +184,7 @@ describe('Currency Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data[0].symbol).toBeNull();
+      expect(dispatchedActions[0].payload[0].symbol).toBeNull();
     });
 
     it('should handle multiple currencies with different rates', async () => {
