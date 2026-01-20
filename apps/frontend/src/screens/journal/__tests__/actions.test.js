@@ -179,7 +179,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.TRANSACTION_CATEGORY_LIST,
-        payload: { status: 200, data: mockCategories },
+        payload: mockCategories,
       });
     });
 
@@ -214,7 +214,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.CONTACT_LIST,
-        payload: { status: 200, data: mockContacts },
+        payload: mockContacts,
       });
     });
 
@@ -249,7 +249,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.VAT_LIST,
-        payload: { status: 200, data: mockVatList },
+        payload: mockVatList,
       });
     });
 
@@ -478,7 +478,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.JOURNAL_LIST,
-        payload: { status: 200, data: [] },
+        payload: [],
       });
     });
 
