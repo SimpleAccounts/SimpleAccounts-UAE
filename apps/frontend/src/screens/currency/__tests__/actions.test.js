@@ -238,7 +238,7 @@ describe('Currency Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toHaveProperty('type');
       expect(dispatchedActions[0]).toHaveProperty('payload');
-      expect(dispatchedActions[0].payload).toHaveProperty('data');
+      expect(Array.isArray(dispatchedActions[0].payload)).toBe(true);
     });
 
     it('should call authApi exactly once', async () => {
