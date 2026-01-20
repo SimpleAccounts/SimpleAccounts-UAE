@@ -112,9 +112,7 @@ describe('SalaryTemplate Actions', () => {
 
       expect(dispatchedActions).toContainEqual({
         type: SALARY_TEMPLATE.SALARY_STRUCTURE_DROPDOWN,
-        payload: {
-          data: mockData,
-        },
+        payload: mockData,
       });
     });
 
@@ -163,7 +161,7 @@ describe('SalaryTemplate Actions', () => {
       await store.dispatch(actions.getSalaryStructureForDropdown());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toEqual([]);
+      expect(dispatchedActions[0].payload).toEqual([]);
     });
   });
 
@@ -213,7 +211,7 @@ describe('SalaryTemplate Actions', () => {
       await store.dispatch(actions.getSalaryRolesForDropdown());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data.length).toBe(3);
+      expect(dispatchedActions[0].payload.length).toBe(3);
     });
 
     it('should handle fetch salary roles error', async () => {
@@ -246,7 +244,7 @@ describe('SalaryTemplate Actions', () => {
       await store.dispatch(actions.getSalaryRolesForDropdown());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toBeNull();
+      expect(dispatchedActions[0].payload).toBeNull();
     });
   });
 

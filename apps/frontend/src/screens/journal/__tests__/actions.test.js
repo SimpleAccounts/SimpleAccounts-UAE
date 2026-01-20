@@ -49,7 +49,7 @@ describe('Journal Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: JOURNAL.JOURNAL_LIST,
-        payload: { status: 200, data: mockJournals },
+        payload: mockJournals,
       });
     });
 

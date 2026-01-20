@@ -377,9 +377,7 @@ describe('Payroll Run Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN,
-        payload: {
-          data: mockUserRoleData,
-        },
+        payload: mockUserRoleData,
       });
     });
 

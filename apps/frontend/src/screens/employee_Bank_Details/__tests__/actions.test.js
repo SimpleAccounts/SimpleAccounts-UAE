@@ -273,7 +273,7 @@ describe('Employee Bank Details Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data.length).toBe(2);
+      expect(dispatchedActions[0].payload.length).toBe(2);
     });
   });
 
