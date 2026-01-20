@@ -10,7 +10,7 @@ const InvoiceViewJournalReducer = (state = initState, action) => {
     case INVOICE_VIEW_JOURNAL.JOURNAL_LIST:
       return {
         ...state,
-        invoice_journal_list: (Array.isArray(payload) ? payload : (payload?.data || [])),
+        invoice_journal_list: Array.isArray(payload) ? payload : payload?.data || [],
       };
     default:
       return state;

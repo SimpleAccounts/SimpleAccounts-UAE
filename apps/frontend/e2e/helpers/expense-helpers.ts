@@ -183,11 +183,14 @@ export async function getExpenseDetails(
   expenseId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.get(`${apiUrl}/rest/expense/getExpenseById?expenseId=${expenseId}`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+  const response = await request.get(
+    `${apiUrl}/rest/expense/getExpenseById?expenseId=${expenseId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+  );
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
@@ -369,6 +372,8 @@ export async function navigateToExpenseList(page: Page): Promise<void> {
  */
 export async function navigateToExpenseDetail(page: Page, expenseId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  await page.goto(`${baseUrl}/admin/expense/expense/${expenseId}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/expense/expense/${expenseId}`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }

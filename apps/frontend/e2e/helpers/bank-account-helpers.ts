@@ -140,11 +140,14 @@ export async function createBankAccountViaAPI(
       );
       if (listResponse.ok()) {
         const listData = await listResponse.json();
-        console.log('Bank account list received for filter, count:', listData.data?.length || listData.length);
+        console.log(
+          'Bank account list received for filter, count:',
+          listData.data?.length || listData.length
+        );
         const items = Array.isArray(listData) ? listData : listData.data || [];
         const account = items.find(
-          (a: any) => 
-            a.bankAccountName === payload.bankAccountName || 
+          (a: any) =>
+            a.bankAccountName === payload.bankAccountName ||
             a.name === payload.bankAccountName ||
             a.accounName === payload.bankAccountName
         );

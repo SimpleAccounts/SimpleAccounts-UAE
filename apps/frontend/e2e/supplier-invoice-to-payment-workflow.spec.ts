@@ -232,7 +232,10 @@ test.describe('Supplier Invoice-to-Payment Workflow', () => {
 
       if (!invoiceExists) {
         console.log('Invoice not found by reference number. Checking table content...');
-        const tableContent = await page.locator('table').innerText().catch(() => 'Table not found');
+        const tableContent = await page
+          .locator('table')
+          .innerText()
+          .catch(() => 'Table not found');
         console.log('Table content:', tableContent);
 
         // Check if there are any invoices in the table

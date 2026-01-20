@@ -137,7 +137,10 @@ export async function createProductViaAPI(
         });
         if (listResponse.ok()) {
           const listData = await listResponse.json();
-          console.log(`Product list received from ${url}, count:`, Array.isArray(listData) ? listData.length : listData.data?.length);
+          console.log(
+            `Product list received from ${url}, count:`,
+            Array.isArray(listData) ? listData.length : listData.data?.length
+          );
           const items = Array.isArray(listData) ? listData : listData.data || [];
           const product = items.find(
             (p: any) => p.name === payload.productName || p.productName === payload.productName

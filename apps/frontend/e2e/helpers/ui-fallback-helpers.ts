@@ -38,7 +38,7 @@ export async function createSupplierInvoiceViaUI(
     await contactSelect.click({ force: true });
     await page.waitForTimeout(1000);
     // Search for the contact name or just select the first one if we can't find by ID
-    // Since we only have the ID here, and react-select usually shows names, 
+    // Since we only have the ID here, and react-select usually shows names,
     // we might need to just pick the first result if it's a test environment
     const firstOption = page.locator('.react-select__option, [class*="-option"]').first();
     if (await firstOption.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -118,8 +118,27 @@ export async function createSupplierInvoiceViaUI(
   if (searchText) {
     // Try finding by reference number
     let invoiceRow = page.getByText(searchText, { exact: false }).first();
-      if (await invoiceRow.isVisible({ timeout: 10000 }).catch(() => false)) {
-        await invoiceRow.click();
+    if (await invoiceRow.isVisible({ timeout: 10000 }).catch(() => false)) {
+      await invoiceRow.click();
+      await page.waitForTimeout(2000);
+      const url = page.url();
+      const idMatch2 = url.match(/\/supplier-invoice\/(\d+)/) || url.match(/[?&]id=(\d+)/);
+      if (idMatch2) {
+        return {
+          ...supplierInvoiceData,
+          invoiceId: parseInt(idMatch2[1]),
+        };
+      }
+    }
+
+    // Try finding in table rows
+    const tableRows = page.locator('table tbody tr, [role="row"]');
+    const rowCount = await tableRows.count();
+    for (let i = 0; i < Math.min(rowCount, 10); i++) {
+      const row = tableRows.nth(i);
+      const rowText = await row.textContent().catch(() => '');
+      if (rowText && rowText.includes(searchText)) {
+        await row.click();
         await page.waitForTimeout(2000);
         const url = page.url();
         const idMatch2 = url.match(/\/supplier-invoice\/(\d+)/) || url.match(/[?&]id=(\d+)/);
@@ -129,27 +148,8 @@ export async function createSupplierInvoiceViaUI(
             invoiceId: parseInt(idMatch2[1]),
           };
         }
+        break;
       }
-
-    // Try finding in table rows
-    const tableRows = page.locator('table tbody tr, [role="row"]');
-    const rowCount = await tableRows.count();
-    for (let i = 0; i < Math.min(rowCount, 10); i++) {
-      const row = tableRows.nth(i);
-      const rowText = await row.textContent().catch(() => '');
-        if (rowText && rowText.includes(searchText)) {
-          await row.click();
-          await page.waitForTimeout(2000);
-          const url = page.url();
-          const idMatch2 = url.match(/\/supplier-invoice\/(\d+)/) || url.match(/[?&]id=(\d+)/);
-          if (idMatch2) {
-            return {
-              ...supplierInvoiceData,
-              invoiceId: parseInt(idMatch2[1]),
-            };
-          }
-          break;
-        }
     }
   }
 

@@ -77,7 +77,11 @@ export async function createInvoiceViaAPI(
   let totalVatAmount = 0;
   let totalExciseAmount = 0;
   const taxTypeNum =
-    typeof invoiceData.taxType === 'boolean' ? (invoiceData.taxType ? 2 : 1) : invoiceData.taxType || 1;
+    typeof invoiceData.taxType === 'boolean'
+      ? invoiceData.taxType
+        ? 2
+        : 1
+      : invoiceData.taxType || 1;
   const type = invoiceData.type || 2;
   const taxTypeBoolean =
     typeof invoiceData.taxType === 'boolean' ? invoiceData.taxType : invoiceData.taxType === 2;
@@ -116,11 +120,11 @@ export async function createInvoiceViaAPI(
       discount: discount,
       discountType: discountType,
       subTotal: subTotal,
-          vatAmount: vatAmount,
-          exciseAmount: exciseAmount,
-          exciseTaxId: item.exciseTaxId || null,
-          transactionCategoryId: item.transactionCategoryId || (type === 6 || type === 1 ? 49 : 84), // Default to 49 (COGS) for supplier, 84 (Sales) for customer
-        };
+      vatAmount: vatAmount,
+      exciseAmount: exciseAmount,
+      exciseTaxId: item.exciseTaxId || null,
+      transactionCategoryId: item.transactionCategoryId || (type === 6 || type === 1 ? 49 : 84), // Default to 49 (COGS) for supplier, 84 (Sales) for customer
+    };
   });
 
   const totalAmount = totalNet + totalVatAmount;
@@ -294,7 +298,8 @@ export async function getInvoiceList(
 
   if (options.type) url += `type=${options.type}&`;
   if (options.contactId) url += `contact=${options.contactId}&`;
-  if (options.referenceNumber) url += `referenceNumber=${encodeURIComponent(options.referenceNumber)}&`;
+  if (options.referenceNumber)
+    url += `referenceNumber=${encodeURIComponent(options.referenceNumber)}&`;
   if (options.status) url += `status=${options.status}&`;
   if (options.pageNo) url += `pageNo=${options.pageNo}&`;
   if (options.pageSize) url += `pageSize=${options.pageSize}&`;
@@ -321,7 +326,9 @@ export async function getInvoiceList(
  */
 export async function navigateToCreateInvoice(page: Page): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }
 
@@ -339,7 +346,9 @@ export async function navigateToInvoiceList(page: Page): Promise<void> {
  */
 export async function navigateToInvoiceDetail(page: Page, invoiceId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  await page.goto(`${baseUrl}/admin/income/customer-invoice/${invoiceId}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/income/customer-invoice/${invoiceId}`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }
 
@@ -362,7 +371,9 @@ export async function createInvoiceViaUI(page: Page, invoiceData: InvoiceData): 
   }
 
   if (invoiceData.lineItems.length > 0) {
-    const descriptionInput = page.locator('input[name*="description"], textarea[name*="description"]').first();
+    const descriptionInput = page
+      .locator('input[name*="description"], textarea[name*="description"]')
+      .first();
     if (await descriptionInput.isVisible({ timeout: 3000 }).catch(() => false)) {
       await descriptionInput.fill(invoiceData.lineItems[0].description);
     }

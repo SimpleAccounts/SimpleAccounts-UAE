@@ -147,7 +147,7 @@ export async function createTestContact(
   }
 ): Promise<ContactData & { contactId: number }> {
   const authToken = await page.evaluate(() => localStorage.getItem('accessToken'));
-  
+
   const contactData: Partial<ContactData> = {
     firstName,
     lastName,

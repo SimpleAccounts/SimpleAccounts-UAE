@@ -84,7 +84,10 @@ export async function createDebitNoteViaAPI(
         subTotal: item.subTotal || item.quantity * item.unitPrice,
       }))
     ),
-    totalAmount: debitNoteData.lineItems.reduce((sum, item) => sum + (item.subTotal || item.quantity * item.unitPrice), 0),
+    totalAmount: debitNoteData.lineItems.reduce(
+      (sum, item) => sum + (item.subTotal || item.quantity * item.unitPrice),
+      0
+    ),
     totalVatAmount: 0,
     exchangeRate: 1,
   };
@@ -157,11 +160,14 @@ export async function getDebitNoteDetails(
   debitNoteId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.get(`${apiUrl}/rest/creditNote/getList?type=13&creditNoteId=${debitNoteId}`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+  const response = await request.get(
+    `${apiUrl}/rest/creditNote/getList?type=13&creditNoteId=${debitNoteId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+  );
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
@@ -180,11 +186,14 @@ export async function getDebitNoteByInvoiceId(
   invoiceId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  const response = await request.get(`${apiUrl}/rest/creditNote/getCreditNoteByInvoiceId?id=${invoiceId}&type=13`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
+  const response = await request.get(
+    `${apiUrl}/rest/creditNote/getCreditNoteByInvoiceId?id=${invoiceId}&type=13`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+  );
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
@@ -354,6 +363,8 @@ export async function navigateToDebitNoteList(page: Page): Promise<void> {
  */
 export async function navigateToDebitNoteDetail(page: Page, debitNoteId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  await page.goto(`${baseUrl}/admin/expense/debit-notes/${debitNoteId}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/expense/debit-notes/${debitNoteId}`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }

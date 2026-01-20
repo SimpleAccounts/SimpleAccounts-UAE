@@ -670,7 +670,10 @@ class SupplierInvoice extends React.Component {
 
     const pageCount = supplier_invoice_list?.count
       ? Math.ceil(supplier_invoice_list.count / pagination.pageSize)
-      : Math.ceil((Array.isArray(supplier_invoice_list) ? supplier_invoice_list.length : 0) / pagination.pageSize);
+      : Math.ceil(
+          (Array.isArray(supplier_invoice_list) ? supplier_invoice_list.length : 0) /
+            pagination.pageSize
+        );
 
     return loading === true ? (
       <Loader loadingMsg={loadingMsg} />
@@ -815,9 +818,7 @@ class SupplierInvoice extends React.Component {
                       pageCount={pageCount}
                       totalCount={
                         supplier_invoice_list?.count ??
-                        (Array.isArray(supplier_invoice_list)
-                          ? supplier_invoice_list.length
-                          : 0)
+                        (Array.isArray(supplier_invoice_list) ? supplier_invoice_list.length : 0)
                       }
                       pagination={pagination}
                       onPaginationChange={updater => {

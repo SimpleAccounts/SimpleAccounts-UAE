@@ -22,7 +22,11 @@ import {
   SupplierInvoiceData,
 } from './helpers/supplier-invoice-helpers';
 import { createSupplierInvoiceViaUI } from './helpers/ui-fallback-helpers';
-import { createBankAccountViaAPI, getBankAccountDetails, BankAccountData } from './helpers/bank-account-helpers';
+import {
+  createBankAccountViaAPI,
+  getBankAccountDetails,
+  BankAccountData,
+} from './helpers/bank-account-helpers';
 import { createProductViaAPI } from './helpers/product-helpers';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
 import { getApiBaseUrl } from './helpers/test-setup-helpers';
