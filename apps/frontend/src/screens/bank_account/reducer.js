@@ -40,7 +40,7 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.BANK_ACCOUNT_LIST:
       return {
         ...state,
-        bank_account_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        bank_account_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.BANK_TRANSACTION_LIST:
