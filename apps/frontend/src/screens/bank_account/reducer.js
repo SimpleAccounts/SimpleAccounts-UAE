@@ -128,7 +128,7 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.RECONCILE_LIST:
       return {
         ...state,
-        reconcile_list: payload,
+        reconcile_list: { ...payload },
       };
 
     case BANK_ACCOUNT.VAT_LIST:
