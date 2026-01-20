@@ -225,7 +225,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.CURRENCY_LIST,
-        payload: { status: 200, data: mockCurrencies },
+        payload: mockCurrencies,
       });
 
       expect(result.status).toBe(200);
