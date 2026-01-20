@@ -367,7 +367,7 @@ describe('CustomerInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: CUSTOMER_INVOICE.STATUS_LIST,
-        payload: { status: 200, data: mockStatuses },
+        payload: mockStatuses,
       });
     });
   });
