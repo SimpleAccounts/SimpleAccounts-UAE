@@ -27,17 +27,17 @@ const CurrencyConReducer = (state = initState, action) => {
     case CURRENCYCONVERT.CURRENCY_CONVERT_LIST:
       return {
         ...state,
-        currency_convert_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_convert_list: getArray(payload),
       };
     case CURRENCYCONVERT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_list: getArray(payload),
       };
     case CURRENCYCONVERT.CURRENCY_CONVERTION_LIST:
       return {
         ...state,
-        currency_converstion_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_converstion_list: getArray(payload),
       };
 
     // Vat Data By ID

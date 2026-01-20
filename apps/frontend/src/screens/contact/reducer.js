@@ -29,37 +29,37 @@ const ContactReducer = (state = initState, action) => {
     case CONTACT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Array.isArray(payload) ? payload : payload?.data || [],
+        contact_list: getArray(payload),
       };
 
     case CONTACT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     case CONTACT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_list: getArray(payload),
       };
 
     case CONTACT.STATE_LIST:
       return {
         ...state,
-        state_list: Array.isArray(payload) ? payload : payload?.data || [],
+        state_list: getArray(payload),
       };
 
     case CONTACT.CITY_LIST:
       return {
         ...state,
-        city_list: Array.isArray(payload) ? payload : payload?.data || [],
+        city_list: getArray(payload),
       };
 
     case CONTACT.CONTACT_TYPE_LIST:
       return {
         ...state,
-        contact_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        contact_type_list: getArray(payload),
       };
     default:
       return state;

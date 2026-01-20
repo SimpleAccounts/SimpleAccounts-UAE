@@ -26,7 +26,7 @@ const SalaryTemplateReducer = (state = initState, action) => {
     case SALARY_TEMPLATE.TEMPLATE_LIST:
       return {
         ...state,
-        template_list: Array.isArray(payload) ? payload : payload?.data || [],
+        template_list: getArray(payload),
       };
 
     case SALARY_TEMPLATE.SALARY_STRUCTURE_DROPDOWN:

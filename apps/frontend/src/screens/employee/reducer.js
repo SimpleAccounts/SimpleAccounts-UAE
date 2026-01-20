@@ -25,7 +25,7 @@ const EmployeeReducer = (state = initState, action) => {
     case EMPLOYEE.EMPLOYEE_LIST:
       return {
         ...state,
-        employee_list: Array.isArray(payload) ? payload : payload?.data || [],
+        employee_list: getArray(payload),
       };
 
     case EMPLOYEE.CURRENCY_LIST:

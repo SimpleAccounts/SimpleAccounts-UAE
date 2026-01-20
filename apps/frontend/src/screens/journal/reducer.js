@@ -29,7 +29,7 @@ const JournalReducer = (state = initState, action) => {
     case JOURNAL.JOURNAL_LIST:
       return {
         ...state,
-        journal_list: Array.isArray(payload) ? payload : payload?.data || [],
+        journal_list: getArray(payload),
       };
 
     case JOURNAL.TRANSACTION_CATEGORY_LIST:

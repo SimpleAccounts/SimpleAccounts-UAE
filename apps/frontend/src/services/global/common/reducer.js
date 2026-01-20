@@ -36,7 +36,7 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.COMPANY_CURRENCY:
       return {
         ...state,
-        companyCurrency: Array.isArray(payload) ? payload : payload?.data || [],
+        companyCurrency: getArray(payload),
       };
 
     case COMMON.END_LOADING:
@@ -48,7 +48,7 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.USER_ROLE_LIST:
       return {
         ...state,
-        user_role_list: Array.isArray(payload) ? payload : payload?.data || [],
+        user_role_list: getArray(payload),
       };
 
     case COMMON.TOSTIFY_ALERT_FUNC:
@@ -81,12 +81,12 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
     case COMMON.STATE_LIST:
       return {
         ...state,
-        state_list: Array.isArray(payload) ? payload : payload?.data || [],
+        state_list: getArray(payload),
       };
     case COMMON.CURRENCY_CONVERT_LIST:
       return {
@@ -97,7 +97,7 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.COMPANY_TYPE:
       return {
         ...state,
-        company_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        company_type_list: getArray(payload),
       };
     case COMMON.CURRENCY_LIST:
       return {

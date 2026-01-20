@@ -32,7 +32,7 @@ const DashboardReducer = (state = initState, action) => {
     case DASHBOARD.BANK_ACCOUNT_TYPE:
       return {
         ...state,
-        bank_account_type: Array.isArray(payload) ? payload : payload?.data || [],
+        bank_account_type: getArray(payload),
       };
 
     case DASHBOARD.BANK_ACCOUNT_GRAPH:
@@ -73,13 +73,13 @@ const DashboardReducer = (state = initState, action) => {
     case DASHBOARD.REVENUE_GRAPH:
       return {
         ...state,
-        revenue_graph: Array.isArray(payload) ? payload : payload?.data || [],
+        revenue_graph: getArray(payload),
       };
 
     case DASHBOARD.EXPENSE_GRAPH:
       return {
         ...state,
-        expense_graph: Array.isArray(payload) ? payload : payload?.data || [],
+        expense_graph: getArray(payload),
       };
 
     default:

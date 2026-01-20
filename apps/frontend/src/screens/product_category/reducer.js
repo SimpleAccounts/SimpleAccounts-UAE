@@ -25,7 +25,7 @@ const VatReducer = (state = initState, action) => {
     case PRODUCT_CATEGORY.PRODUCT_CATEGORY_LIST:
       return {
         ...state,
-        product_category_list: Array.isArray(payload) ? payload : payload?.data || [],
+        product_category_list: getArray(payload),
       };
 
     default:

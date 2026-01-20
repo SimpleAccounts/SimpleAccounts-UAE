@@ -31,7 +31,7 @@ const OpeningBalanceReducer = (state = initState, action) => {
     case OPENING_BALANCE.OPENING_BALANCE_LIST:
       return {
         ...state,
-        opening_balance_list: Array.isArray(payload) ? payload : payload?.data || [],
+        opening_balance_list: getArray(payload),
       };
     default:
       return state;

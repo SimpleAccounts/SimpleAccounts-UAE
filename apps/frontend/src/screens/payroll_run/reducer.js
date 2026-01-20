@@ -32,36 +32,34 @@ const PayrollRunReducer = (state = initState, action) => {
     case EMPLOYEEPAYROLL.PAYROLL_EMPLOYEE_LIST:
       return {
         ...state,
-        payroll_employee_list: Array.isArray(payload) ? payload : payload?.data || [],
+        payroll_employee_list: getArray(payload),
       };
 
     case EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN:
       return {
         ...state,
-        employee_list_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
+        employee_list_dropdown: getArray(payload),
       };
 
     case EMPLOYEEPAYROLL.INCOMPLETED_EMPLOYEE_LIST:
       return {
         ...state,
-        incompleteEmployeeList: Array.isArray(payload) ? payload : payload?.data || [],
+        incompleteEmployeeList: getArray(payload),
       };
     case EMPLOYEEPAYROLL.PAYROLL_LIST:
       return {
         ...state,
-        payroll_list: Array.isArray(payload) ? payload : payload?.data || [],
+        payroll_list: getArray(payload),
       };
     case EMPLOYEEPAYROLL.APPROVER_DROPDOWN:
       return {
         ...state,
-        approver_dropdown_list: Array.isArray(payload) ? payload : payload?.data || [],
+        approver_dropdown_list: getArray(payload),
       };
     case EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN:
       return {
         ...state,
-        user_approver_generater_dropdown_list: Array.isArray(payload)
-          ? payload
-          : payload?.data || [],
+        user_approver_generater_dropdown_list: getArray(payload),
       };
 
     default:

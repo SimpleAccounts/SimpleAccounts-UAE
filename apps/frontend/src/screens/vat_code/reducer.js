@@ -26,7 +26,7 @@ const VatReducer = (state = initState, action) => {
     case VAT.VAT_LIST:
       return {
         ...state,
-        vat_list: Array.isArray(payload) ? payload : payload?.data || [],
+        vat_list: getArray(payload),
       };
 
     // Vat Data By ID

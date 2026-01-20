@@ -70,7 +70,7 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Array.isArray(payload) ? payload : payload?.data || [],
+        transaction_category_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.VENDOR_LIST:
@@ -82,53 +82,53 @@ const BankAccountReducer = (state = initState, action) => {
     case BANK_ACCOUNT.PROJECT_LIST:
       return {
         ...state,
-        project_list: Array.isArray(payload) ? payload : payload?.data || [],
+        project_list: getArray(payload),
       };
     case BANK_ACCOUNT.BANK_LIST:
       return {
         ...state,
-        bank_list: Array.isArray(payload) ? payload : payload?.data || [],
+        bank_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.CUSTOMER_INVOICE_LIST:
       return {
         ...state,
-        customer_invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
+        customer_invoice_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.VENDOR_INVOICE_LIST:
       return {
         ...state,
-        vendor_invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
+        vendor_invoice_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.EXPENSE_LIST:
       return {
         ...state,
-        expense_list: Array.isArray(payload) ? payload : payload?.data || [],
+        expense_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.EXPENSE_CATEGORIES_LIST:
       return {
         ...state,
-        expense_categories_list: Array.isArray(payload) ? payload : payload?.data || [],
+        expense_categories_list: getArray(payload),
       };
     case BANK_ACCOUNT.USER_LIST:
       return {
         ...state,
-        user_list: Array.isArray(payload) ? payload : payload?.data || [],
+        user_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.TRANSACTION_TYPE_LIST:
       return {
         ...state,
-        transaction_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        transaction_type_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.RECONCILE_LIST:
       return {
         ...state,
-        reconcile_list: Array.isArray(payload) ? payload : payload?.data || [],
+        reconcile_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.VAT_LIST:

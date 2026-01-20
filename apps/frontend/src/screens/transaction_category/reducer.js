@@ -26,7 +26,7 @@ const TransactionReducer = (state = initState, action) => {
     case TRANSACTION.TRANSACTION_LIST:
       return {
         ...state,
-        transaction_list: Array.isArray(payload) ? payload : payload?.data || [],
+        transaction_list: getArray(payload),
       };
 
     // TRANSACTION Data By ID

@@ -28,29 +28,29 @@ const UserReducer = (state = initState, action) => {
     case USER.USER_LIST:
       return {
         ...state,
-        user_list: Array.isArray(payload) ? payload : payload?.data || [],
+        user_list: getArray(payload),
       };
 
     case USER.ROLE_LIST:
       return {
         ...state,
-        role_list: Array.isArray(payload) ? payload : payload?.data || [],
+        role_list: getArray(payload),
       };
 
     case USER.COMPANY_TYPE_LIST:
       return {
         ...state,
-        company_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        company_type_list: getArray(payload),
       };
     case USER.EMPLOYEE_LIST:
       return {
         ...state,
-        employee_list: Array.isArray(payload) ? payload : payload?.data || [],
+        employee_list: getArray(payload),
       };
     case USER.DESIGNATION_DROPDOWN:
       return {
         ...state,
-        designation_dropdown: Array.isArray(payload) ? payload : payload?.data || [],
+        designation_dropdown: getArray(payload),
       };
     default:
       return state;

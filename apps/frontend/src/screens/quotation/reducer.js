@@ -93,13 +93,13 @@ const RequestForQuotationReducer = (state = initState, action) => {
     case QUOTATION.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     case QUOTATION.QUOTATION_LIST:
       return {
         ...state,
-        quotation_list: Array.isArray(payload) ? payload : payload?.data || [],
+        quotation_list: getArray(payload),
       };
     default:
       return state;

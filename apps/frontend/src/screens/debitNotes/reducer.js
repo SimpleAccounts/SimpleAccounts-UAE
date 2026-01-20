@@ -61,17 +61,17 @@ const CustomerInvoiceReducer = (state = initState, action) => {
     case DEBIT_NOTE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
     case DEBIT_NOTE.PLACE_OF_SUPPLY:
       return {
         ...state,
-        place_of_supply: Array.isArray(payload) ? payload : payload?.data || [],
+        place_of_supply: getArray(payload),
       };
     case DEBIT_NOTE.INVOICE_LIST_FOR_DROPDOWN:
       return {
         ...state,
-        invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
+        invoice_list: getArray(payload),
       };
 
     default:

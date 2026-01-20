@@ -30,40 +30,40 @@ const ProductReducer = (state = initState, action) => {
     case PRODUCT.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Array.isArray(payload) ? payload : payload?.data || [],
+        product_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_VAT_CATEGORY:
       return {
         ...state,
-        vat_list: Array.isArray(payload) ? payload : payload?.data || [],
+        vat_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_WHARE_HOUSE:
       return {
         ...state,
-        product_warehouse_list: Array.isArray(payload) ? payload : payload?.data || [],
+        product_warehouse_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_CATEGORY:
       return {
         ...state,
-        product_category_list: Array.isArray(payload) ? payload : payload?.data || [],
+        product_category_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_ACCOUNT_LIST:
       return {
         ...state,
-        inventory_account_list: Array.isArray(payload) ? payload : payload?.data || [],
+        inventory_account_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_LIST:
       return {
         ...state,
-        inventory_list: Array.isArray(payload) ? payload : payload?.data || [],
+        inventory_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_HISTORY_LIST:
       return {
         ...state,
-        inventory_history_list: Array.isArray(payload) ? payload : payload?.data || [],
+        inventory_history_list: getArray(payload),
       };
     default:
       return state;

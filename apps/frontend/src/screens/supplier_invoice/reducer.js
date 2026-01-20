@@ -99,7 +99,7 @@ const SupplierInvoiceReducer = (state = initState, action) => {
     case SUPPLIER_INVOICE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     default:

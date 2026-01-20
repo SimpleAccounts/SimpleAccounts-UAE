@@ -30,43 +30,43 @@ const ProfileReducer = (state = initState, action) => {
     case PROFILE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Array.isArray(payload) ? payload : payload?.data || [],
+        currency_list: getArray(payload),
       };
 
     case PROFILE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Array.isArray(payload) ? payload : payload?.data || [],
+        country_list: getArray(payload),
       };
 
     case PROFILE.INDUSTRY_TYPE_LIST:
       return {
         ...state,
-        industry_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        industry_type_list: getArray(payload),
       };
 
     case PROFILE.ROLE_LIST:
       return {
         ...state,
-        role_list: Array.isArray(payload) ? payload : payload?.data || [],
+        role_list: getArray(payload),
       };
 
     case PROFILE.COMPANY_TYPE_LIST:
       return {
         ...state,
-        company_type_list: Array.isArray(payload) ? payload : payload?.data || [],
+        company_type_list: getArray(payload),
       };
 
     case PROFILE.INVOICING_STATE_LIST:
       return {
         ...state,
-        invoicing_state_list: Array.isArray(payload) ? payload : payload?.data || [],
+        invoicing_state_list: getArray(payload),
       };
 
     case PROFILE.COMPANY_STATE_LIST:
       return {
         ...state,
-        company_state_list: Array.isArray(payload) ? payload : payload?.data || [],
+        company_state_list: getArray(payload),
       };
 
     default:

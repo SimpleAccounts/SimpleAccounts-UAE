@@ -26,17 +26,17 @@ const TempReducer = (state = initState, action) => {
     case RECEIPT.RECEIPT_LIST:
       return {
         ...state,
-        receipt_list: Array.isArray(payload) ? payload : payload?.data || [],
+        receipt_list: getArray(payload),
       };
     case RECEIPT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Array.isArray(payload) ? payload : payload?.data || [],
+        contact_list: getArray(payload),
       };
     case RECEIPT.INVOICE_LIST:
       return {
         ...state,
-        invoice_list: Array.isArray(payload) ? payload : payload?.data || [],
+        invoice_list: getArray(payload),
       };
     default:
       return state;
