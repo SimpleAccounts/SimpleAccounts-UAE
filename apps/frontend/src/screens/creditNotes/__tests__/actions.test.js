@@ -216,7 +216,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.CURRENCY_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
