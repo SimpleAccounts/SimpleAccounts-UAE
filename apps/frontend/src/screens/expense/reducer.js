@@ -39,13 +39,13 @@ const ExpenseReducer = (state = initState, action) => {
     case EXPENSE.EXPENSE_DETAIL:
       return {
         ...state,
-        expense_detail: payload?.data || payload || {},
+        expense_detail: { ...(payload?.data || payload || {}) },
       };
 
     case EXPENSE.BANK_LIST:
       return {
         ...state,
-        bank_list: Array.isArray(payload.data) ? payload.data : payload || [],
+        bank_list: getArray(payload),
       };
 
     case EXPENSE.CURRENCY_LIST:
