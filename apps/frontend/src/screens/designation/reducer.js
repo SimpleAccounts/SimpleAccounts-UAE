@@ -25,12 +25,12 @@ const DesignationReducer = (state = initState, action) => {
     case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_LIST:
       return {
         ...state,
-        designation_list: Array.isArray(payload) ? payload : payload?.data || [],
+        designation_list: getArray(payload),
       };
     case EMPLOYEE_DESIGNATION.EMPLOYEE_DESIGNATION_TYPE_LIST:
       return {
         ...state,
-        designationType_list: Array.isArray(payload) ? payload : payload?.data || [],
+        designationType_list: getArray(payload),
       };
 
     default:
