@@ -38,9 +38,7 @@ describe('Currency Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CURRENCY.CURRENCY_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
