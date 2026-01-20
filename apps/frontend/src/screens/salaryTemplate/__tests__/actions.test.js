@@ -190,9 +190,7 @@ describe('SalaryTemplate Actions', () => {
 
       expect(dispatchedActions).toContainEqual({
         type: SALARY_TEMPLATE.SALARY_ROLE_DROPDOWN,
-        payload: {
-          data: mockRoles,
-        },
+        payload: mockRoles,
       });
     });
 
