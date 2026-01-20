@@ -381,7 +381,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });
