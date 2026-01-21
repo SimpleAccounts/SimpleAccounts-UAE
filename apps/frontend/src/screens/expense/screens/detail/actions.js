@@ -12,7 +12,7 @@ export const getExpenseDetail = _id => {
       .then(res => {
         dispatch({
           type: EXPENSE.EXPENSE_DETAIL,
-          payload: res,
+          payload: res.data,
         });
         return res;
       })
@@ -33,9 +33,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: EXPENSE.CURRENCY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

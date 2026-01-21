@@ -83,7 +83,13 @@ function TermDateInput(props) {
             }}
             className={`${term.errors && term.touched ? 'is-invalid' : ''}`}
           />
-          {term.errors && term.touched && <div className="invalid-feedback">{term.errors}</div>}
+          {term.errors && term.touched && (
+            <div className="invalid-feedback">
+              {typeof term.errors === 'string'
+                ? term.errors
+                : term.errors?.message || 'Invalid value'}
+            </div>
+          )}
         </FormGroup>
       </Col>
       <Col lg={3}>
@@ -113,7 +119,11 @@ function TermDateInput(props) {
             }`}
           />
           {invoiceDate.errors && invoiceDate.touched && (
-            <div className="invalid-feedback">{invoiceDate.errors}</div>
+            <div className="invalid-feedback">
+              {typeof invoiceDate.errors === 'string'
+                ? invoiceDate.errors
+                : invoiceDate.errors?.message || 'Invalid value'}
+            </div>
           )}
         </FormGroup>
       </Col>

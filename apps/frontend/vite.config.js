@@ -83,8 +83,6 @@ export default defineConfig({
       'react-router-navigation-prompt',
       // Exclude heavy libraries - they should be lazy-loaded
       'exceljs',
-      '@progress/kendo-react-pdf',
-      '@progress/kendo-drawing',
       // Exclude framer-motion - replaced with CSS animations in Loader component
       'framer-motion',
       // NOTE: lucide-react must be pre-bundled - excluding it causes hundreds of
@@ -241,9 +239,6 @@ export default defineConfig({
             // Split heavy export/PDF libraries - lazy loaded on demand
             if (id.includes('exceljs')) {
               return 'exceljs';
-            }
-            if (id.includes('@progress/kendo')) {
-              return 'kendo-pdf';
             }
 
             // Split lucide-react icons into separate chunk (loaded on-demand)

@@ -275,8 +275,16 @@ public class ReceiptRestHelper {
 
 			Map<String, Object> map = new HashMap<>();
 		map.put(JSON_KEY_CONTACT,receipt.getInvoice().getContact());
-		map.put(JSON_KEY_CONTACT_TYPE, receipt.getInvoice().getType());
-		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
+		map.put(JSON_KEY_CONTACT_TYPE, 2);
+		map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
+		List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
+		if (relations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " + 
+					receipt.getInvoice().getContact().getContactId() + ", contactType: 2");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " + 
+					receipt.getInvoice().getContact().getContactId());
+		}
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 		//For multiCurrency Conversion Of diff currency Invoice to Base Currency
 		journalLineItem1.setCreditAmount(postingRequestModel.getAmount().multiply(invoiceExchangeRate));
@@ -390,10 +398,14 @@ public class ReceiptRestHelper {
 		supplierMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
 		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
 				.findByAttributes(supplierMap);
-		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
-			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
-			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+		if (contactTransactionCategoryRelations == null || contactTransactionCategoryRelations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " +
+					payment.getInvoice().getContact().getContactId() + ", contactType: 1");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " +
+					payment.getInvoice().getContact().getContactId());
 		}
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
+		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.PAYMENT);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
@@ -457,11 +469,15 @@ public class ReceiptRestHelper {
 			exchangeGainOrLoss = exchangeGainOrLoss.negate();
 		}
 		JournalLineItem journalLineItem1 = new JournalLineItem();
-		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
-			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
-			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+		if (contactTransactionCategoryRelations == null || contactTransactionCategoryRelations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " +
+					postingRequestModel.getPostingRefId() + ", contactType: 1");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " +
+					postingRequestModel.getPostingRefId());
 		}
-			journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
+		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+		journalLineItem1.setDebitAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_PAYMENT);
 		journalLineItem1.setReferenceId(referenceId);
 		journalLineItem1.setExchangeRate(exchangeRate);
@@ -525,13 +541,25 @@ public class ReceiptRestHelper {
 		}
 		Map<String, Object> map = new HashMap<>();
 		map.put(JSON_KEY_CONTACT,receipt.getInvoice().getContact());
-		map.put(JSON_KEY_CONTACT_TYPE, receipt.getInvoice().getType());
-		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
-		JournalLineItem journalLineItem1 = new JournalLineItem();
-		if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
-			journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+		map.put(JSON_KEY_CONTACT_TYPE, 2);
+		map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
+		List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
+		if (relations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " + 
+					receipt.getInvoice().getContact().getContactId() + ", contactType: 2");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " + 
+					receipt.getInvoice().getContact().getContactId());
 		}
-			journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
+		JournalLineItem journalLineItem1 = new JournalLineItem();
+		if (contactTransactionCategoryRelations == null || contactTransactionCategoryRelations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " +
+					postingRequestModel.getPostingRefId() + ", contactType: 2");
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " +
+					postingRequestModel.getPostingRefId());
+		}
+		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelations.get(0).getTransactionCategory());
+		journalLineItem1.setCreditAmount(postingRequestModel.getAmount());
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.BANK_RECEIPT);
 		journalLineItem1.setReferenceId(referenceId);
 		journalLineItem1.setCreatedBy(userId);

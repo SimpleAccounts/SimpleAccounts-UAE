@@ -564,6 +564,7 @@ public class BankAccountController{
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getbyid")
 		public ResponseEntity<BankModel> getById(@RequestParam("id") Integer id) {
 			try {

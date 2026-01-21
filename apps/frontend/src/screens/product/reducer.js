@@ -11,46 +11,59 @@ const initState = {
 };
 
 const ProductReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case PRODUCT.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload),
+        product_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_VAT_CATEGORY:
       return {
         ...state,
-        vat_list: Object.assign([], payload),
+        vat_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_WHARE_HOUSE:
       return {
         ...state,
-        product_warehouse_list: Object.assign([], payload),
+        product_warehouse_list: getArray(payload),
       };
 
     case PRODUCT.PRODUCT_CATEGORY:
       return {
         ...state,
-        product_category_list: Object.assign([], payload),
+        product_category_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_ACCOUNT_LIST:
       return {
         ...state,
-        inventory_account_list: Object.assign([], payload),
+        inventory_account_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_LIST:
       return {
         ...state,
-        inventory_list: Object.assign([], payload),
+        inventory_list: getArray(payload),
       };
     case PRODUCT.INVENTORY_HISTORY_LIST:
       return {
         ...state,
-        inventory_history_list: Object.assign([], payload),
+        inventory_history_list: getArray(payload),
       };
     default:
       return state;

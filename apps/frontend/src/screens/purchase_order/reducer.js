@@ -16,82 +16,95 @@ const initState = {
 };
 
 const RequestForQuotationReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case PURCHASE_ORDER.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PURCHASE_ORDER.EXCISE_LIST:
       return {
         ...state,
-        excise_list: Object.assign([], payload.data),
+        excise_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PURCHASE_ORDER.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case PURCHASE_ORDER.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
 
     case PURCHASE_ORDER.PURCHASE_ORDER_LIST:
       return {
         ...state,
-        purchase_order_list: Object.assign([], payload),
+        purchase_order_list: getArray(payload),
       };
     case PURCHASE_ORDER.RFQ_LIST:
       return {
         ...state,
-        rfq_list: Object.assign([], payload),
+        rfq_list: getArray(payload),
       };
     default:
       return state;

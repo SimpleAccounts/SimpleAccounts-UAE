@@ -168,9 +168,7 @@ export const getUserAndRole = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.USER_APPROVER_GENERATER_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

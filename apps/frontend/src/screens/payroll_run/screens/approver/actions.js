@@ -31,9 +31,7 @@ export const getEmployeesForDropdown = () => {
     if (res.status === 200) {
       dispatch({
         type: EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN,
-        payload: {
-          data: res.data,
-        },
+        payload: res.data,
       });
     }
   };
@@ -49,9 +47,7 @@ export const getApproversForDropdown = () => {
     if (res.status === 200) {
       dispatch({
         type: EMPLOYEEPAYROLL.APPROVER_DROPDOWN,
-        payload: {
-          data: res.data,
-        },
+        payload: res.data,
       });
     }
   };

@@ -187,11 +187,19 @@ public class CreditNoteRestHelper {
             Integer invoiceType = Integer.parseInt(creditNoteRequestModel.getType());
             creditNote.setType(invoiceType);
             CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
-            String suffix = invoiceNumberUtil.fetchSuffixFromString(creditNoteRequestModel.getCreditNoteNumber());
-            template.setSuffix(Integer.parseInt(suffix));
-            String prefix = creditNote.getCreditNoteNumber().substring(0, creditNote.getCreditNoteNumber().lastIndexOf(suffix));
-            template.setPrefix(prefix);
-            customizeInvoiceTemplateService.persist(template);
+            if (template != null) {
+                String suffix = invoiceNumberUtil.fetchSuffixFromString(creditNoteRequestModel.getCreditNoteNumber());
+                if (suffix != null && !suffix.isEmpty()) {
+                    try {
+                        template.setSuffix(Integer.parseInt(suffix));
+                        String prefix = creditNote.getCreditNoteNumber().substring(0, creditNote.getCreditNoteNumber().lastIndexOf(suffix));
+                        template.setPrefix(prefix);
+                        customizeInvoiceTemplateService.persist(template);
+                    } catch (NumberFormatException e) {
+                        logger.warn("Could not parse suffix {} as Integer from credit note number {}", suffix, creditNoteRequestModel.getCreditNoteNumber());
+                    }
+                }
+            }
         }
         if (creditNoteRequestModel.getContactId() != null) {
             Contact contact = contactService.findByPK(creditNoteRequestModel.getContactId());
@@ -214,6 +222,10 @@ public class CreditNoteRestHelper {
         creditNote.setDiscountPercentage(creditNoteRequestModel.getDiscountPercentage());
         if (creditNoteRequestModel.getCreditNoteDate() != null) {
             creditNote.setCreditNoteDate(dateFormtUtil.convertToOffsetDateTime(creditNoteRequestModel.getCreditNoteDate()));
+        }
+
+        if (creditNote.getIsCNWithoutProduct() == null) {
+            creditNote.setIsCNWithoutProduct(Boolean.FALSE);
         }
 
         return creditNote;
@@ -633,7 +645,12 @@ public class CreditNoteRestHelper {
     private void handleCreditNoteInventory(CreditNoteLineItem model, Product product, Integer userId) {
         Map<String, Object> relationMap = new HashMap<>();
         relationMap.put(JSON_KEY_CREDIT_NOTE, model.getCreditNote());
-        CreditNoteInvoiceRelation creditNoteInvoiceRelation = creditNoteInvoiceRelationService.findByAttributes(relationMap).get(0);
+        List<CreditNoteInvoiceRelation> relations = creditNoteInvoiceRelationService.findByAttributes(relationMap);
+        if (relations == null || relations.isEmpty()) {
+            logger.error("No CreditNoteInvoiceRelation found for credit note ID: " + model.getCreditNote().getCreditNoteId());
+            throw new RuntimeException("No CreditNoteInvoiceRelation found for credit note ID: " + model.getCreditNote().getCreditNoteId());
+        }
+        CreditNoteInvoiceRelation creditNoteInvoiceRelation = relations.get(0);
 
         Map<String,Object> inventoryHistoryFilterMap = new HashMap<>();
         inventoryHistoryFilterMap.put("invoice",creditNoteInvoiceRelation.getInvoice());
@@ -1119,7 +1136,7 @@ public class CreditNoteRestHelper {
         JournalLineItem journalLineItem1 = new JournalLineItem();
         Map<String, Object> customerMap = new HashMap<>();
             customerMap.put(JSON_KEY_CONTACT,  creditNote.getContact().getContactId());
-        customerMap.put(JSON_KEY_CONTACT_TYPE, 2);
+        customerMap.put(JSON_KEY_CONTACT_TYPE, isCustomerCreditNote ? 2 : 1);
         customerMap.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
         List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
                 .findByAttributes(customerMap);
@@ -1199,10 +1216,16 @@ public class CreditNoteRestHelper {
         creditNote.setCreditNoteNumber(creditNoteRequestModel.getCreditNoteNumber());
         CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(creditNoteType);
         String suffix = invoiceNumberUtil.fetchSuffixFromString(creditNoteRequestModel.getCreditNoteNumber());
-        template.setSuffix(Integer.parseInt(suffix));
-        String prefix = creditNote.getCreditNoteNumber().substring(0, creditNote.getCreditNoteNumber().lastIndexOf(suffix));
-        template.setPrefix(prefix);
-        customizeInvoiceTemplateService.persist(template);
+        if (suffix != null && !suffix.isEmpty()) {
+            try {
+                template.setSuffix(Integer.parseInt(suffix));
+                String prefix = creditNote.getCreditNoteNumber().substring(0, creditNote.getCreditNoteNumber().lastIndexOf(suffix));
+                template.setPrefix(prefix);
+                customizeInvoiceTemplateService.persist(template);
+            } catch (NumberFormatException e) {
+                logger.warn("Could not parse suffix {} as Integer from credit note number {}", suffix, creditNoteRequestModel.getCreditNoteNumber());
+            }
+        }
         creditNote.setTotalAmount(creditNoteRequestModel.getTotalAmount());
         creditNote.setTotalVatAmount(creditNoteRequestModel.getTotalVatAmount());
         creditNote.setDueAmount(creditNoteRequestModel.getTotalAmount());
@@ -1717,15 +1740,21 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
             requestModel.setCreditNoteNumber(creditNote.getCreditNoteNumber());
             if (creditNote.getContact() != null) {
                 requestModel.setContactId(creditNote.getContact().getContactId());
+            }
+            if (creditNote.getCurrency() != null) {
                 requestModel.setCurrencyCode(creditNote.getCurrency().getCurrencyCode());
             }
             requestModel.setDueAmount(creditNote.getDueAmount());
-            requestModel.setTaxTreatment(creditNote.getContact().getTaxTreatment().getTaxTreatment());
+            if (creditNote.getContact() != null && creditNote.getContact().getTaxTreatment() != null) {
+                requestModel.setTaxTreatment(creditNote.getContact().getTaxTreatment().getTaxTreatment());
+            }
             requestModel.setTotalAmount(creditNote.getTotalAmount());
             requestModel.setContactId(creditNote.getContact().getContactId());
             requestModel.setContactName(creditNote.getContact().getFirstName());
             requestModel.setTotalVatAmount(creditNote.getTotalVatAmount());
-            requestModel.setVatCategoryId(creditNote.getVatCategory().getId());
+            if (creditNote.getVatCategory() != null) {
+                requestModel.setVatCategoryId(creditNote.getVatCategory().getId());
+            }
             if(creditNote.getNotes()!=null){
                 requestModel.setNotes(creditNote.getNotes());
             }
@@ -1870,7 +1899,12 @@ public SimpleAccountsMessage recordPaymentForCN(RecordPaymentForCN requestModel,
     private void handleReverseCNInventory(CreditNoteLineItem model,Integer userId) {
         Map<String, Object> relationMap = new HashMap<>();
         relationMap.put(JSON_KEY_CREDIT_NOTE, model.getCreditNote());
-        CreditNoteInvoiceRelation creditNoteInvoiceRelation = creditNoteInvoiceRelationService.findByAttributes(relationMap).get(0);
+        List<CreditNoteInvoiceRelation> relations = creditNoteInvoiceRelationService.findByAttributes(relationMap);
+        if (relations == null || relations.isEmpty()) {
+            logger.error("No CreditNoteInvoiceRelation found for credit note ID: " + model.getCreditNote().getCreditNoteId());
+            throw new RuntimeException("No CreditNoteInvoiceRelation found for credit note ID: " + model.getCreditNote().getCreditNoteId());
+        }
+        CreditNoteInvoiceRelation creditNoteInvoiceRelation = relations.get(0);
         List<Inventory> inventoryList = inventoryService.getProductByProductId(model.getProduct().getProductID());
         int remainingQty = model.getQuantity();
         for(Inventory inventory : inventoryList)

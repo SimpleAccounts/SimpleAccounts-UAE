@@ -15,7 +15,6 @@ import {
 } from 'components/migration';
 
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Currency } from 'components';
 import * as CTActions from './actions';
@@ -182,7 +181,7 @@ class ViewCorporateTax extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -318,7 +317,7 @@ class ViewCorporateTax extends React.Component {
                 />{' '}
               </div>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -667,7 +666,7 @@ class ViewCorporateTax extends React.Component {
                     {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

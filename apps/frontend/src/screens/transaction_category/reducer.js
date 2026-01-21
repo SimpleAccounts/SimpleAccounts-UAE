@@ -6,6 +6,19 @@ const initState = {
 };
 
 const TransactionReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
@@ -13,14 +26,14 @@ const TransactionReducer = (state = initState, action) => {
     case TRANSACTION.TRANSACTION_LIST:
       return {
         ...state,
-        transaction_list: Object.assign([], payload),
+        transaction_list: getArray(payload),
       };
 
     // TRANSACTION Data By ID
     case TRANSACTION.TRANSACTION_ROW:
       return {
         ...state,
-        transaction_row: Object.assign({}, payload),
+        transaction_row: payload?.data || payload || {},
       };
 
     default:

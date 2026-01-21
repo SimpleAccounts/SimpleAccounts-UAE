@@ -30,9 +30,7 @@ export const getTransactionList = obj => {
           if (!obj.paginationDisable) {
             dispatch({
               type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -121,9 +119,7 @@ export const getCustomerInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -146,9 +142,7 @@ export const getCustomerExplainedInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -170,9 +164,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CURRENCY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -194,7 +186,7 @@ export const getVendorList = bankId => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -215,9 +207,7 @@ export const getVendorInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -239,9 +229,7 @@ export const getVendorExplainedInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -263,9 +251,7 @@ export const getExpensesList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.EXPENSE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -474,9 +460,7 @@ export const getUnPaidPayrollsList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.UNPAID_PAYROLLS,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

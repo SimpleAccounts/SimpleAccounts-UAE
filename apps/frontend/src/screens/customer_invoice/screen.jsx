@@ -560,12 +560,11 @@ function CustomerInvoice() {
 
   // Transform data for table
   const tableData = useMemo(() => {
-    // Handle both array and object with data property
     const invoiceList = Array.isArray(customer_invoice_list)
       ? customer_invoice_list
       : customer_invoice_list?.data || [];
 
-    if (!invoiceList || invoiceList.length === 0) return [];
+    if (invoiceList.length === 0 || typeof invoiceList.map !== 'function') return [];
     return invoiceList.map(customer => ({
       id: customer.id,
       status: customer.status,
@@ -589,7 +588,9 @@ function CustomerInvoice() {
 
   // Customer options for filter
   const customerOptions = useMemo(() => {
-    return customer_list.map(item => ({
+    const list = Array.isArray(customer_list) ? customer_list : customer_list?.data || [];
+    if (!list || typeof list.map !== 'function') return [];
+    return list.map(item => ({
       label: item.label?.contactName || item.label,
       value: item.value,
     }));
@@ -687,9 +688,9 @@ function CustomerInvoice() {
               data={tableData}
               manualPagination
               pageCount={Math.ceil(
-                (Array.isArray(customer_invoice_list)
-                  ? customer_invoice_list.length
-                  : customer_invoice_list?.count || 0) / pagination.pageSize
+                (customer_invoice_list?.count ||
+                  (Array.isArray(customer_invoice_list) ? customer_invoice_list.length : 0)) /
+                  pagination.pageSize
               )}
               onPaginationChange={setPagination}
               pagination={pagination}

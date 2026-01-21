@@ -60,6 +60,7 @@ public class ProductRestController {
 	private final UserService userService;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getProductList(ProductRequestFilterModel filterModel, HttpServletRequest request) {
 		try {
@@ -185,6 +186,7 @@ public class ProductRestController {
 					MessageUtil.getMessage("product.created.successful.msg.0036"), false);
 					return new ResponseEntity<>(message,HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error("Error in ProductRestController.save: ", e);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);
@@ -257,7 +259,7 @@ public class ProductRestController {
 	public ResponseEntity<Object> getTransactionCategoryListForInventory(){
 		List<DropdownModel> response  = new ArrayList<>();
 		List<TransactionCategory> transactionCategoryList = transactionCategoryService.getTransactionCategoryListForInventory();
-		if (transactionCategoryList!=null){
+		if (transactionCategoryList != null && !transactionCategoryList.isEmpty()) {
 			DropdownModel dropdownModel = new DropdownModel(transactionCategoryList.get(0).getTransactionCategoryId(),
 					transactionCategoryList.get(0).getTransactionCategoryName());
 			response.add(dropdownModel);

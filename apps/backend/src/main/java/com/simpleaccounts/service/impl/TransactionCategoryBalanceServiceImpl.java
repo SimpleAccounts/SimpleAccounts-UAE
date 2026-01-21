@@ -14,7 +14,11 @@ import com.simpleaccounts.utils.DateUtils;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.OptimisticLockException;
+import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,103 +51,173 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 	@Override
 	
 	public synchronized BigDecimal updateRunningBalance(JournalLineItem lineItem) {
-		if (lineItem != null) {
+		if (lineItem != null && lineItem.getTransactionCategory() != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
 			Map<String, Object> param = new HashMap<>();
 			param.put("transactionCategory", category);
 
-			TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
+			int attempts = 0;
+			while (attempts < 8) {
+				attempts++;
+				TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
 
-			if (balance == null) {
-				balance = new TransactionCategoryBalance();
-				balance.setTransactionCategory(category);
-				balance.setCreatedBy(lineItem.getCreatedBy());
+				if (balance == null) {
+					balance = new TransactionCategoryBalance();
+					balance.setTransactionCategory(category);
+					balance.setCreatedBy(lineItem.getCreatedBy());
 					balance.setOpeningBalance(lineItem.getCreditAmount()!=null && lineItem.getCreditAmount().compareTo(BigDecimal.ZERO)>0?lineItem.getCreditAmount():lineItem.getDebitAmount());
-				balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
-			}
+					balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
+				} else {
+					// Apply pessimistic locking if EntityManager is available (not in test environment)
+					if (transactionCategoryBalanceDao.getEntityManager() != null) {
+						transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					}
+				}
 
-			boolean isDelated = lineItem.getDeleteFlag();
-			boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().compareTo(BigDecimal.ZERO) !=0)
-					? Boolean.TRUE
-					: Boolean.FALSE;
-			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
-					: BigDecimal.ZERO;
-			if (!isDelated) {
-				if (isDebit) {
-					runningBalance = runningBalance
-							.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+				boolean isDelated = lineItem.getDeleteFlag();
+				boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().compareTo(BigDecimal.ZERO) !=0)
+						? Boolean.TRUE
+						: Boolean.FALSE;
+				BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
+						: BigDecimal.ZERO;
+				if (!isDelated) {
+					if (isDebit) {
+						runningBalance = runningBalance
+								.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+					} else {
+						runningBalance = runningBalance
+								.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					}
 				} else {
-					runningBalance = runningBalance
-							.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					if (isDebit) {
+						runningBalance = runningBalance
+								.add(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+					} else {
+						runningBalance = runningBalance.subtract(
+								lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					}
 				}
-			} else {
-				if (isDebit) {
-					runningBalance = runningBalance
-							.add(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
-				} else {
-					runningBalance = runningBalance.subtract(
-							lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+				balance.setRunningBalance(runningBalance);
+				try {
+					transactionCategoryBalanceDao.update(balance);
+					transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
+					return balance.getRunningBalance();
+				} catch (ObjectOptimisticLockingFailureException | OptimisticLockException | StaleStateException e) {
+					transactionCategoryBalanceDao.getEntityManager().clear();
+					if (attempts >= 8) {
+						if (balance.getId() != null) {
+							int updated = transactionCategoryBalanceDao.getEntityManager()
+									.createQuery(
+											"update TransactionCategoryBalance set runningBalance = :runningBalance, openingBalance = :openingBalance, lastUpdateBy = :lastUpdateBy where id = :id")
+									.setParameter("runningBalance", runningBalance)
+									.setParameter("openingBalance", balance.getOpeningBalance())
+									.setParameter("lastUpdateBy", lineItem.getCreatedBy())
+									.setParameter("id", balance.getId())
+									.executeUpdate();
+							if (updated > 0) {
+								transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
+								return runningBalance;
+							}
+						}
+						throw e;
+					}
+					try {
+						Thread.sleep(50L * attempts);
+					} catch (InterruptedException interruptedException) {
+						Thread.currentThread().interrupt();
+					}
 				}
 			}
-			balance.setRunningBalance(runningBalance);
-			transactionCategoryBalanceDao.update(balance);
-			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
-			return balance.getRunningBalance();
 		}
 
 		return null;
 	}
 
 	public synchronized BigDecimal updateRunningBalanceAndOpeningBalance(JournalLineItem lineItem,Boolean updateOpeningBalance) {
-		if (lineItem != null) {
+		if (lineItem != null && lineItem.getTransactionCategory() != null) {
 			TransactionCategory category = lineItem.getTransactionCategory();
 
 			Map<String, Object> param = new HashMap<>();
 			param.put("transactionCategory", category);
 
-			TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
+			int attempts = 0;
+			while (attempts < 8) {
+				attempts++;
+				TransactionCategoryBalance balance = getFirstElement(findByAttributes(param));
 
-			if (balance == null) {
-				balance = new TransactionCategoryBalance();
-				balance.setTransactionCategory(category);
-				balance.setCreatedBy(lineItem.getCreatedBy());
-				balance.setOpeningBalance(lineItem.getCreditAmount()!=null?lineItem.getCreditAmount():lineItem.getDebitAmount());
-				balance.setRunningBalance(lineItem.getCreditAmount()!=null?lineItem.getCreditAmount():lineItem.getDebitAmount());
-				balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
-			}
+				if (balance == null) {
+					balance = new TransactionCategoryBalance();
+					balance.setTransactionCategory(category);
+					balance.setCreatedBy(lineItem.getCreatedBy());
+					balance.setOpeningBalance(lineItem.getCreditAmount()!=null?lineItem.getCreditAmount():lineItem.getDebitAmount());
+					balance.setRunningBalance(lineItem.getCreditAmount()!=null?lineItem.getCreditAmount():lineItem.getDebitAmount());
+					balance.setEffectiveDate(dateUtils.get(lineItem.getJournal().getJournalDate().atStartOfDay()));
+				} else {
+					// Apply pessimistic locking if EntityManager is available (not in test environment)
+					if (transactionCategoryBalanceDao.getEntityManager() != null) {
+						transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+					}
+				}
 
-			boolean isDelated = lineItem.getDeleteFlag();
-			boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().intValue()!=0)
-					? Boolean.TRUE
-					: Boolean.FALSE;
-			BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
-					: BigDecimal.ZERO;
-			if (!isDelated) {
-				if (isDebit) {
-					runningBalance = runningBalance
-							.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+				boolean isDelated = lineItem.getDeleteFlag();
+				boolean isDebit = (lineItem.getDebitAmount() != null && lineItem.getDebitAmount().intValue()!=0)
+						? Boolean.TRUE
+						: Boolean.FALSE;
+				BigDecimal runningBalance = balance.getRunningBalance() != null ? balance.getRunningBalance()
+						: BigDecimal.ZERO;
+				if (!isDelated) {
+					if (isDebit) {
+						runningBalance = runningBalance
+								.subtract(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+					} else {
+						runningBalance = runningBalance
+								.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					}
 				} else {
-					runningBalance = runningBalance
-							.add(lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					if (isDebit) {
+						runningBalance = runningBalance
+								.add(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
+					} else {
+						runningBalance = runningBalance.subtract(
+								lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
+					}
 				}
-			} else {
-				if (isDebit) {
-					runningBalance = runningBalance
-							.add(lineItem.getDebitAmount() != null ? lineItem.getDebitAmount() : BigDecimal.ZERO);
-				} else {
-					runningBalance = runningBalance.subtract(
-							lineItem.getCreditAmount() != null ? lineItem.getCreditAmount() : BigDecimal.ZERO);
-				}
-			}
-			balance.setRunningBalance(runningBalance);
+				balance.setRunningBalance(runningBalance);
 				if(Boolean.TRUE.equals(updateOpeningBalance)&& runningBalance!=null && runningBalance.longValue()<0)
 					balance.setOpeningBalance(runningBalance.negate());
 				else if(Boolean.TRUE.equals(updateOpeningBalance)&& runningBalance!=null)
 					balance.setOpeningBalance(runningBalance);
-			transactionCategoryBalanceDao.update(balance);
-			transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
-			return balance.getRunningBalance();
+				try {
+					transactionCategoryBalanceDao.update(balance);
+					transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
+					return balance.getRunningBalance();
+				} catch (ObjectOptimisticLockingFailureException | OptimisticLockException | StaleStateException e) {
+					transactionCategoryBalanceDao.getEntityManager().clear();
+					if (attempts >= 8) {
+						if (balance.getId() != null) {
+							int updated = transactionCategoryBalanceDao.getEntityManager()
+									.createQuery(
+											"update TransactionCategoryBalance set runningBalance = :runningBalance, openingBalance = :openingBalance, lastUpdateBy = :lastUpdateBy where id = :id")
+									.setParameter("runningBalance", runningBalance)
+									.setParameter("openingBalance", balance.getOpeningBalance())
+									.setParameter("lastUpdateBy", lineItem.getCreatedBy())
+									.setParameter("id", balance.getId())
+									.executeUpdate();
+							if (updated > 0) {
+								transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
+								return runningBalance;
+							}
+						}
+						throw e;
+					}
+					try {
+						Thread.sleep(50L * attempts);
+					} catch (InterruptedException interruptedException) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
 		}
 		return null;
 	}

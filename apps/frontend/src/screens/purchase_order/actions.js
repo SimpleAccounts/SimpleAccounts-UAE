@@ -36,9 +36,7 @@ export const getpoList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: PURCHASE_ORDER.PURCHASE_ORDER_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -61,9 +59,7 @@ export const getExciseList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.EXCISE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -83,9 +79,7 @@ export const getProjectList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.PROJECT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -107,9 +101,7 @@ export const getContactList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -130,7 +122,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -151,9 +143,7 @@ export const getVatList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.VAT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -175,9 +165,7 @@ export const getDepositList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.DEPOSIT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -198,9 +186,7 @@ export const getPaymentMode = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.PAY_MODE,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -221,9 +207,7 @@ export const getProductList = () => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.PRODUCT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -245,7 +229,7 @@ export const getSupplierList = id => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.SUPPLIER_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -265,7 +249,7 @@ export const getRFQList = id => {
         if (res.status === 200) {
           dispatch({
             type: PURCHASE_ORDER.RFQ_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

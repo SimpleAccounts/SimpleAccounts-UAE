@@ -12,7 +12,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -112,7 +111,9 @@ const ArAgingReport = () => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const viewFilter = () => setView(!view);
-  const exportPDFWithComponent = () => pdfExportComponent.current.save();
+  const exportPDFWithComponent = () => {
+    /* pdfExportComponent.current.save() */
+  };
 
   return (
     <div className="transactions-report-screen">
@@ -199,7 +200,7 @@ const ArAgingReport = () => {
               <FilterComponent viewFilter={viewFilter} generateReport={generateReport} />{' '}
             </div>
             <CardBody id="section-to-print">
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -251,7 +252,7 @@ const ArAgingReport = () => {
                 <div style={{ textAlignLast: 'center' }}>
                   {strings.PoweredBy} <b>SimpleAccounts</b>
                 </div>
-              </PDFExport>
+              </div>
             </CardBody>
           </div>
         </Card>

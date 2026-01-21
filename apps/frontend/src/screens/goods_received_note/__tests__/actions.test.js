@@ -118,7 +118,7 @@ describe('Goods Received Note (GRN) Actions', () => {
 
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0].type).toBe(GOODS_RECEVED_NOTE.PROJECT_LIST);
-      expect(dispatchedActions[0].payload.data).toEqual(mockProjects);
+      expect(dispatchedActions[0].payload).toEqual(mockProjects);
     });
 
     it('should call correct API endpoint', async () => {

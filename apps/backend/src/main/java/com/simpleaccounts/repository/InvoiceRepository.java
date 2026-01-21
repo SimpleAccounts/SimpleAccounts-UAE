@@ -4,6 +4,7 @@ import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.rest.invoice.dto.InvoiceAmoutResultSet;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,30 @@ import org.springframework.stereotype.Repository;
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
     List<Invoice> findAllByStatusAndType(Integer status,Integer Type);
+
+    /**
+     * Fetch an invoice with all relationships needed to render the "view invoice" screen without
+     * triggering LazyInitializationException outside a Hibernate session.
+     */
+    @Query("""
+        SELECT DISTINCT i
+        FROM Invoice i
+        LEFT JOIN FETCH i.contact c
+        LEFT JOIN FETCH c.taxTreatment
+        LEFT JOIN FETCH i.currency
+        LEFT JOIN FETCH i.project
+        LEFT JOIN FETCH i.placeOfSupplyId
+        LEFT JOIN FETCH i.AttachmentFileName
+        LEFT JOIN FETCH i.shippingCountry
+        LEFT JOIN FETCH i.invoiceLineItems li
+        LEFT JOIN FETCH li.vatCategory
+        LEFT JOIN FETCH li.product
+        LEFT JOIN FETCH li.trnsactioncCategory
+        LEFT JOIN FETCH li.exciseCategory
+        LEFT JOIN FETCH li.unitTypeId
+        WHERE i.id = :id
+        """)
+    Optional<Invoice> findInvoiceForViewById(@Param("id") Integer id);
 
     @Query(name = "InvoiceAmoutDetails", nativeQuery = true)
     List<InvoiceAmoutResultSet> getAmountDetails(@Param("placeOfSupplyId") Integer placeOfSupplyId, @Param("fromDate") LocalDate fromDate, @Param("toDate") LocalDate toDate, @Param("editFlag") Boolean editFlag);

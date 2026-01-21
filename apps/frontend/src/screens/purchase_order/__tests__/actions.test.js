@@ -63,9 +63,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.PURCHASE_ORDER_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -104,9 +102,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.EXCISE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -130,9 +126,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.PROJECT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -204,7 +198,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.STATUS_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });
@@ -223,9 +217,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.VAT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
@@ -246,9 +238,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.DEPOSIT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -267,9 +257,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.PAY_MODE,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -313,7 +301,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.SUPPLIER_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });
@@ -332,7 +320,7 @@ describe('Purchase Order Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: PURCHASE_ORDER.RFQ_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({

@@ -167,9 +167,7 @@ export const getEmployeesForDropdown = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.EMPLOYEE_LIST_DDROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -256,9 +254,7 @@ export const getSalaryRolesForDropdown = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.SALARY_ROLE_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -279,9 +275,7 @@ export const getSalaryComponentForDropdownFixed = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.SALARY_COMPONENT_FIXED_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -302,9 +296,7 @@ export const getSalaryComponentForDropdownVariable = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.SALARY_COMPONENT_VARAIBLE_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -324,9 +316,7 @@ export const getSalaryComponentForDropdownDeduction = () => {
         if (res.status === 200) {
           dispatch({
             type: EMPLOYEEPAYROLL.SALARY_COMPONENT_DEDUCTION_DROPDOWN,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

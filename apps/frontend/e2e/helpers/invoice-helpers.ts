@@ -3,14 +3,6 @@ import { getApiBaseUrl, getFrontendBaseUrl } from './test-setup-helpers';
 
 /**
  * Generates a unique invoice reference number using the pattern: INV-E2E-${Date.now()}
- *
- * @returns A unique invoice reference number
- *
- * @example
- * ```typescript
- * const invoiceNumber = generateInvoiceNumber();
- * // Returns: INV-E2E-1234567890
- * ```
  */
 export function generateInvoiceNumber(): string {
   return `INV-E2E-${Date.now()}`;
@@ -21,15 +13,16 @@ export function generateInvoiceNumber(): string {
  */
 export interface InvoiceData {
   referenceNumber?: string;
-  invoiceDate?: string; // Format: DD-MM-YYYY
-  dueDate?: string; // Format: DD-MM-YYYY
-  contactId: number; // Customer contact ID
-  currencyCode?: number; // Currency code (default: 150 for AED)
-  type?: number; // Invoice type: 1 = Supplier, 2 = Customer (default: 2)
-  taxType?: number; // Tax type: 1 = Exclusive, 2 = Inclusive (default: 1)
+  invoiceDate?: string; // Format: dd/MM/yyyy
+  dueDate?: string; // Format: dd/MM/yyyy
+  contactId: number;
+  currencyCode?: number;
+  type?: number; // 1 = Supplier (legacy), 2 = Customer, 6 = Supplier (modern)
+  taxType?: boolean | number; // false = Exclusive, true = Inclusive
   lineItems: InvoiceLineItem[];
   notes?: string;
   placeOfSupplyId?: number;
+  term?: string;
 }
 
 /**
@@ -40,30 +33,19 @@ export interface InvoiceLineItem {
   description: string;
   quantity: number;
   unitPrice: number;
-  vatId?: number; // VAT code ID
+  vatCategoryId?: string;
+  vatId?: number;
   discount?: number;
-  subTotal?: number; // Auto-calculated if not provided
+  discountType?: string;
+  subTotal?: number;
+  vatAmount?: number;
+  exciseAmount?: number;
+  exciseTaxId?: number;
+  transactionCategoryId?: number;
 }
 
 /**
  * Creates an invoice via API
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param invoiceData - Invoice data
- * @returns Created invoice data including invoiceId
- *
- * @example
- * ```typescript
- * const invoice = await createInvoiceViaAPI(request, token, {
- *   contactId: 1,
- *   lineItems: [{
- *     description: 'Test Product',
- *     quantity: 1,
- *     unitPrice: 1000
- *   }]
- * });
- * ```
  */
 export async function createInvoiceViaAPI(
   request: APIRequestContext,
@@ -72,74 +54,161 @@ export async function createInvoiceViaAPI(
 ): Promise<InvoiceData & { invoiceId: number }> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
-  const dueDate = new Date(today);
-  dueDate.setDate(dueDate.getDate() + 30);
-  const formattedDueDate = `${String(dueDate.getDate()).padStart(2, '0')}-${String(dueDate.getMonth() + 1).padStart(2, '0')}-${dueDate.getFullYear()}`;
 
-  const payload = {
-    referenceNumber: invoiceData.referenceNumber || generateInvoiceNumber(),
-    invoiceDate: invoiceData.invoiceDate || formattedDate,
-    invoiceDueDate: invoiceData.dueDate || formattedDueDate,
-    contactId: invoiceData.contactId,
-    currencyCode: invoiceData.currencyCode || 150, // AED default
-    type: invoiceData.type || 2, // Customer invoice default
-    taxType: invoiceData.taxType || 1, // Exclusive VAT default
-    notes: invoiceData.notes || '',
-    placeOfSupplyId: invoiceData.placeOfSupplyId || '',
-    // Line items need to be formatted for the API
-    lineItems: JSON.stringify(
-      invoiceData.lineItems.map(item => ({
-        productId: item.productId || '',
-        description: item.description,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        vatId: item.vatId || '',
-        discount: item.discount || 0,
-        subTotal: item.subTotal || item.quantity * item.unitPrice,
-      }))
-    ),
+  const getFormattedDate = (dateInput: string | Date | undefined, defaultDate: Date): string => {
+    const d = dateInput ? new Date(dateInput) : defaultDate;
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  const formData = new URLSearchParams();
+  const formattedDate = getFormattedDate(invoiceData.invoiceDate, today);
+  const formattedDueDate = getFormattedDate(
+    invoiceData.dueDate,
+    (() => {
+      const d = new Date(today);
+      d.setDate(d.getDate() + 30);
+      return d;
+    })()
+  );
+
+  let totalNet = 0;
+  let totalVatAmount = 0;
+  let totalExciseAmount = 0;
+  const taxTypeNum =
+    typeof invoiceData.taxType === 'boolean'
+      ? invoiceData.taxType
+        ? 2
+        : 1
+      : invoiceData.taxType || 1;
+  const type = invoiceData.type || 2;
+  const taxTypeBoolean =
+    typeof invoiceData.taxType === 'boolean' ? invoiceData.taxType : invoiceData.taxType === 2;
+
+  const lineItemsData = invoiceData.lineItems.map(item => {
+    const quantity = item.quantity;
+    const unitPrice = item.unitPrice;
+    const discount = item.discount || 0;
+    const discountType = item.discountType || 'FIXED';
+
+    let netValue = quantity * unitPrice;
+    if (discount > 0) {
+      if (discountType === 'PERCENTAGE') netValue = netValue * (1 - discount / 100);
+      else netValue = netValue - discount;
+    }
+
+    const vatCategoryId = item.vatCategoryId || (item.vatId ? String(item.vatId) : null);
+    let vatAmount = 0;
+    if (vatCategoryId && taxTypeNum === 1) vatAmount = netValue * 0.05;
+    else if (vatCategoryId && taxTypeNum === 2) vatAmount = netValue * (5 / 105);
+
+    const exciseAmount = item.exciseAmount || 0;
+    const subTotal = netValue + vatAmount;
+
+    totalNet += netValue;
+    totalVatAmount += vatAmount;
+    totalExciseAmount += exciseAmount;
+
+    return {
+      id: 0,
+      productId: item.productId || null,
+      description: item.description,
+      quantity: quantity,
+      unitPrice: unitPrice,
+      vatCategoryId: vatCategoryId,
+      discount: discount,
+      discountType: discountType,
+      subTotal: subTotal,
+      vatAmount: vatAmount,
+      exciseAmount: exciseAmount,
+      exciseTaxId: item.exciseTaxId || null,
+      transactionCategoryId: item.transactionCategoryId || (type === 6 || type === 1 ? 49 : 84), // Default to 49 (COGS) for supplier, 84 (Sales) for customer
+    };
+  });
+
+  const totalAmount = totalNet + totalVatAmount;
+
+  const refNum = invoiceData.referenceNumber || generateInvoiceNumber();
+
+  const payload: Record<string, any> = {
+    invoiceDate: formattedDate,
+    invoiceDueDate: formattedDueDate,
+    contactId: invoiceData.contactId,
+    currencyCode: invoiceData.currencyCode || 150,
+    type: String(type),
+    taxType: taxTypeBoolean,
+    notes: invoiceData.notes || '',
+    placeOfSupplyId: invoiceData.placeOfSupplyId || null,
+    lineItemsString: JSON.stringify(lineItemsData),
+    totalAmount: totalAmount,
+    totalVatAmount: totalVatAmount,
+    totalExciseAmount: totalExciseAmount,
+    discount: 0,
+    term: invoiceData.term || 'NET_30',
+    exchangeRate: 1,
+    referenceNumber: refNum, // Always send referenceNumber
+  };
+
+  // Modern frontend uses 'invoiceNumber' for type 6 (Supplier)
+  if (type === 6 || type === 1) {
+    payload.invoiceNumber = refNum;
+  }
+
+  const multipartData: Record<string, string | number> = {};
   Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      formData.append(key, String(value));
+    if (value !== undefined && value !== null) {
+      multipartData[key] = String(value);
     }
   });
 
   const response = await request.post(`${apiUrl}/rest/invoice/save`, {
     headers: {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    data: formData.toString(),
+    multipart: multipartData,
   });
 
   if (!response.ok()) {
     const errorText = await response.text().catch(() => 'Unknown error');
+    console.error('Invoice creation failed:', {
+      status: response.status(),
+      error: errorText,
+      payload: payload,
+    });
     throw new Error(`Failed to create invoice: ${response.status()} ${errorText}`);
   }
 
-  const responseData = await response.json();
+  const responseData = await response.json().catch(() => ({}));
+  let invoiceId = responseData.invoiceId || responseData.id;
+
+  if (!invoiceId) {
+    const listResponse = await getInvoiceList(request, authToken, {
+      type,
+      contactId: invoiceData.contactId,
+      paginationDisable: true,
+      referenceNumber: refNum,
+    });
+    const list = Array.isArray(listResponse?.data) ? listResponse.data : [];
+    const matched = list.find((invoice: any) => {
+      const ref = invoice.referenceNumber || invoice.invoiceNumber;
+      return ref === refNum;
+    });
+    invoiceId = matched?.invoiceId || matched?.id;
+  }
+
+  if (!invoiceId) {
+    throw new Error(`Invoice ID not returned for reference ${refNum}`);
+  }
+
   return {
     ...invoiceData,
-    invoiceId: responseData.invoiceId || responseData.id,
+    invoiceId,
   };
 }
 
 /**
- * Posts an invoice (makes it final/active)
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param invoiceId - Invoice ID to post
- * @returns Posting response
- *
- * @example
- * ```typescript
- * await postInvoice(request, token, invoiceId);
- * ```
+ * Posts an invoice
  */
 export async function postInvoice(
   request: APIRequestContext,
@@ -147,39 +216,46 @@ export async function postInvoice(
   invoiceId: number
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const response = await request.post(`${apiUrl}/rest/invoice/posting`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        postingRefId: invoiceId,
+        postingRefType: 'INVOICE',
+        markAsSent: false, // Default to false for tests
+      },
+    });
 
-  const payload = {
-    invoiceId: invoiceId,
-  };
+    if (!response.ok()) {
+      const errorText = await response.text().catch(() => 'Unknown error');
+      const retryable =
+        /Unexpected row count|No rows were returned from JDBC query for versioned entity/i.test(
+          errorText
+        );
+      if (retryable && attempt < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+        continue;
+      }
+      throw new Error(`Failed to post invoice: ${response.status()} ${errorText}`);
+    }
 
-  const response = await request.post(`${apiUrl}/rest/invoice/posting`, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'application/json',
-    },
-    data: payload,
-  });
-
-  if (!response.ok()) {
-    const errorText = await response.text().catch(() => 'Unknown error');
-    throw new Error(`Failed to post invoice: ${response.status()} ${errorText}`);
+    const responseText = await response.text();
+    try {
+      return responseText ? JSON.parse(responseText) : { message: 'Invoice posted successfully' };
+    } catch (error) {
+      return { message: responseText || 'Invoice posted successfully' };
+    }
   }
 
-  return await response.json();
+  throw new Error('Failed to post invoice after retries');
 }
 
 /**
  * Gets invoice details by ID
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param invoiceId - Invoice ID
- * @returns Invoice details
- *
- * @example
- * ```typescript
- * const invoice = await getInvoiceDetails(request, token, 1);
- * ```
  */
 export async function getInvoiceDetails(
   request: APIRequestContext,
@@ -203,55 +279,32 @@ export async function getInvoiceDetails(
 
 /**
  * Gets invoice list
- *
- * @param request - Playwright APIRequestContext for making API calls
- * @param authToken - Authentication token
- * @param options - Optional filters
- * @returns Invoice list response
- *
- * @example
- * ```typescript
- * const invoices = await getInvoiceList(request, token, {
- *   type: 2, // Customer invoices
- *   pageNo: 1
- * });
- * ```
  */
 export async function getInvoiceList(
   request: APIRequestContext,
   authToken: string,
   options: {
-    type?: number; // 1 = Supplier, 2 = Customer
+    type?: number;
     contactId?: number;
     status?: number;
     pageNo?: number;
     pageSize?: number;
     paginationDisable?: boolean;
+    referenceNumber?: string;
   } = {}
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
-  let url = `${apiUrl}/rest/invoice/list?`;
+  let url = `${apiUrl}/rest/invoice/getList?`;
 
-  if (options.type) {
-    url += `type=${options.type}&`;
-  }
-  if (options.contactId) {
-    url += `contactId=${options.contactId}&`;
-  }
-  if (options.status) {
-    url += `status=${options.status}&`;
-  }
-  if (options.pageNo) {
-    url += `pageNo=${options.pageNo}&`;
-  }
-  if (options.pageSize) {
-    url += `pageSize=${options.pageSize}&`;
-  }
-  if (options.paginationDisable) {
-    url += `paginationDisable=${options.paginationDisable}&`;
-  }
+  if (options.type) url += `type=${options.type}&`;
+  if (options.contactId) url += `contact=${options.contactId}&`;
+  if (options.referenceNumber)
+    url += `referenceNumber=${encodeURIComponent(options.referenceNumber)}&`;
+  if (options.status) url += `status=${options.status}&`;
+  if (options.pageNo) url += `pageNo=${options.pageNo}&`;
+  if (options.pageSize) url += `pageSize=${options.pageSize}&`;
+  if (options.paginationDisable) url += `paginationDisable=${options.paginationDisable}&`;
 
-  // Remove trailing &
   url = url.replace(/&$/, '');
 
   const response = await request.get(url, {
@@ -270,82 +323,41 @@ export async function getInvoiceList(
 
 /**
  * Navigates to invoice creation page
- *
- * @param page - Playwright Page object
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToCreateInvoice(page);
- * ```
  */
 export async function navigateToCreateInvoice(page: Page): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const createPath = '/admin/income/customer-invoice/create';
-  await page.goto(`${baseUrl}${createPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/income/customer-invoice/create`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }
 
 /**
  * Navigates to invoice list page
- *
- * @param page - Playwright Page object
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToInvoiceList(page);
- * ```
  */
 export async function navigateToInvoiceList(page: Page): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const listPath = '/admin/income/customer-invoice';
-  await page.goto(`${baseUrl}${listPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/income/customer-invoice`, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2000);
 }
 
 /**
  * Navigates to invoice detail page
- *
- * @param page - Playwright Page object
- * @param invoiceId - Invoice ID
- * @throws Error if navigation fails
- *
- * @example
- * ```typescript
- * await navigateToInvoiceDetail(page, 1);
- * ```
  */
 export async function navigateToInvoiceDetail(page: Page, invoiceId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const detailPath = `/admin/income/customer-invoice/${invoiceId}`;
-  await page.goto(`${baseUrl}${detailPath}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${baseUrl}/admin/income/customer-invoice/${invoiceId}`, {
+    waitUntil: 'domcontentloaded',
+  });
   await page.waitForTimeout(2000);
 }
 
 /**
- * Creates an invoice via UI (fallback method)
- *
- * @param page - Playwright Page object
- * @param invoiceData - Invoice data
- * @throws Error if creation fails
- *
- * @example
- * ```typescript
- * await createInvoiceViaUI(page, {
- *   contactId: 1,
- *   lineItems: [{
- *     description: 'Test Product',
- *     quantity: 1,
- *     unitPrice: 1000
- *   }]
- * });
- * ```
+ * Creates an invoice via UI (fallback)
  */
 export async function createInvoiceViaUI(page: Page, invoiceData: InvoiceData): Promise<void> {
   await navigateToCreateInvoice(page);
 
-  // Fill in invoice number if field exists
   if (invoiceData.referenceNumber) {
     const refInput = page.locator('input[name*="reference"], input[name*="number"]').first();
     if (await refInput.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -353,41 +365,30 @@ export async function createInvoiceViaUI(page: Page, invoiceData: InvoiceData): 
     }
   }
 
-  // Select customer/contact
   const contactSelect = page.locator('select[name*="contact"], select[name*="customer"]').first();
   if (await contactSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
     await contactSelect.selectOption(String(invoiceData.contactId));
   }
 
-  // Fill in line items (simplified - actual implementation may vary)
-  // This is a basic implementation; the actual form may be more complex
-  const descriptionInput = page
-    .locator('input[name*="description"], textarea[name*="description"]')
-    .first();
-  if (
-    invoiceData.lineItems.length > 0 &&
-    (await descriptionInput.isVisible({ timeout: 3000 }).catch(() => false))
-  ) {
-    await descriptionInput.fill(invoiceData.lineItems[0].description);
+  if (invoiceData.lineItems.length > 0) {
+    const descriptionInput = page
+      .locator('input[name*="description"], textarea[name*="description"]')
+      .first();
+    if (await descriptionInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await descriptionInput.fill(invoiceData.lineItems[0].description);
+    }
+
+    const quantityInput = page.locator('input[name*="quantity"]').first();
+    if (await quantityInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await quantityInput.fill(String(invoiceData.lineItems[0].quantity));
+    }
+
+    const priceInput = page.locator('input[name*="price"], input[name*="unitPrice"]').first();
+    if (await priceInput.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await priceInput.fill(String(invoiceData.lineItems[0].unitPrice));
+    }
   }
 
-  const quantityInput = page.locator('input[name*="quantity"]').first();
-  if (
-    invoiceData.lineItems.length > 0 &&
-    (await quantityInput.isVisible({ timeout: 3000 }).catch(() => false))
-  ) {
-    await quantityInput.fill(String(invoiceData.lineItems[0].quantity));
-  }
-
-  const priceInput = page.locator('input[name*="price"], input[name*="unitPrice"]').first();
-  if (
-    invoiceData.lineItems.length > 0 &&
-    (await priceInput.isVisible({ timeout: 3000 }).catch(() => false))
-  ) {
-    await priceInput.fill(String(invoiceData.lineItems[0].unitPrice));
-  }
-
-  // Submit the form
   const submitButton = page.getByRole('button', { name: /save|submit|create/i });
   if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
     await submitButton.click();

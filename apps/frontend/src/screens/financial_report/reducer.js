@@ -15,65 +15,78 @@ const initState = {
 };
 
 const ReportsReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case REPORTS.COMPANY_PROFILE:
       return {
         ...state,
-        company_profile: Object.assign([], payload.data),
+        company_profile: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.SALES_BY_CUSTOMER:
       return {
         ...state,
-        sales_by_customer: Object.assign([], payload.data),
+        sales_by_customer: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.SALES_BY_ITEM:
       return {
         ...state,
-        sales_by_item: Object.assign([], payload.data),
+        sales_by_item: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case REPORTS.PURCHASE_BY_VENDOR:
       return {
         ...state,
-        purchase_by_vendor: Object.assign([], payload.data),
+        purchase_by_vendor: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.PURCHASE_BY_ITEM:
       return {
         ...state,
-        purchase_by_item: Object.assign([], payload.data),
+        purchase_by_item: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.RECEIVABLE_INVOICE:
       return {
         ...state,
-        receivable_invoice: Object.assign([], payload.data),
+        receivable_invoice: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.PAYABLE_INVOICE:
       return {
         ...state,
-        payable_invoice: Object.assign([], payload.data),
+        payable_invoice: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case REPORTS.CREDITNOTE_DETAILS:
       return {
         ...state,
-        creditnote_details: Object.assign([], payload.data),
+        creditnote_details: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.SETTING_LIST:
       return {
         ...state,
-        setting_list: Object.assign([], payload.data),
+        setting_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.PAYMENT_HISTORY:
       return {
         ...state,
-        payment_history: Object.assign([], payload.data),
+        payment_history: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case REPORTS.CTREPORT_LIST:
       return {
         ...state,
-        ctReport_list: Object.assign([], payload.data),
+        ctReport_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     default:
       return state;

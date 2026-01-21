@@ -12,7 +12,7 @@ export const getExpenseDetail = _id => {
       .then(res => {
         dispatch({
           type: EXPENSE.EXPENSE_DETAIL,
-          payload: res,
+          payload: res.data,
         });
         return res;
       })

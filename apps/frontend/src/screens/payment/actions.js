@@ -13,7 +13,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -34,7 +34,7 @@ export const getBankList = () => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.BANK_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -55,7 +55,7 @@ export const getSupplierContactList = id => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.SUPPLIER_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -76,7 +76,7 @@ export const getSupplierInvoiceList = id => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.INVOICE_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -97,7 +97,7 @@ export const getProjectList = () => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.PROJECT_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -134,7 +134,7 @@ export const getPaymentList = obj => {
         if (!obj.paginationDisable) {
           dispatch({
             type: PAYMENT.PAYMENT_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
         return res;
@@ -207,7 +207,7 @@ export const getCountryList = () => {
         if (res.status === 200) {
           dispatch({
             type: PAYMENT.COUNTRY_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

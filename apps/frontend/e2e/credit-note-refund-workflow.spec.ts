@@ -105,7 +105,7 @@ test.describe('Credit Note and Refund Workflow', () => {
 
       // Get customer ID from API
       const contactListResponse = await page.request.get(
-        `${getApiBaseUrl()}/rest/contact/list?paginationDisable=true`,
+        `${getApiBaseUrl()}/rest/contact/getContactList?paginationDisable=true`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

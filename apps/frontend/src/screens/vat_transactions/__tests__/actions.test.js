@@ -85,7 +85,7 @@ describe('VAT Transactions Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: VAT_TRANSACTIONS.VAT_TRANSACTION_LIST,
-        payload: { data: mockData },
+        payload: mockData,
       });
     });
 

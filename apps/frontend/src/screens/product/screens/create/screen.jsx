@@ -15,7 +15,6 @@ import {
   FormGroup,
   Input,
   Label,
-  UncontrolledTooltip,
 } from 'components/migration';
 import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
@@ -35,11 +34,13 @@ import {
   getTransactionCategoryListForSalesProduct,
   getTransactionCategoryListForPurchaseProduct,
   getTransactionCategoryListForInventory,
+  checkValidation,
+  checkProductNameValidation,
 } from '../../productSlice';
 import { WareHouseModal } from '../../sections';
 import { selectOptionsFactory, selectStyles } from 'utils';
 import config from '../../../../constants/config';
-import { Ban, CircleDot, HelpCircle, Package, RefreshCw } from 'lucide-react';
+import { Ban, CircleDot, Package, RefreshCw } from 'lucide-react';
 
 const mapStateToProps = state => {
   return {
@@ -65,7 +66,10 @@ const strings = new LocalizedStrings(data);
 const createProductSchema = z
   .object({
     productName: z.string().min(1, 'Product name is required'),
-    productCode: z.string().min(1, 'Product code is required'),
+    productCode: z
+      .union([z.string(), z.number()])
+      .transform(val => String(val))
+      .pipe(z.string().min(1, 'Product code is required')),
     productDescription: z.string().optional(),
     vatCategoryId: z
       .object({
@@ -73,7 +77,7 @@ const createProductSchema = z
         label: z.string(),
       })
       .nullable()
-      .refine(val => val !== null, 'VAT type is required'),
+      .optional(), // Make optional - will be validated and set in onSubmit based on company VAT status
     unitTypeId: z
       .object({
         value: z.number(),
@@ -234,6 +238,28 @@ const CreateProduct = ({
   const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
   const regDecimal5 = /^\d{1,10}$/;
 
+  // Helper function to get human-readable field labels for error messages
+  const getFieldLabel = fieldName => {
+    const labels = {
+      productName: 'Product Name',
+      productCode: 'Product Code',
+      vatCategoryId: 'VAT Type',
+      productType: 'Product Type',
+      productPriceType: 'Price Type (SALES/PURCHASE)',
+      salesUnitPrice: 'Sales Unit Price',
+      purchaseUnitPrice: 'Purchase Unit Price',
+      salesTransactionCategoryId: 'Sales Transaction Category',
+      purchaseTransactionCategoryId: 'Purchase Transaction Category',
+      inventoryPurchasePrice: 'Inventory Purchase Price',
+      inventoryQty: 'Inventory Quantity',
+      exciseTaxId: 'Excise Tax',
+    };
+    return (
+      labels[fieldName] ||
+      fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
+    );
+  };
+
   const form = useForm({
     resolver: zodResolver(createProductSchema),
     defaultValues: {
@@ -294,6 +320,22 @@ const CreateProduct = ({
     getcompanyDetails();
   }, []);
 
+  // Set VAT Type to N/A when company details and VAT list are both loaded for non-VAT companies
+  useEffect(() => {
+    if (companyDetails && !companyDetails.isRegisteredVat && vat_list && vat_list.length > 0) {
+      // Find N/A option in vat_list (value: 10) or create it
+      const naVat = vat_list.find(vat => vat.id === 10);
+      const naVatOption = naVat ? { label: naVat.name, value: 10 } : { label: 'N/A', value: 10 };
+
+      // Only set if not already set to N/A
+      const currentValue = watch('vatCategoryId');
+      if (!currentValue || currentValue.value !== 10) {
+        setValue('vatCategoryId', naVatOption, { shouldValidate: false });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyDetails, vat_list]);
+
   const getcompanyDetails = () => {
     // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
     getCompanyDetailsApi()
@@ -301,7 +343,13 @@ const CreateProduct = ({
         if (res.status === 200) {
           setCompanyDetails(res.data);
           if (res.data && res.data.isRegisteredVat === false) {
-            setValue('vatCategoryId', { label: 'N/A', value: 10 });
+            // For non-VAT companies, automatically set VAT to N/A
+            const naVatOption = { label: 'N/A', value: 10 };
+            setValue('vatCategoryId', naVatOption, { shouldValidate: false });
+            // Also ensure it's in the vat_list if not already there
+            if (vat_list && !vat_list.find(vat => vat.id === 10)) {
+              // N/A option should be available in the list
+            }
           }
         }
       })
@@ -385,23 +433,60 @@ const CreateProduct = ({
   const getData = data => {
     let temp = {};
     for (let item in data) {
-      if (typeof data[`${item}`] !== 'object') {
-        temp[`${item}`] = data[`${item}`];
+      const value = data[`${item}`];
+      if (value === null || value === undefined || value === '') {
+        // Skip null, undefined, or empty string values
+        continue;
+      } else if (typeof value !== 'object' || Array.isArray(value)) {
+        // Primitive types or arrays - use as is
+        temp[`${item}`] = value;
+      } else if (value && typeof value === 'object' && 'value' in value) {
+        // Object with value property (e.g., { value: 10, label: 'N/A' })
+        // Only include if value is not null/undefined/empty
+        if (value.value !== null && value.value !== undefined && value.value !== '') {
+          temp[`${item}`] = value.value;
+        }
       } else {
-        temp[`${item}`] = data[`${item}`].value;
+        // Other objects - use as is (might be a complex object)
+        temp[`${item}`] = value;
       }
     }
     return temp;
   };
 
   const onSubmit = data => {
+    // Handle VAT Type for non-VAT registered companies
+    if (companyDetails && !companyDetails.isRegisteredVat) {
+      // For non-VAT companies, VAT should be set to N/A (value: 10)
+      if (!data.vatCategoryId || (data.vatCategoryId && data.vatCategoryId.value !== 10)) {
+        const naVatOption = { label: 'N/A', value: 10 };
+        setValue('vatCategoryId', naVatOption);
+        data.vatCategoryId = naVatOption;
+      }
+    }
+
+    // Ensure productCode is a string (it might come as a number from auto-generation)
+    if (typeof data.productCode !== 'string') {
+      const codeAsString = String(data.productCode || '');
+      setValue('productCode', codeAsString);
+      data.productCode = codeAsString;
+    }
+
     // Custom validation
     if (exist === true) {
       setError('productName', { type: 'manual', message: 'Product name already exists' });
+      commonActions.tostifyAlert(
+        'error',
+        'Product name already exists. Please choose a different name.'
+      );
       return;
     }
     if (ProductExist === true) {
       setError('productCode', { type: 'manual', message: 'Product code already exists' });
+      commonActions.tostifyAlert(
+        'error',
+        'Product code already exists. Please choose a different code.'
+      );
       return;
     }
     if (data.isInventoryEnabled === true) {
@@ -410,39 +495,49 @@ const CreateProduct = ({
           type: 'manual',
           message: 'Inventory purchase price is required',
         });
+        commonActions.tostifyAlert(
+          'error',
+          'Inventory purchase price is required when inventory is enabled.'
+        );
         return;
       }
       if (data.inventoryQty === '') {
         setError('inventoryQty', { type: 'manual', message: 'Inventory quantity is required' });
+        commonActions.tostifyAlert(
+          'error',
+          'Inventory quantity is required when inventory is enabled.'
+        );
         return;
       }
     }
     if (exciseTaxCheck === true && data.exciseTaxId === '') {
       setError('exciseTaxId', { type: 'manual', message: 'Excise tax is required' });
+      commonActions.tostifyAlert('error', 'Excise tax is required when excise tax is enabled.');
       return;
     }
 
     setDisabled(true);
-    const productCode = data['productCode'];
-    const salesUnitPrice = data['salesUnitPrice'];
-    const salesTransactionCategoryId = data['salesTransactionCategoryId'];
-    const salesDescription = data['salesDescription'];
-    const purchaseDescription = data['purchaseDescription'];
-    const purchaseTransactionCategoryId = data['purchaseTransactionCategoryId'];
-    const purchaseUnitPrice = data['purchaseUnitPrice'];
-    const vatCategoryId = data['vatCategoryId'];
-    const exciseTaxId = data['exciseTaxId'];
-    const vatIncluded = data['vatIncluded'];
-    const inventoryPurchasePrice = data['inventoryPurchasePrice'];
-    const inventoryQty = data['inventoryQty'];
-    const inventoryReorderLevel = data['inventoryReorderLevel'];
+    // Ensure productCode is a string (it might come as a number from auto-generation)
+    const productCode = String(data['productCode'] || '');
+    const salesUnitPrice = data['salesUnitPrice'] || '';
+    const salesTransactionCategoryId = data['salesTransactionCategoryId'] || null;
+    const salesDescription = data['salesDescription'] || '';
+    const purchaseDescription = data['purchaseDescription'] || '';
+    const purchaseTransactionCategoryId = data['purchaseTransactionCategoryId'] || null;
+    const purchaseUnitPrice = data['purchaseUnitPrice'] || '';
+    const vatCategoryId = data['vatCategoryId'] || null;
+    const exciseTaxId = data['exciseTaxId'] || '';
+    const vatIncluded = data['vatIncluded'] || false;
+    const inventoryPurchasePrice = data['inventoryPurchasePrice'] || '';
+    const inventoryQty = data['inventoryQty'] || '';
+    const inventoryReorderLevel = data['inventoryReorderLevel'] || '';
     const contactId = data['contactId'] ? data['contactId'].value : '';
-    const isInventoryEnabled = data['isInventoryEnabled'];
-    const transactionCategoryId = data['transactionCategoryId'];
-    const productCategoryId = data['productCategoryId'];
+    const isInventoryEnabled = data['isInventoryEnabled'] || false;
+    const transactionCategoryId = data['transactionCategoryId'] || null;
+    const productCategoryId = data['productCategoryId'] || null;
     const isActive = productActive;
     const exciseTaxCheckVal = exciseTaxCheck;
-    const unitTypeId = data['unitTypeId'];
+    const unitTypeId = data['unitTypeId'] || null;
 
     let productPriceType;
     if (data['productPriceType'].includes('SALES')) {
@@ -459,46 +554,65 @@ const CreateProduct = ({
     }
     const productName = data['productName'];
     const productType = data['productType'];
+    // Helper function to safely extract value from object or return as-is
+    const getValue = val => {
+      if (val === null || val === undefined) return null;
+      if (typeof val === 'object' && !Array.isArray(val) && 'value' in val) {
+        return val.value;
+      }
+      return val;
+    };
+
+    // Helper function to check if a value should be included
+    const shouldInclude = val => {
+      if (val === null || val === undefined || val === '') return false;
+      if (typeof val === 'string' && val.length === 0) return false;
+      if (typeof val === 'object' && !Array.isArray(val) && 'value' in val) {
+        return val.value !== null && val.value !== undefined && val.value !== '';
+      }
+      return true;
+    };
+
     const dataNew = {
       productCode,
       productName,
       productType,
       productPriceType,
-      vatCategoryId,
+      vatCategoryId: getValue(vatCategoryId),
       exciseTaxId,
       vatIncluded,
       isInventoryEnabled,
       contactId,
-      transactionCategoryId,
-      productCategoryId,
+      transactionCategoryId: getValue(transactionCategoryId),
+      productCategoryId: getValue(productCategoryId),
       isActive,
       exciseTaxCheck: exciseTaxCheckVal,
-      unitTypeId,
-      ...(salesUnitPrice.length !== 0 && {
+      unitTypeId: getValue(unitTypeId),
+      ...(shouldInclude(salesUnitPrice) && {
         salesUnitPrice,
       }),
-      ...(salesTransactionCategoryId.length !== 0 && {
-        salesTransactionCategoryId,
+      ...(shouldInclude(salesTransactionCategoryId) && {
+        salesTransactionCategoryId: getValue(salesTransactionCategoryId),
       }),
-      ...(salesDescription.length !== 0 && {
+      ...(shouldInclude(salesDescription) && {
         salesDescription,
       }),
-      ...(purchaseDescription.length !== 0 && {
+      ...(shouldInclude(purchaseDescription) && {
         purchaseDescription,
       }),
-      ...(purchaseTransactionCategoryId.length !== 0 && {
-        purchaseTransactionCategoryId,
+      ...(shouldInclude(purchaseTransactionCategoryId) && {
+        purchaseTransactionCategoryId: getValue(purchaseTransactionCategoryId),
       }),
-      ...(purchaseUnitPrice.length !== 0 && {
+      ...(shouldInclude(purchaseUnitPrice) && {
         purchaseUnitPrice,
       }),
-      ...(inventoryPurchasePrice.length !== 0 && {
+      ...(shouldInclude(inventoryPurchasePrice) && {
         inventoryPurchasePrice,
       }),
-      ...(inventoryQty.length !== 0 && {
+      ...(shouldInclude(inventoryQty) && {
         inventoryQty,
       }),
-      ...(inventoryReorderLevel.length !== 0 && {
+      ...(shouldInclude(inventoryReorderLevel) && {
         inventoryReorderLevel,
       }),
     };
@@ -508,17 +622,40 @@ const CreateProduct = ({
     setLoadingMsg('Creating Product...');
     productActions
       .createAndSaveProduct(postData)
-      .then(res => {
+      .then(action => {
         setDisabled(false);
         setLoading(false);
-        if (res.status === 200) {
-          commonActions.tostifyAlert(
-            'success',
-            res.data ? res.data.message : 'Product Created Successfully'
-          );
+        setDisableLeavePage(false);
+
+        // RTK thunk returns fulfilled action object: { type, payload, meta }
+        // payload is the SimpleAccountsMessage object or string from backend
+        const res = action.payload || action;
+
+        // Handle response - res is the SimpleAccountsMessage object or string
+        // Backend returns SimpleAccountsMessage with isErrorMessage flag
+        // Or "Product Code Already Exist" as a string
+        const isError = typeof res === 'string' || (res && res.isErrorMessage === true);
+        const message =
+          typeof res === 'string' ? res : res?.message || 'Product Created Successfully';
+
+        if (isError) {
+          // Error case
+          commonActions.tostifyAlert('error', message);
+          if (typeof res === 'string' && res.includes('Product Code')) {
+            setError('productCode', { type: 'manual', message: message });
+            // Focus on product code field so user can edit it
+            const productCodeInput = document.getElementById('productCode');
+            if (productCodeInput) {
+              productCodeInput.focus();
+              productCodeInput.select();
+            }
+          }
+        } else {
+          // Success case
+          commonActions.tostifyAlert('success', message);
+
           if (createMore) {
             setCreateMore(false);
-            setDisableLeavePage(false);
             reset({
               productName: '',
               productDescription: '',
@@ -551,58 +688,87 @@ const CreateProduct = ({
             getcompanyDetails();
           } else {
             if (isParentComponentPresent && isParentComponentPresent === true) {
-              getCurrentProductData(res.data);
+              // For modal usage, pass the response data
+              getCurrentProductData(res);
               closeModal(true);
             } else {
+              // For standalone page, navigate to product list
               history.push('/admin/master/product');
             }
-            setLoading(false);
           }
         }
       })
       .catch(err => {
         setDisabled(false);
         setLoading(false);
-        commonActions.tostifyAlert(
-          'error',
-          err.data ? err.data.message : 'Product Created Unsuccessfully'
-        );
+        setDisableLeavePage(false);
+
+        // Handle error - err is the rejected action object or error
+        const errorPayload = err?.payload || err;
+        const errorMessage =
+          typeof errorPayload === 'string'
+            ? errorPayload
+            : errorPayload?.message ||
+              errorPayload?.data?.message ||
+              'Product creation failed. Please try again.';
+        commonActions.tostifyAlert('error', errorMessage);
+        console.error('Product creation error:', err);
       });
   };
 
   const validationCheck = value => {
+    if (!value || value.trim() === '') {
+      return; // Skip validation for empty values
+    }
     const data = {
       moduleType: 1,
       name: value,
     };
-    productActions.checkValidation(data).then(response => {
-      if (response.data === 'Product Name Already Exists') {
-        setExist(true);
-      } else {
-        setExist(false);
-      }
-    });
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+    checkValidation(data)
+      .then(response => {
+        if (response.data === 'Product Name Already Exists') {
+          setExist(true);
+        } else {
+          setExist(false);
+        }
+      })
+      .catch(err => {
+        // Silently handle errors - validation is not critical for UX
+        console.error('Product name validation error:', err);
+      });
   };
 
   const ProductvalidationCheck = value => {
+    if (!value || value.trim() === '') {
+      return; // Skip validation for empty values
+    }
     const data = {
       moduleType: 7,
       productCode: value,
     };
-    productActions.checkProductNameValidation(data).then(response => {
-      if (response.data === 'Product Code Already Exists') {
-        setProductExist(true);
-      } else {
-        setProductExist(false);
-      }
-    });
+    // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
+    checkProductNameValidation(data)
+      .then(response => {
+        if (response.data === 'Product Code Already Exists') {
+          setProductExist(true);
+        } else {
+          setProductExist(false);
+        }
+      })
+      .catch(err => {
+        // Silently handle errors - validation is not critical for UX
+        console.error('Product code validation error:', err);
+      });
   };
 
   const getProductCode = () => {
     // Call directly (not through bindActionCreators - this is a utility function, not a Redux action)
     getProductCodeApi().then(res => {
       if (res.status === 200) {
-        setValue('productCode', res.data);
+        // Ensure productCode is always a string (API might return a number)
+        const productCode = String(res.data || '');
+        setValue('productCode', productCode);
       }
     });
   };
@@ -637,18 +803,44 @@ const CreateProduct = ({
                 <CardBody>
                   <Row>
                     <Col lg={12}>
-                      <Form onSubmit={handleSubmit(onSubmit)}>
+                      <Form
+                        onSubmit={handleSubmit(onSubmit, errors => {
+                          // Show validation errors summary when form is submitted with errors
+                          const errorFields = Object.keys(errors);
+                          if (errorFields.length > 0) {
+                            const errorMessages = errorFields.map(field => {
+                              const fieldLabel = getFieldLabel(field);
+                              return `${fieldLabel}: ${errors[field]?.message || 'Required'}`;
+                            });
+                            commonActions.tostifyAlert(
+                              'error',
+                              `Please fill in all required fields:\n${errorMessages.join('\n')}`
+                            );
+                          }
+                        })}
+                      >
+                        {/* Validation Summary Alert */}
+                        {Object.keys(errors).length > 0 && (
+                          <Row className="mb-3">
+                            <Col lg={12}>
+                              <div className="alert alert-danger" role="alert">
+                                <strong>Please fix the following errors:</strong>
+                                <ul className="mb-0 mt-2">
+                                  {Object.entries(errors).map(([field, error]) => (
+                                    <li key={field}>
+                                      <strong>{getFieldLabel(field)}:</strong>{' '}
+                                      {error?.message || 'This field is required'}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
                         <Row>
                           <Col lg={4}>
                             <FormGroup check inline className="mb-3">
-                              <Label className="productlabel">
-                                {strings.ProductType}
-                                <HelpCircle id="ProductTypetip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="ProductTypetip">
-                                  The product type cannot be changed after any document has been
-                                  created using this product.
-                                </UncontrolledTooltip>
-                              </Label>
+                              <Label className="productlabel">{strings.ProductType}</Label>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               <FormGroup check inline>
                                 <div className="custom-radio custom-control">
@@ -684,7 +876,7 @@ const CreateProduct = ({
                                     control={control}
                                     render={({ field }) => (
                                       <>
-                                        <Input
+                                        <input
                                           className="custom-control-input"
                                           type="radio"
                                           id="producttypetwo"
@@ -809,10 +1001,6 @@ const CreateProduct = ({
                               <Label htmlFor="productCode">
                                 <span className="text-danger">* </span>
                                 {strings.ProductCode}
-                                <HelpCircle id="ProductCodeTooltip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="ProductCodeTooltip">
-                                  Product Code - Unique identifier code for the product
-                                </UncontrolledTooltip>
                               </Label>
                               <Controller
                                 name="productCode"
@@ -825,12 +1013,7 @@ const CreateProduct = ({
                                     id="productCode"
                                     disabled
                                     placeholder={strings.Enter + strings.ProductCode}
-                                    onChange={e => {
-                                      if (e.target.value === '' || regExBoth.test(e.target.value)) {
-                                        field.onChange(e);
-                                      }
-                                      ProductvalidationCheck(e.target.value);
-                                    }}
+                                    value={field.value ? String(field.value) : ''}
                                     className={
                                       errors.productCode && touchedFields.productCode
                                         ? 'is-invalid'
@@ -858,7 +1041,7 @@ const CreateProduct = ({
                                     styles={selectStyles}
                                     className="select-default-width"
                                     options={
-                                      product_category_list
+                                      product_category_list && product_category_list.length > 0
                                         ? selectOptionsFactory.renderOptions(
                                             'label',
                                             'value',
@@ -868,9 +1051,16 @@ const CreateProduct = ({
                                         : []
                                     }
                                     id="productCategoryId"
-                                    placeholder={strings.Select + strings.ProductCategory}
+                                    placeholder={
+                                      product_category_list && product_category_list.length === 0
+                                        ? 'No categories available (Optional)'
+                                        : strings.Select + strings.ProductCategory
+                                    }
+                                    isDisabled={
+                                      !product_category_list || product_category_list.length === 0
+                                    }
                                     onChange={option => {
-                                      field.onChange(option || '');
+                                      field.onChange(option || null);
                                     }}
                                     isClearable
                                   />
@@ -887,33 +1077,50 @@ const CreateProduct = ({
                               <Controller
                                 name="vatCategoryId"
                                 control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    {...field}
-                                    styles={selectStyles}
-                                    isDisabled={companyDetails && !companyDetails.isRegisteredVat}
-                                    options={
-                                      vat_list
-                                        ? selectOptionsFactory.renderOptions(
-                                            'name',
-                                            'id',
-                                            vat_list,
-                                            'VAT'
-                                          )
-                                        : []
-                                    }
-                                    id="vatCategoryId"
-                                    placeholder={strings.Select + 'VAT Type'}
-                                    onChange={option => {
-                                      field.onChange(option || '');
-                                    }}
-                                    className={
-                                      errors.vatCategoryId && touchedFields.vatCategoryId
-                                        ? 'is-invalid'
-                                        : ''
-                                    }
-                                  />
-                                )}
+                                render={({ field }) => {
+                                  // For non-VAT companies, ensure N/A is selected
+                                  const fieldValue =
+                                    companyDetails &&
+                                    !companyDetails.isRegisteredVat &&
+                                    !field.value
+                                      ? { label: 'N/A', value: 10 }
+                                      : field.value;
+
+                                  return (
+                                    <Select
+                                      {...field}
+                                      value={fieldValue}
+                                      styles={selectStyles}
+                                      isDisabled={companyDetails && !companyDetails.isRegisteredVat}
+                                      options={
+                                        vat_list && vat_list.length > 0
+                                          ? selectOptionsFactory.renderOptions(
+                                              'name',
+                                              'id',
+                                              vat_list,
+                                              'VAT'
+                                            )
+                                          : companyDetails && !companyDetails.isRegisteredVat
+                                            ? [{ label: 'N/A', value: 10 }] // Ensure N/A option is available
+                                            : []
+                                      }
+                                      id="vatCategoryId"
+                                      placeholder={
+                                        companyDetails && !companyDetails.isRegisteredVat
+                                          ? 'N/A (Non-VAT Company)'
+                                          : strings.Select + 'VAT Type'
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option || null);
+                                      }}
+                                      className={
+                                        errors.vatCategoryId && touchedFields.vatCategoryId
+                                          ? 'is-invalid'
+                                          : ''
+                                      }
+                                    />
+                                  );
+                                }}
                               />
                               {errors.vatCategoryId && touchedFields.vatCategoryId && (
                                 <div className="invalid-feedback">
@@ -977,12 +1184,6 @@ const CreateProduct = ({
                                   checked={exciseTaxCheck}
                                 />
                                 {strings.excise_product}
-                                <HelpCircle id="ExciseTooltip" className="h-4 w-4 inline" />
-                                <UncontrolledTooltip placement="right" target="ExciseTooltip">
-                                  Note: It is not possible to switch from Excise Goods to Non-Excise
-                                  Goods or vice versa once any document is created using this
-                                  product.
-                                </UncontrolledTooltip>
                               </Label>
                             </FormGroup>
                           </Col>
@@ -1092,10 +1293,6 @@ const CreateProduct = ({
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="salesUnitPrice">
                                     <span className="text-danger">* </span> {strings.SellingPrice}
-                                    <HelpCircle id="SalesTooltip" className="h-4 w-4 inline" />
-                                    <UncontrolledTooltip placement="right" target="SalesTooltip">
-                                      Selling price – Price at which your product is sold
-                                    </UncontrolledTooltip>
                                   </Label>
                                   <Controller
                                     name="salesUnitPrice"
@@ -1252,10 +1449,6 @@ const CreateProduct = ({
                                 <FormGroup className="mb-3">
                                   <Label htmlFor="salesUnitPrice">
                                     <span className="text-danger">* </span> {strings.PurchasePrice}
-                                    <HelpCircle id="PurchaseTooltip" className="h-4 w-4 inline" />
-                                    <UncontrolledTooltip placement="right" target="PurchaseTooltip">
-                                      Purchase price – Amount of money you paid for the product
-                                    </UncontrolledTooltip>
                                   </Label>
                                   <Controller
                                     name="purchaseUnitPrice"
@@ -1401,11 +1594,6 @@ const CreateProduct = ({
                                       {errors.productPriceType.message}
                                     </div>
                                   )}
-                                  <HelpCircle id="EnventoryTooltip" className="h-4 w-4 inline" />
-                                  <UncontrolledTooltip placement="right" target="EnventoryTooltip">
-                                    Inventory cannot be enabled or disabled once a document has been
-                                    created using this product.
-                                  </UncontrolledTooltip>
                                 </Label>
                               </FormGroup>
 

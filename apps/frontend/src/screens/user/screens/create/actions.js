@@ -47,9 +47,7 @@ export const getEmployeesNotInUserForDropdown = () => {
         if (res.status === 200) {
           dispatch({
             type: USER.EMPLOYEE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
         return res;

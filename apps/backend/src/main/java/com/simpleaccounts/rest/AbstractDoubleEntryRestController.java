@@ -288,8 +288,11 @@ public abstract class AbstractDoubleEntryRestController {
 				TransactionExpenses transactionExpenses =  transactionExpensesRepository.findByExpense(expense);
 				transactionExpensesService.delete(transactionExpenses);
 				Transaction transaction = transactionService.findByPK(transactionExpenses.getTransaction().getTransactionId());
-				TransactionExplanation transactionExplanation = transactionExplanationRepository.getTransactionExplanationsByTransaction(transaction).get(0);
-				transactionExplanationRepository.delete(transactionExplanation);
+				List<TransactionExplanation> transactionExplanationList = transactionExplanationRepository.getTransactionExplanationsByTransaction(transaction);
+				if (transactionExplanationList != null && !transactionExplanationList.isEmpty()) {
+					TransactionExplanation transactionExplanation = transactionExplanationList.get(0);
+					transactionExplanationRepository.delete(transactionExplanation);
+				}
 				transaction.setDeleteFlag(Boolean.TRUE);
 				transactionService.deleteTransaction(transaction);
 				}

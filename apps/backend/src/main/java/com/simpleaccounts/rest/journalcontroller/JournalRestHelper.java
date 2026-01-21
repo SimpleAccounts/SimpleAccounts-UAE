@@ -76,12 +76,18 @@ public class JournalRestHelper {
 		}
 		journal.setJournlReferencenNo(journalRequestModel.getJournalReferenceNo());
 		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(11);
-		if (journalRequestModel.getJournalReferenceNo()!=null && !journalRequestModel.getJournalReferenceNo().isEmpty()) {
+		if (journalRequestModel.getJournalReferenceNo()!=null && !journalRequestModel.getJournalReferenceNo().isEmpty() && template != null) {
 			String suffix = invoiceNumberUtil.fetchSuffixFromString(journalRequestModel.getJournalReferenceNo());
-			template.setSuffix(Integer.parseInt(suffix));
-			String prefix = journal.getJournlReferencenNo().substring(0, journal.getJournlReferencenNo().lastIndexOf(suffix));
-			template.setPrefix(prefix);
-			customizeInvoiceTemplateService.persist(template);
+			if (suffix != null && !suffix.isEmpty()) {
+				try {
+					template.setSuffix(Integer.parseInt(suffix));
+					String prefix = journal.getJournlReferencenNo().substring(0, journal.getJournlReferencenNo().lastIndexOf(suffix));
+					template.setPrefix(prefix);
+					customizeInvoiceTemplateService.persist(template);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse suffix {} as Integer from journal reference no {}", suffix, journalRequestModel.getJournalReferenceNo());
+				}
+			}
 		}
 		getJournalDate(journalRequestModel, journal);
 		journal.setDescription(journalRequestModel.getDescription());

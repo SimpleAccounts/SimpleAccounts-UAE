@@ -48,7 +48,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST,
-        payload: { data: mockInvoices },
+        payload: mockInvoices,
       });
     });
 
@@ -117,7 +117,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PROJECT_LIST,
-        payload: { data: mockProjects },
+        payload: mockProjects,
       });
     });
 
@@ -152,7 +152,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.CONTACT_LIST,
-        payload: { data: mockContacts },
+        payload: mockContacts,
       });
     });
 
@@ -191,7 +191,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.STATUS_LIST,
-        payload: { status: 200, data: mockStatuses },
+        payload: mockStatuses,
       });
     });
   });
@@ -218,7 +218,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.CURRENCY_LIST,
-        payload: { data: mockCurrencies },
+        payload: mockCurrencies,
       });
 
       expect(result.status).toBe(200);
@@ -247,7 +247,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.VAT_LIST,
-        payload: { data: mockVatList },
+        payload: mockVatList,
       });
 
       expect(result.status).toBe(200);
@@ -276,7 +276,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.EXCISE_LIST,
-        payload: { data: mockExciseList },
+        payload: mockExciseList,
       });
     });
   });
@@ -303,7 +303,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.DEPOSIT_LIST,
-        payload: { data: mockDeposits },
+        payload: mockDeposits,
       });
     });
   });
@@ -330,7 +330,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PAY_MODE,
-        payload: { data: mockPayModes },
+        payload: mockPayModes,
       });
     });
   });
@@ -357,7 +357,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.PRODUCT_LIST,
-        payload: { data: mockProducts },
+        payload: mockProducts,
       });
 
       expect(result.status).toBe(200);
@@ -386,7 +386,7 @@ describe('SupplierInvoice Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: SUPPLIER_INVOICE.SUPPLIER_LIST,
-        payload: { status: 200, data: mockSuppliers },
+        payload: mockSuppliers,
       });
     });
   });

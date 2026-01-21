@@ -330,6 +330,8 @@ export async function postCreditNote(
 
   const payload = {
     postingRefId: creditNoteId,
+    postingRefType: 'CREDIT_NOTE',
+    markAsSent: false,
   };
 
   const response = await request.post(`${apiUrl}/rest/creditNote/creditNotePosting`, {

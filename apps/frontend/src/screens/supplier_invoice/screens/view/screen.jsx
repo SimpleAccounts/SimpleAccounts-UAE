@@ -7,7 +7,6 @@ import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { InvoiceTemplate } from './sections';
 import { CommonActions } from 'services/global';
 import { data } from '../../../Language/index';
@@ -123,7 +122,7 @@ const ViewInvoice = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   const redirectToDebitNote = debiteNote => {
@@ -219,7 +218,7 @@ const ViewInvoice = props => {
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -234,7 +233,7 @@ const ViewInvoice = props => {
                   companyData={companyData}
                   contactData={contactData}
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

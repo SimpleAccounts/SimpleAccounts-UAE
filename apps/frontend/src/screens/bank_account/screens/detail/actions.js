@@ -12,9 +12,7 @@ export const getAccountTypeList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -35,9 +33,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CURRENCY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -58,9 +54,7 @@ export const getCountryList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.COUNTRY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

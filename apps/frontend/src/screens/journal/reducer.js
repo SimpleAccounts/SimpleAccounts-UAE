@@ -11,36 +11,49 @@ const initState = {
 };
 
 const JournalReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
   switch (type) {
     case JOURNAL.JOURNAL_LIST:
       return {
         ...state,
-        journal_list: Object.assign([], payload),
+        journal_list: getArray(payload),
       };
 
     case JOURNAL.TRANSACTION_CATEGORY_LIST:
       return {
         ...state,
-        transaction_category_list: Object.assign([], payload.data),
+        transaction_category_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case JOURNAL.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case JOURNAL.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case JOURNAL.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case JOURNAL.PAGE_NUM:

@@ -16,77 +16,90 @@ const initState = {
 };
 
 const SupplierInvoiceReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case SUPPLIER_INVOICE.SUPPLIER_INVOICE_LIST:
       return {
         ...state,
-        supplier_invoice_list: Object.assign([], payload.data),
+        supplier_invoice_list: getArray(payload),
       };
 
     case SUPPLIER_INVOICE.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case SUPPLIER_INVOICE.EXCISE_LIST:
       return {
         ...state,
-        excise_list: Object.assign([], payload.data),
+        excise_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case SUPPLIER_INVOICE.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case SUPPLIER_INVOICE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
 
     default:

@@ -203,7 +203,7 @@ describe('Employee Bank Details Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
 
@@ -256,7 +256,7 @@ describe('Employee Bank Details Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toEqual([]);
+      expect(dispatchedActions[0].payload).toEqual([]);
     });
 
     it('should fetch currencies for bank details dropdown', async () => {
@@ -273,7 +273,7 @@ describe('Employee Bank Details Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data.length).toBe(2);
+      expect(dispatchedActions[0].payload.length).toBe(2);
     });
   });
 

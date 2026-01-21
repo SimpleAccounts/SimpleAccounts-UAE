@@ -8,7 +8,6 @@ import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
@@ -88,7 +87,7 @@ class ViewExpense extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -169,7 +168,7 @@ class ViewExpense extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -180,7 +179,7 @@ class ViewExpense extends React.Component {
                     companyData={this.state && this.state.companyData ? this.state.companyData : ''}
                     ref={el => (this.componentRef = el)}
                   />
-                </PDFExport>
+                </div>
               </div>
               <div>
                 {expenseStatus && expenseStatus !== 'Draft' && (

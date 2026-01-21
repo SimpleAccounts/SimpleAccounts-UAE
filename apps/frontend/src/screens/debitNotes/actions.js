@@ -37,9 +37,7 @@ export const getdebitNotesList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: DEBIT_NOTE.DEBIT_NOTE_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
             return res;
           }
@@ -62,9 +60,7 @@ export const getPlaceOfSuppliyList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.PLACE_OF_SUPPLY,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -84,7 +80,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
           return res;
         }
@@ -106,9 +102,7 @@ export const getDepositList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.DEPOSIT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -130,9 +124,7 @@ export const getContactList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -153,7 +145,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -466,9 +458,7 @@ export const getProductListById = id => {
         if (res.status === 200) {
           dispatch({
             type: DEBIT_NOTE.PRODUCT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

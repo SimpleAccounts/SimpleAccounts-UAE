@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.simpleaccounts.entity.Invoice;
 import com.simpleaccounts.helper.ExpenseRestHelper;
+import com.simpleaccounts.repository.InvoiceRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.QuotationInvoiceRepository;
 import com.simpleaccounts.rfq_po.PoQuatationService;
@@ -21,6 +22,7 @@ import com.simpleaccounts.service.InvoiceService;
 import com.simpleaccounts.service.PlaceOfSupplyService;
 import com.simpleaccounts.service.UserService;
 import com.simpleaccounts.utils.ChartUtil;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,6 +55,7 @@ class InvoiceRestControllerTest {
     @Mock private PoQuatationService poQuatationService;
     @Mock private QuotationInvoiceRepository quotationInvoiceRepository;
     @Mock private JournalLineItemRepository journalLineItemRepository;
+    @Mock private InvoiceRepository invoiceRepository;
 
     @InjectMocks
     private InvoiceRestController invoiceRestController;
@@ -71,7 +74,7 @@ class InvoiceRestControllerTest {
         InvoiceRequestModel requestModel = new InvoiceRequestModel();
         requestModel.setReferenceNumber("INV-123");
 
-        when(invoiceService.findByPK(invoiceId)).thenReturn(invoice);
+        when(invoiceRepository.findInvoiceForViewById(invoiceId)).thenReturn(Optional.of(invoice));
         when(invoiceRestHelper.getRequestModel(invoice)).thenReturn(requestModel);
 
         mockMvc.perform(get("/rest/invoice/getInvoiceById")
@@ -83,7 +86,7 @@ class InvoiceRestControllerTest {
     @Test
     void shouldReturnNotFoundWhenInvoiceByIdDoesNotExist() throws Exception {
         Integer invoiceId = 999;
-        when(invoiceService.findByPK(invoiceId)).thenReturn(null);
+        when(invoiceRepository.findInvoiceForViewById(invoiceId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/rest/invoice/getInvoiceById")
                 .param("id", String.valueOf(invoiceId))

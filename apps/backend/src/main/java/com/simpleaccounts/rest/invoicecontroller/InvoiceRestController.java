@@ -19,6 +19,7 @@ import com.simpleaccounts.helper.ExpenseRestHelper;
 import com.simpleaccounts.model.EarningDetailsModel;
 import com.simpleaccounts.model.OverDueAmountDetailsModel;
 import com.simpleaccounts.model.PlaceOfSupplyResponseModel;
+import com.simpleaccounts.repository.InvoiceRepository;
 import com.simpleaccounts.repository.JournalLineItemRepository;
 import com.simpleaccounts.repository.QuotationInvoiceRepository;
 import com.simpleaccounts.rest.AbstractDoubleEntryRestController;
@@ -49,6 +50,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +113,8 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	private final FileAttachmentService fileAttachmentService;
 
+	private final InvoiceRepository invoiceRepository;
+
 	private final CreditNoteInvoiceRelationService creditNoteInvoiceRelationService;
 
 	private final PoQuatationService poQuatationService;
@@ -120,6 +124,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	private final JournalLineItemRepository journalLineItemRepository;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getInvoiceList(InvoiceRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -224,8 +229,10 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 
 	@LogRequest
 	@GetMapping(value = "/getInvoiceById")
+	@Transactional(readOnly = true)
 	public ResponseEntity<InvoiceRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
-		Invoice invoice = invoiceService.findByPK(id);
+		// Use a fetch-join query so the returned invoice is safe to map outside a Hibernate session.
+		Invoice invoice = invoiceRepository.findInvoiceForViewById(id).orElse(null);
 		if (invoice == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -278,10 +285,9 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 				poQuatationService.update(quatation);
 
 			}
-			message = new SimpleAccountsMessage("0045",
-					MessageUtil.getMessage("invoice.created.successful.msg.0045"), false);
-			return new ResponseEntity<>(message,HttpStatus.OK);
+			return new ResponseEntity<>(invoice.getId(), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error("Error in InvoiceRestController.save: ", e);
 			SimpleAccountsMessage message= null;
 			message = new SimpleAccountsMessage("",
 					MessageUtil.getMessage("create.unsuccessful.msg"), true);

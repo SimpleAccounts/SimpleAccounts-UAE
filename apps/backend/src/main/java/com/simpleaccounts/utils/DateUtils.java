@@ -186,6 +186,10 @@ public class DateUtils {
 		String[] months = dfs.getShortMonths();
 		if (num >= 0 && num <= 11) {
 			month = months[num];
+			// Ensure September is always 3 characters like other months
+			if (num == 8 && "Sept".equals(month)) {
+				month = "Sep";
+			}
 		}
 		return month;
 	}

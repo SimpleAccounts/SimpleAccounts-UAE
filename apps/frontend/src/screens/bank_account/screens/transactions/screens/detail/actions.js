@@ -62,9 +62,7 @@ export const getUnPaidPayrollsList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.UNPAID_PAYROLLS,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

@@ -11,7 +11,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as ReceivbaleInvoiceDetailsActions from './actions';
@@ -152,7 +151,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   generateReport = value => {
@@ -292,7 +291,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={1}
                   paperSize="auto"
@@ -360,7 +359,7 @@ class PayablesInvoiceDetailsReport extends React.Component {
                     {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

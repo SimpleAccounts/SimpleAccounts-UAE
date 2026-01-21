@@ -11,7 +11,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -143,7 +142,7 @@ class PurchaseByVendor extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   hideExportOptionsFunctionality = val => {
     this.setState({ hideExportOptions: val });
@@ -258,7 +257,7 @@ class PurchaseByVendor extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={1}
                   paperSize="auto"
@@ -317,7 +316,7 @@ class PurchaseByVendor extends React.Component {
                     {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

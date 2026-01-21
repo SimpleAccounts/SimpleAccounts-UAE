@@ -11,43 +11,56 @@ const initState = {
 };
 
 const PaymentReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case PAYMENT.PAYMENT_LIST:
       return {
         ...state,
-        payment_list: Object.assign([], payload.data),
+        payment_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.BANK_LIST:
       return {
         ...state,
-        bank_list: Object.assign([], payload.data),
+        bank_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.INVOICE_LIST:
       return {
         ...state,
-        invoice_list: Object.assign([], payload.data),
+        invoice_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case PAYMENT.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload.data),
+        country_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     default:
       return state;

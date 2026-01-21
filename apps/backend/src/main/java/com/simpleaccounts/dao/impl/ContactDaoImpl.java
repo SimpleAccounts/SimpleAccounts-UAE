@@ -10,6 +10,7 @@ import com.simpleaccounts.dao.AbstractDao;
 import com.simpleaccounts.dao.ContactDao;
 import com.simpleaccounts.entity.Contact;
 import com.simpleaccounts.entity.Currency;
+import com.simpleaccounts.entity.TaxTreatment;
 import com.simpleaccounts.model.ContactModel;
 import com.simpleaccounts.rest.DropdownModel;
 import com.simpleaccounts.rest.DropdownObjectModel;
@@ -81,8 +82,33 @@ public class ContactDaoImpl extends AbstractDao<Integer, Contact> implements Con
 					contactModel.setContactName(contact.getFirstName()+" "+contact.getMiddleName()+" "+contact.getLastName());
 				}
 				contactModel.setContactId(contact.getContactId());
-				contactModel.setCurrency(contact.getCurrency());
-				contactModel.setTaxTreatment(contact.getTaxTreatment());
+				// Avoid returning uninitialized Hibernate proxies (lazy entities) which can fail during JSON serialization
+				// with "Could not initialize proxy ... - no session".
+				final Currency currency = contact.getCurrency();
+				if (currency != null) {
+					Currency currencyDto = new Currency();
+					currencyDto.setCurrencyCode(currency.getCurrencyCode());
+					currencyDto.setCurrencyName(currency.getCurrencyName());
+					currencyDto.setCurrencyDescription(currency.getCurrencyDescription());
+					currencyDto.setCurrencyIsoCode(currency.getCurrencyIsoCode());
+					currencyDto.setCurrencySymbol(currency.getCurrencySymbol());
+					currencyDto.setDefaultFlag(currency.getDefaultFlag());
+					currencyDto.setOrderSequence(currency.getOrderSequence());
+					contactModel.setCurrency(currencyDto);
+				} else {
+					contactModel.setCurrency(null);
+				}
+
+				final TaxTreatment taxTreatment = contact.getTaxTreatment();
+				if (taxTreatment != null) {
+					TaxTreatment taxTreatmentDto = new TaxTreatment();
+					taxTreatmentDto.setId(taxTreatment.getId());
+					taxTreatmentDto.setTaxTreatment(taxTreatment.getTaxTreatment());
+					taxTreatmentDto.setOrderSequence(taxTreatment.getOrderSequence());
+					contactModel.setTaxTreatment(taxTreatmentDto);
+				} else {
+					contactModel.setTaxTreatment(null);
+				}
 				DropdownObjectModel dropdownObjectModel = new DropdownObjectModel(contact.getContactId(),contactModel);
 				dropdownObjectModelList.add(dropdownObjectModel);
 			}

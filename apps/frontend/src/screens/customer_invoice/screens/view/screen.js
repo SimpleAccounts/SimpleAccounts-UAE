@@ -7,7 +7,6 @@ import * as SupplierInvoiceActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import { CommonActions } from 'services/global';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { InvoiceTemplate } from './sections';
 import { data } from '../../../Language/index';
@@ -170,7 +169,7 @@ class ViewCustomerInvoice extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   redirectToCreditNote = creditNote => {
     const commonParams = {
@@ -293,7 +292,7 @@ class ViewCustomerInvoice extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -309,7 +308,7 @@ class ViewCustomerInvoice extends React.Component {
                     totalNet={this.state.totalNet}
                     companyData={this.state && this.state.companyData ? this.state.companyData : ''}
                   />
-                </PDFExport>
+                </div>
               </div>
             </Col>
           </Row>

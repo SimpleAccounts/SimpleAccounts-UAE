@@ -449,9 +449,7 @@ describe('Profile Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-        payload: {
-          data: mockTransactions,
-        },
+        payload: mockTransactions,
       });
 
       expect(authApi).toHaveBeenCalledWith({
