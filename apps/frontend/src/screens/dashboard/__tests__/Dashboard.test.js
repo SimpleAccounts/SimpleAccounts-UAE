@@ -3,27 +3,40 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import Dashboard from '../screen';
 
-// Mock the dashboard sections
-jest.mock('../sections', () => ({
-  BankAccount: ({ bank_account_type, bank_account_graph }) => (
+// Mock the dashboard sections - mock individual imports
+jest.mock('../sections/bank_account', () => ({
+  __esModule: true,
+  default: ({ bank_account_type, bank_account_graph }) => (
     <div data-testid="bank-account">
       Bank Account Section
       {bank_account_type && <span>{bank_account_type}</span>}
     </div>
   ),
-  CashFlow: ({ cash_flow_graph }) => (
+}));
+
+jest.mock('../sections/cash_flow', () => ({
+  __esModule: true,
+  default: ({ cash_flow_graph }) => (
     <div data-testid="cash-flow">
       Cash Flow Section
       {cash_flow_graph && <span>{JSON.stringify(cash_flow_graph)}</span>}
     </div>
   ),
-  ProfitAndLossReport: ({ profit_loss, taxes }) => (
+}));
+
+jest.mock('../sections/profit_loss_report/index.jsx', () => ({
+  __esModule: true,
+  default: ({ profit_loss, taxes }) => (
     <div data-testid="profit-loss">
       Profit and Loss Report
       {profit_loss && <span>{JSON.stringify(profit_loss)}</span>}
     </div>
   ),
-  PaidInvoices: ({ invoice_graph }) => (
+}));
+
+jest.mock('../sections/paid_invoices/index.jsx', () => ({
+  __esModule: true,
+  default: ({ invoice_graph }) => (
     <div data-testid="paid-invoices">
       Paid Invoices Section
       {invoice_graph && <span>{JSON.stringify(invoice_graph)}</span>}

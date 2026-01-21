@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import '../../product/screens/create/style.scss';
 import { data } from '../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -17,9 +23,16 @@ const ProductModal = props => {
   return (
     <div className="contact-modal-screen">
       <Dialog open={openProductModal} onOpenChange={closeProductModal}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent
+          className="max-w-4xl max-h-[90vh] overflow-y-auto"
+          aria-describedby="product-modal-description"
+        >
           <DialogHeader>
             <DialogTitle>Create Product</DialogTitle>
+            <DialogDescription id="product-modal-description">
+              Create a new product or service. Fill in all required fields marked with an asterisk
+              (*).
+            </DialogDescription>
           </DialogHeader>
           <CreateProduct
             getCurrentProductData={Data => {

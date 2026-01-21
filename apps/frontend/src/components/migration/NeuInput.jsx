@@ -115,35 +115,47 @@ const NeuInput = React.forwardRef(
 );
 NeuInput.displayName = 'NeuInput';
 
-const NeuLabel = React.forwardRef(({ children, className, htmlFor, style, ...props }, ref) => (
-  <label
-    ref={ref}
-    htmlFor={htmlFor}
-    className={cn('block mb-2', className)}
-    style={{ ...NEU_INPUT_STYLES.label, ...style }}
-    {...props}
-  >
-    {children}
-  </label>
-));
+const NeuLabel = React.forwardRef(
+  ({ children, className, htmlFor, style, check, ...props }, ref) => {
+    // Filter out React-specific props that shouldn't be passed to DOM
+    // 'check' is a reactstrap prop for checkbox labels, not a DOM attribute
+    return (
+      <label
+        ref={ref}
+        htmlFor={htmlFor}
+        className={cn('block mb-2', className, check && 'form-check-label')}
+        style={{ ...NEU_INPUT_STYLES.label, ...style }}
+        {...props}
+      >
+        {children}
+      </label>
+    );
+  }
+);
 NeuLabel.displayName = 'NeuLabel';
 
 const NeuFormGroup = React.forwardRef(
-  ({ children, className, row = false, check = false, style, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'mb-4',
-        row && 'flex flex-wrap items-center',
-        check && 'flex items-center gap-2',
-        className
-      )}
-      style={style}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ children, className, row = false, check = false, inline = false, style, ...props }, ref) => {
+    // Filter out React-specific props that shouldn't be passed to DOM
+    const { check: _check, row: _row, inline: _inline, ...domProps } = props;
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'mb-4',
+          row && 'flex flex-wrap items-center',
+          check && 'flex items-center gap-2',
+          inline && 'inline-flex items-center',
+          className
+        )}
+        style={style}
+        {...domProps}
+      >
+        {children}
+      </div>
+    );
+  }
 );
 NeuFormGroup.displayName = 'NeuFormGroup';
 
