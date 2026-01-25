@@ -358,18 +358,18 @@ export async function createDepositTransaction(
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  const formattedDate = transactionData.transactionDate || formatDateDDMMYYYY(today);
 
   const payload = {
     bankId: transactionData.bankId,
-    transactionDate: transactionData.transactionDate || formattedDate,
-    transactionAmount: transactionData.transactionAmount,
+    date: formattedDate,
+    amount: transactionData.transactionAmount,
     transactionType: 'DEPOSIT',
     description: transactionData.description || `Test Deposit ${Date.now()}`,
     referenceNumber: transactionData.referenceNumber || `DEP-${Date.now()}`,
     chartOfAccountId: transactionData.chartOfAccountId || '',
     transactionCategoryId: transactionData.transactionCategoryId || '',
-    coaCategoryId: transactionData.coaCategoryId || '',
+    coaCategoryId: transactionData.coaCategoryId ?? 8, // 8 = MONEY_RECEIVED_OTHERS (1 not in switch)
   };
 
   const formData = new URLSearchParams();
@@ -393,6 +393,13 @@ export async function createDepositTransaction(
   }
 
   return await response.text();
+}
+
+function formatDateDDMMYYYY(date: Date): string {
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
 }
 
 /**
@@ -419,18 +426,18 @@ export async function createWithdrawalTransaction(
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = `${String(today.getDate()).padStart(2, '0')}-${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
+  const formattedDate = transactionData.transactionDate || formatDateDDMMYYYY(today);
 
   const payload = {
     bankId: transactionData.bankId,
-    transactionDate: transactionData.transactionDate || formattedDate,
-    transactionAmount: transactionData.transactionAmount,
+    date: formattedDate,
+    amount: transactionData.transactionAmount,
     transactionType: 'WITHDRAWAL',
     description: transactionData.description || `Test Withdrawal ${Date.now()}`,
     referenceNumber: transactionData.referenceNumber || `WD-${Date.now()}`,
     chartOfAccountId: transactionData.chartOfAccountId || '',
     transactionCategoryId: transactionData.transactionCategoryId || '',
-    coaCategoryId: transactionData.coaCategoryId || '',
+    coaCategoryId: transactionData.coaCategoryId ?? 9, // 9 = MONEY_SPENT
   };
 
   const formData = new URLSearchParams();
