@@ -117,12 +117,14 @@ public class DataListController {
 			if (dropdownModelList != null && ! dropdownModelList.isEmpty()) {
 				return new ResponseEntity<>(dropdownModelList, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				// Return empty list instead of 404 to allow registration/login to proceed
+				return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
+			// Return empty list on error instead of 500 to allow registration/login to proceed
+			return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/**
@@ -157,9 +159,11 @@ public class DataListController {
 		try {
 			List<ChartOfAccount> transactionTypes = transactionTypeService.findAll();
 			if (transactionTypes != null && !transactionTypes.isEmpty()) {
-
+				// Clear lazy-loaded relationships to prevent LazyInitializationException during JSON serialization
 				for (ChartOfAccount ac : transactionTypes) {
 					ac.setTransactionChartOfAccountCategoryList(null);
+					// Set parent to null to avoid lazy loading issues during JSON serialization
+					ac.setParentChartOfAccount(null);
 				}
 				return new ResponseEntity<>(transactionTypes, HttpStatus.OK);
 			} else {
@@ -167,6 +171,55 @@ public class DataListController {
 			}
 		} catch (Exception e) {
 			logger.error(ERROR, e);
+			logger.error("Error details: {}", e.getMessage(), e);
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@LogRequest
+	@Transactional(readOnly = true)
+	@GetMapping(value = "/getBankTransactionTypes")
+	public ResponseEntity<List<ChartOfAccountCategory>> getBankTransactionTypes() {
+		try {
+			// Get all chart of account categories
+			List<ChartOfAccountCategory> allCategories = chartOfAccountCategoryService.findAll();
+			
+			// Filter to only valid transaction types for bank account transactions (IDs 1-18)
+			// Based on ChartOfAccountCategoryIdEnumConstant
+			Set<Integer> validTransactionTypeIds = Set.of(
+				1,  // MONEY_RECEIVED
+				2,  // SALES
+				3,  // TRANSFER_FROM
+				4,  // REFUND_RECEIVED
+				5,  // INTEREST_RECEVIED
+				6,  // MONEY_RECEIVED_FROM_USER
+				7,  // DISPOSAL_OF_CAPITAL_ASSET
+				8,  // MONEY_RECEIVED_OTHERS
+				9,  // MONEY_SPENT
+				10, // EXPENSE
+				11, // TRANSFERD_TO
+				12, // MONEY_PAID_TO_USER
+				13, // PURCHASE_OF_CAPITAL_ASSET
+				14, // MONEY_SPENT_OTHERS
+				15, // INVOICE
+				16, // VAT_PAYMENT
+				17, // VAT_CLAIM
+				18  // CORPORATE_TAX_PAYMENT
+			);
+			
+			List<ChartOfAccountCategory> bankTransactionTypes = allCategories.stream()
+					.filter(category -> validTransactionTypeIds.contains(category.getChartOfAccountCategoryId()))
+					.sorted(Comparator.comparing(ChartOfAccountCategory::getChartOfAccountCategoryId))
+					.toList();
+			
+			if (bankTransactionTypes != null && !bankTransactionTypes.isEmpty()) {
+				return new ResponseEntity<>(bankTransactionTypes, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			logger.error("Error details: {}", e.getMessage(), e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}

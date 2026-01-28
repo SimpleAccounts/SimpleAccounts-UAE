@@ -353,6 +353,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@Cacheable(cacheNames = "dashboardInvoiceChart", key = "#monthCount")
 	@GetMapping(value = "/getChartData")
 	public ResponseEntity<Object> getChartData(@RequestParam int monthCount) {

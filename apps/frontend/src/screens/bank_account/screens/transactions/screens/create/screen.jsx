@@ -20,6 +20,7 @@ import { bindActionCreators } from 'redux';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import dayjs from '@/utils/date';
+import { selectOptionsFactory } from 'utils';
 
 import * as transactionCreateActions from './actions';
 import * as transactionActions from '../../actions';
@@ -169,7 +170,21 @@ const CreateBankTransaction = () => {
   const [ct_taxPeriod, setCt_taxPeriod] = useState(null);
 
   // Bank and currency state
-  const [id, setId] = useState(location.state?.bankAccountId || '');
+  // Extract bankAccountId from location.state or URL query parameters
+  const getBankAccountId = () => {
+    // First try location.state (when navigating from bank account list/detail)
+    if (location.state?.bankAccountId) {
+      return location.state.bankAccountId;
+    }
+    // Fallback to URL query parameter
+    const searchParams = new URLSearchParams(location.search);
+    const bankIdFromQuery = searchParams.get('bankId') || searchParams.get('bankAccountId');
+    if (bankIdFromQuery) {
+      return bankIdFromQuery;
+    }
+    return null;
+  };
+  const [id, setId] = useState(getBankAccountId());
   const [date, setDate] = useState('');
   const [reconciledDate, setReconciledDate] = useState('');
   const [bankCurrency, setBankCurrency] = useState(null);
@@ -279,8 +294,9 @@ const CreateBankTransaction = () => {
       setPayrolldata(res.data);
     });
 
-    if (location.state?.bankAccountId) {
-      const bankAccountId = location.state.bankAccountId;
+    // Get bank account ID from state or URL query params
+    const bankAccountId = getBankAccountId();
+    if (bankAccountId) {
       setId(bankAccountId);
 
       detailBankAccountActionsDispatch
@@ -295,12 +311,50 @@ const CreateBankTransaction = () => {
         .catch(err => {
           commonActionsDispatch.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
         });
+    } else {
+      // If no bank account ID is available, show an error and redirect
+      commonActionsDispatch.tostifyAlert('error', 'Bank account ID is required to create a transaction');
+      navigate('/admin/banking/bank-account');
     }
 
     // Get transaction type list
-    transactionActionsDispatch.getTransactionTypeList(location.state?.bankAccountId).then(res => {
-      setChartOfAccountCategoryList(res.data || []);
-    });
+    transactionActionsDispatch
+      .getTransactionTypeList()
+      .then(res => {
+        console.log('Transaction type API response:', res);
+        if (res && res.status === 200 && res.data) {
+          // Ensure res.data is an array
+          const dataArray = Array.isArray(res.data) ? res.data : [];
+          console.log('Transaction type data array:', dataArray);
+          
+          if (dataArray.length > 0) {
+            // Transform ChartOfAccountCategory objects to { value, label } format
+            // Use chartOfAccountCategoryId as value and chartOfAccountCategoryName as label
+            const transformedData = selectOptionsFactory.renderOptions(
+              'chartOfAccountCategoryName',
+              'chartOfAccountCategoryId',
+              dataArray,
+              'Transaction Type'
+            );
+            console.log('Transformed transaction types:', transformedData);
+            setChartOfAccountCategoryList(transformedData);
+          } else {
+            console.warn('Transaction type list is empty');
+            setChartOfAccountCategoryList([]);
+          }
+        } else {
+          console.warn('Invalid transaction type response:', res);
+          setChartOfAccountCategoryList([]);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load transaction types:', err);
+        commonActionsDispatch.tostifyAlert(
+          'error',
+          err?.data?.message || 'Failed to load transaction types'
+        );
+        setChartOfAccountCategoryList([]);
+      });
   };
 
   const getCompanyCurrency = async () => {
@@ -356,9 +410,25 @@ const CreateBankTransaction = () => {
       getVendorList();
     } else {
       try {
+        // Only pass bankId if it's a valid number (not null, not empty, not "null" string, not undefined)
+        // Pass undefined instead of null to ensure it's not included in URL
+        // Debug logging to verify the value
+        console.log('getTransactionCategoryList - id value:', id, 'type:', typeof id);
+        
+        // More explicit check: if id is falsy, null, undefined, empty string, or string "null"/"undefined", use undefined
+        let bankId = undefined;
+        if (id != null && id !== undefined && id !== '' && id !== 'null' && id !== 'undefined') {
+          const numId = Number(id);
+          if (!isNaN(numId) && Number.isInteger(numId) && numId > 0) {
+            bankId = numId;
+          }
+        }
+        
+        console.log('getTransactionCategoryList - bankId value:', bankId, 'type:', typeof bankId);
+        
         const res = await transactionActionsDispatch.getTransactionCategoryListForExplain(
           type.value,
-          id
+          bankId
         );
         if (res.status === 200) {
           let categoryList = res.data.categoriesList?.map(category => {
@@ -411,7 +481,7 @@ const CreateBankTransaction = () => {
       amount: amount,
       id: option,
       currency: invoiceCurrency || 0,
-      bankId: id,
+      bankId: id && id !== '' ? id : null,
     };
     try {
       const res = await transactionActionsDispatch.getVendorInvoiceList(data);
@@ -530,7 +600,14 @@ const CreateBankTransaction = () => {
     setLoading(true);
     setDisableLeavePage(true);
 
-    const bankAccountId = id;
+    // Get bankAccountId - try current id state first, then location state, then URL params
+    let bankAccountId = id && id !== '' ? id : null;
+    if (!bankAccountId) {
+      bankAccountId = getBankAccountId();
+    }
+    
+    // Log for debugging
+    console.log('onSubmit - bankAccountId:', bankAccountId, 'id state:', id, 'location.state:', location.state);
     let {
       transactionDate,
       description,
@@ -607,7 +684,15 @@ const CreateBankTransaction = () => {
 
     // Append basic fields
     formData.append('expenseType', expenseType);
-    formData.append('bankId ', bankAccountId || '');
+    // Always append bankId if available - it's required for bank account transactions
+    // Use bankAccountId from above (which includes fallback logic)
+    if (bankAccountId) {
+      formData.append('bankId', bankAccountId);
+      console.log('createTransaction: bankId appended to formData:', bankAccountId);
+    } else {
+      // Log warning if bankId is missing for bank account transaction creation
+      console.error('createTransaction: bankId is missing - transaction will fail. id state:', id, 'location:', location);
+    }
     formData.append('date', transactionDate || '');
     formData.append('description', description || '');
     formData.append('amount', transactionAmount || '');
@@ -665,15 +750,45 @@ const CreateBankTransaction = () => {
 
     // Handle VAT Payment/Claim
     if (coaCategoryId?.label === 'VAT Payment' || coaCategoryId?.label === 'VAT Claim') {
+      if (!VATReportId || !VATReportId.value) {
+        commonActionsDispatch.tostifyAlert('error', 'Please select a VAT report for VAT transactions');
+        setDisabled(false);
+        setLoading(false);
+        setDisableLeavePage(false);
+        return;
+      }
       const info = { ...VATlist.find(i => i.id === VATReportId?.value) };
+      if (!info || !info.id) {
+        commonActionsDispatch.tostifyAlert('error', 'Selected VAT report not found. Please select a valid VAT report');
+        setDisabled(false);
+        setLoading(false);
+        setDisableLeavePage(false);
+        return;
+      }
       delete info.taxFiledOn;
-      formData.append('explainedVatPaymentListString', info ? JSON.stringify([info]) : '');
+      formData.append('explainedVatPaymentListString', JSON.stringify([info]));
+      console.log('VAT transaction - VAT report appended:', info.id);
     }
 
     // Handle Corporate Tax Payment
     if (coaCategoryId?.label === 'Corporate Tax Payment') {
+      if (!ct_taxPeriod || ct_taxPeriod.value === undefined || ct_taxPeriod.value === null) {
+        commonActionsDispatch.tostifyAlert('error', 'Please select a corporate tax period for corporate tax payment transactions');
+        setDisabled(false);
+        setLoading(false);
+        setDisableLeavePage(false);
+        return;
+      }
       const report = { ...corporateTaxList.find((obj, index) => index === ct_taxPeriod?.value) };
-      formData.append('explainedCorporateTaxListString', report ? JSON.stringify([report]) : '');
+      if (!report || !report.id) {
+        commonActionsDispatch.tostifyAlert('error', 'Selected corporate tax report not found. Please select a valid corporate tax period');
+        setDisabled(false);
+        setLoading(false);
+        setDisableLeavePage(false);
+        return;
+      }
+      formData.append('explainedCorporateTaxListString', JSON.stringify([report]));
+      console.log('Corporate Tax transaction - report appended:', report.id);
     }
 
     transactionCreateActionsDispatch
@@ -760,6 +875,12 @@ const CreateBankTransaction = () => {
                                     {...field}
                                     styles={customStyles}
                                     options={chartOfAccountCategoryList}
+                                    value={
+                                      chartOfAccountCategoryList &&
+                                      chartOfAccountCategoryList.find(
+                                        option => option.value === field.value?.value || option.value === field.value
+                                      )
+                                    }
                                     onChange={option => {
                                       field.onChange(option);
                                       const result = getExchangeRate();
@@ -789,6 +910,7 @@ const CreateBankTransaction = () => {
                                     }}
                                     placeholder={strings.Select + strings.TransactionType}
                                     className={errors.coaCategoryId ? 'is-invalid' : ''}
+                                    isSearchable={false}
                                   />
                                 )}
                               />

@@ -22,6 +22,7 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as transactionDetailActions from '../transactions/screens/detail/actions';
+import * as detailBankAccountActions from '../detail/actions';
 
 const ZERO = 0.0;
 let strings = new LocalizedStrings(data);
@@ -41,7 +42,7 @@ function BankTransactions() {
     () => bindActionCreators(TransactionsActions, dispatch),
     [dispatch]
   );
-  const detailBankAccountActions = useMemo(
+  const detailBankAccountActionsObj = useMemo(
     () => bindActionCreators(detailBankAccountActions, dispatch),
     [dispatch]
   );
@@ -87,7 +88,7 @@ function BankTransactions() {
 
   const getnewbackdetails = useCallback(() => {
     if (location.state && location.state.bankAccountId) {
-      detailBankAccountActions
+      detailBankAccountActionsObj
         .getBankAccountByID(location.state.bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
@@ -160,7 +161,7 @@ function BankTransactions() {
 
   useEffect(() => {
     if (location.state && location.state.bankAccountId) {
-      detailBankAccountActions
+      detailBankAccountActionsObj
         .getBankAccountByID(location.state.bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
@@ -527,10 +528,12 @@ function BankTransactions() {
                             className="btn-square mr-1"
                             onClick={() =>
                               navigate('/admin/banking/bank-account/detail', {
-                                bankAccountId:
-                                  location.state && location.state.bankAccountId
-                                    ? location.state.bankAccountId
-                                    : '',
+                                state: {
+                                  bankAccountId:
+                                    location.state && location.state.bankAccountId
+                                      ? location.state.bankAccountId
+                                      : '',
+                                },
                               })
                             }
                           >
@@ -576,16 +579,18 @@ function BankTransactions() {
                     <Button
                       variant="default"
                       className="btn-square"
-                      onClick={() =>
-                        navigate('/admin/banking/bank-account/transaction/create', {
-                          bankAccountId:
-                            location.state && location.state.bankAccountId
-                              ? location.state.bankAccountId
-                              : '',
-                          currency: location.state.currency,
-                          isRegisteredVat: location.state.isRegisteredVat,
-                        })
-                      }
+                      onClick={() => {
+                        const bankAccountId = location.state && location.state.bankAccountId
+                          ? location.state.bankAccountId
+                          : '';
+                        navigate(`/admin/banking/bank-account/transaction/create?bankId=${bankAccountId}`, {
+                          state: {
+                            bankAccountId: bankAccountId,
+                            currency: location.state?.currency,
+                            isRegisteredVat: location.state?.isRegisteredVat,
+                          },
+                        });
+                      }}
                     >
                       <Plus className="h-4 w-4" />
                       {strings.AddnewTransaction}

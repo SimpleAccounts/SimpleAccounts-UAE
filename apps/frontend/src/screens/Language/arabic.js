@@ -76,6 +76,7 @@ const ar = {
   EFFECTIVEDATE: 'تاريخ النفاذ',
   EffectiveDate: 'تاريخ النفاذ',
   OPENINGBALANCE: 'الرصيد الافتتاحي',
+  CURRENTBALANCE: 'الرصيد الحالي',
   CURRENCY: 'عملة',
   NewOpeningBalance: 'رصيد افتتاحي جديد',
   TransactionCategory: 'فئة المعاملة',

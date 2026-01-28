@@ -2,4 +2,45 @@
   .card-header {
     color: #1e6eff;
   }
+
+  // Styling for DatePicker
+  .react-datepicker-wrapper {
+    width: 100%;
+    .react-datepicker__input-container {
+      width: 100%;
+      input {
+        background-color: #ffffff !important;
+        &[disabled] {
+          background-color: var(--corp-bg-secondary, #f8f9fa) !important;
+          cursor: not-allowed;
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+
+  // Ensure editable inputs have white background
+  input:not([disabled]):not([readonly]) {
+    background-color: #ffffff !important;
+  }
+
+  // Fix react-select text truncation on the left
+  // Target all react-select components
+  div[class*='ValueContainer'] {
+    padding-left: 16px !important;
+    padding-right: 8px !important;
+  }
+  
+  div[class*='SingleValue'] {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    left: 0 !important;
+    position: relative !important;
+    transform: none !important;
+  }
+  
+  // Also target the control container to ensure proper spacing
+  div[class*='control'] {
+    padding-left: 0 !important;
+  }
 }

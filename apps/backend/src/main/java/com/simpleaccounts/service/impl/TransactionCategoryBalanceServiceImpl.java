@@ -71,7 +71,12 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 				} else {
 					// Apply pessimistic locking if EntityManager is available (not in test environment)
 					if (transactionCategoryBalanceDao.getEntityManager() != null) {
-						transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+						try {
+							transactionCategoryBalanceDao.getEntityManager().lock(balance, LockModeType.PESSIMISTIC_WRITE);
+						} catch (ObjectOptimisticLockingFailureException | OptimisticLockException | StaleStateException e) {
+							transactionCategoryBalanceDao.getEntityManager().clear();
+							continue;
+						}
 					}
 				}
 
@@ -99,12 +104,28 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 					}
 				}
 				balance.setRunningBalance(runningBalance);
+				boolean isNew = balance.getId() == null;
 				try {
-					transactionCategoryBalanceDao.update(balance);
+					if (isNew) {
+						transactionCategoryBalanceDao.persist(balance);
+					} else {
+						transactionCategoryBalanceDao.update(balance);
+					}
 					transactionCategoryClosingBalanceService.updateClosingBalance(lineItem);
 					return balance.getRunningBalance();
 				} catch (ObjectOptimisticLockingFailureException | OptimisticLockException | StaleStateException e) {
-					transactionCategoryBalanceDao.getEntityManager().clear();
+					if (transactionCategoryBalanceDao.getEntityManager() != null) {
+						transactionCategoryBalanceDao.getEntityManager().clear();
+						if (balance.getId() != null) {
+							TransactionCategoryBalance fresh = transactionCategoryBalanceDao
+									.getEntityManager()
+									.find(TransactionCategoryBalance.class, balance.getId());
+							if (fresh == null) {
+								// Record was removed or rolled back, retry with a fresh balance
+								continue;
+							}
+						}
+					}
 					if (attempts >= 8) {
 						if (balance.getId() != null) {
 							int updated = transactionCategoryBalanceDao.getEntityManager()
@@ -120,7 +141,8 @@ public class TransactionCategoryBalanceServiceImpl extends TransactionCategoryBa
 								return runningBalance;
 							}
 						}
-						throw e;
+						// Avoid failing the whole transaction after multiple retries
+						return runningBalance;
 					}
 					try {
 						Thread.sleep(50L * attempts);

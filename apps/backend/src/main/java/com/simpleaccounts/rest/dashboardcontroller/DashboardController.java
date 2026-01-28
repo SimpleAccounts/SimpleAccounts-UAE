@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -119,6 +120,7 @@ public class DashboardController {
 
 @LogExecutionTime
 @LogRequest
+@Transactional(readOnly = true)
 @Cacheable(cacheNames = "dashboardProfitLoss", key = "T(com.simpleaccounts.helper.DashboardCacheKeyUtil).profitLossKey(#monthNo)")
 @GetMapping(value = "/profitandloss")
 public ResponseEntity<Object> getDashboardProfitAndLoss(@RequestParam(required = false) Integer monthNo) {

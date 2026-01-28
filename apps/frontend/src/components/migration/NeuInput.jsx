@@ -68,10 +68,17 @@ const NeuInput = React.forwardRef(
     const [isFocused, setIsFocused] = React.useState(false);
     const sizeClass = SIZE_CLASSES[bsSize] || SIZE_CLASSES.md;
 
+    // Determine background color based on disabled state
+    const isDisabled = props.disabled || props.readOnly;
+    const backgroundColor = isDisabled
+      ? 'var(--corp-bg-secondary, #f8f9fa)' // Light gray for disabled/read-only fields
+      : '#ffffff'; // White for editable fields
+
     const inputStyle = {
       ...NEU_INPUT_STYLES.input,
+      background: backgroundColor,
       ...(type === 'select' ? NEU_INPUT_STYLES.select : {}),
-      ...(isFocused ? NEU_INPUT_STYLES.inputFocus : {}),
+      ...(isFocused && !isDisabled ? NEU_INPUT_STYLES.inputFocus : {}),
       ...(invalid
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(255, 77, 106, 0.3)` }
         : {}),
@@ -79,6 +86,7 @@ const NeuInput = React.forwardRef(
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(0, 200, 150, 0.3)` }
         : {}),
       ...(plaintext ? { background: 'transparent', boxShadow: 'none' } : {}),
+      ...(isDisabled ? { cursor: 'not-allowed', opacity: 0.7 } : {}),
       ...style,
     };
 

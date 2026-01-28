@@ -43,9 +43,12 @@ const BankAccountReducer = (state = initState, action) => {
 
   switch (type) {
     case BANK_ACCOUNT.BANK_ACCOUNT_LIST:
+      // Preserve pagination structure: { data: [...], count: X }
       return {
         ...state,
-        bank_account_list: getArray(payload),
+        bank_account_list: payload?.data
+          ? { ...payload, data: payload.data.slice() }
+          : payload || { data: [], count: 0 },
       };
 
     case BANK_ACCOUNT.BANK_TRANSACTION_LIST:

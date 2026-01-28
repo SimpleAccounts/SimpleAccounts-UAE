@@ -74,7 +74,8 @@ public class BankAccountRestHelper {
 						acc.getBankAccountType() != null ? acc.getBankAccountType().getName() : "-");
 				model.setCurrancyName(
 						acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode() : "-");
-				model.setCurruncySymbol(acc.getBankAccountCurrency().getCurrencyIsoCode());
+				model.setCurruncySymbol(
+						acc.getBankAccountCurrency() != null ? acc.getBankAccountCurrency().getCurrencyIsoCode() : "-");
 				Integer res = transactionService.getTransactionCountByBankAccountId(acc.getBankAccountId());
 					model.setTransactionCount(res);
 				model.setName(acc.getBankName());

@@ -116,8 +116,14 @@ public class TransactionHelper {
 				}
 			transactionModel.setExplinationStatusEnum(transaction.getTransactionExplinationStatusEnum());
 			transactionModel.setCreationMode(transaction.getCreationMode());
-			transactionModel.setCurrencySymbol(transaction.getBankAccount().getBankAccountCurrency().getCurrencySymbol());
-			transactionModel.setCurrencyIsoCode(transaction.getBankAccount().getBankAccountCurrency().getCurrencyIsoCode());
+			// Safely access nested lazy-loaded relationships
+			if (transaction.getBankAccount() != null && transaction.getBankAccount().getBankAccountCurrency() != null) {
+				transactionModel.setCurrencySymbol(transaction.getBankAccount().getBankAccountCurrency().getCurrencySymbol());
+				transactionModel.setCurrencyIsoCode(transaction.getBankAccount().getBankAccountCurrency().getCurrencyIsoCode());
+			} else {
+				transactionModel.setCurrencySymbol("-");
+				transactionModel.setCurrencyIsoCode("-");
+			}
 			transactionModelList.add(transactionModel);
 		}
 

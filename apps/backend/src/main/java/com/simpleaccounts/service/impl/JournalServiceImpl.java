@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("JournalServiceImpl")
 @RequiredArgsConstructor
@@ -58,6 +60,15 @@ public class JournalServiceImpl extends JournalService {
 		}
 		super.persist(journal);
 
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void persistInNewTransaction(Journal journal) {
+		for (JournalLineItem lineItem : journal.getJournalLineItems()) {
+			lineItem.setCurrentBalance(transactionCategoryBalanceService.updateRunningBalance(lineItem));
+		}
+		super.persist(journal);
 	}
 	public void updateOpeningBalance(Journal journal,Boolean updateOpeningBalance)
 	{

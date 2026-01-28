@@ -39,7 +39,7 @@ describe('BankAccountReducer', () => {
 
     const expectedState = {
       ...initialState,
-      bank_account_list: mockBankAccounts,
+      bank_account_list: { data: mockBankAccounts },
     };
 
     expect(BankAccountReducer(initialState, action)).toEqual(expectedState);

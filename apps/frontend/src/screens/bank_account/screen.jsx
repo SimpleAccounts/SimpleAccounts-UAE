@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, Landmark, Eye, Edit, Trash2, CreditCard } from 'lucide-react';
+import { Plus, Search, RefreshCw, Landmark, Eye, Edit, Trash2, CreditCard, List } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -223,23 +223,31 @@ function BankAccount() {
               label: strings.Edit,
               icon: Edit,
               onClick: () =>
-                navigate('/admin/banking/bank-account/detail', { state: { id: account.id } }),
+                navigate('/admin/banking/bank-account/detail', { state: { bankAccountId: account.id } }),
             },
             {
               label: strings.View,
               icon: Eye,
               onClick: () =>
-                navigate('/admin/banking/bank-account/detail', { state: { id: account.id } }),
+                navigate('/admin/banking/bank-account/detail', { state: { bankAccountId: account.id } }),
             },
             {
-              label: strings.Transactions,
-              icon: CreditCard,
+              label: strings.ViewTransactions || 'View Transactions',
+              icon: List,
               onClick: () =>
-                navigate('/admin/banking/bank-account/transaction/create', {
+                navigate('/admin/banking/bank-account/transaction', {
                   state: { bankAccountId: account.id },
                 }),
             },
-            { type: 'separator' },
+            {
+              label: strings.AddnewTransaction || 'Add Transaction',
+              icon: CreditCard,
+              onClick: () =>
+                navigate(`/admin/banking/bank-account/transaction/create?bankId=${account.id}`, {
+                  state: { bankAccountId: account.id },
+                }),
+            },
+            { separator: true },
             {
               label: strings.Delete,
               icon: Trash2,
@@ -260,13 +268,13 @@ function BankAccount() {
     if (!bank_account_list?.data) return [];
     return bank_account_list.data.map(account => ({
       id: account.bankAccountId,
-      bankName: account.bankName || '',
-      bankAccountName: account.bankAccountName || '',
-      accountNumber: account.accountNumber || '',
-      accountTypeName: account.accountTypeName || '',
-      currencySymbol: account.currencySymbol || '',
-      openingBalance: account.openingBalance || 0,
-      balance: account.balance || 0,
+      bankName: account.name || '', // Backend uses 'name' not 'bankName'
+      bankAccountName: account.accounName || '', // Backend typo: 'accounName' not 'bankAccountName'
+      accountNumber: account.bankAccountNo || '', // Backend uses 'bankAccountNo' not 'accountNumber'
+      accountTypeName: account.bankAccountTypeName || '',
+      currencySymbol: account.curruncySymbol || '', // Backend typo: 'curruncySymbol' not 'currencySymbol'
+      openingBalance: account.openingBalance || 0, // Note: backend sets this to currentBalance
+      balance: account.openingBalance || 0, // Use openingBalance (which is actually currentBalance) for balance display
     }));
   }, [bank_account_list]);
 

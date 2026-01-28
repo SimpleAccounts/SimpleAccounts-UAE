@@ -88,17 +88,49 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getTransactionCat")
 	public ResponseEntity<Object> getTransactionCategory(ReconcilationRequestModel filterModel ) {
 		try {
 			Integer chartOfAccountCategoryId = filterModel.getChartOfAccountCategoryId();
+			if (chartOfAccountCategoryId == null) {
+				logger.warn("getTransactionCategory called with null chartOfAccountCategoryId");
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 			ChartOfAccountCategory category = chartOfAccountCategoryService.findByPK(chartOfAccountCategoryId);
+			if (category == null) {
+				logger.warn("getTransactionCategory: ChartOfAccountCategory with ID {} not found. Returning empty structure instead of 404.", chartOfAccountCategoryId);
+				// Return empty structure instead of 404 to prevent UI errors
+				return new ResponseEntity<>(
+						new ReconsilationCatDataModel(null, new ArrayList<>()),
+						HttpStatus.OK);
+			}
 			Map<String, Object> param = null;
 			List<TransactionCategory> transactionCatList = null;
 			List<Object> list = new ArrayList<>();
-			BankAccount bankAccount =bankAccountService.findByPK(filterModel.getBankId());
+			
+			// Handle null, empty, or invalid bankId gracefully
+			// bankId is optional for many transaction types, so we continue even if it's null or invalid
+			BankAccount bankAccount = null;
+			Integer bankId = filterModel.getBankId();
+			if (bankId != null && bankId != 0) {
+				try {
+					bankAccount = bankAccountService.findByPK(bankId);
+					if (bankAccount == null) {
+						logger.debug("getTransactionCategory: Bank account with ID {} not found, continuing without bank account context", bankId);
+					}
+				} catch (Exception e) {
+					logger.warn("getTransactionCategory: Error fetching bank account with ID {}: {}. Continuing without bank account context.", bankId, e.getMessage());
+					// Continue without bankAccount - it's optional for some transaction types
+				}
+			} else {
+				logger.debug("getTransactionCategory: No valid bankId provided (bankId={}), continuing without bank account context", bankId);
+			}
 
-			List<Contact> customerContactList = contactService.getCustomerContacts(bankAccount.getBankAccountCurrency());
+			List<Contact> customerContactList = new ArrayList<>();
+			if (bankAccount != null && bankAccount.getBankAccountCurrency() != null) {
+				customerContactList = contactService.getCustomerContacts(bankAccount.getBankAccountCurrency());
+			}
 			List<DropdownModel> dropdownModelList = new ArrayList<>();
 			for (Contact contact:customerContactList){
 				DropdownModel dropdownModel =new DropdownModel();
@@ -112,7 +144,13 @@ public class ReconsilationController {
 				dropdownModelList.add(dropdownModel);
 			}
 
-			switch (ChartOfAccountCategoryIdEnumConstant.get(category.getChartOfAccountCategoryId())) {
+			ChartOfAccountCategoryIdEnumConstant categoryEnum = ChartOfAccountCategoryIdEnumConstant.get(category.getChartOfAccountCategoryId());
+			if (categoryEnum == null) {
+				logger.warn("getTransactionCategory: Unknown ChartOfAccountCategoryIdEnumConstant for category ID {}", category.getChartOfAccountCategoryId());
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			
+			switch (categoryEnum) {
 				case SALES:
 					param = new HashMap<>();
 					param.put("deleteFlag", false);
@@ -146,9 +184,16 @@ public class ReconsilationController {
 							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 					list.add(new SingleLevelDropDownModel("Vat Included", vatCategoryService.getVatCategoryForDropDown()));
 					list.add(new SingleLevelDropDownModel("Customer", dropdownModelList));
-					 bankAccount =bankAccountService.findByPK(filterModel.getBankId());
+					
+					// Re-fetch bankAccount if needed, with null check
+					if (bankAccount == null && filterModel.getBankId() != null && filterModel.getBankId() != 0) {
+						bankAccount = bankAccountService.findByPK(filterModel.getBankId());
+					}
 
-					List<Contact> supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
+					List<Contact> supplierContactList = new ArrayList<>();
+					if (bankAccount != null && bankAccount.getBankAccountCurrency() != null) {
+						supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
+					}
 					dropdownModelList = new ArrayList<>();
 					for (Contact contact:supplierContactList){
 						DropdownModel dropdownModel =new DropdownModel();
@@ -184,28 +229,34 @@ public class ReconsilationController {
 						if(filterModel.getBankId() != null && filterModel.getBankId() != 0)
 						{
 							List<TransactionCategory> tempTransactionCatogaryList = new ArrayList<>();
-							TransactionCategory bankTransactionCategory = bankAccountService.getBankAccountById(filterModel.getBankId()).getTransactionCategory();
-							Integer bankTransactionCategoryId = bankTransactionCategory.getTransactionCategoryId();
-							for(TransactionCategory transactionCategory : transactionCatList)
-							{
-                             Integer transactionCategoryId = transactionCategory.getTransactionCategoryId();
+							BankAccount transferBankAccount = bankAccountService.getBankAccountById(filterModel.getBankId());
+							if (transferBankAccount != null && transferBankAccount.getTransactionCategory() != null) {
+								TransactionCategory bankTransactionCategory = transferBankAccount.getTransactionCategory();
+								Integer bankTransactionCategoryId = bankTransactionCategory.getTransactionCategoryId();
+								for(TransactionCategory transactionCategory : transactionCatList)
+								{
+									Integer transactionCategoryId = transactionCategory.getTransactionCategoryId();
 									if(Objects.equals(transactionCategoryId, bankTransactionCategoryId))
 									{
-
+										// Skip the bank's own transaction category
 									}
 									else
-								{
-									tempTransactionCatogaryList.add(transactionCategory);
+									{
+										tempTransactionCatogaryList.add(transactionCategory);
+									}
 								}
+								transactionCatList = tempTransactionCatogaryList;
 							}
-							transactionCatList = tempTransactionCatogaryList;
 						}
 						return new ResponseEntity<>(
 								new ReconsilationCatDataModel(null,
 										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 							HttpStatus.OK);
 					}
-					break;
+					// Return empty structure if no categories found
+					return new ResponseEntity<>(
+							new ReconsilationCatDataModel(null, new ArrayList<>()),
+							HttpStatus.OK);
 
 				case MONEY_SPENT_OTHERS:
 				case MONEY_SPENT:
@@ -215,7 +266,6 @@ public class ReconsilationController {
 				case MONEY_RECEIVED_OTHERS:
 				case DISPOSAL_OF_CAPITAL_ASSET:
 				case MONEY_RECEIVED:
-
 					transactionCatList = transactionCategoryService
 							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
 					if (transactionCatList != null && !transactionCatList.isEmpty())
@@ -223,22 +273,42 @@ public class ReconsilationController {
 								new ReconsilationCatDataModel(null,
 										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 								HttpStatus.OK);
-					break;
+					// Return empty structure if no categories found
+					return new ResponseEntity<>(
+							new ReconsilationCatDataModel(null, new ArrayList<>()),
+							HttpStatus.OK);
+				case VAT_PAYMENT:
+				case VAT_CLAIM:
+				case CORPORATE_TAX_PAYMENT:
+					// These categories don't need transaction categories, return empty structure
+					transactionCatList = transactionCategoryService
+							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
+					return new ResponseEntity<>(
+							new ReconsilationCatDataModel(null,
+									transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList != null ? transactionCatList : new ArrayList<>())),
+							HttpStatus.OK);
 				case DEFAULT:
+				default:
+					logger.warn("getTransactionCategory: Unhandled category enum: {}", categoryEnum);
+					// For unhandled cases, return empty data structure instead of error
 					transactionCatList = transactionCategoryService
 							.getTransactionCatByChartOfAccountCategoryId(category.getChartOfAccountCategoryId());
-					if (transactionCatList != null && !transactionCatList.isEmpty())
+					if (transactionCatList != null && !transactionCatList.isEmpty()) {
 						return new ResponseEntity<>(
 								new ReconsilationCatDataModel(null,
 										transcationCategoryHelper.getSinleLevelDropDownModelList(transactionCatList)),
 								HttpStatus.OK);
+					}
+					// Return empty structure for unhandled cases
+					return new ResponseEntity<>(
+							new ReconsilationCatDataModel(null, new ArrayList<>()),
+							HttpStatus.OK);
 			}
-
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			logger.error(ERROR, e);
+			logger.error("Error in getTransactionCategory for categoryId={}, bankId={}: ", 
+					filterModel.getChartOfAccountCategoryId(), filterModel.getBankId(), e);
+			return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest

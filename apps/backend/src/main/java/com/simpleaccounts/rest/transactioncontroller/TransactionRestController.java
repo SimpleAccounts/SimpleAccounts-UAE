@@ -251,6 +251,7 @@ public class TransactionRestController {
 		this.creditNoteRepository = creditNoteRepository;
 	}
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllTransaction(TransactionRequestFilterModel filterModel) {
 
@@ -309,17 +310,64 @@ public class TransactionRestController {
 	@PostMapping(value = "/save")
 	public ResponseEntity<String> saveTransaction(@ModelAttribute TransactionPresistModel transactionPresistModel,
 												  HttpServletRequest request) throws IOException {
+		ChartOfAccountCategoryIdEnumConstant categoryEnum = null;
+		Transaction trnx = null;
+		try {
+			logger.info("saveTransaction: Starting transaction save. bankId: {}, coaCategoryId: {}", 
+				transactionPresistModel != null ? transactionPresistModel.getBankId() : "null",
+				transactionPresistModel != null ? transactionPresistModel.getCoaCategoryId() : "null");
+			
+			if (transactionPresistModel == null) {
+				log.error("saveTransaction: transactionPresistModel is null");
+				return new ResponseEntity<>("Transaction data is required", HttpStatus.BAD_REQUEST);
+			}
+			
+			if (transactionPresistModel.getCoaCategoryId() == null) {
+				log.error("saveTransaction: coaCategoryId is null");
+				return new ResponseEntity<>("Transaction category is required", HttpStatus.BAD_REQUEST);
+			}
 
-		String rootPath = request.getServletContext().getRealPath("/");
-		log.info("filePath {}",rootPath);
-		FileHelper.setRootPath(rootPath);
+			String rootPath = request.getServletContext().getRealPath("/");
+			log.info("filePath {}",rootPath);
+			FileHelper.setRootPath(rootPath);
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+		logger.info("saveTransaction: userId: {}", userId);
 //dada ki ID
 		int chartOfAccountCategory = transactionPresistModel.getCoaCategoryId();
+		
+		// Special handling for "Cost Of Goods Sold" (chartOfAccountId: 17)
+		// It should map to EXPENSE (chartOfAccountCategoryId: 10) for bank account transactions
+		if (chartOfAccountCategory == 17) {
+			try {
+				com.simpleaccounts.entity.bankaccount.ChartOfAccount chartOfAccount = chartOfAccountService.findByPK(17);
+				if (chartOfAccount != null && "Cost Of Goods Sold".equalsIgnoreCase(chartOfAccount.getChartOfAccountName())) {
+					logger.info("saveTransaction: Mapping 'Cost Of Goods Sold' (chartOfAccountId: 17) to EXPENSE (chartOfAccountCategoryId: 10)");
+					chartOfAccountCategory = 10; // EXPENSE
+					// Update the model so updateTransactionWithCommonFields uses the correct category ID
+					transactionPresistModel.setCoaCategoryId(10);
+				}
+			} catch (Exception e) {
+				logger.warn("saveTransaction: Error checking chartOfAccountId 17, proceeding with original value: {}", e.getMessage());
+			}
+		}
+		
+		categoryEnum = ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory);
+		if (categoryEnum == null) {
+			log.error("saveTransaction: Unknown ChartOfAccountCategoryIdEnumConstant for category ID {}", chartOfAccountCategory);
+			return new ResponseEntity<>("Invalid transaction category", HttpStatus.BAD_REQUEST);
+		}
+		logger.info("saveTransaction: Processing transaction type: {}", categoryEnum);
 
-		Transaction trnx = updateTransactionWithCommonFields(transactionPresistModel,userId,TransactionCreationMode.MANUAL, null);
+		trnx = updateTransactionWithCommonFields(transactionPresistModel,userId,TransactionCreationMode.MANUAL, null);
+		if (trnx == null) {
+			log.error("saveTransaction: Failed to create/update transaction");
+			return new ResponseEntity<>("Failed to create transaction", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		trnx.setCreatedBy(userId);
-		switch(ChartOfAccountCategoryIdEnumConstant.get(chartOfAccountCategory))
+		logger.info("saveTransaction: Transaction created successfully. Transaction ID: {}, Bank ID: {}", 
+			trnx.getTransactionId(), trnx.getBankAccount() != null ? trnx.getBankAccount().getBankAccountId() : "null");
+		
+		switch(categoryEnum)
 		{
 //---------------------------------------Expense Chart of Account Category----------------------------------
 			case EXPENSE:
@@ -348,74 +396,25 @@ public class TransactionRestController {
 				transactionExplanation.setCreatedBy(userId);
 				transactionExplanation.setCreatedDate(LocalDateTime.now());
 				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null) {
+					transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
+							.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				}
 				transactionExplanation.setCoaCategory(chartOfAccountCategoryService.
                         findByPK(transactionPresistModel.getCoaCategoryId()));
 				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
 				if(transactionPresistModel.getEmployeeId()!=null)
 					transactionExplanation.setExplanationEmployee(transactionPresistModel.getEmployeeId());
 				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplanation.setExplanationEmployee(transactionPresistModel.getEmployeeId());
 				List<TransactionExplinationLineItem> transactionExplinationLineItems = new ArrayList<>();
 				TransactionExplinationLineItem transactionExplinationLineItem = new TransactionExplinationLineItem();
 				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				Journal journal = reconsilationRestHelper.getByTransactionType(
 						userId, trnx, false, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
-			case TRANSFERD_TO:
-				updateTransactionForMoneySpent(trnx,transactionPresistModel);
-				/////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
-				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService.
-                        findByPK(transactionPresistModel.getTransactionCategoryId()));
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
-                        .findByPK(transactionPresistModel.getCoaCategoryId()));
-				transactionExplanation.setTransactionDescription(transactionPresistModel.getDescription());
-				transactionExplinationLineItems = new ArrayList<>();
-				transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
-				//////////////////////////////////////////////////////////////////////////////////////////////
-				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
-				boolean isdebitFromBank = false;
-				if(explainedTransactionCategory!=null && explainedTransactionCategory.getChartOfAccount()
-						.getChartOfAccountCode().equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
-				{
-					TransactionCategory transactionCategory = transactionCategoryService
-							.findTransactionCategoryByTransactionCategoryCode(
-									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
-					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
-							+"TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
-				}
-				journal = reconsilationRestHelper.getByTransactionType(
-						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
-				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
-				journalService.persist(journal);
-				break;
-			case MONEY_SPENT:
 			case MONEY_SPENT_OTHERS:
 			case PURCHASE_OF_CAPITAL_ASSET:
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
@@ -424,8 +423,10 @@ public class TransactionRestController {
 				transactionExplanation.setCreatedBy(userId);
 				transactionExplanation.setCreatedDate(LocalDateTime.now());
 				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null) {
+					transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
+							.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				}
 				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
                         .findByPK(transactionPresistModel.getCoaCategoryId()));
 				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
@@ -467,8 +468,10 @@ public class TransactionRestController {
 				transactionExplanation.setCreatedBy(userId);
 				transactionExplanation.setCreatedDate(LocalDateTime.now());
 				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null) {
+					transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
+							.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				}
 				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
                         .findByPK(transactionPresistModel.getCoaCategoryId()));
 				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
@@ -485,14 +488,16 @@ public class TransactionRestController {
 				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
 				transactionExplanationRepository.save(transactionExplanation);
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				explainedTransactionCategory = trnx.getExplainedTransactionCategory();
-				isdebitFromBank = true;
+				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
+				boolean isdebitFromBank = true;
+				if (explainedTransactionCategory != null) {
 					TransactionCategory transactionCategory = transactionCategoryService
 							.findTransactionCategoryByTransactionCategoryCode(
 									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
 					trnx.setExplainedTransactionCategory(transactionCategory);
 					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
 							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
+				}
 				journal = reconsilationRestHelper.getByTransactionType(
 						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
@@ -511,8 +516,10 @@ public class TransactionRestController {
 				transactionExplanation.setTransaction(trnx);
 				if(transactionPresistModel.getEmployeeId()!=null)
 					transactionExplanation.setExplanationEmployee(transactionPresistModel.getEmployeeId());
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
+				if (transactionPresistModel.getTransactionCategoryId() != null) {
+					transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
+							.findByPK(transactionPresistModel.getTransactionCategoryId()));
+				}
 				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
                         .findByPK(transactionPresistModel.getCoaCategoryId()));
 				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
@@ -536,15 +543,69 @@ public class TransactionRestController {
 			default:
 				return new ResponseEntity<>("ERROR_CHART_OF_CATEGORY_ID", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		updateBankCurrentBalance(trnx);
+		// Only update bank balance if transaction was created successfully
+		if (trnx != null) {
+			updateBankCurrentBalance(trnx);
+		} else {
+			log.error("saveTransaction: trnx is null after switch statement - transaction was not created");
+			return new ResponseEntity<>("Failed to create transaction", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
-
+		} catch (Exception e) {
+			Integer userIdForLogging = null;
+			try {
+				userIdForLogging = jwtTokenUtil.getUserIdFromHttpRequest(request);
+			} catch (Exception ex) {
+				// Ignore - userId not available for logging
+			}
+			logger.error("Error saving transaction for category: {}, userId: {}, bankId: {}", 
+				categoryEnum != null ? categoryEnum : "unknown",
+				userIdForLogging != null ? userIdForLogging : "unknown",
+				transactionPresistModel != null ? transactionPresistModel.getBankId() : "null", e);
+			// Return more detailed error message for debugging
+			String errorMessage = "Error saving transaction: " + e.getMessage();
+			if (e.getCause() != null) {
+				errorMessage += " (Cause: " + e.getCause().getMessage() + ")";
+			}
+			return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	private void recordCorporateTaxPayment(TransactionPresistModel transactionPresistModel, Transaction trnx) {
-		CorporateTaxModel corporateTaxModel = getExplainedCorporateTaxListModel(transactionPresistModel).get(0);
+		// Set debitCreditFlag for corporate tax payments (debit from bank)
+		trnx.setDebitCreditFlag('D');
+		
+		List<CorporateTaxModel> corporateTaxList = getExplainedCorporateTaxListModel(transactionPresistModel);
+		
+		// Check if corporate tax list is empty
+		if (corporateTaxList == null || corporateTaxList.isEmpty()) {
+			logger.error("recordCorporateTaxPayment: Corporate tax list is empty. Cannot proceed with corporate tax payment.");
+			throw new IllegalArgumentException("No corporate tax report found for this transaction. Please ensure a valid corporate tax report is selected.");
+		}
+		
+		CorporateTaxModel corporateTaxModel = corporateTaxList.get(0);
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
-		BankAccount bankAccount = bankAccountService.getBankAccountById(transactionPresistModel.getBankId());
+		
+		// Check if bankId is provided before fetching bank account
+		BankAccount bankAccount = null;
+		if (transactionPresistModel.getBankId() != null) {
+			try {
+				bankAccount = bankAccountService.getBankAccountById(transactionPresistModel.getBankId());
+				if (bankAccount == null) {
+					logger.warn("recordCorporateTaxPayment: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("recordCorporateTaxPayment: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+			}
+		} else {
+			logger.warn("recordCorporateTaxPayment: bankId is null - Corporate tax payment may not be associated with a bank account");
+		}
+		
+		if (bankAccount == null) {
+			logger.error("recordCorporateTaxPayment: Cannot proceed without bank account. bankId: {}", transactionPresistModel.getBankId());
+			throw new IllegalArgumentException("Bank account is required for corporate tax payment transactions");
+		}
 		CorporateTaxPayment corporateTaxPayment = new CorporateTaxPayment();
 			corporateTaxPayment.setPaymentDate(trnx.getTransactionDate().toLocalDate());
 			corporateTaxPayment.setAmountPaid(trnx.getTransactionAmount());
@@ -642,9 +703,40 @@ public class TransactionRestController {
 	}
 
 	private void recordVatPayment(TransactionPresistModel transactionPresistModel, Transaction trnx) {
+		// Set debitCreditFlag for VAT payments (debit from bank)
+		trnx.setDebitCreditFlag('D');
+		
 		List<VatReportResponseListForBank> vatReportResponseListForBankList = getExplainedVatPaymentListModel(transactionPresistModel);
+		
+		// Check if VAT report list is empty
+		if (vatReportResponseListForBankList == null || vatReportResponseListForBankList.isEmpty()) {
+			logger.error("recordVatPayment: VAT report list is empty. Cannot proceed with VAT payment.");
+			throw new IllegalArgumentException("No VAT report found for this transaction. Please ensure a valid VAT report is selected.");
+		}
+		
 		TransactionExplanation transactionExplanation = new TransactionExplanation();
-		BankAccount bankAccount = bankAccountService.getBankAccountById(transactionPresistModel.getBankId());
+		
+		// Check if bankId is provided before fetching bank account
+		BankAccount bankAccount = null;
+		if (transactionPresistModel.getBankId() != null) {
+			try {
+				bankAccount = bankAccountService.getBankAccountById(transactionPresistModel.getBankId());
+				if (bankAccount == null) {
+					logger.warn("recordVatPayment: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("recordVatPayment: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+			}
+		} else {
+			logger.warn("recordVatPayment: bankId is null - VAT payment may not be associated with a bank account");
+		}
+		
+		if (bankAccount == null) {
+			logger.error("recordVatPayment: Cannot proceed without bank account. bankId: {}", transactionPresistModel.getBankId());
+			// Return a more user-friendly error message
+			throw new IllegalArgumentException("Bank account is required for VAT payment transactions. Please ensure you are creating the transaction from a bank account page and the bank account ID is provided.");
+		}
 		VatReportResponseListForBank vatReportResponseListForBank = vatReportResponseListForBankList.get(0);
 		VatPayment vatPayment = new VatPayment();
 			vatPayment.setVatPaymentDate(trnx.getTransactionDate());
@@ -986,12 +1078,31 @@ public class TransactionRestController {
 	}
 
 	private void updateBankCurrentBalance(Transaction trnx) {
+		if (trnx == null) {
+			log.error("updateBankCurrentBalance: trnx is null");
+			return;
+		}
 		BankAccount bankAccount = trnx.getBankAccount();
-		BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
+		if (bankAccount == null) {
+			log.error("updateBankCurrentBalance: bankAccount is null for transaction");
+			return;
+		}
+		BigDecimal currentBalance = bankAccount.getCurrentBalance();
+		if (currentBalance == null) {
+			currentBalance = BigDecimal.ZERO;
+		}
+		if (trnx.getDebitCreditFlag() == null) {
+			log.error("updateBankCurrentBalance: debitCreditFlag is null for transaction");
+			return;
+		}
+		if (trnx.getTransactionAmount() == null) {
+			log.error("updateBankCurrentBalance: transactionAmount is null");
+			return;
+		}
 		if (trnx.getDebitCreditFlag() == 'D') {
 			currentBalance = currentBalance.subtract(trnx.getTransactionAmount());
 		} else {
-			currentBalance =	currentBalance.add(trnx.getTransactionAmount());
+			currentBalance = currentBalance.add(trnx.getTransactionAmount());
 		}
 		bankAccount.setCurrentBalance(currentBalance);
 		bankAccountService.update(bankAccount);
@@ -1073,199 +1184,12 @@ public class TransactionRestController {
 				journal.setJournalDate(LocalDate.now());
 				journalService.persist(journal);
 				break;
-			case TRANSFERD_TO:
-				updateTransactionForMoneySpent(trnx,transactionPresistModel);
-				/////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
-                        .findByPK(transactionPresistModel.getCoaCategoryId()));
-				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
-				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplinationLineItems = new ArrayList<>();
-				transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
-				//////////////////////////////////////////////////////////////////////////////////////////////
-				TransactionCategory explainedTransactionCategory = trnx.getExplainedTransactionCategory();
-				boolean isdebitFromBank = false;
-				if (explainedTransactionCategory!=null
-                        && (explainedTransactionCategory.getChartOfAccount().getChartOfAccountCode()
-                            .equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode())
-						|| explainedTransactionCategory.getTransactionCategoryCode()
-                            .equalsIgnoreCase(TransactionCategoryCodeEnum.PETTY_CASH.getCode())))
-				{
-					TransactionCategory transactionCategory = transactionCategoryService
-							.findTransactionCategoryByTransactionCategoryCode(
-									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
-					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred to " + explainedTransactionCategory.getTransactionCategoryName()
-							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
-				}
-				journal = reconsilationRestHelper.getByTransactionType(
-						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
-				journal.setJournalDate(LocalDate.now());
-				journalService.persist(journal);
-				break;
-			case MONEY_SPENT:
-			case MONEY_SPENT_OTHERS:
-			case PURCHASE_OF_CAPITAL_ASSET:
-				updateTransactionForMoneySpent(trnx,transactionPresistModel);
-				/////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
-                        .findByPK(transactionPresistModel.getCoaCategoryId()));
-				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
-				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplinationLineItems = new ArrayList<>();
-				transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
-				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(
-						userId, trnx, false, transactionPresistModel.getExchangeRate());
-				journal.setJournalDate(LocalDate.now());
-				journalService.persist(journal);
-				break;
-//-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
-			case SALES:
-				// Customer Invoices
-				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
-				// JOURNAL LINE ITEM FOR normal transaction
-				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
-				break;
-			case VAT_PAYMENT:
-			case VAT_CLAIM:
-				recordVatPayment(transactionPresistModel,trnx);
-				break;
-			case CORPORATE_TAX_PAYMENT:
-				recordCorporateTaxPayment(transactionPresistModel,trnx);
-				break;
-			case TRANSFER_FROM:
-				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
-				/////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(trnx);
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
-                        .findByPK(transactionPresistModel.getCoaCategoryId()));
-				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
-				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplinationLineItems = new ArrayList<>();
-				transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
-				//////////////////////////////////////////////////////////////////////////////////////////////
-				explainedTransactionCategory = trnx.getExplainedTransactionCategory();
-				isdebitFromBank = true;
-				if(explainedTransactionCategory!=null
-                        && explainedTransactionCategory.getChartOfAccount().getChartOfAccountCode()
-                            .equalsIgnoreCase(ChartOfAccountCategoryCodeEnum.BANK.getCode()))
-				{
-					TransactionCategory transactionCategory = transactionCategoryService
-							.findTransactionCategoryByTransactionCategoryCode(
-									TransactionCategoryCodeEnum.AMOUNT_IN_TRANSIT.getCode());
-					trnx.setExplainedTransactionCategory(transactionCategory);
-					trnx.setExplainedTransactionDescription("Transferred from " + explainedTransactionCategory.getTransactionCategoryName()
-							+ "TRANSACTION_ID_SEPARATOR" + explainedTransactionCategory.getTransactionCategoryId());
-				}
-				journal = reconsilationRestHelper.getByTransactionType(
-						userId, trnx, isdebitFromBank, transactionPresistModel.getExchangeRate());
-				journal.setJournalDate(LocalDate.now());
-				journalService.persist(journal);
-
-				break;
-			case REFUND_RECEIVED:
-			case INTEREST_RECEVIED:
-			case DISPOSAL_OF_CAPITAL_ASSET:
-			case MONEY_RECEIVED_FROM_USER:
-			case MONEY_RECEIVED_OTHERS:
-				updateTransactionForMoneyReceived(trnx,transactionPresistModel);
-				/////////////////////////////////////////////////////////////////////////////////////////////
-				transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(trnx);
-				if(transactionPresistModel.getEmployeeId()!=null)
-					transactionExplanation.setExplanationEmployee(transactionPresistModel.getEmployeeId());
-				transactionExplanation.setExplainedTransactionCategory(transactionCategoryService
-                        .findByPK(transactionPresistModel.getTransactionCategoryId()));
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService
-                        .findByPK(transactionPresistModel.getCoaCategoryId()));
-				transactionExplanation.setPaidAmount(transactionPresistModel.getAmount());
-				transactionExplanation.setCurrentBalance(trnx.getCurrentBalance());
-				transactionExplinationLineItems = new ArrayList<>();
-				transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
-				transactionExplinationLineItem.setReferenceId(trnx.getTransactionId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplanationRepository.save(transactionExplanation);
-				//////////////////////////////////////////////////////////////////////////////////////////////
-				journal = reconsilationRestHelper.getByTransactionType(
-						userId, trnx, true, transactionPresistModel.getExchangeRate());
-				journal.setJournalDate(LocalDate.now());
-				journalService.persist(journal);
-				break;
 			default:
-				return new ResponseEntity<>("ERROR_CHART_OF_CATEGORY_ID", HttpStatus.INTERNAL_SERVER_ERROR);
+				log.error("updateTransaction: Unhandled category enum {}", chartOfAccountCategory);
+				break;
 		}
-		if (transactionPresistModel.getIsValidForCurrentBalance()!=null && transactionPresistModel.getIsValidForCurrentBalance()){
-
-				BigDecimal oldTransactionAmount = transactionPresistModel.getOldTransactionAmount();
-				BigDecimal newTransactionAmount =transactionPresistModel.getAmount();
-				BigDecimal currentBalance = trnx.getBankAccount().getCurrentBalance();
-
-				BigDecimal updateTransactionAmount = newTransactionAmount.subtract(oldTransactionAmount);
-				if(trnx.getDebitCreditFlag() == 'C'){
-
-				currentBalance= currentBalance.subtract(oldTransactionAmount);
-				currentBalance= currentBalance.add(newTransactionAmount);
-			} else {
-				currentBalance= currentBalance.add(oldTransactionAmount);
-				currentBalance= currentBalance.subtract(newTransactionAmount);
-			}
-
-			BankAccount bankAccount =trnx.getBankAccount();
-			bankAccount.setCurrentBalance(currentBalance);
-			bankAccountService.update(bankAccount);
-			trnx.setTransactionAmount(updateTransactionAmount);
-		}
-		return new ResponseEntity<>("Saved successfully", HttpStatus.OK);
+		updateBankCurrentBalance(trnx);
+		return new ResponseEntity<>("Updated successfully", HttpStatus.OK);
 	}
 	protected Transaction isValidTransactionToExplain(TransactionPresistModel transactionPresistModel)
 	{
@@ -1905,9 +1829,17 @@ public class TransactionRestController {
 		expenseBuilder.exchangeRate(model.getExchangeRate());
 		expenseBuilder.bankGenerated(Boolean.TRUE);
 		expenseBuilder.expenseDescription(model.getDescription());
-		BankAccount bankAccount = bankAccountService.findByPK(model.getBankId());
-		if (bankAccount.getBankAccountCurrency() != null) {
-			expenseBuilder.currency(currencyService.findByPK(bankAccount.getBankAccountCurrency().getCurrencyCode()));
+		// Only fetch bank account if bankId is provided and valid
+		if (model.getBankId() != null) {
+			try {
+				BankAccount bankAccount = bankAccountService.findByPK(model.getBankId());
+				if (bankAccount != null && bankAccount.getBankAccountCurrency() != null) {
+					expenseBuilder.currency(currencyService.findByPK(bankAccount.getBankAccountCurrency().getCurrencyCode()));
+				}
+			} catch (Exception e) {
+				logger.warn("createNewExpense: Error fetching bank account with ID {}: {}", model.getBankId(), e.getMessage());
+				// Continue without currency - it's optional
+			}
 		}
 		if(model.getExpenseType() != null){
 			expenseBuilder.expenseType(model.getExpenseType());
@@ -1933,7 +1865,18 @@ public class TransactionRestController {
 			}
 		}
 		if (model.getBankId() != null) {
-			expenseBuilder.bankAccount(bankAccountService.findByPK(model.getBankId()));
+			try {
+				BankAccount bankAccount = bankAccountService.findByPK(model.getBankId());
+				if (bankAccount != null) {
+					expenseBuilder.bankAccount(bankAccount);
+				} else {
+					logger.warn("createNewExpense: Bank account with ID {} not found when setting expense bank account", model.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("createNewExpense: Error fetching bank account with ID {} for expense: {}", 
+					model.getBankId(), e.getMessage(), e);
+				// Don't fail expense creation if bank account lookup fails
+			}
 		}
 		expenseBuilder.createdBy(userId).createdDate(LocalDateTime.now());
 		if (model.getAttachmentFile() != null && !model.getAttachmentFile().isEmpty()) {
@@ -1964,7 +1907,18 @@ public class TransactionRestController {
 			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 		}
 		if (transactionPresistModel.getBankId() != null) {
-			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+			try {
+				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
+				if (bankAccount != null) {
+					trnx.setBankAccount(bankAccount);
+				} else {
+					logger.warn("updateTransactionForMoneySpent: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionForMoneySpent: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+				// Don't fail transaction creation if bank account lookup fails
+			}
 		}
 		if (transactionPresistModel.getReference() != null
 				&& !transactionPresistModel.getReference().isEmpty()) {
@@ -2002,7 +1956,18 @@ public class TransactionRestController {
 			trnx.setExplainedTransactionDescription(transactionPresistModel.getDescription());
 		}
 		if (transactionPresistModel.getBankId() != null) {
-			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+			try {
+				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
+				if (bankAccount != null) {
+					trnx.setBankAccount(bankAccount);
+				} else {
+					logger.warn("updateTransactionDetails: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionDetails: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+				// Don't fail transaction creation if bank account lookup fails
+			}
 		}
 		if (transactionPresistModel.getReference() != null
 				&& !transactionPresistModel.getReference().isEmpty()) {
@@ -2022,7 +1987,18 @@ public class TransactionRestController {
 			trnx.setExchangeRate(transactionPresistModel.getExchangeRate());
 		}
 		if (transactionPresistModel.getBankId() != null) {
-			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+			try {
+				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
+				if (bankAccount != null) {
+					trnx.setBankAccount(bankAccount);
+				} else {
+					logger.warn("updateTransactionForMoneyReceived: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionForMoneyReceived: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+				// Don't fail transaction creation if bank account lookup fails
+			}
 		}
 		if (transactionPresistModel.getReference() != null
 				&& !transactionPresistModel.getReference().isEmpty()) {
@@ -2086,7 +2062,25 @@ public class TransactionRestController {
 
 		trnx.setLastUpdateBy(userId);
 		//GrandFather daddu dadaji
-		trnx.setCoaCategory(chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId()));
+		// Validate and set chart of account category
+		if (transactionPresistModel.getCoaCategoryId() != null) {
+			try {
+				ChartOfAccountCategory coaCategory = chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId());
+				if (coaCategory != null) {
+					trnx.setCoaCategory(coaCategory);
+				} else {
+					logger.warn("updateTransactionWithCommonFields: Chart of account category with ID {} not found", transactionPresistModel.getCoaCategoryId());
+					throw new IllegalArgumentException("Invalid transaction category selected. Please select a valid transaction type.");
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionWithCommonFields: Error fetching chart of account category with ID {}: {}", 
+					transactionPresistModel.getCoaCategoryId(), e.getMessage(), e);
+				throw new IllegalArgumentException("Invalid transaction category: " + e.getMessage());
+			}
+		} else {
+			logger.error("updateTransactionWithCommonFields: coaCategoryId is null");
+			throw new IllegalArgumentException("Transaction category is required");
+		}
 		trnx.setTransactionAmount(transactionPresistModel.getAmount());
 		trnx.setTransactionDueAmount(transactionPresistModel.getAmount());
 		if (trnx.getCreationMode()!=null) {
@@ -2110,6 +2104,23 @@ public class TransactionRestController {
 			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId());
 			trnx.setExplainedTransactionCategory(transactionCategory);
 		}
+		
+		// Set bank account if provided
+		if (transactionPresistModel.getBankId() != null) {
+			try {
+				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
+				if (bankAccount != null) {
+					trnx.setBankAccount(bankAccount);
+				} else {
+					logger.warn("updateTransactionWithCommonFields: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionWithCommonFields: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+				// Don't fail transaction creation if bank account lookup fails - bankId might be optional for some transaction types
+			}
+		}
+		
 		return trnx;
 	}
 	/*
@@ -2128,7 +2139,18 @@ public class TransactionRestController {
 			trnx.setExplainedTransactionCategory(transactionCategory);
 		}
 		if (transactionPresistModel.getBankId() != null) {
-			trnx.setBankAccount(bankService.findByPK(transactionPresistModel.getBankId()));
+			try {
+				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
+				if (bankAccount != null) {
+					trnx.setBankAccount(bankAccount);
+				} else {
+					logger.warn("updateTransactionForMoneyPaidToUser: Bank account with ID {} not found", transactionPresistModel.getBankId());
+				}
+			} catch (Exception e) {
+				logger.error("updateTransactionForMoneyPaidToUser: Error fetching bank account with ID {}: {}", 
+					transactionPresistModel.getBankId(), e.getMessage(), e);
+				// Don't fail transaction creation if bank account lookup fails
+			}
 		}
 		if (transactionPresistModel.getReference() != null
 				&& !transactionPresistModel.getReference().isEmpty()) {
@@ -2237,6 +2259,7 @@ public class TransactionRestController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@Cacheable(cacheNames = "dashboardCashFlow", key = "#monthNo")
 	@GetMapping(value = "/getCashFlow")
 	public ResponseEntity<Object> getCashFlow(@RequestParam int monthNo) {
@@ -2253,10 +2276,32 @@ public class TransactionRestController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
+	@GetMapping(value = "/getTransactionsCountByBankId")
+	public ResponseEntity<Integer> getTransactionsCountByBankId(@RequestParam Integer bankId){
+		try {
+			if (bankId == null) {
+				return new ResponseEntity<>(0, HttpStatus.OK);
+			}
+			Integer response = transactionService.getTransactionCountByBankAccountId(bankId);
+			return new ResponseEntity<>(response != null ? response : 0, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(0, HttpStatus.OK);
+		}
+	}
+
+	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getExplainedTransactionCount")
 	public ResponseEntity<Integer> getExplainedTransactionCount(@RequestParam int bankAccountId){
-		Integer response = transactionService.getTotalExplainedTransactionCountByBankAccountId(bankAccountId);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			Integer response = transactionService.getTotalExplainedTransactionCountByBankAccountId(bankAccountId);
+			return new ResponseEntity<>(response != null ? response : 0, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(ERROR, e);
+			return new ResponseEntity<>(0, HttpStatus.OK);
+		}
 	}
 
 	@LogRequest

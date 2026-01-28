@@ -69,7 +69,7 @@ export const getTransactionTypeList = () => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: '/rest/datalist/getTransactionTypes',
+      url: '/rest/datalist/getBankTransactionTypes',
     };
     return authApi(data)
       .then(res => {
@@ -358,9 +358,31 @@ export const getChartOfCategoryList = type => {
 
 export const getTransactionCategoryListForExplain = (id, bankId) => {
   return dispatch => {
+    // Only include bankId in URL if it's a valid positive integer
+    // Exclude: null, undefined, empty string, string "null", string "undefined", 0, negative numbers, NaN
+    let validBankId = null;
+    
+    // Explicit check: if bankId is falsy, null, undefined, empty string, or string "null"/"undefined", exclude it
+    if (bankId == null || bankId === undefined || bankId === '' || bankId === 'null' || bankId === 'undefined') {
+      validBankId = null;
+    } 
+    // Check if it's a valid positive integer
+    else {
+      const numBankId = Number(bankId);
+      if (!isNaN(numBankId) && Number.isInteger(numBankId) && numBankId > 0) {
+        validBankId = numBankId;
+      } else {
+        validBankId = null;
+      }
+    }
+    
+    // Only include bankId parameter if we have a valid value
+    const bankIdParam = validBankId ? `&bankId=${validBankId}` : '';
+    const finalUrl = `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}${bankIdParam}`;
+    
     let data = {
       method: 'get',
-      url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
+      url: finalUrl,
     };
     return authApi(data)
       .then(res => {
