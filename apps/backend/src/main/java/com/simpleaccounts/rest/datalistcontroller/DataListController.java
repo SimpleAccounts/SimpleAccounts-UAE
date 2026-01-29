@@ -28,6 +28,7 @@ import com.simpleaccounts.utils.ChartOfAccountCacheService;
 import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.util.*;
+import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -210,9 +211,15 @@ public class DataListController {
 			List<ChartOfAccountCategory> bankTransactionTypes = allCategories.stream()
 					.filter(category -> validTransactionTypeIds.contains(category.getChartOfAccountCategoryId()))
 					.sorted(Comparator.comparing(ChartOfAccountCategory::getChartOfAccountCategoryId))
-					.toList();
+					.collect(Collectors.toList());
 			
 			if (bankTransactionTypes != null && !bankTransactionTypes.isEmpty()) {
+				// Clear lazy-loaded relationships to prevent LazyInitializationException during JSON serialization
+				for (ChartOfAccountCategory category : bankTransactionTypes) {
+					category.setParentChartOfAccount(null);
+					category.setCoacoaCategoryList(null);
+					category.setCoatransactionCategoryList(null);
+				}
 				return new ResponseEntity<>(bankTransactionTypes, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
