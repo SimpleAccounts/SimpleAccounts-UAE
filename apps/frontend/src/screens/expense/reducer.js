@@ -122,7 +122,10 @@ const ExpenseReducer = (state = initState, action) => {
       let list1 = payload;
       if (list1 && list1.length && list1.length > 0)
         list1 = list1.map((data, index) => {
-          if (index == 0) data.label = 'Petty Cash';
+          if (index == 0) {
+            // Create a new object instead of mutating the existing one
+            return { ...data, label: 'Petty Cash' };
+          }
           return data;
         });
       return {
@@ -132,19 +135,22 @@ const ExpenseReducer = (state = initState, action) => {
     }
 
     case EXPENSE.USER_LIST:
-      if (payload && payload[0] && payload[0].label) {
-        let obj = new Object({ label: 'Company Expense', value: 'Company Expense' });
-        payload.unshift(obj);
+      let userList = payload;
+      if (userList && userList[0] && userList[0].label) {
+        // Create a new array instead of mutating the payload
+        const obj = { label: 'Company Expense', value: 'Company Expense' };
+        userList = [obj, ...userList];
       }
 
       return {
         ...state,
-        user_list: getArray(payload),
+        user_list: getArray(userList),
       };
     case EXPENSE.PAY_TO_LIST: {
       let list = payload;
       if (Array.isArray(list)) {
-        list.unshift({ value: 'Company Expense', label: 'Company Expense' });
+        // Create a new array instead of mutating the payload
+        list = [{ value: 'Company Expense', label: 'Company Expense' }, ...list];
       }
       return {
         ...state,

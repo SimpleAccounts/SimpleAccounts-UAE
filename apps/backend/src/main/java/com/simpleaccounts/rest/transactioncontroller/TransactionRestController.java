@@ -503,6 +503,7 @@ public class TransactionRestController {
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
+			case MONEY_RECEIVED:
 			case REFUND_RECEIVED:
 			case INTEREST_RECEVIED:
 			case DISPOSAL_OF_CAPITAL_ASSET:
