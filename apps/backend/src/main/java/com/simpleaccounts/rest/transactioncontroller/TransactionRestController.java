@@ -40,6 +40,7 @@ import com.simpleaccounts.utils.ChartUtil;
 import com.simpleaccounts.utils.DateFormatUtil;
 import com.simpleaccounts.utils.FileHelper;
 import com.simpleaccounts.utils.InvoiceNumberUtil;
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -61,6 +62,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -250,6 +252,36 @@ public class TransactionRestController {
 		this.corporateTaxPaymentHistoryRepository = corporateTaxPaymentHistoryRepository;
 		this.creditNoteRepository = creditNoteRepository;
 	}
+
+	/**
+	 * Binds form "date" field (epoch milliseconds string or yyyy-MM-dd) to java.util.Date
+	 * so multipart/form-data from the frontend is correctly parsed.
+	 */
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
+			@Override
+			public void setAsText(String text) {
+				if (text == null || text.trim().isEmpty()) {
+					setValue(null);
+					return;
+				}
+				String trimmed = text.trim();
+				try {
+					long epoch = Long.parseLong(trimmed);
+					setValue(new Date(epoch));
+				} catch (NumberFormatException e) {
+					try {
+						setValue(new SimpleDateFormat("yyyy-MM-dd").parse(trimmed));
+					} catch (ParseException e2) {
+						logger.warn("Could not parse date: {}", trimmed);
+						setValue(null);
+					}
+				}
+			}
+		});
+	}
+
 	@LogRequest
 	@Transactional(readOnly = true)
 	@GetMapping(value = "/list")
@@ -326,6 +358,14 @@ public class TransactionRestController {
 				log.error("saveTransaction: coaCategoryId is null");
 				return new ResponseEntity<>("Transaction category is required", HttpStatus.BAD_REQUEST);
 			}
+			if (transactionPresistModel.getTransactionId() == null && transactionPresistModel.getDate() == null) {
+				log.error("saveTransaction: date is null for new transaction");
+				return new ResponseEntity<>("Transaction date is required", HttpStatus.BAD_REQUEST);
+			}
+			if (transactionPresistModel.getAmount() == null) {
+				log.error("saveTransaction: amount is null");
+				return new ResponseEntity<>("Transaction amount is required", HttpStatus.BAD_REQUEST);
+			}
 
 			String rootPath = request.getServletContext().getRealPath("/");
 			log.info("filePath {}",rootPath);
@@ -382,11 +422,42 @@ public class TransactionRestController {
 					}
 				}
 				else
-				{  // Supplier Invoices
-					updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
-					// JOURNAL LINE ITEM FOR normal transaction
-					List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
-					reconsileSupplierInvoices(userId, trnx, itemModels,transactionPresistModel,request);
+				{  // Supplier Invoices - or simple expense if no invoices selected
+					List<ExplainedInvoiceListModel> expenseInvoiceList = getExplainedInvoiceListModel(transactionPresistModel);
+					if (expenseInvoiceList != null && !expenseInvoiceList.isEmpty()) {
+						updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
+						List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+						reconsileSupplierInvoices(userId, trnx, itemModels,transactionPresistModel,request);
+					} else {
+						// Simple expense (money out) - no invoice selection
+						updateTransactionForMoneySpent(trnx,transactionPresistModel);
+						TransactionExplanation expExplanation = new TransactionExplanation();
+						expExplanation.setCreatedBy(userId);
+						expExplanation.setCreatedDate(LocalDateTime.now());
+						expExplanation.setTransaction(trnx);
+						if (transactionPresistModel.getTransactionCategoryId() != null) {
+							expExplanation.setExplainedTransactionCategory(transactionCategoryService
+									.findByPK(transactionPresistModel.getTransactionCategoryId()));
+						}
+						expExplanation.setCoaCategory(chartOfAccountCategoryService
+								.findByPK(transactionPresistModel.getCoaCategoryId()));
+						expExplanation.setPaidAmount(transactionPresistModel.getAmount());
+						expExplanation.setCurrentBalance(trnx.getCurrentBalance());
+						List<TransactionExplinationLineItem> expLineItems = new ArrayList<>();
+						TransactionExplinationLineItem expLineItem = new TransactionExplinationLineItem();
+						expLineItem.setCreatedBy(userId);
+						expLineItem.setCreatedDate(LocalDateTime.now());
+						expLineItem.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
+						expLineItem.setReferenceId(trnx.getTransactionId());
+						expLineItem.setTransactionExplanation(expExplanation);
+						expLineItems.add(expLineItem);
+						expExplanation.setExplanationLineItems(expLineItems);
+						transactionExplanationRepository.save(expExplanation);
+						Journal expJournal = reconsilationRestHelper.getByTransactionType(
+								userId, trnx, false, transactionPresistModel.getExchangeRate());
+						expJournal.setJournalDate(trnx.getTransactionDate().toLocalDate());
+						journalService.persist(expJournal);
+					}
 				}
 				break;
 			case MONEY_PAID_TO_USER:
@@ -415,6 +486,8 @@ public class TransactionRestController {
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
+			case TRANSFERD_TO:
+			case MONEY_SPENT:
 			case MONEY_SPENT_OTHERS:
 			case PURCHASE_OF_CAPITAL_ASSET:
 				updateTransactionForMoneySpent(trnx,transactionPresistModel);
@@ -447,9 +520,26 @@ public class TransactionRestController {
 				journal.setJournalDate(trnx.getTransactionDate().toLocalDate());
 				journalService.persist(journal);
 				break;
+//-----------------------------------------------------Invoice (Supplier Invoice)-----------------------------------------
+			case INVOICE:
+				List<ExplainedInvoiceListModel> invoiceList = getExplainedInvoiceListModel(transactionPresistModel);
+				if (invoiceList == null || invoiceList.isEmpty()) {
+					throw new IllegalArgumentException("Please select at least one supplier invoice for Invoice transactions");
+				}
+				updateTransactionForSupplierInvoices(trnx,transactionPresistModel);
+				List<ReconsileRequestLineItemModel> invoiceItemModels = getReconsileRequestLineItemModels(transactionPresistModel);
+				reconsileSupplierInvoices(userId, trnx, invoiceItemModels, transactionPresistModel, request);
+				break;
 //-----------------------------------------------------Sales Chart of Account Category-----------------------------------------
 			case SALES:
-				// Customer Invoices
+				// Customer Invoices - requires invoice selection
+				List<ExplainedInvoiceListModel> salesInvoiceList = getExplainedInvoiceListModel(transactionPresistModel);
+				if (salesInvoiceList == null || salesInvoiceList.isEmpty()) {
+					throw new IllegalArgumentException("Please select at least one customer invoice for Sales transactions");
+				}
+				if (transactionPresistModel.getCustomerId() == null) {
+					throw new IllegalArgumentException("Please select a customer for Sales transactions");
+				}
 				updateTransactionForCustomerInvoices(trnx,transactionPresistModel);
 				List<ReconsileRequestLineItemModel> itemModels = getReconsileRequestLineItemModels(transactionPresistModel);
 				reconsileCustomerInvoices(userId, trnx, itemModels, transactionPresistModel,request);
@@ -552,7 +642,23 @@ public class TransactionRestController {
 			return new ResponseEntity<>("Failed to create transaction", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>("Saved successfull", HttpStatus.OK);
+		} catch (IllegalArgumentException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
+			// #region agent log
+			try {
+				java.io.File logFile = new java.io.File("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log");
+				try (java.io.FileWriter fw = new java.io.FileWriter(logFile, true)) {
+					String msg = e.getMessage() != null ? e.getMessage().replace("\"", "'").replace("\n", " ").replace("%", "%%") : "null";
+					String trace = java.util.Arrays.stream(e.getStackTrace())
+							.limit(15)
+							.map(StackTraceElement::toString)
+							.collect(java.util.stream.Collectors.joining(" | ")).replace("\"", "'").replace("%", "%%");
+					fw.write(String.format("{\"location\":\"TransactionRestController.saveTransaction:catch\",\"message\":\"exception\",\"data\":{\"message\":\"%s\",\"class\":\"%s\",\"trace\":\"%s\"},\"timestamp\":%d,\"hypothesisId\":\"A\"}\n",
+							msg, e.getClass().getName(), trace, System.currentTimeMillis()));
+				}
+			} catch (Exception ignored) { /* ignore */ }
+			// #endregion
 			Integer userIdForLogging = null;
 			try {
 				userIdForLogging = jwtTokenUtil.getUserIdFromHttpRequest(request);
@@ -563,7 +669,6 @@ public class TransactionRestController {
 				categoryEnum != null ? categoryEnum : "unknown",
 				userIdForLogging != null ? userIdForLogging : "unknown",
 				transactionPresistModel != null ? transactionPresistModel.getBankId() : "null", e);
-			// Return more detailed error message for debugging
 			String errorMessage = "Error saving transaction: " + e.getMessage();
 			if (e.getCause() != null) {
 				errorMessage += " (Cause: " + e.getCause().getMessage() + ")";
@@ -1374,16 +1479,18 @@ public class TransactionRestController {
 		transactionExplanation.setTransaction(trnx);
 		transactionExplanation.setExplanationContact(transactionPresistModel.getCustomerId());
 		Contact contact1 = contactService.findByPK(transactionPresistModel.getCustomerId());
-		Map<String, Object> customerMap = new HashMap<>();
-		customerMap.put("contact", contact1.getContactId());
-		customerMap.put("contactType", 2);
-		customerMap.put("deleteFlag",Boolean.FALSE);
+		if (contact1 != null) {
+			Map<String, Object> customerMap = new HashMap<>();
+			customerMap.put("contact", contact1);
+			customerMap.put("contactType", 2);
+			customerMap.put("deleteFlag", Boolean.FALSE);
 
-		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
-				.findByAttributes(customerMap);
-		if (contactTransactionCategoryRelations!=null && !contactTransactionCategoryRelations.isEmpty()){
-			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
-			transactionExplanation.setExplainedTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+			List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
+					.findByAttributes(customerMap);
+			if (contactTransactionCategoryRelations != null && !contactTransactionCategoryRelations.isEmpty()) {
+				ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryRelations.get(0);
+				transactionExplanation.setExplainedTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
+			}
 		}
 		transactionExplanation.setCoaCategory(chartOfAccountCategoryService.findByPK(trnx.getCoaCategory().getChartOfAccountCategoryId()));
 		transactionExplanation.setPaidAmount(trnx.getTransactionAmount());
@@ -1402,7 +1509,7 @@ public class TransactionRestController {
 				Invoice invoiceEntity = invoiceService.findByPK(explainParam.getInvoiceId());
 				contactId = invoiceEntity.getContact().getContactId();
 				Contact contact = invoiceEntity.getContact();
-				if (explainParam.getPartiallyPaid().equals(Boolean.TRUE)){
+				if (Boolean.TRUE.equals(explainParam.getPartiallyPaid())){
 				invoiceEntity.setDueAmount(invoiceEntity.getDueAmount().subtract(explainParam.getNonConvertedInvoiceAmount()));
 				invoiceEntity.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
 			}
@@ -1500,7 +1607,7 @@ public class TransactionRestController {
 				Contact contact = invoiceEntity.getContact();
 				explainedAmount =explainParam.getExplainedAmount();
 
-				if (explainParam.getPartiallyPaid().equals(Boolean.TRUE)){
+				if (Boolean.TRUE.equals(explainParam.getPartiallyPaid())){
 					invoiceEntity.setDueAmount(invoiceEntity.getDueAmount().subtract(explainParam.getNonConvertedInvoiceAmount()));
 					invoiceEntity.setStatus(CommonStatusEnum.PARTIALLY_PAID.getValue());
 				} else {
@@ -2046,13 +2153,12 @@ public class TransactionRestController {
 			trnx = new Transaction();
 			transactionPresistModel.setIsValidForClosingBalance(true);
 		}
-
 		BigDecimal oldTransactionAmount = trnx.getTransactionAmount();
 		BigDecimal newTransactionAmount = transactionPresistModel.getAmount();
 
-		if (trnx.getTransactionExplinationStatusEnum()!=TransactionExplinationStatusEnum.FULL) {
+		if (trnx.getTransactionExplinationStatusEnum() != TransactionExplinationStatusEnum.FULL) {
 			transactionPresistModel.setIsValidForClosingBalance(true);
-		} else if (oldTransactionAmount.compareTo(newTransactionAmount) != 0) {
+		} else if (oldTransactionAmount != null && newTransactionAmount != null && oldTransactionAmount.compareTo(newTransactionAmount) != 0) {
 			transactionPresistModel.setIsValidForCurrentBalance(true);
 			transactionPresistModel.setOldTransactionAmount(oldTransactionAmount);
 		}
@@ -2062,6 +2168,9 @@ public class TransactionRestController {
 		}
 
 		trnx.setLastUpdateBy(userId);
+		logger.info("updateTransactionWithCommonFields: userId: {}, coaCategoryId: {}, amount: {}", 
+			userId, transactionPresistModel.getCoaCategoryId(), transactionPresistModel.getAmount());
+		
 		//GrandFather daddu dadaji
 		// Validate and set chart of account category
 		if (transactionPresistModel.getCoaCategoryId() != null) {
@@ -2069,6 +2178,7 @@ public class TransactionRestController {
 				ChartOfAccountCategory coaCategory = chartOfAccountCategoryService.findByPK(transactionPresistModel.getCoaCategoryId());
 				if (coaCategory != null) {
 					trnx.setCoaCategory(coaCategory);
+					logger.info("updateTransactionWithCommonFields: coaCategory set: {}", coaCategory.getChartOfAccountCategoryName());
 				} else {
 					logger.warn("updateTransactionWithCommonFields: Chart of account category with ID {} not found", transactionPresistModel.getCoaCategoryId());
 					throw new IllegalArgumentException("Invalid transaction category selected. Please select a valid transaction type.");
@@ -2090,20 +2200,25 @@ public class TransactionRestController {
 		trnx.setReferenceStr(transactionPresistModel.getReference());
 		trnx.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
 		if (transactionPresistModel.getDate() != null){
+			logger.info("updateTransactionWithCommonFields: setting date: {}", transactionPresistModel.getDate());
 			Instant instant = Instant.ofEpochMilli(transactionPresistModel.getDate().getTime());
 			LocalDateTime transactionDate = LocalDateTime.ofInstant(instant,
 					ZoneId.systemDefault());
 			trnx.setTransactionDate(transactionDate);
+		} else {
+			logger.warn("updateTransactionWithCommonFields: date is null in model");
 		}
 
 		if(transactionPresistModel.getVatId() != null) {
 			trnx.setVatCategory(vatCategoryService.findByPK(transactionPresistModel.getVatId()));
+			logger.info("updateTransactionWithCommonFields: vatCategory set: {}", transactionPresistModel.getVatId());
 		}
 
 		if(transactionPresistModel.getTransactionCategoryId()!=null) {
 			//Pota Grandchild
 			TransactionCategory transactionCategory = transactionCategoryService.findByPK(transactionPresistModel.getTransactionCategoryId());
 			trnx.setExplainedTransactionCategory(transactionCategory);
+			logger.info("updateTransactionWithCommonFields: transactionCategory set: {}", transactionPresistModel.getTransactionCategoryId());
 		}
 		
 		// Set bank account if provided
@@ -2112,6 +2227,7 @@ public class TransactionRestController {
 				BankAccount bankAccount = bankService.findByPK(transactionPresistModel.getBankId());
 				if (bankAccount != null) {
 					trnx.setBankAccount(bankAccount);
+					logger.info("updateTransactionWithCommonFields: bankAccount set: {}", transactionPresistModel.getBankId());
 				} else {
 					logger.warn("updateTransactionWithCommonFields: Bank account with ID {} not found", transactionPresistModel.getBankId());
 				}

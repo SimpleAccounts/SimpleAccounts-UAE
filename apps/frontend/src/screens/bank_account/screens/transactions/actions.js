@@ -175,6 +175,29 @@ export const getCurrencyList = () => {
   };
 };
 
+export const getCustomerList = contactType => {
+  return dispatch => {
+    const type = contactType || 2; // 2 = Customer
+    let data = {
+      method: 'get',
+      url: `/rest/contact/getContactsForDropdown?contactType=${type}`,
+    };
+    return authApi(data)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch({
+            type: BANK_ACCOUNT.CUSTOMER_LIST,
+            payload: res.data,
+          });
+          return res;
+        }
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
+};
+
 export const getVendorList = bankId => {
   return dispatch => {
     let data = {

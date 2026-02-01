@@ -1,6 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +14,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Loader } from 'components';
 import { selectOptionsFactory } from 'utils';
-// Removed: bootstrap-daterangepicker (jQuery dependency)
 import { CommonActions } from 'services/global';
 import * as ExpenseActions from './actions';
 import dayjs from '@/utils/date';
@@ -34,21 +32,8 @@ import {
   Search,
   Send,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const mapStateToProps = state => {
-  return {
-    expense_list: state.expense.expense_list,
-    expense_categories_list: state.expense.expense_categories_list,
-    universal_currency_list: state.common.universal_currency_list,
-    user_list: state.expense.user_list,
-  };
-};
-const mapDispatchToProps = dispatch => {
-  return {
-    commonActions: bindActionCreators(CommonActions, dispatch),
-    expenseActions: bindActionCreators(ExpenseActions, dispatch),
-  };
-};
 const customStyles = {
   control: (base, state) => ({
     ...base,
@@ -61,39 +46,30 @@ const customStyles = {
 };
 
 let strings = new LocalizedStrings(data);
-class Expense extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      dialog: null,
-      selectedRows: [],
-      actionButtons: {},
-      filterData: {
-        expenseDate: '',
-        transactionCategoryId: '',
-        payee: '',
-      },
-      sorting: [],
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-      csvData: [],
-      view: false,
-      language: window['localStorage'].getItem('language'),
-      loadingMsg: 'Loading...',
-    };
-  }
 
-  componentDidMount = () => {
-    this.props.expenseActions.getExpenseCategoriesList();
-    this.initializeData();
-    this.props.expenseActions.getVatList();
-  };
+const Expense = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  initializeData = () => {
-    let { filterData, pagination, sorting } = this.state;
+  const expense_list = useSelector(state => state.expense.expense_list);
+  const expense_categories_list = useSelector(state => state.expense.expense_categories_list);
+  const user_list = useSelector(state => state.expense.user_list);
+
+  const [loading, setLoading] = useState(true);
+  const [loadingMsg, setLoadingMsg] = useState('Loading...');
+  const [filterData, setFilterData] = useState({
+    expenseDate: '',
+    transactionCategoryId: '',
+    payee: '',
+  });
+  const [sorting, setSorting] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [language] = useState(window['localStorage'].getItem('language'));
+
+  const initializeData = () => {
     const paginationData = {
       pageNo: pagination.pageIndex,
       pageSize: pagination.pageSize,
@@ -112,551 +88,395 @@ class Expense extends React.Component {
 
     const postData = { ...filterData, ...paginationData, ...sortingData };
 
-    this.props.expenseActions
-      .getExpenseList(postData)
+    dispatch(ExpenseActions.getExpenseList(postData))
       .then(res => {
         if (res.status === 200) {
-          this.setState({ loading: false });
+          setLoading(false);
         }
       })
       .catch(err => {
-        this.setState({ loading: false });
-        this.props.commonActions.tostifyAlert(
-          'error',
-          err && err.data ? err.data.message : 'Something Went Wrong'
+        setLoading(false);
+        dispatch(
+          CommonActions.tostifyAlert(
+            'error',
+            err && err.data ? err.data.message : 'Something Went Wrong'
+          )
         );
       });
 
-    this.props.expenseActions.getVatList();
-    this.props.expenseActions.getExpenseCategoriesList();
-    this.props.expenseActions.getBankList();
-    this.props.expenseActions.getPaymentMode();
-    this.props.expenseActions.getUserForDropdown();
+    dispatch(ExpenseActions.getVatList());
+    dispatch(ExpenseActions.getExpenseCategoriesList());
+    dispatch(ExpenseActions.getBankList());
+    dispatch(ExpenseActions.getPaymentMode());
+    dispatch(ExpenseActions.getUserForDropdown());
   };
 
-  componentWillUnmount = () => {
-    this.setState({
-      selectedRows: [],
+  useEffect(() => {
+    initializeData();
+  }, [pagination, sorting, filterData.expenseDate, filterData.transactionCategoryId, filterData.payee]);
+
+  const goToDetail = row => {
+    navigate('/admin/expense/expense/detail', {
+      state: { expenseId: row['expenseId'] },
     });
   };
 
-  goToDetail = row => {
-    this.props.history.push('/admin/expense/expense/detail', {
-      expenseId: row['expenseId'],
-    });
+  const handlePaginationChange = newPagination => {
+    setPagination(newPagination);
   };
 
-  handlePaginationChange = newPagination => {
-    this.setState({ pagination: newPagination }, () => {
-      this.initializeData();
-    });
+  const handleSortingChange = newSorting => {
+    setSorting(newSorting);
   };
 
-  handleSortingChange = newSorting => {
-    this.setState({ sorting: newSorting }, () => {
-      this.initializeData();
-    });
+  const handleChange = (val, name) => {
+    setFilterData(prev => ({
+      ...prev,
+      [name]: val,
+    }));
   };
 
-  handleChange = (val, name) => {
-    this.setState({
-      filterData: Object.assign(this.state.filterData, {
-        [name]: val,
-      }),
-    });
+  const handleSearch = () => {
+    setPagination(prev => ({ ...prev, pageIndex: 0 }));
+    initializeData();
   };
 
-  handleSearch = () => {
-    this.setState(
-      {
-        pagination: { ...this.state.pagination, pageIndex: 0 },
-      },
-      () => {
-        this.initializeData();
-      }
-    );
-  };
-
-  postExpense = row => {
-    this.setState({
-      loading: true,
-    });
+  const postExpense = row => {
+    setLoading(true);
+    setLoadingMsg('Expense Posting...');
     const postingRequestModel = {
       amount: row.expenseAmount,
       postingRefId: row.expenseId,
       postingRefType: 'EXPENSE',
       postingChartOfAccountId: row.chartOfAccountId,
     };
-    this.setState({ loading: true, loadingMsg: 'Expense Posting...' });
-    this.props.expenseActions
-      .postExpense(postingRequestModel)
+    dispatch(ExpenseActions.postExpense(postingRequestModel))
       .then(res => {
         if (res.status === 200) {
-          this.props.commonActions.tostifyAlert('success', 'Expense Posted Successfully');
-          this.setState({
-            loading: false,
-          });
-          this.initializeData();
-          this.setState({ loading: false });
+          dispatch(CommonActions.tostifyAlert('success', 'Expense Posted Successfully'));
+          setLoading(false);
+          initializeData();
         }
       })
       .catch(err => {
-        this.props.commonActions.tostifyAlert('error', 'Expense Posted Unsuccessfully');
-        this.setState({
-          loading: false,
-        });
+        dispatch(CommonActions.tostifyAlert('error', 'Expense Posted Unsuccessfully'));
+        setLoading(false);
       });
   };
 
-  unPostExpense = row => {
-    this.setState({
-      loading: true,
-    });
+  const unPostExpense = row => {
+    setLoading(true);
     const postingRequestModel = {
       amount: row.expenseAmount,
       postingRefId: row.expenseId,
       postingRefType: 'EXPENSE',
       postingChartOfAccountId: row.chartOfAccountId,
     };
-    this.props.expenseActions
-      .unPostExpense(postingRequestModel)
+    dispatch(ExpenseActions.unPostExpense(postingRequestModel))
       .then(res => {
         if (res.status === 200) {
-          this.props.commonActions.tostifyAlert('success', 'Expense Moved To Draft Successfully');
-          this.setState({
-            loading: false,
-          });
-          this.initializeData();
+          dispatch(CommonActions.tostifyAlert('success', 'Expense Moved To Draft Successfully'));
+          setLoading(false);
+          initializeData();
         }
       })
       .catch(err => {
-        this.props.commonActions.tostifyAlert('error', 'Expense Moved To Draft Unsuccessfully');
-        this.setState({
-          loading: false,
-        });
+        dispatch(CommonActions.tostifyAlert('error', 'Expense Moved To Draft Unsuccessfully'));
+        setLoading(false);
       });
   };
 
-  clearAll = () => {
-    this.setState(
-      {
-        filterData: {
-          expenseDate: '',
-          transactionCategoryId: '',
-          payee: '',
-        },
-        pagination: { pageIndex: 0, pageSize: 10 },
-      },
-      () => {
-        this.initializeData();
-      }
-    );
-  };
-
-  removeDialog = () => {
-    this.setState({
-      dialog: null,
+  const clearAll = () => {
+    setFilterData({
+      expenseDate: '',
+      transactionCategoryId: '',
+      payee: '',
     });
+    setPagination({ pageIndex: 0, pageSize: 10 });
   };
 
-  getColumns = () => {
-    const columns = [
-      {
-        accessorKey: 'expenseNumber',
-        header: strings.Expense + ' ' + strings.No + '.',
-        cell: ({ row }) => {
-          return <div className="text-left">{row.original.expenseNumber || '-'}</div>;
-        },
-        size: 150,
+  const getColumns = () => [
+    {
+      accessorKey: 'expenseNumber',
+      header: strings.Expense + ' ' + strings.No + '.',
+      cell: ({ row }) => <div className="text-left">{row.original.expenseNumber || '-'}</div>,
+      size: 150,
+    },
+    {
+      accessorKey: 'payee',
+      header: strings.PAYEE,
+    },
+    {
+      accessorKey: 'expenseDate',
+      header: strings.EXPENSEDATE,
+      cell: ({ row }) => dayjs(row.original.expenseDate).format('DD-MM-YYYY'),
+    },
+    {
+      accessorKey: 'transactionCategoryName',
+      header: strings.EXPENSECATEGORY,
+    },
+    {
+      accessorKey: 'expenseStatus',
+      header: strings.STATUS,
+      cell: ({ row }) => {
+        const status = row.original.expenseStatus;
+        let classname = '';
+        if (status === 'Posted') classname = 'label-posted';
+        else if (status === 'Draft') classname = 'label-draft';
+        else if (status === 'Pending') classname = 'label-danger';
+        else classname = 'label-info';
+        return (
+          <div className="d-flex justify-content-center flex-column align-items-center">
+            <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
+              {status}
+            </span>
+            {row.original.bankGenerated ? '( Bank Generated )' : ''}
+          </div>
+        );
       },
-      {
-        accessorKey: 'payee',
-        header: strings.PAYEE,
-      },
-      {
-        accessorKey: 'expenseDate',
-        header: strings.EXPENSEDATE,
-        cell: ({ row }) => {
-          return dayjs(row.original.expenseDate).format('DD-MM-YYYY');
-        },
-      },
-      {
-        accessorKey: 'transactionCategoryName',
-        header: strings.EXPENSECATEGORY,
-      },
-      {
-        accessorKey: 'expenseStatus',
-        header: strings.STATUS,
-        cell: ({ row }) => {
-          const status = row.original.expenseStatus;
-          let classname = '';
-          if (status === 'Posted') {
-            classname = 'label-posted';
-          } else if (status === 'Draft') {
-            classname = 'label-draft';
-          } else if (status === 'Pending') {
-            classname = 'label-danger';
-          } else {
-            classname = 'label-info';
-          }
-          return (
-            <div className="d-flex justify-content-center flex-column align-items-center">
-              <span className={`badge ${classname} mb-0`} style={{ color: 'white' }}>
-                {status}
-              </span>
-              {row.original.bankGenerated ? '( Bank Generated )' : ''}
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'expenseAmount',
-        header: strings.EXPENSEAMOUNT,
-        cell: ({ row }) => {
-          const r = row.original;
-          return (
+    },
+    {
+      accessorKey: 'expenseAmount',
+      header: strings.EXPENSEAMOUNT,
+      cell: ({ row }) => {
+        const r = row.original;
+        return (
+          <div>
             <div>
-              <div>
-                <label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount}:</label>
-                <label>
-                  {!r.exclusiveVat
-                    ? r.currencyName +
-                      ' ' +
-                      (r.expenseAmount - r.expenseVatAmount).toLocaleString(navigator.language, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    : r.currencyName +
-                      ' ' +
-                      r.expenseAmount.toLocaleString(navigator.language, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                </label>
-              </div>
-              {r.expenseVatAmount != null && (
-                <div style={{ display: r.expenseVatAmount === 0 ? 'none' : '' }}>
-                  <label className="font-weight-bold mr-2">{strings.VatAmount}:</label>
-                  <label>
-                    {r.expenseVatAmount === 0
-                      ? r.currencyName +
-                        ' ' +
-                        r.expenseVatAmount.toLocaleString(navigator.language, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })
-                      : r.currencyName +
-                        ' ' +
-                        r.expenseVatAmount.toLocaleString(navigator.language, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                  </label>
-                </div>
-              )}
-              <div style={{ display: r.expenseAmount === 0 ? 'none' : '' }}>
-                <label className="font-weight-bold mr-2">{strings.ExpenseAmount}:</label>
-                <label>
-                  {!r.exclusiveVat
-                    ? r.currencyName +
-                      ' ' +
-                      r.expenseAmount.toLocaleString(navigator.language, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })
-                    : r.currencyName +
-                      ' ' +
-                      (r.expenseAmount + r.expenseVatAmount).toLocaleString(navigator.language, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                </label>
-              </div>
-              {r.baseCurrencyAmount != null && (
-                <div style={{ display: r.baseCurrencyAmount === 0 ? 'none' : '' }}>
-                  <label className="font-weight-bold mr-2">
-                    {strings.BaseCurrencyExpenseAmount}:
-                  </label>
-                  <label>
-                    {r.baseCurrencyAmount === 0
-                      ? 'AED' +
-                        ' ' +
-                        r.baseCurrencyAmount.toLocaleString(navigator.language, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })
-                      : 'AED' +
-                        ' ' +
-                        r.baseCurrencyAmount.toLocaleString(navigator.language, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                  </label>
-                </div>
-              )}
+              <label className="font-weight-bold mr-2 ">{strings.ActualExpenseAmount}:</label>
+              <label>
+                {!r.exclusiveVat
+                  ? r.currencyName +
+                    ' ' +
+                    (r.expenseAmount - r.expenseVatAmount).toLocaleString(navigator.language, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                  : r.currencyName +
+                    ' ' +
+                    r.expenseAmount.toLocaleString(navigator.language, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+              </label>
             </div>
-          );
-        },
-        size: 250,
+            {r.expenseVatAmount != null && (
+              <div style={{ display: r.expenseVatAmount === 0 ? 'none' : '' }}>
+                <label className="font-weight-bold mr-2">{strings.VatAmount}:</label>
+                <label>
+                  {r.expenseVatAmount.toLocaleString(navigator.language, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </label>
+              </div>
+            )}
+            <div style={{ display: r.expenseAmount === 0 ? 'none' : '' }}>
+              <label className="font-weight-bold mr-2">{strings.ExpenseAmount}:</label>
+              <label>
+                {!r.exclusiveVat
+                  ? r.currencyName +
+                    ' ' +
+                    r.expenseAmount.toLocaleString(navigator.language, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                  : r.currencyName +
+                    ' ' +
+                    (r.expenseAmount + r.expenseVatAmount).toLocaleString(navigator.language, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+              </label>
+            </div>
+          </div>
+        );
       },
-      {
-        id: 'actions',
-        header: '',
-        cell: ({ row }) => {
-          const expense = row.original;
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {expense.expenseStatus !== 'Posted' && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      if (expense.editFlag)
-                        this.props.history.push('/admin/expense/expense/detail', {
-                          expenseId: expense.expenseId,
-                        });
-                      else
-                        this.props.commonActions.tostifyAlert(
-                          'error',
-                          'You cannot edit transactions for which VAT is recorded'
-                        );
-                    }}
-                  >
-                    <Pencil className="h-4 w-4" /> {strings.Edit}
-                  </DropdownMenuItem>
-                )}
-                {!expense.bankGenerated && (
-                  <DropdownMenuItem
-                    onClick={() =>
-                      this.props.history.push(`/admin/expense/expense/create`, {
-                        parentId: expense.expenseId,
-                      })
-                    }
-                  >
-                    <Copy className="h-4 w-4" /> {strings.CreateADuplicate}
-                  </DropdownMenuItem>
-                )}
-                {expense.expenseStatus !== 'Posted' && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      if (expense.bankGenerated) {
-                        this.props.commonActions.tostifyAlert(
-                          'error',
-                          'In order to post this expense, please select the tax treatment and pay-through options.'
-                        );
-                      } else this.postExpense(expense);
-                    }}
-                  >
-                    <Send className="h-4 w-4" /> {strings.Post}
-                  </DropdownMenuItem>
-                )}
-                {expense.expenseStatus === 'Posted' && expense.bankAccountId === null && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      if (expense.editFlag) this.unPostExpense(expense);
-                      else
-                        this.props.commonActions.tostifyAlert(
-                          'error',
-                          'You cannot edit transactions for which VAT is recorded'
-                        );
-                    }}
-                  >
-                    <File className="h-4 w-4" /> {strings.Draft}
-                  </DropdownMenuItem>
-                )}
+      size: 250,
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: ({ row }) => {
+        const expense = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {expense.expenseStatus !== 'Posted' && (
                 <DropdownMenuItem
                   onClick={() => {
-                    this.props.history.push('/admin/expense/expense/view', {
-                      expenseId: expense.expenseId,
-                    });
+                    if (expense.editFlag)
+                      navigate('/admin/expense/expense/detail', {
+                        state: { expenseId: expense.expenseId },
+                      });
+                    else
+                      dispatch(
+                        CommonActions.tostifyAlert(
+                          'error',
+                          'You cannot edit transactions for which VAT is recorded'
+                        )
+                      );
                   }}
                 >
-                  <Eye className="h-4 w-4" /> {strings.View}
+                  <Pencil className="h-4 w-4" /> {strings.Edit}
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
-        },
-        size: 50,
-        enableSorting: false,
+              )}
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate('/admin/expense/expense/view', {
+                    state: { expenseId: expense.expenseId },
+                  })
+                }
+              >
+                <Eye className="h-4 w-4" /> {strings.View}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
       },
-    ];
-    return columns;
-  };
+      size: 50,
+      enableSorting: false,
+    },
+  ];
 
-  render() {
-    strings.setLanguage(this.state.language);
-    const { loading, loadingMsg, dialog, filterData, pagination, sorting } = this.state;
-    const { expense_list, expense_categories_list, user_list } = this.props;
+  strings.setLanguage(language);
 
-    const pageCount =
-      expense_list && expense_list.count ? Math.ceil(expense_list.count / pagination.pageSize) : 0;
+  const tableData = Array.isArray(expense_list) ? expense_list : expense_list?.data || [];
+  const totalCount = expense_list?.count ?? (Array.isArray(expense_list) ? expense_list.count : 0);
+  const pageCount = totalCount ? Math.ceil(totalCount / pagination.pageSize) : 0;
 
-    return loading == true ? (
-      <Loader loadingMsg={loadingMsg} />
-    ) : (
-      <div className="w-full">
-        <div className="expense-screen w-full">
-          <div className="animated fadeIn">
-            {dialog}
-            <Card>
-              <CardHeader>
-                <div className="grid grid-cols-12 gap-4 w-full">
-                  <div className="col-span-12">
-                    <div className="h4 mb-0 d-flex align-items-center">
-                      <ArrowUpDown className="h-4 w-4" />
-                      <span className="ml-2">{strings.Expenses}</span>
-                    </div>
+  if (loading) return <Loader loadingMsg={loadingMsg} />;
+
+  return (
+    <div className="w-full">
+      <div className="expense-screen w-full">
+        <div className="animated fadeIn">
+          <Card>
+            <CardHeader>
+              <div className="grid grid-cols-12 gap-4 w-full">
+                <div className="col-span-12">
+                  <div className="h4 mb-0 d-flex align-items-center">
+                    <ArrowUpDown className="h-4 w-4" />
+                    <span className="ml-2">{strings.Expenses}</span>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="w-full">
-                {loading && (
-                  <div className="grid grid-cols-12 gap-4 w-full">
-                    <div className="col-span-12 rounded-loader">
-                      <Loader />
-                    </div>
-                  </div>
-                )}
-                <div className="grid grid-cols-12 gap-4 w-full">
-                  <div className="col-span-12">
-                    <div className="py-3">
-                      <h5>{strings.Filter}: </h5>
-                      <div className="grid grid-cols-12 gap-4 w-full">
-                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
-                          <div className="mb-3">
-                            <Select
-                              styles={customStyles}
-                              className="select-default-width"
-                              id="payee"
-                              name="payee"
-                              value={filterData.payee}
-                              options={
-                                user_list
-                                  ? selectOptionsFactory.renderOptions(
-                                      'label',
-                                      'value',
-                                      user_list,
-                                      'Payee'
-                                    )
-                                  : []
-                              }
-                              onChange={option => {
-                                if (option && option.value) {
-                                  this.handleChange(option, 'payee');
-                                } else {
-                                  this.handleChange('', 'payee');
-                                }
-                              }}
-                              placeholder={strings.Select + strings.Payee}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
-                          <DatePicker
-                            className="form-control w-full"
-                            id="date"
-                            name="expenseDate"
-                            placeholderText={strings.Select + strings.ExpenseDate}
-                            selected={filterData.expenseDate}
-                            showMonthDropdown
-                            showYearDropdown
-                            dateFormat="dd-MM-yyyy"
-                            dropdownMode="select"
-                            value={filterData.expenseDate}
-                            onChange={value => {
-                              this.handleChange(value, 'expenseDate');
-                            }}
-                          />
-                        </div>
-
-                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 mb-1">
-                          <div className="mb-3">
-                            <Select
-                              styles={customStyles}
-                              className="select-default-width"
-                              id="expenseCategoryId"
-                              name="expenseCategoryId"
-                              value={filterData.transactionCategoryId}
-                              options={
-                                expense_categories_list
-                                  ? selectOptionsFactory.renderOptions(
-                                      'transactionCategoryName',
-                                      'transactionCategoryId',
-                                      expense_categories_list,
-                                      'Expense Category'
-                                    )
-                                  : []
-                              }
-                              onChange={option => {
-                                if (option && option.value) {
-                                  this.handleChange(option, 'transactionCategoryId');
-                                } else {
-                                  this.handleChange('', 'transactionCategoryId');
-                                }
-                              }}
-                              placeholder={strings.ExpenseCategory}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 pl-0 pr-0">
-                          <Button
-                            type="button"
-                            variant="default"
-                            className="btn-square mr-1"
-                            onClick={this.handleSearch}
-                          >
-                            <Search className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="default"
-                            className="btn-square"
-                            onClick={this.clearAll}
-                          >
-                            <RefreshCw className="h-4 w-4" />
-                          </Button>
-                        </div>
+              </div>
+            </CardHeader>
+            <CardContent className="w-full">
+              <div className="grid grid-cols-12 gap-4 w-full">
+                <div className="col-span-12">
+                  <div className="py-3">
+                    <h5>{strings.Filter}: </h5>
+                    <div className="grid grid-cols-12 gap-4 w-full">
+                      <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
+                        <Select
+                          styles={customStyles}
+                          className="select-default-width"
+                          id="payee"
+                          name="payee"
+                          value={filterData.payee}
+                          options={
+                            user_list
+                              ? selectOptionsFactory.renderOptions(
+                                  'label',
+                                  'value',
+                                  user_list,
+                                  'Payee'
+                                )
+                              : []
+                          }
+                          onChange={option => handleChange(option || '', 'payee')}
+                          placeholder={strings.Select + strings.Payee}
+                        />
+                      </div>
+                      <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-2 mb-1">
+                        <DatePicker
+                          className="form-control w-full"
+                          id="date"
+                          name="expenseDate"
+                          placeholderText={strings.Select + strings.ExpenseDate}
+                          selected={filterData.expenseDate}
+                          showMonthDropdown
+                          showYearDropdown
+                          dateFormat="dd-MM-yyyy"
+                          dropdownMode="select"
+                          onChange={value => handleChange(value, 'expenseDate')}
+                        />
+                      </div>
+                      <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 mb-1">
+                        <Select
+                          styles={customStyles}
+                          className="select-default-width"
+                          id="expenseCategoryId"
+                          name="expenseCategoryId"
+                          value={filterData.transactionCategoryId}
+                          options={
+                            expense_categories_list
+                              ? selectOptionsFactory.renderOptions(
+                                  'transactionCategoryName',
+                                  'transactionCategoryId',
+                                  expense_categories_list,
+                                  'Expense Category'
+                                )
+                              : []
+                          }
+                          onChange={option => handleChange(option || '', 'transactionCategoryId')}
+                          placeholder={strings.ExpenseCategory}
+                        />
+                      </div>
+                      <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 pl-0 pr-0">
+                        <Button
+                          type="button"
+                          variant="default"
+                          className="btn-square mr-1"
+                          onClick={handleSearch}
+                        >
+                          <Search className="h-4 w-4" />
+                        </Button>
+                        <Button type="button" variant="default" className="btn-square" onClick={clearAll}>
+                          <RefreshCw className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                    <div>
-                      <Button
-                        variant="default"
-                        style={{ marginBottom: '10px' }}
-                        className="btn-square pull-right"
-                        onClick={() => this.props.history.push(`/admin/expense/expense/create`)}
-                      >
-                        <Plus className="h-4 w-4" />
-                        {strings.AddNewExpense}
-                      </Button>
-                    </div>
-                    <div>
-                      <DataTable
-                        columns={this.getColumns()}
-                        data={expense_list && expense_list.data ? expense_list.data : []}
-                        manualPagination
-                        pageCount={pageCount}
-                        pagination={pagination}
-                        onPaginationChange={this.handlePaginationChange}
-                        manualSorting
-                        sorting={sorting}
-                        onSortingChange={this.handleSortingChange}
-                        onRowClick={row => this.goToDetail(row)}
-                      />
-                    </div>
+                  </div>
+                  <div>
+                    <Button
+                      variant="default"
+                      style={{ marginBottom: '10px' }}
+                      className="btn-square pull-right"
+                      onClick={() => navigate(`/admin/expense/expense/create`)}
+                    >
+                      <Plus className="h-4 w-4" />
+                      {strings.AddNewExpense}
+                    </Button>
+                  </div>
+                  <div>
+                    <DataTable
+                      columns={getColumns()}
+                      data={tableData}
+                      manualPagination
+                      pageCount={pageCount}
+                      pagination={pagination}
+                      onPaginationChange={handlePaginationChange}
+                      manualSorting
+                      sorting={sorting}
+                      onSortingChange={handleSortingChange}
+                      onRowClick={row => goToDetail(row)}
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Expense);
+export default Expense;

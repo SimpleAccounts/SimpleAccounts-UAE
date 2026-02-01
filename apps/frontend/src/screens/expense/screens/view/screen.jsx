@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Row, Col } from 'components/migration';
 import * as ExpenseDetailsAction from '../detail/actions';
 import * as ExpenseActions from '../../actions';
@@ -13,39 +12,24 @@ import ActionButtons from 'components/view_actions_buttons';
 import { InvoiceViewJournalEntries } from 'components';
 import { StatusActionList } from 'utils';
 import { FileText, Printer, X } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const mapStateToProps = state => {
-  return {
-    expense_detail: state.expense.expense_detail,
-    profile: state.auth.profile,
-  };
-};
+const ViewExpense = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-const mapDispatchToProps = dispatch => {
-  return {
-    expenseActions: bindActionCreators(ExpenseActions, dispatch),
-    expenseDetailsAction: bindActionCreators(ExpenseDetailsAction, dispatch),
-    commonActions: bindActionCreators(CommonActions, dispatch),
-  };
-};
+  const expense_detail = useSelector(state => state.expense.expense_detail);
+  const profile = useSelector(state => state.auth.profile);
 
-const ViewExpense = props => {
   const [expenseData, setExpenseData] = useState({});
-  const [id] = useState(props.location?.state?.expenseId);
-  const [expenseId, setExpenseId] = useState(props?.location?.state?.id);
+  const [id] = useState(location?.state?.expenseId);
+  const [expenseId, setExpenseId] = useState(location?.state?.id);
   const [expenseStatus, setExpenseStatus] = useState('');
   const [actionList, setActionList] = useState([]);
   const [companyData, setCompanyData] = useState({});
 
-  const pdfExportComponent = useRef(null);
   const componentRef = useRef(null);
-
-  const termList = [
-    { label: 'Net 7', value: 'NET_7' },
-    { label: 'Net 10', value: 'NET_10' },
-    { label: 'Net 30', value: 'NET_30' },
-    { label: 'Due on Receipt', value: 'DUE_ON_RECEIPT' },
-  ];
 
   useEffect(() => {
     initializeData();
@@ -53,15 +37,14 @@ const ViewExpense = props => {
   }, []);
 
   const initializeData = () => {
-    props.expenseActions.getCompanyDetails().then(res => {
+    dispatch(ExpenseActions.getCompanyDetails()).then(res => {
       if (res.status === 200) {
         setCompanyData(res.data);
       }
     });
 
-    if (props.location.state && props.location.state.expenseId) {
-      console.log(props.location.state.expenseId);
-      props.expenseDetailsAction.getExpenseDetail(props.location.state.expenseId).then(res => {
+    if (location.state && location.state.expenseId) {
+      dispatch(ExpenseDetailsAction.getExpenseDetail(location.state.expenseId)).then(res => {
         if (res.status === 200) {
           const data = res.data;
           const status = data.expenseStatus ?? '';
@@ -71,17 +54,13 @@ const ViewExpense = props => {
             statusActionList = statuslist ? statuslist.list : [];
           }
 
-          setExpenseData({ id: props.location.state.expenseId, ...res.data });
-          setExpenseId(props.location.state.expenseId);
+          setExpenseData({ id: location.state.expenseId, ...res.data });
+          setExpenseId(location.state.expenseId);
           setActionList(statusActionList);
           setExpenseStatus(res.data.expenseStatus);
         }
       });
     }
-  };
-
-  const exportPDFWithComponent = () => {
-    // pdfExportComponent.current.save();
   };
 
   return (
@@ -91,8 +70,8 @@ const ViewExpense = props => {
           <Col lg={12} className="mx-auto">
             <div className="pull-left">
               <ActionButtons
-                id={props.location.state.expenseId}
-                history={props.history}
+                id={location.state?.expenseId}
+                history={{ push: (path, state) => navigate(path, { state }) }}
                 URL={'/admin/expense/expense'}
                 invoiceData={expenseData}
                 postingRefType={'EXPENSE'}
@@ -101,86 +80,48 @@ const ViewExpense = props => {
                 }}
                 actionList={actionList}
                 invoiceStatus={expenseStatus}
-                documentTitle={'Expense'}
-                documentCreated={false}
               />
             </div>
             <div className="pull-right">
-              <Button
-                className="btn-lg mb-1 print-btn-cont"
-                onClick={() => {
-                  exportPDFWithComponent();
-                }}
-              >
-                <FileText className="h-4 w-4" />
-              </Button>
-              <ReactToPrint
-                trigger={() => (
-                  <Button
-                    type="button"
-                    className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
-                    onClick={() => window.print()}
-                  >
-                    <Printer className="h-4 w-4" />
-                  </Button>
-                )}
-                content={() => componentRef.current}
-              />
-              <Button
-                className="close-btn mb-1 btn-lg print-btn-cont"
-                onClick={() => {
-                  if (props.location?.state?.crossLinked === true) {
-                    props.history.push('/admin/report/vatreports/vatreturnsubreports', {
-                      boxNo: props.location.state.description,
-                      description: props.location.state.description,
-                      startDate: props.location.state.startDate,
-                      endDate: props.location.state.endDate,
-                      placeOfSupplyId: props.location.state.placeOfSupplyId,
-                    });
-                  } else if (
-                    props.location &&
-                    props.location.state &&
-                    props.location.state.gotoReports
-                  ) {
-                    props.history.push(props.location.state.gotoReports);
-                  } else if (
-                    props.location &&
-                    props.location.state &&
-                    props.location.state.gotoDGLReport
-                  ) {
-                    props.history.push('/admin/report/detailed-general-ledger');
-                  } else {
-                    props.history.push('/admin/expense');
-                  }
-                }}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div>
-              <div ref={pdfExportComponent} scale={0.8} paperSize="A3" fileName="Expense.pdf">
-                <ExpenseTemplate
-                  expenseData={expenseData}
-                  companyData={companyData}
-                  ref={componentRef}
+              <div className="d-flex align-items-center">
+                <ReactToPrint
+                  trigger={() => (
+                    <Button variant="outline" className="btn-square mr-2">
+                      <Printer className="h-4 w-4 mr-2" />
+                      Print
+                    </Button>
+                  )}
+                  content={() => componentRef.current}
                 />
+                <Button
+                  variant="outline"
+                  className="btn-square"
+                  onClick={() => navigate('/admin/expense/expense')}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
               </div>
-            </div>
-            <div>
-              {expenseStatus && expenseStatus !== 'Draft' && (
-                <InvoiceViewJournalEntries
-                  history={props.history}
-                  invoiceURL={'/admin/expense/expense/view'}
-                  invoiceId={id}
-                  invoiceType={3}
-                />
-              )}
             </div>
           </Col>
         </Row>
+        <div ref={componentRef}>
+          <ExpenseTemplate
+            expenseData={expenseData}
+            companyData={companyData}
+            id={id}
+            expenseId={expenseId}
+          />
+        </div>
+        <div className="mt-4">
+          <InvoiceViewJournalEntries
+            id={location.state?.expenseId}
+            postingRefType={'EXPENSE'}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewExpense);
+export default ViewExpense;

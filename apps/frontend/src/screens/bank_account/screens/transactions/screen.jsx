@@ -54,7 +54,7 @@ function BankTransactions() {
 
   // Local state
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
   const [actionButtons, setActionButtons] = useState({});
   const [filterData, setFilterData] = useState({
@@ -129,7 +129,7 @@ function BankTransactions() {
         .then(res => {
           const array = [];
           if (res.status === 200) {
-            setLoading(false);
+            setIsLoading(false);
             setTransationData(res.data.data);
             res.data.data.forEach(item => {
               if (item.creationMode === 'POTENTIAL_DUPLICATE') {
@@ -144,7 +144,7 @@ function BankTransactions() {
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          setLoading(false);
+          setIsLoading(false);
         });
     } else {
       navigate('/admin/banking/bank-account');
@@ -188,8 +188,11 @@ function BankTransactions() {
       });
       transactionsActions.getTransactionTypeList();
       initializeData();
+    } else {
+      // If no bankAccountId in state, redirect to bank accounts list
+      navigate('/admin/banking/bank-account');
     }
-  }, []);
+  }, [location.state?.bankAccountId]);
 
   useEffect(() => {
     initializeData();
@@ -439,7 +442,7 @@ function BankTransactions() {
           </CardHeader>
           <CardContent>
             {dialog}
-            {loading ? (
+            {isLoading ? (
               <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12">
                   <Loader />
@@ -598,17 +601,16 @@ function BankTransactions() {
                   </div>
                   <div>
                     <DataTable
+                      key={location.state?.bankAccountId ? `${location.state.bankAccountId}-${transactionType}` : 'transactions'}
                       columns={columns}
                       data={bank_transaction_list.data || []}
                       manualPagination={true}
                       pageCount={Math.ceil(
                         (bank_transaction_list.count || 0) / pagination.pageSize
                       )}
-                      totalRows={bank_transaction_list.count || 0}
-                      pagination={pagination}
+                      totalCount={bank_transaction_list.count || 0}
                       onPaginationChange={handlePaginationChange}
-                      loading={loading}
-                      emptyMessage="There are no records to display."
+                      isLoading={isLoading}
                     />
                   </div>
                 </div>

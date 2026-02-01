@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -93,8 +94,10 @@ const DetailJournal = ({
   contact_list,
   universal_currency_list,
   history,
-  location,
+  location: locationProp,
 }) => {
+  const locationFromRouter = useLocation();
+  const location = locationProp ?? locationFromRouter;
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
@@ -151,7 +154,7 @@ const DetailJournal = ({
   }, []);
 
   const initializeData = () => {
-    if (location.state && location.state.id) {
+    if (location?.state?.id) {
       journalDetailActions
         .getJournalById(location.state.id)
         .then(res => {
@@ -176,7 +179,7 @@ const DetailJournal = ({
                   )
                 : 0;
 
-            setCurrentJournalId(location.state.id);
+            setCurrentJournalId(location?.state?.id);
             setData(journalData);
             setIdCount(calculatedIdCount);
             setPostingReferenceType(res.data.postingReferenceType || '');
@@ -771,7 +774,7 @@ const DetailJournal = ({
   };
 
   const values = getValues();
-  const { state } = location;
+  const state = location?.state ?? {};
 
   return loading == true ? (
     <Loader loadingMsg={loadingMsg || 'Loading...'} />

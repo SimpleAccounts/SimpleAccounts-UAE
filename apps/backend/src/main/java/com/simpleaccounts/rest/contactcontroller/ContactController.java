@@ -117,31 +117,57 @@ public class ContactController {
 	}
 
 	/**
-	 * Vender list for bank transactiom
-	 *
+	 * Vendor list for bank transaction.
+	 * Returns suppliers with unpaid invoices. Falls back to all suppliers if bank not found or on error.
 	 */
 	@LogRequest
 	@GetMapping(value = "/getContactsForDropdownForVendor")
 	public ResponseEntity<Object> getContactsForDropdownForVendor(
 			@RequestParam(name = "bankId", required = false) Integer BankId) {
-		BankAccount bankAccount = bankAccountService.findByPK(BankId);
-		List<DropdownObjectModel> dropdownModelList = new ArrayList<>();
-		List<Contact> supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
-		for(Contact contact : supplierContactList) {
-			ContactModel contactModel = new ContactModel();
-			if(contact.getOrganization() != null && !contact.getOrganization().isEmpty()){
-				contactModel.setContactName(contact.getOrganization());
-			}else {
-				contactModel.setContactName(contact.getFirstName()+" "+contact.getMiddleName()+" "+contact.getLastName());
+		try {
+			List<DropdownObjectModel> dropdownModelList = new ArrayList<>();
+			List<Contact> supplierContactList;
+
+			if (BankId != null) {
+				BankAccount bankAccount = bankAccountService.findByPK(BankId);
+				if (bankAccount != null && bankAccount.getBankAccountCurrency() != null) {
+					supplierContactList = contactService.getSupplierContacts(bankAccount.getBankAccountCurrency());
+				} else {
+					supplierContactList = contactService.getSupplierContacts(null);
+				}
+			} else {
+				supplierContactList = contactService.getSupplierContacts(null);
 			}
-			contactModel.setContactId(contact.getContactId());
-			contactModel.setCurrency(contact.getCurrency());
-			DropdownObjectModel dropdownObjectModel = new DropdownObjectModel(contact.getContactId(),contactModel);
-			dropdownModelList.add(dropdownObjectModel);
+
+			if (supplierContactList == null) {
+				supplierContactList = new ArrayList<>();
+			}
+
+			for (Contact contact : supplierContactList) {
+				ContactModel contactModel = new ContactModel();
+				if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()) {
+					contactModel.setContactName(contact.getOrganization());
+				} else {
+					String name = (contact.getFirstName() != null ? contact.getFirstName() : "")
+							+ " " + (contact.getMiddleName() != null ? contact.getMiddleName() : "")
+							+ " " + (contact.getLastName() != null ? contact.getLastName() : "");
+					contactModel.setContactName(name.trim().isEmpty() ? "Contact " + contact.getContactId() : name.trim());
+				}
+				contactModel.setContactId(contact.getContactId());
+				contactModel.setCurrency(contact.getCurrency());
+				dropdownModelList.add(new DropdownObjectModel(contact.getContactId(), contactModel));
+			}
+			return new ResponseEntity<>(dropdownModelList, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Error in getContactsForDropdownForVendor: {}", e.getMessage(), e);
+			try {
+				List<DropdownObjectModel> fallback = contactService.getContactForDropdownObjectModel(1);
+				return new ResponseEntity<>(fallback != null ? fallback : new ArrayList<>(), HttpStatus.OK);
+			} catch (Exception ex) {
+				logger.error("Fallback also failed: {}", ex.getMessage());
+				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+			}
 		}
-
-		return new ResponseEntity<>(dropdownModelList, HttpStatus.OK);
-
 	}
 
 	@LogRequest

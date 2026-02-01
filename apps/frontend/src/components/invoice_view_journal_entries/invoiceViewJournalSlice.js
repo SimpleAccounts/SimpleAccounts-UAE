@@ -15,7 +15,12 @@ const invoiceViewJournalSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(INVOICE_VIEW_JOURNAL.JOURNAL_LIST, (state, action) => {
-      state.invoice_journal_list = action.payload || [];
+      const p = action.payload;
+      state.invoice_journal_list = Array.isArray(p)
+        ? p
+        : Array.isArray(p?.data)
+          ? p.data
+          : [];
     });
   },
 });

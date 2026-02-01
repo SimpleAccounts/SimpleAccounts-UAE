@@ -432,18 +432,27 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
-		@GetMapping(value = "/getChildrenTransactionCategoryList")
-		public ResponseEntity<List<SingleLevelDropDownModel>> getlistEmployeeTransactionCategory(Integer id){
-			try {
-				List<DropdownModel> response;
-				Map<String, Object> param = new HashMap<>();
-				param.put("parentTransactionCategory", id);
-				List<TransactionCategory> transactionCategoryList =
-						transactionCategoryService.findByAttributes(param);
-				response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
+	@GetMapping(value = "/getChildrenTransactionCategoryList")
+	public ResponseEntity<List<SingleLevelDropDownModel>> getlistEmployeeTransactionCategory(
+			@RequestParam(value = "id", required = false) Integer id) {
+		try {
+			if (id == null) {
+				logger.warn("getChildrenTransactionCategoryList: id is null");
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+			List<DropdownModel> response;
+			TransactionCategory parentCategory = transactionCategoryService.findByPK(id);
+			if (parentCategory == null) {
+				logger.warn("getChildrenTransactionCategoryList: parent category not found for id {}", id);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			Map<String, Object> param = new HashMap<>();
+			param.put("parentTransactionCategory", parentCategory);
+			List<TransactionCategory> transactionCategoryList =
+					transactionCategoryService.findByAttributes(param);
+			response = transcationCategoryHelper.getEmployeeTransactionCategory(transactionCategoryList);
 			return new ResponseEntity(response, HttpStatus.OK);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.error(ERROR, e);
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

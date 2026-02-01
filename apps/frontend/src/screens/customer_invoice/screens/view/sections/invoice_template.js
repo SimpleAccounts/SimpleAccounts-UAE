@@ -712,7 +712,7 @@ class InvoiceTemplate extends Component {
                     <textarea
                       className="mb-0"
                       style={{ width: '500px', height: '200px', border: 'none' }}
-                      value={invoiceData.notes}
+                      value={invoiceData.notes || ''}
                       readOnly
                     />
                   </>
@@ -952,7 +952,7 @@ class InvoiceTemplate extends Component {
               maxLength="250"
               style={{ width: '1100px' }}
               // rows="5"
-              value={invoiceData.footNote}
+              value={invoiceData.footNote || ''}
             />
             <br />
             <br />

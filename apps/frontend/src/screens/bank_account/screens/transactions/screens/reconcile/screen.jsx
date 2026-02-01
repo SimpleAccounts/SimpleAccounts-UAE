@@ -61,7 +61,7 @@ function ReconcileTransaction() {
 
   // Local state
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
   const [view, setView] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -110,7 +110,7 @@ function ReconcileTransaction() {
         .getReconcileList(postData)
         .then(res => {
           if (res.status === 200) {
-            setLoading(false);
+            setIsLoading(false);
           }
         })
         .catch(err => {
@@ -118,7 +118,7 @@ function ReconcileTransaction() {
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          setLoading(false);
+          setIsLoading(false);
         });
     } else {
       navigate('/admin/banking/bank-account');
@@ -136,7 +136,7 @@ function ReconcileTransaction() {
   const onSubmit = useCallback(
     data => {
       setDisabled(true);
-      setLoading(true);
+      setIsLoading(true);
       setDisableLeavePage(true);
       setLoadingMsg('Reconciling...');
 
@@ -159,7 +159,7 @@ function ReconcileTransaction() {
             } else {
               commonActions.tostifyAlert('error', res.data.message);
               setDisabled(false);
-              setLoading(false);
+              setIsLoading(false);
               setDisableLeavePage(true);
               setLoadingMsg('');
             }
@@ -293,7 +293,7 @@ function ReconcileTransaction() {
         {dialog}
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 mx-auto">
-            {loading ? (
+            {isLoading ? (
               <Loader />
             ) : view ? (
               <ViewBankAccount
@@ -425,11 +425,9 @@ function ReconcileTransaction() {
                       data={reconcile_list.data || []}
                       manualPagination={true}
                       pageCount={Math.ceil((reconcile_list.count || 0) / pagination.pageSize)}
-                      totalRows={reconcile_list.count || 0}
-                      pagination={pagination}
+                      totalCount={reconcile_list.count || 0}
                       onPaginationChange={handlePaginationChange}
-                      loading={loading}
-                      emptyMessage="There are no records to display."
+                      isLoading={isLoading}
                     />
                   </div>
                 </CardContent>

@@ -538,7 +538,11 @@ public class DataListController {
 				filterDataMap.put(ProductFilterEnum.PRODUCT_PRICE_TYPE,
 						Arrays.asList(priceType, ProductPriceType.BOTH));
 				filterDataMap.put(ProductFilterEnum.DELETE_FLAG, false);
-				PaginationResponseModel responseModel = productService.getProductList(filterDataMap, null);
+				// Limit to 1000 products for datalist to avoid loading 2849+ and causing 5+ second delay
+				PaginationModel paginationModel = new PaginationModel();
+				paginationModel.setPageSize(1000);
+				paginationModel.setPageNo(0);
+				PaginationResponseModel responseModel = productService.getProductList(filterDataMap, paginationModel);
 				if (responseModel != null && responseModel.getData() != null) {
 					List<ProductPriceModel> modelList = new ArrayList<>();
 					for (Product product : (List<Product>) responseModel.getData())

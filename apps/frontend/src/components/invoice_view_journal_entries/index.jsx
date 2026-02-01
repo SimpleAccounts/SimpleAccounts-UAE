@@ -24,8 +24,12 @@ const InvoiceViewJournalEntries = ({
   const navigate = useNavigate();
 
   const getList = listData => {
-    if (!listData) return [];
-    return listData.map(item => ({
+    const arr = Array.isArray(listData)
+      ? listData
+      : Array.isArray(listData?.data)
+        ? listData.data
+        : [];
+    return arr.map(item => ({
       journalDate: item.journalDate ?? '',
       createdByName: item.createdByName,
       description: item.description,

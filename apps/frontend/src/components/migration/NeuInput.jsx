@@ -61,6 +61,8 @@ const NeuInput = React.forwardRef(
       plaintext = false,
       addon: _addon = false,
       style,
+      children,
+      dangerouslySetInnerHTML,
       ...props
     },
     ref
@@ -90,6 +92,9 @@ const NeuInput = React.forwardRef(
       ...style,
     };
 
+    // Ensure value is never null to avoid React warning
+    const safeValue = props.value === null ? '' : props.value;
+    
     const commonProps = {
       ref,
       className: cn('w-full', sizeClass, className),
@@ -103,10 +108,12 @@ const NeuInput = React.forwardRef(
         props.onBlur?.(e);
       },
       ...props,
+      // Override value with safe value (null -> '')
+      ...(props.value !== undefined ? { value: safeValue } : {}),
     };
 
     if (type === 'select') {
-      return <select {...commonProps}>{props.children}</select>;
+      return <select {...commonProps}>{children}</select>;
     }
 
     if (type === 'textarea') {
@@ -118,6 +125,7 @@ const NeuInput = React.forwardRef(
       );
     }
 
+    // input is a void element: never pass children or dangerouslySetInnerHTML
     return <input type={type} {...commonProps} />;
   }
 );

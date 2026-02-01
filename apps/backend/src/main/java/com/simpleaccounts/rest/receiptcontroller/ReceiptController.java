@@ -90,6 +90,7 @@ public class ReceiptController {
 
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getList(ReceiptRequestFilterModel filterModel, HttpServletRequest request) {
@@ -97,7 +98,7 @@ public class ReceiptController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userService.findByPK(userId);
 			Map<ReceiptFilterEnum, Object> filterDataMap = new EnumMap<>(ReceiptFilterEnum.class);
-			if(user.getRole().getRoleCode()!=1) {
+			if (user != null && user.getRole() != null && user.getRole().getRoleCode() != null && user.getRole().getRoleCode() != 1) {
 				filterDataMap.put(ReceiptFilterEnum.USER_ID, filterModel.getUserId());
 			}
 			if (filterModel.getContactId() != null) {

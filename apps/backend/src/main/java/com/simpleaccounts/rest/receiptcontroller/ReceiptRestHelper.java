@@ -530,12 +530,15 @@ public class ReceiptRestHelper {
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 		Journal journal = new Journal();
 
+		Contact contact = postingRequestModel.getPostingRefId() != null
+				? contactService.findByPK(postingRequestModel.getPostingRefId()) : null;
 		Map<String, Object> supplierMap = new HashMap<>();
-		supplierMap.put(JSON_KEY_CONTACT, postingRequestModel.getPostingRefId());
+		supplierMap.put(JSON_KEY_CONTACT, contact);
 		supplierMap.put(JSON_KEY_CONTACT_TYPE, 2);
 		supplierMap.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
-		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contactTransactionCategoryService
-				.findByAttributes(supplierMap);
+		List<ContactTransactionCategoryRelation> contactTransactionCategoryRelations = contact != null
+				? contactTransactionCategoryService.findByAttributes(supplierMap)
+				: new ArrayList<>();
 		if (!id.equals(79)) {
 			exchangeGainOrLoss = exchangeGainOrLoss.negate();
 		}

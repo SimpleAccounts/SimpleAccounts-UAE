@@ -62,6 +62,8 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
     List<Invoice> findAllByDeleteFlag(boolean deleteFlag);
 
+    boolean existsByDeleteFlag(Boolean deleteFlag);
+
     @Query(value = "SELECT * FROM Invoice i WHERE i.contact_id = :contact AND i.type = :type AND i.cn_created_on_paid_invoice = true " +
             "AND i.delete_flag = false AND i.invoice_date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<Invoice> getInvoicesForReport(@Param("contact") Integer contactId, @Param("startDate") LocalDate startDate,

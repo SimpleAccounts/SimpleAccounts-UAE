@@ -287,10 +287,14 @@ function Journal() {
     [navigate, getCurrencySymbol]
   );
 
-  // Transform data for table
+  // Transform data for table (API returns { data: [...], count } or reducer may store array)
   const tableData = useMemo(() => {
-    if (!journal_list?.data?.data) return [];
-    return journal_list.data.data.map(item => ({
+    const list = Array.isArray(journal_list)
+      ? journal_list
+      : Array.isArray(journal_list?.data)
+        ? journal_list.data
+        : [];
+    return list.map(item => ({
       journalId: item.journalId,
       journalReferenceNo: item.journalReferenceNo || '',
       postingReferenceTypeDisplayName: item.postingReferenceTypeDisplayName || '',
@@ -389,7 +393,7 @@ function Journal() {
               columns={columns}
               data={tableData}
               manualPagination
-              pageCount={Math.ceil((journal_list?.data?.count || 0) / pagination.pageSize)}
+              pageCount={Math.ceil((journal_list?.count ?? journal_list?.data?.count ?? 0) / pagination.pageSize) || 1}
               onPaginationChange={setPagination}
               pagination={pagination}
               manualSorting

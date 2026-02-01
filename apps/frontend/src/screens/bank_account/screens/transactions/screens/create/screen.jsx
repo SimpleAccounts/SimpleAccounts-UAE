@@ -71,7 +71,8 @@ const SUPPORTED_FORMAT = [
 
 // Validation schema
 const createValidationSchema = () => {
-  return z.object({
+  return z
+    .object({
     transactionDate: z.any().refine(val => val, { message: 'Transaction Date is Required' }),
     transactionAmount: z
       .any()
@@ -95,7 +96,7 @@ const createValidationSchema = () => {
     isReverseChargeEnabled: z.boolean().optional(),
     exclusiveVat: z.boolean().optional(),
     expenseType: z.boolean().optional(),
-    attachment: z
+      attachment: z
       .any()
       .optional()
       .refine(
@@ -112,7 +113,9 @@ const createValidationSchema = () => {
         },
         { message: '*File Size is too large' }
       ),
-  });
+    });
+    // Note: transactionCategoryId is optional - some transaction types don't require a category
+    // The backend handles cases where no category is selected
 };
 
 const CreateBankTransaction = () => {
@@ -140,11 +143,12 @@ const CreateBankTransaction = () => {
   );
   const vendor_invoice_list = useSelector(state => state.bank_account?.vendor_invoice_list || []);
   const expense_categories_list = useSelector(
-    state => state.expense?.expense_categories_list || []
+    state => state.bank_account?.expense_categories_list || state.expense?.expense_categories_list || []
   );
   const user_list = useSelector(state => state.bank_account?.user_list || []);
   const currency_list = useSelector(state => state.bank_account?.currency_list || []);
   const vendor_list = useSelector(state => state.bank_account?.vendor_list || []);
+  const customer_list = useSelector(state => state.bank_account?.customer_list || []);
   const vat_list = useSelector(state => state.bank_account?.vat_list || []);
   const currency_convert_list = useSelector(state => state.common?.currency_convert_list || []);
   const UnPaidPayrolls_List = useSelector(state => state.bank_account?.UnPaidPayrolls_List || []);
@@ -267,6 +271,33 @@ const CreateBankTransaction = () => {
     });
   }, []);
 
+  // Refetch customer/supplier invoices when amount or customer/vendor changes (for Sales/Invoice/Expense)
+  useEffect(() => {
+    const amt = watchedValues.transactionAmount;
+    const cust = watchedValues.customerId;
+    const vend = watchedValues.vendorId;
+    const type = watchedValues.coaCategoryId?.label;
+    const typeVal = watchedValues.coaCategoryId?.value;
+    if (cust && (type === 'Sales' || typeVal === 2)) {
+      getSuggestionInvoicesFotCust(cust?.value ?? cust, amt || 999999999);
+    } else if (type === 'Sales' || typeVal === 2) {
+      setCustomerInvoiceListState([]);
+    }
+    if (
+      amt &&
+      vend &&
+      (type === 'Invoice' || type === 'Supplier Invoice' || type === 'Expense' || typeVal === 10)
+    ) {
+      getSuggestionInvoicesFotVend(vend?.value ?? vend, amt);
+    }
+  }, [
+    watchedValues.transactionAmount,
+    watchedValues.customerId?.value ?? watchedValues.customerId,
+    watchedValues.vendorId?.value ?? watchedValues.vendorId,
+    watchedValues.coaCategoryId?.label,
+    watchedValues.coaCategoryId?.value,
+  ]);
+
   const initializeData = async () => {
     getCompanyCurrency();
 
@@ -329,15 +360,28 @@ const CreateBankTransaction = () => {
           
           if (dataArray.length > 0) {
             // Transform ChartOfAccountCategory objects to { value, label } format
-            // Use chartOfAccountCategoryId as value and chartOfAccountCategoryName as label
             const transformedData = selectOptionsFactory.renderOptions(
               'chartOfAccountCategoryName',
               'chartOfAccountCategoryId',
               dataArray,
               'Transaction Type'
             );
-            console.log('Transformed transaction types:', transformedData);
-            setChartOfAccountCategoryList(transformedData);
+            // Ensure INVOICE, VAT_PAYMENT, VAT_CLAIM, CORPORATE_TAX_PAYMENT appear even if not in DB
+            const fallbackTypes = [
+              { value: 15, label: 'Invoice' },
+              { value: 16, label: 'VAT Payment' },
+              { value: 17, label: 'VAT Claim' },
+              { value: 18, label: 'Corporate Tax Payment' },
+            ];
+            const existingIds = new Set(transformedData.map(t => t.value));
+            const merged = [...transformedData];
+            fallbackTypes.forEach(ft => {
+              if (!existingIds.has(ft.value)) {
+                merged.push(ft);
+                existingIds.add(ft.value);
+              }
+            });
+            setChartOfAccountCategoryList(merged);
           } else {
             console.warn('Transaction type list is empty');
             setChartOfAccountCategoryList([]);
@@ -462,25 +506,37 @@ const CreateBankTransaction = () => {
   };
 
   const getSuggestionInvoicesFotCust = async (option, amount) => {
+    const currencyCode =
+      bankCurrency?.bankAccountCurrency?.currencyCode ??
+      bankCurrency?.bankAccountCurrency ??
+      basecurrency?.currencyCode ??
+      0;
     const data = {
       amount: amount,
       id: option,
-      currency: bankCurrency?.bankAccountCurrency || 0,
+      currency: currencyCode,
       bankId: id,
     };
     try {
       const res = await transactionActionsDispatch.getCustomerInvoiceList(data);
-      setCustomerInvoiceListState(res.data);
+      setCustomerInvoiceListState(Array.isArray(res?.data) ? res.data : []);
     } catch (err) {
       console.error('Error getting customer invoice list:', err);
+      setCustomerInvoiceListState([]);
     }
   };
 
   const getSuggestionInvoicesFotVend = async (option, amount) => {
+    const currencyCode =
+      invoiceCurrency ??
+      bankCurrency?.bankAccountCurrency?.currencyCode ??
+      bankCurrency?.bankAccountCurrency ??
+      basecurrency?.currencyCode ??
+      0;
     const data = {
       amount: amount,
       id: option,
-      currency: invoiceCurrency || 0,
+      currency: currencyCode,
       bankId: id && id !== '' ? id : null,
     };
     try {
@@ -583,6 +639,77 @@ const CreateBankTransaction = () => {
     };
   };
 
+  const setcustomexchnage = (customerinvoice, exrate) => {
+    const bankCurrencyCode = bankCurrency?.bankAccountCurrency ?? bankCurrency?.bankAccountCurrency?.currencyCode;
+    const baseCurrencyCode = basecurrency?.currencyCode ?? basecurrency;
+    let exchange;
+    const convertor =
+      bankCurrencyCode === baseCurrencyCode ? customerinvoice : bankCurrencyCode;
+    const result = (currency_convert_list ?? []).filter(obj => obj.currencyCode === convertor);
+    const ex = exrate || result[0]?.exchangeRate || 1;
+    setValue('exchangeRate', ex);
+
+    if (customerinvoice === bankCurrencyCode) {
+      exchange = 1;
+    } else {
+      if (baseCurrencyCode === customerinvoice) exchange = 1 / ex;
+      else exchange = ex;
+    }
+    return exchange;
+  };
+
+  const basecurrencyconvertor = customerinvoice => {
+    const baseCurrencyCode = basecurrency?.currencyCode ?? basecurrency;
+    if (customerinvoice !== baseCurrencyCode) {
+      const result = currency_convert_list?.filter(obj => obj.currencyCode === customerinvoice) ?? [];
+      return result[0]?.exchangeRate || 1;
+    }
+    return 1;
+  };
+
+  const setexchnagedamount = (option, amount, exrate) => {
+    if (option?.length > 0) {
+      const transactionAmount = amount || getValues('transactionAmount');
+      const invoicelist = [...option];
+      let remainingcredit = Number(transactionAmount) || 0;
+      const finaldata = invoicelist.map(i => {
+        let localexe = setcustomexchnage(i.currencyCode ?? i.currency, exrate);
+        let finalcredit = 0;
+        let localremainamount = remainingcredit;
+        const dueAmt = Number(i.dueAmount ?? i.amount ?? 0);
+        let isPartiallyPaid = false;
+        if (remainingcredit > 0) {
+          localremainamount = remainingcredit - dueAmt * localexe;
+          if (localremainamount >= 0) {
+            finalcredit = dueAmt * localexe;
+          }
+          if (localremainamount < 0) {
+            finalcredit = dueAmt * localexe + localremainamount;
+            isPartiallyPaid = true;
+          }
+          remainingcredit = localremainamount;
+        }
+        const basecurrencyVal = basecurrencyconvertor(i.currencyCode ?? i.currency);
+        const explainedAmt = finalcredit > 0 ? finalcredit : 0;
+        return {
+          ...i,
+          invoiceId: i.value ?? i.invoiceId ?? i.id,
+          invoiceAmount: dueAmt,
+          convertedInvoiceAmount: explainedAmt || dueAmt * localexe,
+          explainedAmount: explainedAmt,
+          exchangeRate: localexe,
+          pp: isPartiallyPaid,
+          convertedToBaseCurrencyAmount: (explainedAmt || dueAmt * localexe) * basecurrencyVal,
+        };
+      });
+      setValue('invoiceIdList', finaldata);
+      return finaldata;
+    } else {
+      setValue('invoiceIdList', []);
+      return [];
+    }
+  };
+
   const handleFileChange = e => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -606,8 +733,6 @@ const CreateBankTransaction = () => {
       bankAccountId = getBankAccountId();
     }
     
-    // Log for debugging
-    console.log('onSubmit - bankAccountId:', bankAccountId, 'id state:', id, 'location.state:', location.state);
     let {
       transactionDate,
       description,
@@ -640,8 +765,14 @@ const CreateBankTransaction = () => {
       setTransactionExpenseAmount(list.transactionExpenseAmount);
     }
 
-    // Handle invoice list for Sales or Supplier Invoice
-    if (coaCategoryId?.label === 'Sales' || coaCategoryId?.label === 'Supplier Invoice') {
+    // Handle invoice list for Sales, Supplier Invoice, Invoice, or Expense (with supplier invoices)
+    if (
+      (coaCategoryId?.label === 'Sales' ||
+        coaCategoryId?.label === 'Supplier Invoice' ||
+        coaCategoryId?.label === 'Invoice' ||
+        (coaCategoryId?.label === 'Expense' && invoiceIdList?.length > 0)) &&
+      invoiceIdList?.length > 0
+    ) {
       const result = invoiceIdList?.map(o => ({
         id: o.value,
         remainingInvoiceAmount: 0,
@@ -654,16 +785,20 @@ const CreateBankTransaction = () => {
         'explainedInvoiceListString',
         invoiceIdList
           ? JSON.stringify(
-              invoiceIdList.map(i => ({
-                invoiceId: i.value,
-                invoiceAmount: i.dueAmount,
-                convertedInvoiceAmount: i.convertedInvoiceAmount,
-                explainedAmount: i.explainedAmount,
-                exchangeRate: i.exchangeRate,
-                partiallyPaid: i.pp,
-                nonConvertedInvoiceAmount: i.explainedAmount / i.exchangeRate,
-                convertedToBaseCurrencyAmount: i.convertedToBaseCurrencyAmount,
-              }))
+              invoiceIdList.map(i => {
+                const exRate = i.exchangeRate && Number(i.exchangeRate) !== 0 ? Number(i.exchangeRate) : 1;
+                const explained = Number(i.explainedAmount) || 0;
+                return {
+                  invoiceId: i.value ?? i.invoiceId ?? i.id,
+                  invoiceAmount: i.invoiceAmount ?? i.dueAmount ?? i.amount,
+                  convertedInvoiceAmount: i.convertedInvoiceAmount ?? 0,
+                  explainedAmount: explained,
+                  exchangeRate: exRate,
+                  partiallyPaid: Boolean(i.pp),
+                  nonConvertedInvoiceAmount: exRate !== 0 ? explained / exRate : explained,
+                  convertedToBaseCurrencyAmount: i.convertedToBaseCurrencyAmount ?? 0,
+                };
+              })
             )
           : []
       );
@@ -688,12 +823,11 @@ const CreateBankTransaction = () => {
     // Use bankAccountId from above (which includes fallback logic)
     if (bankAccountId) {
       formData.append('bankId', bankAccountId);
-      console.log('createTransaction: bankId appended to formData:', bankAccountId);
     } else {
       // Log warning if bankId is missing for bank account transaction creation
-      console.error('createTransaction: bankId is missing - transaction will fail. id state:', id, 'location:', location);
     }
-    formData.append('date', transactionDate || '');
+    // Send date as epoch ms so backend can bind to java.util.Date
+    formData.append('date', transactionDate ? String(new Date(transactionDate).getTime()) : '');
     formData.append('description', description || '');
     formData.append('amount', transactionAmount || '');
     formData.append(
@@ -725,7 +859,8 @@ const CreateBankTransaction = () => {
       currencyCode &&
       (coaCategoryId?.label === 'Expense' ||
         coaCategoryId?.label === 'Sales' ||
-        coaCategoryId?.label === 'Supplier Invoice')
+        coaCategoryId?.label === 'Supplier Invoice' ||
+        coaCategoryId?.label === 'Invoice')
     ) {
       formData.append('currencyCode', currencyCode.value || currencyCode);
     }
@@ -734,7 +869,12 @@ const CreateBankTransaction = () => {
       formData.append('customerId', customerId.value || '');
     }
 
-    if (vendorId && coaCategoryId?.label === 'Supplier Invoice') {
+    if (
+      vendorId &&
+      (coaCategoryId?.label === 'Supplier Invoice' ||
+        coaCategoryId?.label === 'Invoice' ||
+        (coaCategoryId?.label === 'Expense' && invoiceIdList?.length > 0))
+    ) {
       formData.append('vendorId', vendorId.value || vendorId);
     }
 
@@ -808,7 +948,10 @@ const CreateBankTransaction = () => {
         }
       })
       .catch(err => {
-        commonActionsDispatch.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+        // Backend returns 400 with plain string body; axios puts it in err.data
+        const msg =
+          (typeof err?.data === 'object' && err?.data?.message) || err?.data || 'Something Went Wrong';
+        commonActionsDispatch.tostifyAlert('error', msg);
         setDisabled(false);
         setLoading(false);
         setDisableLeavePage(false);
@@ -889,6 +1032,7 @@ const CreateBankTransaction = () => {
                                       if (
                                         option?.label !== 'Expense' &&
                                         option?.label !== 'Supplier Invoice' &&
+                                        option?.label !== 'Invoice' &&
                                         option?.label !== 'VAT Payment' &&
                                         option?.label !== 'VAT Claim' &&
                                         option?.label !== 'Corporate Tax Payment'
@@ -897,8 +1041,12 @@ const CreateBankTransaction = () => {
                                       }
                                       if (option?.label === 'Expense') {
                                         getExpensesCategoriesList();
+                                        getVendorList();
                                       }
-                                      if (option?.label === 'Supplier Invoice') {
+                                      if (option?.label === 'Sales') {
+                                        transactionActionsDispatch.getCustomerList(2);
+                                      }
+                                      if (option?.label === 'Supplier Invoice' || option?.label === 'Invoice') {
                                         getVendorList();
                                       }
                                       if (option?.label === 'VAT Payment') {
@@ -906,6 +1054,9 @@ const CreateBankTransaction = () => {
                                       }
                                       if (option?.label === 'VAT Claim') {
                                         getVatReportListForBank(2);
+                                      }
+                                      if (option?.label === 'Corporate Tax Payment') {
+                                        getCorporateTaxList();
                                       }
                                     }}
                                     placeholder={strings.Select + strings.TransactionType}
@@ -993,6 +1144,412 @@ const CreateBankTransaction = () => {
                             </FormGroup>
                           </Col>
                         </Row>
+
+                        {/* Sales: Customer + Customer Invoice */}
+                        {(watchedValues.coaCategoryId?.label === 'Sales' ||
+                          watchedValues.coaCategoryId?.value === 2) && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="customerId">
+                                  <span className="text-danger">* </span>
+                                  {strings.Customer || 'Customer'}
+                                </Label>
+                                <Controller
+                                  name="customerId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        customer_list?.map(c => ({
+                                          value: c.value,
+                                          label: c.label?.contactName || c.label || String(c.value),
+                                        })) || []
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option);
+                                        if (option?.value) {
+                                          getSuggestionInvoicesFotCust(
+                                            option.value,
+                                            getValues('transactionAmount') || 999999999
+                                          );
+                                        } else {
+                                          setCustomerInvoiceListState([]);
+                                        }
+                                      }}
+                                      placeholder={strings.Select + ' Customer'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="invoiceIdList">
+                                  <span className="text-danger">* </span>
+                                  {strings.CustomerInvoice || 'Customer Invoice'}
+                                </Label>
+                                <Controller
+                                  name="invoiceIdList"
+                                  control={control}
+                                  render={({ field }) => {
+                                    const opts =
+                                      customerInvoiceListState?.map(inv => ({
+                                        value: inv.value ?? inv.invoiceId ?? inv.id,
+                                        label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                        dueAmount: inv.dueAmount ?? inv.amount ?? 0,
+                                        currencyCode: inv.currencyCode ?? inv.currency,
+                                        type: 'customer',
+                                      })) || [];
+                                    return (
+                                      <Select
+                                        {...field}
+                                        styles={customStyles}
+                                        options={opts}
+                                        isMulti
+                                        onChange={selected => {
+                                          const amt = getValues('transactionAmount');
+                                          const rate = getValues('exchangeRate') || 1;
+                                          const formatted = selected?.length
+                                            ? setexchnagedamount(selected, amt, rate)
+                                            : [];
+                                          field.onChange(formatted);
+                                        }}
+                                        placeholder={strings.Select + ' Invoice'}
+                                        value={
+                                          field.value?.map(v => {
+                                            const inv = customerInvoiceListState?.find(
+                                              i =>
+                                                (i.value ?? i.invoiceId ?? i.id) === (v.value ?? v)
+                                            );
+                                            return inv
+                                              ? {
+                                                  value: inv.value ?? inv.invoiceId ?? inv.id,
+                                                  label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                                }
+                                              : v;
+                                          }) || field.value
+                                        }
+                                      />
+                                    );
+                                  }}
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {/* Expense: Expense Category + VAT + Vendor + Supplier Invoice */}
+                        {(watchedValues.coaCategoryId?.label === 'Expense' ||
+                          watchedValues.coaCategoryId?.value === 10) && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="expenseCategory">
+                                  {strings.ExpenseCategory || 'Expense Category'}
+                                </Label>
+                                <Controller
+                                  name="expenseCategory"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        expense_categories_list_generate() ||
+                                        expense_categories_list?.map(c => ({
+                                          value: c.transactionCategoryId ?? c.value,
+                                          label: c.transactionCategoryName ?? c.label,
+                                        })) ||
+                                        []
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option);
+                                      }}
+                                      placeholder={strings.Select + ' Expense Category'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="vatId">{strings.VAT || 'VAT'}</Label>
+                                <Controller
+                                  name="vatId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        vat_list?.map(v => ({
+                                          value: v.value ?? v.id,
+                                          label: v.label ?? v.vatCategoryName ?? String(v.value),
+                                        })) || []
+                                      }
+                                      placeholder={strings.Select + ' VAT'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="vendorId">
+                                  {strings.Vendor || 'Vendor (for supplier invoice)'}
+                                </Label>
+                                <Controller
+                                  name="vendorId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        vendor_list?.map(v => ({
+                                          value: v.value,
+                                          label: v.label?.contactName || v.label || String(v.value),
+                                        })) || []
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option);
+                                        if (option?.value && getValues('transactionAmount')) {
+                                          getSuggestionInvoicesFotVend(
+                                            option.value,
+                                            getValues('transactionAmount')
+                                          );
+                                        }
+                                      }}
+                                      placeholder={strings.Select + ' Vendor'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
+                        {(watchedValues.coaCategoryId?.label === 'Expense' ||
+                          watchedValues.coaCategoryId?.value === 10) && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="invoiceIdList">
+                                  {strings.SupplierInvoice || 'Supplier Invoice (optional)'}
+                                </Label>
+                                <Controller
+                                  name="invoiceIdList"
+                                  control={control}
+                                  render={({ field }) => {
+                                    const opts =
+                                      supplierInvoiceListState?.map(inv => ({
+                                        value: inv.value ?? inv.invoiceId ?? inv.id,
+                                        label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                        dueAmount: inv.dueAmount ?? inv.amount ?? 0,
+                                        currencyCode: inv.currencyCode ?? inv.currency,
+                                        type: 'supplier',
+                                      })) || [];
+                                    return (
+                                      <Select
+                                        {...field}
+                                        styles={customStyles}
+                                        options={opts}
+                                        isMulti
+                                        onChange={selected => {
+                                          const amt = getValues('transactionAmount');
+                                          const rate = getValues('exchangeRate') || 1;
+                                          const formatted = selected?.length
+                                            ? setexchnagedamount(selected, amt, rate)
+                                            : [];
+                                          field.onChange(formatted);
+                                        }}
+                                        placeholder={strings.Select + ' Supplier Invoice'}
+                                        value={
+                                          field.value?.map(v => {
+                                            const inv = supplierInvoiceListState?.find(
+                                              i =>
+                                                (i.value ?? i.invoiceId ?? i.id) === (v.value ?? v)
+                                            );
+                                            return inv
+                                              ? {
+                                                  value: inv.value ?? inv.invoiceId ?? inv.id,
+                                                  label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                                }
+                                              : v;
+                                          }) || field.value
+                                        }
+                                      />
+                                    );
+                                  }}
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {/* Invoice / Supplier Invoice: Vendor + Supplier Invoice */}
+                        {(watchedValues.coaCategoryId?.label === 'Invoice' ||
+                          watchedValues.coaCategoryId?.label === 'Supplier Invoice') && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="vendorId">
+                                  <span className="text-danger">* </span>
+                                  {strings.Vendor || 'Vendor'}
+                                </Label>
+                                <Controller
+                                  name="vendorId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        vendor_list?.map(v => ({
+                                          value: v.value,
+                                          label: v.label?.contactName || v.label || String(v.value),
+                                        })) || []
+                                      }
+                                      onChange={option => {
+                                        field.onChange(option);
+                                        if (option?.value && getValues('transactionAmount')) {
+                                          getSuggestionInvoicesFotVend(
+                                            option.value,
+                                            getValues('transactionAmount')
+                                          );
+                                        }
+                                      }}
+                                      placeholder={strings.Select + ' Vendor'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="invoiceIdList">
+                                  <span className="text-danger">* </span>
+                                  {strings.SupplierInvoice || 'Supplier Invoice'}
+                                </Label>
+                                <Controller
+                                  name="invoiceIdList"
+                                  control={control}
+                                  render={({ field }) => {
+                                    const opts =
+                                      supplierInvoiceListState?.map(inv => ({
+                                        value: inv.value ?? inv.invoiceId ?? inv.id,
+                                        label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                        dueAmount: inv.dueAmount ?? inv.amount ?? 0,
+                                        currencyCode: inv.currencyCode ?? inv.currency,
+                                        type: 'supplier',
+                                      })) || [];
+                                    return (
+                                      <Select
+                                        {...field}
+                                        styles={customStyles}
+                                        options={opts}
+                                        isMulti
+                                        onChange={selected => {
+                                          const amt = getValues('transactionAmount');
+                                          const rate = getValues('exchangeRate') || 1;
+                                          const formatted = selected?.length
+                                            ? setexchnagedamount(selected, amt, rate)
+                                            : [];
+                                          field.onChange(formatted);
+                                        }}
+                                        placeholder={strings.Select + ' Supplier Invoice'}
+                                        value={
+                                          field.value?.map(v => {
+                                            const inv = supplierInvoiceListState?.find(
+                                              i =>
+                                                (i.value ?? i.invoiceId ?? i.id) === (v.value ?? v)
+                                            );
+                                            return inv
+                                              ? {
+                                                  value: inv.value ?? inv.invoiceId ?? inv.id,
+                                                  label: `${inv.invoiceNumber ?? inv.label ?? inv.value ?? inv.id} - ${inv.dueAmount ?? inv.amount ?? 0}`,
+                                                }
+                                              : v;
+                                          }) || field.value
+                                        }
+                                      />
+                                    );
+                                  }}
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {/* VAT Payment / VAT Claim: VAT Report */}
+                        {(watchedValues.coaCategoryId?.label === 'VAT Payment' ||
+                          watchedValues.coaCategoryId?.label === 'VAT Claim' ||
+                          watchedValues.coaCategoryId?.value === 16 ||
+                          watchedValues.coaCategoryId?.value === 17) && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="VATReportId">
+                                  <span className="text-danger">* </span>
+                                  {strings.VATReport || 'VAT Report'}
+                                </Label>
+                                <Controller
+                                  name="VATReportId"
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Select
+                                      {...field}
+                                      styles={customStyles}
+                                      options={
+                                        VATlist?.map(v => ({
+                                          value: v.id,
+                                          label: v.vatNumber
+                                            ? `${v.vatNumber} - ${v.dueAmount ?? v.totalAmount ?? ''}`
+                                            : String(v.id),
+                                        })) || []
+                                      }
+                                      placeholder={strings.Select + ' VAT Report'}
+                                      isClearable
+                                    />
+                                  )}
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
+
+                        {/* Corporate Tax Payment: Tax Period */}
+                        {(watchedValues.coaCategoryId?.label === 'Corporate Tax Payment' ||
+                          watchedValues.coaCategoryId?.value === 18) && (
+                          <Row>
+                            <Col lg={4}>
+                              <FormGroup className="mb-3">
+                                <Label htmlFor="ct_taxPeriod">
+                                  <span className="text-danger">* </span>
+                                  {strings.CorporateTaxPeriod || 'Corporate Tax Period'}
+                                </Label>
+                                <Select
+                                  value={ct_taxPeriod}
+                                  onChange={option => {
+                                    setCt_taxPeriod(option);
+                                    if (option?.value !== undefined) setCTValues(option.value);
+                                  }}
+                                  options={ct_taxPeriodList}
+                                  placeholder={strings.Select + ' Tax Period'}
+                                  styles={customStyles}
+                                  isClearable
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        )}
 
                         {/* Description */}
                         {watchedValues.coaCategoryId?.label !== 'Corporate Tax Payment' && (

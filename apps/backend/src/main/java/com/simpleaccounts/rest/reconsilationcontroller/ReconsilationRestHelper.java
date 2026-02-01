@@ -123,18 +123,35 @@ public class ReconsilationRestHelper {
 			BigDecimal exchangeRate) {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
+		BigDecimal resolvedExchangeRate = exchangeRate != null ? exchangeRate : BigDecimal.ONE;
+		
+		// Validate bank account
+		if (transaction.getBankAccount() == null || transaction.getBankAccount().getTransactionCategory() == null) {
+			throw new IllegalArgumentException("Bank account category is required");
+		}
+		
+		// Use bank account's transaction category as fallback if no specific category was selected
+		// This handles cases where no transaction categories are available in the database for certain transaction types
+		TransactionCategory explainedCategory = transaction.getExplainedTransactionCategory();
+		if (explainedCategory == null) {
+			// Use the bank account's own category as a fallback for simple transactions
+			// This is a safe default for basic money in/out transactions
+			explainedCategory = transaction.getBankAccount().getTransactionCategory();
+			transaction.setExplainedTransactionCategory(explainedCategory);
+			logger.info("getByTransactionType: Using bank account category as fallback for explainedTransactionCategory");
+		}
 
 			Journal journal = new Journal();
 			JournalLineItem journalLineItem1 = new JournalLineItem();
 		journalLineItem1.setTransactionCategory(transaction.getExplainedTransactionCategory());
 		if (!isdebitFromBank) {
-			journalLineItem1.setDebitAmount(transaction.getTransactionDueAmount().multiply(exchangeRate));
+			journalLineItem1.setDebitAmount(transaction.getTransactionDueAmount().multiply(resolvedExchangeRate));
 		} else {
-			journalLineItem1.setCreditAmount(transaction.getTransactionDueAmount().multiply(exchangeRate));
+			journalLineItem1.setCreditAmount(transaction.getTransactionDueAmount().multiply(resolvedExchangeRate));
 		}
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
 		journalLineItem1.setReferenceId(transaction.getTransactionId());
-		journalLineItem1.setExchangeRate(exchangeRate);
+		journalLineItem1.setExchangeRate(resolvedExchangeRate);
 		journalLineItem1.setCreatedBy(userId);
 		journalLineItem1.setJournal(journal);
 		journalLineItemList.add(journalLineItem1);
@@ -142,13 +159,13 @@ public class ReconsilationRestHelper {
 		JournalLineItem journalLineItem2 = new JournalLineItem();
 		journalLineItem2.setTransactionCategory(transaction.getBankAccount().getTransactionCategory());
 		if (isdebitFromBank) {
-			journalLineItem2.setDebitAmount(transaction.getTransactionDueAmount().multiply(exchangeRate));
+			journalLineItem2.setDebitAmount(transaction.getTransactionDueAmount().multiply(resolvedExchangeRate));
 		} else {
-			journalLineItem2.setCreditAmount(transaction.getTransactionDueAmount().multiply(exchangeRate));
+			journalLineItem2.setCreditAmount(transaction.getTransactionDueAmount().multiply(resolvedExchangeRate));
 		}
 		journalLineItem2.setReferenceType(PostingReferenceTypeEnum.TRANSACTION_RECONSILE);
 		journalLineItem2.setReferenceId(transaction.getTransactionId());
-		journalLineItem2.setExchangeRate(exchangeRate);
+		journalLineItem2.setExchangeRate(resolvedExchangeRate);
 		journalLineItem2.setCreatedBy(transaction.getCreatedBy());
 		journalLineItem2.setJournal(journal);
 		journalLineItemList.add(journalLineItem2);
