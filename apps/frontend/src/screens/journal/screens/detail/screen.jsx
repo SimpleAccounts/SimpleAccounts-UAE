@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -93,10 +93,10 @@ const DetailJournal = ({
   currency_list,
   contact_list,
   universal_currency_list,
-  history,
   location: locationProp,
 }) => {
   const locationFromRouter = useLocation();
+  const navigate = useNavigate();
   const location = locationProp ?? locationFromRouter;
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
@@ -207,7 +207,7 @@ const DetailJournal = ({
           setLoading(false);
         });
     } else {
-      history.push('/admin/accountant/journal');
+      navigate('/admin/accountant/journal');
     }
   };
 
@@ -697,7 +697,7 @@ const DetailJournal = ({
             'success',
             res.data ? res.data.message : 'Journal Deleted Successfully'
           );
-          history.push('/admin/accountant/journal');
+          navigate('/admin/accountant/journal');
         }
       })
       .catch(err => {
@@ -761,7 +761,7 @@ const DetailJournal = ({
             'success',
             res.data ? res.data.message : 'Journal Updated Successfully'
           );
-          history.push('/admin/accountant/journal');
+          navigate('/admin/accountant/journal');
           setLoading(false);
         }
       })
@@ -1122,13 +1122,16 @@ const DetailJournal = ({
                                   className="btn-square"
                                   onClick={() => {
                                     journalActions.setCancelFlag(true);
-                                    history.push('/admin/accountant/journal');
-                                    if (state && state.renderURL) {
-                                      history.push(state.renderURL, {
-                                        id: state.renderId,
-                                        isCNWithoutProduct: state.renderCN,
-                                        expenseId: state.renderId,
+                                    if (state?.renderURL) {
+                                      navigate(state.renderURL, {
+                                        state: {
+                                          id: state.renderId,
+                                          isCNWithoutProduct: state.renderCN,
+                                          expenseId: state.renderId,
+                                        },
                                       });
+                                    } else {
+                                      navigate('/admin/accountant/journal');
                                     }
                                   }}
                                 >

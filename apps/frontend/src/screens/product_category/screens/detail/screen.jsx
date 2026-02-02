@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -75,9 +76,9 @@ const DetailProductCategory = ({
   commonActions,
   detailProductCategoryAction,
   productCategoryActions,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading');
   const [dialog, setDialog] = useState(null);
@@ -137,8 +138,8 @@ const DetailProductCategory = ({
   );
 
   const initializeData = useCallback(() => {
-    const id = location.state?.id;
-    if (location.state && id) {
+    const id = location?.state?.id;
+    if (location?.state && id) {
       detailProductCategoryAction
         .getProductCategoryById(id)
         .then(res => {
@@ -156,15 +157,15 @@ const DetailProductCategory = ({
         })
         .catch(err => {
           setLoading(false);
-          history.push('/admin/master/product-category');
+          navigate('/admin/master/product-category');
         });
     } else {
-      history.push('/admin/master/product-category');
+      navigate('/admin/master/product-category');
     }
   }, [
-    location.state,
+    location?.state,
     detailProductCategoryAction,
-    history,
+    navigate,
     reset,
     getAssociatedProductWithCategory,
   ]);
@@ -207,7 +208,7 @@ const DetailProductCategory = ({
             'success',
             res.data ? res.data.message : 'Product Category Updated Successfully'
           );
-          history.push('/admin/master/product-category');
+          navigate('/admin/master/product-category');
           setLoading(false);
         }
       })
@@ -223,9 +224,9 @@ const DetailProductCategory = ({
 
   const deleteProductCategory = () => {
     const message1 = (
-      <text>
+      <span>
         <b>Delete Product Category?</b>
-      </text>
+      </span>
     );
     const message = 'This Product Category will be deleted permanently and cannot be recovered. ';
     setDialog(
@@ -251,7 +252,7 @@ const DetailProductCategory = ({
             'success',
             res.data ? res.data.message : 'Product Category Deleted Successfully'
           );
-          history.push('/admin/master/product-category');
+          navigate('/admin/master/product-category');
           setLoading(false);
         }
       })
@@ -401,7 +402,7 @@ const DetailProductCategory = ({
                                 color="secondary"
                                 className="btn-square"
                                 onClick={() => {
-                                  history.push('/admin/master/product-category');
+                                  navigate('/admin/master/product-category');
                                 }}
                               >
                                 <Ban className="h-4 w-4" />

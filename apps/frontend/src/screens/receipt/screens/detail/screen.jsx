@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -74,15 +75,40 @@ const detailReceiptSchema = z.object({
 const regEx = /^[0-9]+$/;
 const regExBoth = /[a-zA-Z0-9]+$/;
 
+/**
+ * Normalize a contact option so label is always a string (API may return label as object with contactId, contactName, etc.).
+ * Prevents "Objects are not valid as a React child" when react-select renders the option.
+ */
+export function normalizeContactOption(option) {
+  if (option == null) return null;
+  const value = option.value;
+  const label = option.label;
+  const stringLabel =
+    typeof label === 'string'
+      ? label
+      : label != null && typeof label === 'object' && 'contactName' in label
+        ? label.contactName
+        : String(value ?? '');
+  return { value, label: stringLabel };
+}
+
+/**
+ * Normalize contact list options so each has a string label (safe for react-select).
+ */
+export function normalizeContactOptions(list) {
+  if (!list || !list.length) return [];
+  return list.map(opt => normalizeContactOption(opt) ?? opt);
+}
+
 const DetailReceipt = ({
   contact_list,
   invoice_list,
   commonActions,
   receiptDetailActions,
   receiptActions,
-  history,
-  location,
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
   const [currentReceiptId, setCurrentReceiptId] = useState(null);
@@ -111,18 +137,23 @@ const DetailReceipt = ({
   } = form;
 
   const initializeData = useCallback(() => {
-    const id = location.state?.id;
-    if (location.state && id) {
-      receiptActions.getContactList();
+    const id = location?.state?.id;
+    if (id) {
+      receiptActions.getContactList(2);
       receiptActions.getInvoiceList();
       receiptDetailActions
         .getReceiptById(id)
         .then(res => {
           if (res.status === 200) {
             setCurrentReceiptId(id);
+            const contactIdRaw = res.data.contactId;
+            const contactIdPrimitive =
+              contactIdRaw != null && typeof contactIdRaw === 'object' && 'contactId' in contactIdRaw
+                ? contactIdRaw.contactId
+                : contactIdRaw;
             reset({
               receiptNo: res.data.receiptNo || '',
-              contactId: res.data.contactId ? res.data.contactId : '',
+              contactId: contactIdPrimitive ?? '',
               referenceCode: res.data.referenceCode || '',
               receiptDate: res.data.receiptDate ? new Date(res.data.receiptDate) : new Date(),
               unusedAmount: res.data.unusedAmount?.toString() || '',
@@ -137,9 +168,9 @@ const DetailReceipt = ({
           setLoading(false);
         });
     } else {
-      history.push('admin/revenue/receipt');
+      setLoading(false);
     }
-  }, [location.state, receiptActions, receiptDetailActions, commonActions, history, reset]);
+  }, [location?.state?.id, receiptActions, receiptDetailActions, commonActions, reset]);
 
   useEffect(() => {
     initializeData();
@@ -168,7 +199,7 @@ const DetailReceipt = ({
       .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', res.data.message);
-          history.push('/admin/revenue/receipt');
+          navigate('/admin/income/receipt');
         }
       })
       .catch(err => {
@@ -205,7 +236,7 @@ const DetailReceipt = ({
             'success',
             res.data ? res.data.message : 'Deleted Successfully'
           );
-          history.push('/admin/revenue/receipt');
+          navigate('/admin/income/receipt');
         }
       })
       .catch(err => {
@@ -219,6 +250,17 @@ const DetailReceipt = ({
 
   if (loading) {
     return <Loader />;
+  }
+
+  if (currentReceiptId == null) {
+    return (
+      <div className="detail-receipt-screen p-4">
+        <p className="text-corp-text-secondary mb-3">No receipt selected.</p>
+        <Button color="primary" onClick={() => navigate('/admin/income/receipt')}>
+          Back to Customer Receipts
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -343,34 +385,38 @@ const DetailReceipt = ({
                               <Controller
                                 name="contactId"
                                 control={control}
-                                render={({ field }) => (
-                                  <Select
-                                    options={
-                                      contact_list
-                                        ? selectOptionsFactory.renderOptions(
-                                            'label',
-                                            'value',
-                                            contact_list,
-                                            'Customer Name'
-                                          )
-                                        : []
-                                    }
-                                    placeholder={strings.CustomerName}
-                                    value={
-                                      contact_list &&
-                                      contact_list.find(option => option.value === +field.value)
-                                    }
-                                    onChange={option => {
-                                      if (option && option.value) {
-                                        field.onChange(option.value);
-                                      } else {
-                                        field.onChange('');
-                                      }
-                                    }}
-                                    styles={selectStyles}
-                                    className={errors.contactId ? 'is-invalid' : ''}
-                                  />
-                                )}
+                                render={({ field }) => {
+                                  const id =
+                                    field.value != null && typeof field.value === 'object' && 'contactId' in field.value
+                                      ? field.value.contactId
+                                      : field.value;
+                                  const option =
+                                    contact_list && contact_list.length
+                                      ? (contact_list.find(
+                                          opt => opt.value === +id || opt.value === id
+                                        ) ?? null)
+                                      : null;
+                                  const safeOptions = contact_list?.length
+                                    ? [{ value: '', label: `Select ${strings.CustomerName || 'Customer Name'}` }, ...normalizeContactOptions(contact_list)]
+                                    : [];
+                                  const safeValue = option ? normalizeContactOption(option) : null;
+                                  return (
+                                    <Select
+                                      options={safeOptions}
+                                      placeholder={strings.CustomerName}
+                                      value={safeValue}
+                                      onChange={option => {
+                                        if (option && option.value != null) {
+                                          field.onChange(option.value);
+                                        } else {
+                                          field.onChange('');
+                                        }
+                                      }}
+                                      styles={selectStyles}
+                                      className={errors.contactId ? 'is-invalid' : ''}
+                                    />
+                                  );
+                                }}
                               />
                               {errors.contactId && (
                                 <div className="invalid-feedback d-block">
@@ -513,9 +559,7 @@ const DetailReceipt = ({
                               <Button
                                 color="secondary"
                                 className="btn-square"
-                                onClick={() => {
-                                  history.push('/admin/revenue/receipt');
-                                }}
+                                onClick={() => navigate('/admin/income/receipt')}
                               >
                                 <Ban className="h-4 w-4" />
                                 {strings.Cancel}

@@ -358,7 +358,7 @@ export async function createDepositTransaction(
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = transactionData.transactionDate || formatDateDDMMYYYY(today);
+  const formattedDate = transactionData.transactionDate || formatDateForTransaction(today);
 
   const payload = {
     bankId: transactionData.bankId,
@@ -402,6 +402,11 @@ function formatDateDDMMYYYY(date: Date): string {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+/** Backend transaction save expects "date" as epoch ms string or yyyy-MM-dd */
+function formatDateForTransaction(date: Date): string {
+  return String(date.getTime());
+}
+
 /**
  * Creates a withdrawal transaction via API
  *
@@ -426,7 +431,7 @@ export async function createWithdrawalTransaction(
 ): Promise<any> {
   const apiUrl = getApiBaseUrl();
   const today = new Date();
-  const formattedDate = transactionData.transactionDate || formatDateDDMMYYYY(today);
+  const formattedDate = transactionData.transactionDate || formatDateForTransaction(today);
 
   const payload = {
     bankId: transactionData.bankId,
@@ -608,9 +613,10 @@ export async function verifyBankAccountBalance(
  */
 export async function navigateToBankTransactions(page: Page, bankId: number): Promise<void> {
   const baseUrl = getFrontendBaseUrl();
-  const transactionsPath = `/admin/banking/accounts/${bankId}/transactions`;
+  // Route is banking/bank-account/transaction; screen supports ?bankId= for E2E
+  const transactionsPath = `/admin/banking/bank-account/transaction?bankId=${bankId}`;
   await page.goto(`${baseUrl}${transactionsPath}`, { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3000);
 }
 
 /**

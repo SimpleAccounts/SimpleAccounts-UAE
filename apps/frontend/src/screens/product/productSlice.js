@@ -306,7 +306,7 @@ const productSlice = createSlice({
     builder
       // getProductList
       .addCase(getProductList.fulfilled, (state, action) => {
-        if (action.payload && typeof action.payload === 'object' && !action.payload.data) {
+        if (action.payload != null && typeof action.payload === 'object') {
           state.product_list = action.payload;
         }
       })

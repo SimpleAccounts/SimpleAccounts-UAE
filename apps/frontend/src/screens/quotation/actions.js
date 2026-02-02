@@ -2,38 +2,43 @@ import { QUOTATION } from 'constants/types';
 import { authApi } from 'utils';
 
 export const getQuotationList = postObj => {
-  let customerId = postObj.customerId ? postObj.customerId.value : '';
-  let poReceiveDate = postObj.poExpiryDate ? postObj.poExpiryDate : '';
-  let poExpiryDate = postObj.poExpiryDate ? postObj.poExpiryDate : '';
-  let quatationNumber = postObj.quatationNumber ? postObj.quatationNumber : '';
-  let status = postObj.status ? postObj.status.value : '';
-  let pageNo = postObj?.pageNo ? postObj.pageNo : '';
-  let pageSize = postObj?.pageSize ? postObj.pageSize : '';
-  let order = postObj?.order ? postObj.order : '';
-  let sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
-  let paginationDisable = postObj?.paginationDisable ? postObj.paginationDisable : false;
+  const rawCustomerId = postObj.customerId ? (postObj.customerId.value ?? postObj.customerId) : '';
+  const customerId = rawCustomerId !== '' && rawCustomerId != null && !Number.isNaN(Number(rawCustomerId))
+    ? Number(rawCustomerId)
+    : '';
+  const quatationNumber = postObj.quatationNumber ? postObj.quatationNumber : '';
+  const status = postObj.status ? postObj.status.value : '';
+  const pageNo = postObj?.pageNo !== undefined && postObj?.pageNo !== '' ? postObj.pageNo : 0;
+  const pageSize = postObj?.pageSize !== undefined && postObj?.pageSize !== '' ? postObj.pageSize : 10;
+  const order = postObj?.order ? postObj.order : '';
+  const sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
+  const paginationDisable = postObj?.paginationDisable ? postObj.paginationDisable : false;
+
+  const params = new URLSearchParams();
+  if (customerId !== '') params.set('supplierId', String(customerId));
+  params.set('quatationNumber', quatationNumber);
+  params.set('status', status ?? '');
+  params.set('type', '6');
+  params.set('pageNo', String(pageNo));
+  params.set('pageSize', String(pageSize));
+  params.set('order', order);
+  params.set('sortingCol', sortingCol);
+  params.set('paginationDisable', String(paginationDisable));
 
   return dispatch => {
-    let param = `/rest/poquatation/getListForQuatation?supplierId=${customerId}&quatationNumber=${quatationNumber}&status=${status}&type=6&pageNo=${pageNo}&pageSize=${pageSize}&order=${order}&sortingCol=${sortingCol}&paginationDisable=${paginationDisable}`;
-
-    let data = {
-      method: 'get',
-      url: param,
-      // data: postObj
-    };
-    return authApi(data)
+    const url = `/rest/poquatation/getListForQuatation?${params.toString()}`;
+    return authApi({ method: 'get', url })
       .then(res => {
-        if (res.status === 200) {
-          if (!postObj.paginationDisable) {
-            dispatch({
-              type: QUOTATION.QUOTATION_LIST,
-              payload: res.data,
-            });
-          }
-          return res;
+        if (res.status === 200 && !postObj.paginationDisable) {
+          const payload = res.data != null ? res.data : { data: [], count: 0 };
+          dispatch({ type: QUOTATION.QUOTATION_LIST, payload });
         }
+        return res;
       })
       .catch(err => {
+        if (!postObj.paginationDisable) {
+          dispatch({ type: QUOTATION.QUOTATION_LIST, payload: { data: [], count: 0 } });
+        }
         throw err;
       });
   };

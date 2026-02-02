@@ -6,7 +6,7 @@ public enum QuotationFilterEnum {
 
     SUPPLIERID("supplierId", " = :supplierId"),
     PO_NUMBER("poNumber", " = :poNumber"),
-    QUOTATION_NUMBER("quatationNumber", " = :quatationNumber"),
+    QUOTATION_NUMBER("quotationNumber", " = :quotationNumber"),
     GRN_NUMBER("grnNumber", " = :grnNumber"),
     TYPE("type", " = :type "),
     STATUS("status", " = :status "),

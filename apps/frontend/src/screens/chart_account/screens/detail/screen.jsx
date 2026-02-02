@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -67,9 +68,9 @@ const DetailChartAccount = ({
   chartOfAccontActions,
   detailChartOfAccontActions,
   commonActions,
-  history,
-  location,
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [dialog, setDialog] = useState(null);
@@ -118,8 +119,8 @@ const DetailChartAccount = ({
   }, [chartOfAccontActions]);
 
   const initializeData = useCallback(() => {
-    const id = location.state?.id;
-    if (location.state && id) {
+    const id = location?.state?.id;
+    if (id) {
       detailChartOfAccontActions
         .getTransactionCategoryById(id)
         .then(res => {
@@ -146,8 +147,10 @@ const DetailChartAccount = ({
           );
           setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
-  }, [location.state, detailChartOfAccontActions, getSubTransactionTypes, commonActions, reset]);
+  }, [location?.state?.id, detailChartOfAccontActions, getSubTransactionTypes, commonActions, reset]);
 
   useEffect(() => {
     initializeData();
@@ -181,7 +184,7 @@ const DetailChartAccount = ({
 
   const removeChartAccount = () => {
     setDisabled1(true);
-    const id = location.state.id;
+    const id = coaId ?? location?.state?.id;
     setLoading(true);
     setLoadingMsg('Deleting Chart Of Account...');
     detailChartOfAccontActions
@@ -192,7 +195,7 @@ const DetailChartAccount = ({
             'success',
             res.data ? res.data.message : 'Chart Of Account Deleted Successfully'
           );
-          history.push('/admin/master/chart-account');
+          navigate('/admin/master/chart-account');
           setLoading(false);
         }
       })
@@ -246,7 +249,7 @@ const DetailChartAccount = ({
     setDisabled(true);
     setDisableLeavePage(true);
 
-    const id = location.state.id;
+    const id = coaId ?? location?.state?.id;
     const postData = {
       transactionCategoryName: data.transactionCategoryName,
       chartOfAccount: data.chartOfAccount.value,
@@ -267,7 +270,7 @@ const DetailChartAccount = ({
             'success',
             res.data ? res.data.message : 'Chart Of Account Updated Successfully'
           );
-          history.push('/admin/master/chart-account');
+          navigate('/admin/master/chart-account');
           setLoading(false);
         }
       })
@@ -293,6 +296,18 @@ const DetailChartAccount = ({
 
   if (loading) {
     return <Loader loadingMsg={loadingMsg} />;
+  }
+
+  const id = location?.state?.id ?? coaId;
+  if (!id) {
+    return (
+      <div className="chart-account-screen p-6">
+        <p className="text-muted">No chart of account selected.</p>
+        <Button color="primary" onClick={() => navigate('/admin/master/chart-account')}>
+          Back to Chart of Accounts
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -409,7 +424,7 @@ const DetailChartAccount = ({
                                 color="secondary"
                                 className="btn-square"
                                 onClick={() => {
-                                  history.push('/admin/master/chart-account');
+                                  navigate('/admin/master/chart-account');
                                 }}
                               >
                                 <Ban className="h-4 w-4" /> {strings.Cancel}

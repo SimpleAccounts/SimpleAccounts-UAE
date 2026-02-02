@@ -59,9 +59,23 @@ const Quatation = () => {
     initializeData();
   }, [language]);
 
+  // Use primitive deps to avoid loop when DataTable remounts after loading and calls setPagination/setSorting with same values
+  const pageIndex = pagination.pageIndex;
+  const pageSize = pagination.pageSize;
+  const sortId = sorting[0]?.id;
+  const sortDesc = sorting[0]?.desc;
+  const filterDeps = [
+    filterData.customerId,
+    filterData.referenceNumber,
+    filterData.invoiceDate,
+    filterData.invoiceDueDate,
+    filterData.amount,
+    filterData.status,
+    filterData.contactType,
+  ].join('|');
   useEffect(() => {
     initializeData();
-  }, [pagination, sorting, filterData]);
+  }, [pageIndex, pageSize, sortId, sortDesc, filterDeps]);
 
   const initializeData = () => {
     setLoading(true);
@@ -252,7 +266,7 @@ const Quatation = () => {
           return (
             <div className="text-right">
               <ActionDropdownButtons
-                history={{ push: navigate }} // Adapter for history
+                history={{ push: (path, state) => navigate(path, { state }) }} // Adapter: second arg becomes location.state (RR v6)
                 URL={'/admin/income/quotation'}
                 invoiceData={row.original}
                 postingRefType={'QUOTATION'}
@@ -367,11 +381,17 @@ const Quatation = () => {
                   </Row>
 
                   <DataTable
-                    data={quotation_list?.data?.data || []}
+                    data={Array.isArray(quotation_list) ? quotation_list : (quotation_list?.data ?? [])}
                     columns={columns}
                     manualPagination={true}
                     manualSorting={true}
-                    pageCount={quotation_list?.data?.totalPages || 0}
+                    pageCount={
+                      quotation_list?.totalPages ??
+                      quotation_list?.data?.totalPages ??
+                      (quotation_list?.count != null && pagination?.pageSize
+                        ? Math.ceil(Number(quotation_list.count) / pagination.pageSize)
+                        : 0)
+                    }
                     onPaginationChange={setPagination}
                     onSortingChange={setSorting}
                   />

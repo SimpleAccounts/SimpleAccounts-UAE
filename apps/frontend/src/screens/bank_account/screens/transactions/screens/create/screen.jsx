@@ -330,6 +330,11 @@ const CreateBankTransaction = () => {
     if (bankAccountId) {
       setId(bankAccountId);
 
+      // Preload expense-related dropdowns (categories, VAT %, vendors) so they are ready when user selects Expense
+      transactionActionsDispatch.getExpensesCategoriesList();
+      transactionActionsDispatch.getVendorList(bankAccountId);
+      transactionActionsDispatch.getVatList();
+
       detailBankAccountActionsDispatch
         .getBankAccountByID(bankAccountId)
         .then(res => {
@@ -541,9 +546,10 @@ const CreateBankTransaction = () => {
     };
     try {
       const res = await transactionActionsDispatch.getVendorInvoiceList(data);
-      setSupplierInvoiceListState(res.data);
+      setSupplierInvoiceListState(Array.isArray(res?.data) ? res.data : []);
     } catch (err) {
       console.error('Error getting vendor invoice list:', err);
+      setSupplierInvoiceListState([]);
     }
   };
 

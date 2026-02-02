@@ -120,6 +120,7 @@ public class ContactController {
 	 * Vendor list for bank transaction.
 	 * Returns suppliers with unpaid invoices. Falls back to all suppliers if bank not found or on error.
 	 */
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/getContactsForDropdownForVendor")
 	public ResponseEntity<Object> getContactsForDropdownForVendor(
@@ -154,7 +155,8 @@ public class ContactController {
 					contactModel.setContactName(name.trim().isEmpty() ? "Contact " + contact.getContactId() : name.trim());
 				}
 				contactModel.setContactId(contact.getContactId());
-				contactModel.setCurrency(contact.getCurrency());
+				// Avoid lazy-loaded Currency proxy causing LazyInitializationException during JSON serialization
+				contactModel.setCurrency(null);
 				dropdownModelList.add(new DropdownObjectModel(contact.getContactId(), contactModel));
 			}
 			return new ResponseEntity<>(dropdownModelList, HttpStatus.OK);

@@ -394,10 +394,8 @@ public class DataListController {
 					switch (payMode){
 
 						case CASH:
-							modelList.add(new  EnumDropdownModel(payMode.toString(), payMode.toString()));
-							break;
 						case BANK:
-							// BANK mode is commented out - not included in dropdown
+							modelList.add(new EnumDropdownModel(payMode.toString(), payMode.toString()));
 							break;
 						default:
 							// Unknown pay mode - no action needed
@@ -415,31 +413,25 @@ public class DataListController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getsubChartofAccount")
 	public ResponseEntity<Map<String, List<DropdownModel>>> getsubChartofAccount() {
+		Map<String, List<DropdownModel>> empty = new HashMap<>();
 		try {
-			// Check if the chartOf Account result is already cached.
 			Map<String, List<DropdownModel>> chartOfAccountMap = ChartOfAccountCacheService.getInstance()
 					.getChartOfAccountCacheMap();
 
 			if (chartOfAccountMap != null && !chartOfAccountMap.isEmpty()) {
-				// If cached return the result
 				return new ResponseEntity<>(chartOfAccountMap, HttpStatus.OK);
-			} else if (chartOfAccountMap != null && chartOfAccountMap.isEmpty()) {
-				// If result not cached read all the chart of accounts from the from db/
-				List<ChartOfAccount> chartOfAccountList = transactionTypeService.findAll();
-				// Process them to get the desired result.
-				chartOfAccountMap = ChartOfAccountCacheService.getInstance()
-						.loadChartOfAccountCacheMap(chartOfAccountList);
-
-				return new ResponseEntity<>(chartOfAccountMap, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-		} catch (Exception e) {
+			List<ChartOfAccount> chartOfAccountList = transactionTypeService.findAll();
+			Map<String, List<DropdownModel>> loaded = ChartOfAccountCacheService.getInstance()
+					.loadChartOfAccountCacheMap(chartOfAccountList != null ? chartOfAccountList : new ArrayList<>());
+			return new ResponseEntity<>(loaded != null && !loaded.isEmpty() ? loaded : empty, HttpStatus.OK);
+		} catch (Throwable e) {
 			logger.error(ERROR, e);
+			return new ResponseEntity<>(empty, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@LogRequest

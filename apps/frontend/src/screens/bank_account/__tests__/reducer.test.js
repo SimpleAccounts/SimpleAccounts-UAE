@@ -4,7 +4,7 @@ import { BANK_ACCOUNT } from 'constants/types';
 describe('BankAccountReducer', () => {
   const initialState = {
     bank_account_list: [],
-    bank_transaction_list: [],
+    bank_transaction_list: { data: [], count: 0 },
     account_type_list: [],
     currency_list: [],
     country_list: [],
@@ -16,6 +16,7 @@ describe('BankAccountReducer', () => {
     expense_categories_list: [],
     user_list: [],
     vendor_list: [],
+    customer_list: [],
     vat_list: [],
     reconcile_list: [],
     UnPaidPayrolls_List: [],
@@ -58,7 +59,7 @@ describe('BankAccountReducer', () => {
 
     const expectedState = {
       ...initialState,
-      bank_transaction_list: mockTransactions,
+      bank_transaction_list: { ...action.payload, data: [...mockTransactions] },
     };
 
     expect(BankAccountReducer(initialState, action)).toEqual(expectedState);

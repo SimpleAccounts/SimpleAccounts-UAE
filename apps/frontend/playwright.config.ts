@@ -16,7 +16,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',
-    headless: true,
+    headless: process.env.CI ? true : process.env.PLAYWRIGHT_HEADLESS === '1',
   },
   projects: [
     {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -31,6 +32,7 @@ import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Textarea } from '@/components/ui/textarea';
 import { BookUser, Upload, X, CircleDot, Ban } from 'lucide-react';
+import { toast } from 'sonner';
 
 const mapStateToProps = state => {
   return {
@@ -75,26 +77,32 @@ const supported_format = [
 
 // Zod validation schema
 const recordPaymentSchema = z.object({
-  receiptNo: z.string().optional(),
+  receiptNo: z.union([z.string(), z.number()]).optional(),
   receiptDate: z
     .union([z.string(), z.date()])
-    .refine(val => val !== '', { message: 'Payment date is required' }),
-  contactId: z.union([z.string(), z.number()]),
+    .refine(val => val != null && val !== '', { message: 'Payment date is required' }),
+  contactId: z
+    .union([z.string(), z.number()])
+    .refine(val => val != null && val !== '' && (typeof val !== 'number' || val > 0), {
+      message: 'Customer is required',
+    }),
   amount: z.union([z.string(), z.number()]).refine(
     val => {
-      const numVal = typeof val === 'string' ? parseFloat(val) : val;
-      return numVal > 0;
+      const numVal = typeof val === 'string' ? parseFloat(String(val).replace(/,/g, '')) : val;
+      return numVal != null && !Number.isNaN(numVal) && numVal > 0;
     },
     { message: 'Amount cannot be empty or 0' }
   ),
-  payMode: z
-    .object({ value: z.string(), label: z.string() })
-    .refine(val => val.value !== '', { message: 'Payment mode is required' }),
-  depositeTo: z
-    .object({ value: z.union([z.string(), z.number()]), label: z.string() })
-    .refine(val => val.value !== '', { message: 'Received through is required' }),
-  notes: z.string().optional(),
-  referenceCode: z.string().optional(),
+  payMode: z.any().refine(
+    val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '',
+    { message: 'Payment mode is required' }
+  ),
+  depositeTo: z.any().refine(
+    val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '',
+    { message: 'Received through is required' }
+  ),
+  notes: z.union([z.string(), z.number()]).optional(),
+  referenceCode: z.union([z.string(), z.number()]).optional(),
   attachmentFile: z
     .any()
     .refine(
@@ -115,6 +123,10 @@ const recordPaymentSchema = z.object({
 });
 
 const RecordCustomerPayment = props => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const invoiceData = location?.state?.id ?? null;
+
   const [language] = useState(window.localStorage.getItem('language'));
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState(null);
@@ -130,14 +142,48 @@ const RecordCustomerPayment = props => {
   const uploadFile = useRef(null);
   const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
-  const invoiceId = props.location.state.id.id;
-  const invoiceDate = new Date(
-    props.location.state.id.invoiceDate.substring(3, 5) +
-      ' ' +
-      props.location.state.id.invoiceDate.substring(0, 2) +
-      ' ' +
-      props.location.state.id.invoiceDate.substring(6)
-  );
+  // Normalize invoice data (with safe fallbacks when null - required for Rules of Hooks)
+  const inv = invoiceData
+    ? {
+        id: invoiceData.id,
+        invoiceNumber: invoiceData.invoiceNumber ?? invoiceData.referenceNumber,
+        invoiceDate: invoiceData.invoiceDate,
+        invoiceDueDate: invoiceData.invoiceDueDate,
+        invoiceAmount: invoiceData.invoiceAmount ?? invoiceData.totalAmount,
+        dueAmount:
+          invoiceData.dueAmount ??
+          invoiceData.remainingInvoiceAmount ??
+          invoiceData.invoiceAmount ??
+          invoiceData.totalAmount,
+        contactId:
+          invoiceData.contactId ??
+          invoiceData.contact?.contactId ??
+          invoiceData.contact?.contact_id ??
+          invoiceData.contact?.id,
+        renderURL: invoiceData.renderURL,
+        renderID: invoiceData.renderID ?? invoiceData.id,
+      }
+    : { id: null, invoiceNumber: '', invoiceDate: '', invoiceDueDate: '', invoiceAmount: 0, dueAmount: 0, contactId: null, renderURL: '', renderID: null };
+
+  const invoiceId = inv.id;
+
+  // Parse date - support DD-MM-YYYY, YYYY-MM-DD, and ISO
+  const parseInvoiceDate = str => {
+    const s = String(str || '').trim();
+    if (!s || s.length < 8) return new Date();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      return new Date(s);
+    }
+    if (/^\d{2}-\d{2}-\d{4}/.test(s)) {
+      const [d, m, y] = s.split('-');
+      return new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
+    }
+    return new Date(s) || new Date();
+  };
+  const invoiceDate = parseInvoiceDate(inv.invoiceDate);
+
+  const dueAmount = inv.dueAmount ?? 0;
+  const { deposit_list, pay_mode, customer_list } = props;
 
   const {
     control,
@@ -150,8 +196,8 @@ const RecordCustomerPayment = props => {
     defaultValues: {
       receiptNo: '',
       receiptDate: invoiceDate,
-      contactId: props.location.state.id.contactId,
-      amount: props.location.state.id.dueAmount,
+      contactId: inv.contactId ?? '',
+      amount: dueAmount,
       payMode: { label: 'CASH', value: 'CASH' },
       notes: '',
       depositeTo: { label: 'Petty Cash', value: 47 },
@@ -159,42 +205,69 @@ const RecordCustomerPayment = props => {
       attachmentFile: '',
       paidInvoiceListStr: [
         {
-          id: props.location.state.id.id,
-          date: dayjs(props.location.state.id.invoiceDate, 'DD-MM-YYYY').toDate(),
-          dueDate: dayjs(props.location.state.id.invoiceDueDate, 'DD-MM-YYYY').toDate(),
-          paidAmount: props.location.state.id.invoiceAmount,
-          dueAmount: props.location.state.id.dueAmount,
-          referenceNo: props.location.state.id.invoiceNumber,
-          totalAount: props.location.state.id.invoiceAmount,
+          id: inv.id,
+          date: parseInvoiceDate(inv.invoiceDate),
+          dueDate: parseInvoiceDate(inv.invoiceDueDate),
+          paidAmount: inv.invoiceAmount ?? inv.dueAmount ?? 0,
+          dueAmount,
+          referenceNo: inv.invoiceNumber ?? '',
+          totalAount: inv.invoiceAmount ?? inv.dueAmount ?? 0,
         },
       ],
     },
   });
 
   const amountValue = watch('amount');
-  const dueAmount = props.location.state.id.dueAmount;
 
   useEffect(() => {
-    initializeData();
+    if (!invoiceData) {
+      props.commonActions.tostifyAlert('error', 'Invoice data is missing. Please select an invoice and try again.');
+      navigate('/admin/income/customer-invoice');
+    }
+  }, [invoiceData, navigate, props.commonActions]);
+
+  useEffect(() => {
+    if (invoiceData && invoiceId) {
+      props.customerInvoiceActions.getDepositList();
+      props.customerInvoiceActions.getPaymentMode();
+      props.customerInvoiceActions.getCustomerList(contactType);
+      props.CustomerRecordPaymentActions.getReceiptNo(invoiceId).then(res => {
+        if (res?.status === 200) setValue('receiptNo', res.data, true);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [invoiceData, invoiceId]);
 
-  const initializeData = () => {
-    Promise.all([
-      props.customerInvoiceActions.getDepositList(),
-      props.customerInvoiceActions.getPaymentMode(),
-      props.customerInvoiceActions.getCustomerList(contactType),
-    ]);
-    getReceiptNo();
-  };
+  useEffect(() => {
+    if (inv.contactId != null && inv.contactId !== '') {
+      setValue('contactId', inv.contactId, { shouldValidate: false });
+    }
+  }, [inv.contactId, setValue]);
 
-  const getReceiptNo = () => {
-    props.CustomerRecordPaymentActions.getReceiptNo(invoiceId).then(res => {
-      if (res.status === 200) {
-        setValue('receiptNo', res.data, true);
+  useEffect(() => {
+    const list = Array.isArray(deposit_list) ? deposit_list : deposit_list?.data ?? [];
+    if (list.length > 0) {
+      let firstOpt = null;
+      for (const group of list) {
+        const opts = group?.options ?? (Array.isArray(group) ? group : []);
+        if (opts && opts.length > 0) {
+          firstOpt = opts[0];
+          break;
+        }
       }
-    });
-  };
+      if (firstOpt && (firstOpt.value != null || firstOpt.label)) {
+        const opt = {
+          value: firstOpt.value ?? firstOpt.id ?? firstOpt.label,
+          label: firstOpt.label ?? String(firstOpt.value ?? firstOpt.id ?? ''),
+        };
+        setValue('depositeTo', opt, { shouldValidate: false });
+      }
+    }
+  }, [deposit_list, setValue]);
+
+  if (!invoiceData) {
+    return <Loader />;
+  }
 
   const handleFileChange = e => {
     e.preventDefault();
@@ -215,30 +288,52 @@ const RecordCustomerPayment = props => {
     const { receiptNo, receiptDate, contactId, amount, depositeTo, payMode, notes, referenceCode } =
       formData;
 
+    const contactIdVal =
+      typeof contactId === 'object' && contactId != null && 'value' in contactId
+        ? contactId.value
+        : contactId;
+
+    const receiptDateVal =
+      typeof receiptDate === 'string'
+        ? dayjs(receiptDate, 'DD-MM-YYYY').toDate()
+        : receiptDate;
+    const receiptDateStr =
+      receiptDateVal instanceof Date
+        ? dayjs(receiptDateVal).format('DD-MM-YYYY')
+        : String(receiptDateVal);
+
     let submitData = new FormData();
-    submitData.append('receiptNo', receiptNo !== null ? receiptNo : '');
     submitData.append(
-      'receiptDate',
-      typeof receiptDate === 'string' ? dayjs(receiptDate, 'DD-MM-YYYY').toDate() : receiptDate
+      'receiptNo',
+      receiptNo != null && receiptNo !== '' ? String(receiptNo) : `RCP-${Date.now()}`
     );
+    submitData.append('receiptDate', receiptDateStr);
     submitData.append('paidInvoiceListStr', JSON.stringify(formData.paidInvoiceListStr));
     submitData.append(
       'invoiceNumber',
-      props.location.state.id.invoiceNumber
-        ? props.location.state.id.invoiceNumber
-        : 'Invoice-00000'
+      inv.invoiceNumber ? inv.invoiceNumber : 'Invoice-00000'
     );
     submitData.append(
       'invoiceAmount',
-      props.location.state.id.invoiceAmount ? props.location.state.id.invoiceAmount : '00000'
+      inv.invoiceAmount != null ? inv.invoiceAmount : '00000'
     );
-    submitData.append('amount', amount !== null ? amount : '');
+    const amountStr =
+      amount != null && amount !== ''
+        ? String(amount).replace(/,/g, '')
+        : '';
+    submitData.append('amount', amountStr);
     submitData.append('notes', notes !== null ? notes : '');
     submitData.append('referenceCode', referenceCode !== null ? referenceCode : '');
-    submitData.append('depositeTo', depositeTo !== null ? depositeTo.value : '');
-    submitData.append('payMode', payMode !== null ? payMode.value : '');
-    if (contactId) {
-      submitData.append('contactId', contactId);
+    submitData.append(
+      'depositeTo',
+      depositeTo != null && typeof depositeTo === 'object' ? depositeTo.value : depositeTo ?? ''
+    );
+    submitData.append(
+      'payMode',
+      payMode != null && typeof payMode === 'object' ? payMode.value : payMode ?? 'CASH'
+    );
+    if (contactIdVal != null && contactIdVal !== '') {
+      submitData.append('contactId', contactIdVal);
     }
     if (uploadFile.current?.files?.[0]) {
       submitData.append('attachmentFile', uploadFile.current.files[0]);
@@ -247,20 +342,18 @@ const RecordCustomerPayment = props => {
     setLoadingMsg('Payment Recording...');
     props.CustomerRecordPaymentActions.recordPayment(submitData)
       .then(res => {
-        props.commonActions.tostifyAlert(
-          'success',
-          res.data ? strings.PaymentRecordedSuccessfully : res.data.message
-        );
-        props.history.push('/admin/income/customer-invoice');
+        const msg = res?.data?.message ?? strings.PaymentRecordedSuccessfully ?? 'Payment recorded successfully';
+        toast.success(msg, { duration: 4000 });
+        props.commonActions.tostifyAlert('success', msg);
+        navigate('/admin/income/customer-invoice');
         setLoading(false);
       })
       .catch(err => {
         setDisabled(false);
         setLoading(false);
-        props.commonActions.tostifyAlert(
-          'error',
-          err && err.data ? err.data.message : 'Payment Recorded Unsuccessfully'
-        );
+        const errMsg = err?.data?.message ?? err?.response?.data?.message ?? 'Payment could not be recorded';
+        toast.error(errMsg, { duration: 5000 });
+        props.commonActions.tostifyAlert('error', errMsg);
       });
   };
 
@@ -316,7 +409,7 @@ const RecordCustomerPayment = props => {
             'success',
             res.data ? res.data.message : 'Invoice Deleted Successfully'
           );
-          props.history.push('/admin/income/customer-invoice');
+          navigate('/admin/income/customer-invoice');
         }
       })
       .catch(err => {
@@ -332,13 +425,13 @@ const RecordCustomerPayment = props => {
   };
 
   strings.setLanguage(language);
-  const { pay_mode, customer_list, deposit_list } = props;
 
   let tmpcustomer_list = [];
-  customer_list.map(item => {
-    let obj = { label: item.label.contactName, value: item.value };
-    tmpcustomer_list.push(obj);
-    return obj;
+  (customer_list || []).forEach(item => {
+    const label = item?.label?.contactName ?? item?.label ?? (item?.value != null ? String(item.value) : '');
+    if (item?.value != null) {
+      tmpcustomer_list.push({ label, value: item.value });
+    }
   });
 
   // Custom validation for amount
@@ -373,7 +466,17 @@ const RecordCustomerPayment = props => {
                   ) : (
                     <Row>
                       <Col lg={12}>
-                        <Form onSubmit={handleSubmit(onSubmit)}>
+                        <Form
+                          noValidate
+                          onSubmit={handleSubmit(onSubmit, errors => {
+                            const firstError =
+                              errors && Object.keys(errors).length > 0
+                                ? Object.values(errors)[0]?.message || 'Please fill all mandatory fields'
+                                : 'Please fill all mandatory fields';
+                            toast.error(firstError, { duration: 5000 });
+                            props.commonActions.tostifyAlert('error', firstError);
+                          })}
+                        >
                           <Row>
                             <Col lg={4}>
                               <FormGroup className="mb-3">
@@ -384,26 +487,30 @@ const RecordCustomerPayment = props => {
                                 <Controller
                                   name="contactId"
                                   control={control}
-                                  render={({ field }) => (
+                                  render={({ field }) => {
+                                    const option =
+                                      tmpcustomer_list?.find(o => String(o.value) === String(field.value)) ||
+                                      (field.value != null && field.value !== ''
+                                        ? { value: field.value, label: String(field.value) }
+                                        : null);
+                                    return (
                                     <Select
-                                      {...field}
+                                      ref={field.ref}
+                                      value={option}
+                                      onChange={e => field.onChange(e?.value ?? e)}
+                                      onBlur={field.onBlur}
+                                      options={tmpcustomer_list || []}
                                       styles={customStyles}
                                       id="contactId"
                                       isDisabled
-                                      value={
-                                        tmpcustomer_list &&
-                                        tmpcustomer_list.find(
-                                          option =>
-                                            option.value === +props.location.state.id.contactId
-                                        )
-                                      }
                                       className={
                                         errors.contactId && touchedFields.contactId
                                           ? 'is-invalid'
                                           : ''
                                       }
                                     />
-                                  )}
+                                    );
+                                  }}
                                 />
                                 {errors.contactId && touchedFields.contactId && (
                                   <div className="invalid-feedback">{errors.contactId.message}</div>
@@ -680,6 +787,23 @@ const RecordCustomerPayment = props => {
                               </FormGroup>
                             </Col>
                           </Row>
+                          {Object.keys(errors).length > 0 && (
+                            <Row>
+                              <Col lg={12}>
+                                <div
+                                  className="alert alert-danger mb-3"
+                                  role="alert"
+                                >
+                                  <strong>Please fix the following:</strong>
+                                  <ul className="mb-0 mt-2">
+                                    {Object.entries(errors).map(([key, err]) => (
+                                      <li key={key}>{err?.message}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </Col>
+                            </Row>
+                          )}
                           <Row>
                             <Col
                               lg={12}
@@ -691,10 +815,6 @@ const RecordCustomerPayment = props => {
                                   color="primary"
                                   className="btn-square mr-3"
                                   disabled={disabled}
-                                  onClick={() => {
-                                    if (errors && Object.keys(errors).length !== 0)
-                                      props.commonActions.fillManDatoryDetails();
-                                  }}
                                 >
                                   <CircleDot className="h-4 w-4" />{' '}
                                   {disabled ? 'Recording...' : strings.RecordPayment}
@@ -703,12 +823,13 @@ const RecordCustomerPayment = props => {
                                   color="secondary"
                                   className="btn-square"
                                   onClick={() => {
-                                    if (props?.location?.state?.id?.renderURL) {
-                                      props.history.push(
-                                        `${props?.location?.state?.id?.renderURL}`,
-                                        { id: props?.location?.state?.id.renderID }
-                                      );
-                                    } else props.history.push('/admin/income/customer-invoice');
+                                    if (inv?.renderURL) {
+                                      navigate(inv.renderURL, {
+                                        state: { id: inv.renderID },
+                                      });
+                                    } else {
+                                      navigate('/admin/income/customer-invoice');
+                                    }
                                   }}
                                 >
                                   <Ban className="h-4 w-4" /> {strings.Cancel}

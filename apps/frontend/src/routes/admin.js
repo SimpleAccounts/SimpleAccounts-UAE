@@ -373,7 +373,7 @@ const adminRoutes = [
   },
   Config.INCOME_IR && {
     path: 'income/receipt/detail',
-    name: 'Detail',
+    name: 'Customer Receipts',
     component: DetailReceipt.screen,
   },
   Config.INCOME_IR && {

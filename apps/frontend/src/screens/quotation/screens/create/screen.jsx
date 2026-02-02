@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -87,6 +88,7 @@ const createQuotationSchema = z
     quotation_Number: z.string().min(1, 'Quotation number is required'),
     customerId: z.union([
       z.string().min(1, 'Customer name is required'),
+      z.number(),
       z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
     ]),
     quotationdate: z.union([z.string(), z.date()]).refine(val => val !== '', {
@@ -97,7 +99,8 @@ const createQuotationSchema = z
     }),
     currencyCode: z.union([
       z.string().min(1, 'Currency is required'),
-      z.object({ value: z.string(), label: z.string() }),
+      z.number(),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
     ]),
     placeOfSupplyId: z
       .union([z.string(), z.object({ value: z.string(), label: z.string() })])
@@ -176,6 +179,7 @@ const CreateQuotation = ({
   quotationCreateAction,
   ProductActions,
   commonActions,
+  customerInvoiceActions,
   currency_list_dropdown,
   vat_list,
   product_list,
@@ -186,9 +190,9 @@ const CreateQuotation = ({
   universal_currency_list,
   currency_convert_list,
   companyDetails,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [disabled, setDisabled] = useState(false);
@@ -370,6 +374,7 @@ const CreateQuotation = ({
 
   const getInitialData = async () => {
     getQuotationNo();
+    await requestForQuotationAction.getContactList(2); // Load customer list (contactType=2)
     await requestForQuotationAction.getSupplierList(contactType);
     await requestForQuotationAction.getCountryList();
     await requestForQuotationAction.getExciseList();
@@ -379,7 +384,7 @@ const CreateQuotation = ({
       setPrefixData(response.data);
     });
     await requestForQuotationAction.getVatList();
-    await requestForQuotationAction
+    await customerInvoiceActions
       .getTaxTreatment()
       .then(res => {
         if (res.status === 200) {
@@ -406,15 +411,15 @@ const CreateQuotation = ({
       setCompanyVATRegistrationDate(new Date(dayjs(vatRegistrationDate)));
       setIsDesignatedZone(desZone);
       setIsRegisteredVat(regVat);
-      setLoading(false);
     }
 
-    if (location.state && location.state.parentId) {
+    if (location?.state && location.state.parentId) {
       setParentId(location.state.parentId);
       getParentQuotationDetails(location.state.parentId);
     }
 
     getDefaultNotes();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -441,8 +446,9 @@ const CreateQuotation = ({
   };
 
   const getTaxTreatment = e => {
-    let taxTreatmentIdValue = '';
-    taxTreatmentIdValue = e.taxTreatment;
+    if (e == null) return '';
+    const taxTreatmentIdValue = e?.taxTreatment ?? '';
+    const contactId = e?.id ?? e?.value ?? e?.contactId;
     setTaxTreatmentId(taxTreatmentIdValue);
     setEnablePlaceOfSupply(
       !!(
@@ -452,8 +458,7 @@ const CreateQuotation = ({
       )
     );
     setValue('taxTreatmentId', taxTreatmentIdValue, { shouldValidate: true });
-
-    getContactShippingAddress(e.id, taxTreatmentIdValue);
+    if (contactId != null) getContactShippingAddress(contactId, taxTreatmentIdValue);
     return taxTreatmentIdValue;
   };
 
@@ -641,7 +646,7 @@ const CreateQuotation = ({
     );
     postFormData.append('notes', formData.notes !== null ? formData.notes : '');
     postFormData.append('footNote', formData.footNote ? formData.footNote : '');
-    postFormData.append('type', 2);
+    postFormData.append('type', 6); // 6 = Customer Quotation (list fetches type=6)
 
     const local = data.map(({ taxtreatment, vat_list: vatListItem, ...rest }) => rest);
     postFormData.append('lineItemsString', JSON.stringify(local));
@@ -677,7 +682,7 @@ const CreateQuotation = ({
         setLoading(false);
         commonActions.tostifyAlert(
           'success',
-          res.data ? strings.QuotationCreatedSuccessfully : res.data.message
+          (res?.data?.message != null ? res.data.message : strings.QuotationCreatedSuccessfully) || strings.QuotationCreatedSuccessfully
         );
 
         if (createMore) {
@@ -721,7 +726,7 @@ const CreateQuotation = ({
           getQuotationNo();
           setValue('lineItemsString', data, { shouldValidate: false });
         } else {
-          history.push('/admin/income/quotation');
+          navigate('/admin/income/quotation');
           setLoading(false);
         }
       })
@@ -803,10 +808,11 @@ const CreateQuotation = ({
 
   const setContactDetails = customerID => {
     setValue('customerId', customerID, { shouldValidate: true });
-    const customer = customer_list_dropdown.find(obj => obj.value === customerID);
-    if (customer) {
-      const currencyCode = customer.label.currency.currencyCode;
-      const taxTreatment = customer.label.taxTreatment.taxTreatment;
+    const customer = customer_list_dropdown?.find(obj => obj.value === customerID);
+    const labelObj = customer?.label != null && typeof customer.label === 'object' ? customer.label : null;
+    if (labelObj && (labelObj.currency != null || labelObj.taxTreatment != null)) {
+      const currencyCode = labelObj.currency?.currencyCode;
+      const taxTreatment = labelObj.taxTreatment?.taxTreatment ?? '';
       setContactId(customerID);
       setTaxTreatmentId(taxTreatment);
       setEnablePlaceOfSupply(
@@ -819,6 +825,29 @@ const CreateQuotation = ({
       setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
       setCurrency(currencyCode);
       getContactShippingAddress(customerID, taxTreatment);
+      return;
+    }
+    if (customerID != null) {
+      quotationCreateAction.getCustomerShippingAddressbyID(customerID).then(res => {
+        if (res?.status === 200 && res?.data) {
+          const c = res.data;
+          const taxTreatment = c?.taxTreatment?.taxTreatment ?? '';
+          setContactId(customerID);
+          setTaxTreatmentId(taxTreatment);
+          setEnablePlaceOfSupply(
+            !!(
+              taxTreatment !== 'GCC VAT REGISTERED' &&
+              taxTreatment !== 'GCC NON-VAT REGISTERED' &&
+              taxTreatment !== 'NON GCC'
+            )
+          );
+          setValue('taxTreatmentId', taxTreatment, { shouldValidate: true });
+          setCurrency(c?.currency?.currencyCode);
+          getContactShippingAddress(customerID, taxTreatment);
+        }
+      }).catch(() => {
+        setValue('taxTreatmentId', '', { shouldValidate: true });
+      });
     } else {
       setValue('taxTreatmentId', '', { shouldValidate: true });
     }
@@ -850,7 +879,8 @@ const CreateQuotation = ({
                 <CardBody>
                   <Row>
                     <Col lg={12}>
-                      <Form onSubmit={handleSubmit(onSubmit)}>
+                      <FormProvider {...form}>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
                         <Row>
                           <Col lg={3}>
                             <FormGroup className="mb-3">
@@ -1313,11 +1343,11 @@ const CreateQuotation = ({
                                 className="btn-square"
                                 onClick={() => {
                                   if (location?.state?.renderURL) {
-                                    history.push(`${location?.state?.renderURL}`, {
-                                      id: location?.state?.renderID,
+                                    navigate(location?.state?.renderURL, {
+                                      state: { id: location?.state?.renderID },
                                     });
                                   } else {
-                                    history.push('/admin/income/quotation');
+                                    navigate('/admin/income/quotation');
                                   }
                                 }}
                               >
@@ -1328,6 +1358,7 @@ const CreateQuotation = ({
                           </Col>
                         </Row>
                       </Form>
+                      </FormProvider>
                     </Col>
                   </Row>
                 </CardBody>

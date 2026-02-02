@@ -164,10 +164,13 @@ function ProductCategory() {
     []
   );
 
-  // Transform data for table
+  // Transform data for table (reducer stores array with .count when API returns { data, count })
   const tableData = useMemo(() => {
-    if (!product_category_list?.data) return [];
-    return product_category_list.data.map(item => ({
+    const data = Array.isArray(product_category_list)
+      ? product_category_list
+      : product_category_list?.data || [];
+    if (!data.length && !product_category_list) return [];
+    return data.map(item => ({
       id: item.id,
       productCategoryCode: item.productCategoryCode || '',
       productCategoryName: item.productCategoryName || '',

@@ -560,6 +560,7 @@ PoQuatationController {
     }
     
     @LogRequest
+    @Transactional(readOnly = true)
     @GetMapping(value = "/getQuotationById")
     public ResponseEntity<PoQuatationRequestModel> getQuotationById(@RequestParam(value = "id") Integer id) {
         PoQuatation poQuatation = poQuatationService.findByPK(id);
@@ -573,18 +574,33 @@ PoQuatationController {
 
     //getList for quatation
     @LogRequest
+    @Transactional(readOnly = true)
     @GetMapping(value = "/getListForQuatation")
     public ResponseEntity<PaginationResponseModel> getListForQuatation(PORequestFilterModel filterModel,
                                                                  HttpServletRequest request) {
         try {
+            // #region agent log
+            logger.info("DEBUG_QUOTATION_FILTER: Entry - supplierId={}, type={}, pageNo={}, pageSize={}", 
+                filterModel.getSupplierId(), filterModel.getType(), filterModel.getPageNo(), filterModel.getPageSize());
+            // #endregion
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
             User user = userService.findByPK(userId);
+            if (user == null) {
+                return new ResponseEntity<>(new PaginationResponseModel(0, new ArrayList<>()), HttpStatus.OK);
+            }
             Map<QuotationFilterEnum, Object> filterDataMap = new EnumMap<>(QuotationFilterEnum.class);
-            if(user.getRole().getRoleCode()!=1) {
+            if (user.getRole() != null && user.getRole().getRoleCode() != null && user.getRole().getRoleCode() != 1) {
                 filterDataMap.put(QuotationFilterEnum.USER_ID, userId);
             }
             if (filterModel.getSupplierId() != null) {
-                filterDataMap.put(QuotationFilterEnum.SUPPLIERID, contactService.findByPK(filterModel.getSupplierId()));
+                // #region agent log
+                Contact contact = contactService.findByPK(filterModel.getSupplierId());
+                logger.info("DEBUG_QUOTATION_FILTER: Contact found - id={}, name={}, type={}", 
+                    contact != null ? contact.getContactId() : null, 
+                    contact != null ? contact.getFirstName() : null,
+                    contact != null ? contact.getContactType() : null);
+                // #endregion
+                filterDataMap.put(QuotationFilterEnum.SUPPLIERID, contact);
             }
             filterDataMap.put(QuotationFilterEnum.QUOTATION_NUMBER, filterModel.getQuatationNumber());
             filterDataMap.put(QuotationFilterEnum.STATUS, filterModel.getStatus());
@@ -593,39 +609,53 @@ PoQuatationController {
             filterDataMap.put(QuotationFilterEnum.TYPE, filterModel.getType());
             PaginationResponseModel responseModel = poQuatationService.getQuotationList(filterDataMap, filterModel);
             if (responseModel == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                responseModel = new PaginationResponseModel(0, new ArrayList<>());
             }
             responseModel.setData(poQuatationRestHelper.getQuotationListModel(responseModel.getData()));
             return new ResponseEntity<>(responseModel, HttpStatus.OK);
         } catch (Exception e) {
+            // #region agent log
+            logger.error("DEBUG_QUOTATION_FILTER: Exception - message={}, type={}, supplierId={}", 
+                e.getMessage(), e.getClass().getSimpleName(), filterModel.getSupplierId(), e);
+            // #endregion
             logger.error(ERROR, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @LogRequest
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping(value = "/sendQuotation")
     public ResponseEntity<Object> sendQuotation(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
         try {
+            if (postingRequestModel == null || postingRequestModel.getPostingRefId() == null) {
+                return new ResponseEntity<>(new SimpleAccountsMessage("", MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true), HttpStatus.BAD_REQUEST);
+            }
             Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
+            Integer refId = postingRequestModel.getPostingRefId();
 
-	            if (!Boolean.TRUE.equals(postingRequestModel.getMarkAsSent())){
-	                poQuatationRestHelper.sendQuotation(poQuatationService.findByPK(postingRequestModel.getPostingRefId()), userId,postingRequestModel,request);
-	            }
-            PoQuatation poQuatation=poQuatationService.findByPK(postingRequestModel.getPostingRefId());
-            if(poQuatation.getStatus() != 3){
+            if (!Boolean.TRUE.equals(postingRequestModel.getMarkAsSent())) {
+                PoQuatation toSend = poQuatationService.findByPK(refId);
+                if (toSend != null) {
+                    poQuatationRestHelper.sendQuotation(toSend, userId, postingRequestModel, request);
+                }
+            }
+            PoQuatation poQuatation = poQuatationService.findByPK(refId);
+            if (poQuatation == null) {
+                return new ResponseEntity<>(new SimpleAccountsMessage("", MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true), HttpStatus.NOT_FOUND);
+            }
+            if (poQuatation.getStatus() != null && poQuatation.getStatus() != 3) {
                 poQuatation.setStatus(CommonStatusEnum.POST.getValue());
                 poQuatationService.update(poQuatation);
             }
-            SimpleAccountsMessage message = null;
-            message = new SimpleAccountsMessage("0064",
+            SimpleAccountsMessage message = new SimpleAccountsMessage("0064",
                     MessageUtil.getMessage("quotation.sent.successful.msg.0064"), false);
-            return new ResponseEntity<>(message,HttpStatus.OK);
+            return new ResponseEntity<>(message, HttpStatus.OK);
         } catch (Exception e) {
-            SimpleAccountsMessage message= null;
-            message = new SimpleAccountsMessage("",
+            logger.error("sendQuotation failed", e);
+            SimpleAccountsMessage message = new SimpleAccountsMessage("",
                     MessageUtil.getMessage(MSG_SENT_UNSUCCESSFUL), true);
-            return new ResponseEntity<>( message,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

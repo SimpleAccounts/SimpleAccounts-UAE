@@ -149,10 +149,10 @@ function ChartAccount() {
     }));
   }, []);
 
-  // Navigate to detail
+  // Navigate to detail (allow navigation even if not editable - user can view)
   const goToDetailPage = useCallback(
     row => {
-      if (row.editableFlag) {
+      if (row.transactionCategoryId != null) {
         navigate('/admin/master/chart-account/detail', {
           state: { id: row.transactionCategoryId },
         });
@@ -354,8 +354,11 @@ function ChartAccount() {
 
   // Transform data for table
   const tableData = useMemo(() => {
-    if (!transaction_category_list?.data) return [];
-    return transaction_category_list.data.map(item => ({
+    const data = Array.isArray(transaction_category_list)
+      ? transaction_category_list
+      : transaction_category_list?.data ?? [];
+    if (!data.length && !transaction_category_list) return [];
+    return data.map(item => ({
       transactionCategoryId: item.transactionCategoryId,
       transactionCategoryCode: item.transactionCategoryCode || '',
       transactionCategoryName: item.transactionCategoryName || '',
@@ -460,8 +463,8 @@ function ChartAccount() {
                 style={selectStyle}
               >
                 <option value="">Filter by Account Type</option>
-                {transaction_type_list?.map(type => (
-                  <option key={type.id} value={type.id}>
+                {transaction_type_list?.map((type, index) => (
+                  <option key={type.id ?? type.transactionTypeId ?? index} value={type.id ?? type.transactionTypeId ?? ''}>
                     {type.transactionTypeName}
                   </option>
                 ))}

@@ -96,11 +96,16 @@ const RequestForQuotationReducer = (state = initState, action) => {
         country_list: getArray(payload),
       };
 
-    case QUOTATION.QUOTATION_LIST:
-      return {
-        ...state,
-        quotation_list: getArray(payload),
-      };
+    case QUOTATION.QUOTATION_LIST: {
+      // Backend returns { data: [...], count, totalRecords }; preserve full payload so list and pagination work
+      if (payload != null && Array.isArray(payload.data)) {
+        return { ...state, quotation_list: { ...payload, data: [...payload.data] } };
+      }
+      if (Array.isArray(payload)) {
+        return { ...state, quotation_list: payload };
+      }
+      return { ...state, quotation_list: [] };
+    }
     default:
       return state;
   }

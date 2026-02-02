@@ -99,14 +99,20 @@ function Product() {
       });
   }, [productActions, commonActions, filterData, pagination, sorting]);
 
+  // Load VAT categories once on mount
   useEffect(() => {
     productActions.getProductVatCategoryList();
-    initializeData();
-  }, []);
+  }, [productActions]);
 
+  // Single data fetch: run on mount and when pagination/sorting change (primitives only to avoid loop)
+  const pageIndex = pagination.pageIndex;
+  const pageSize = pagination.pageSize;
+  const sortId = sorting[0]?.id;
+  const sortDesc = sorting[0]?.desc;
   useEffect(() => {
     initializeData();
-  }, [pagination, sorting]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only refetch when pagination/sort change; initializeData is stable enough
+  }, [pageIndex, pageSize, sortId, sortDesc]);
 
   // Navigate to detail
   const goToDetail = useCallback(
@@ -253,10 +259,13 @@ function Product() {
     [navigate, getCurrencySymbol]
   );
 
-  // Transform data for table
+  // Transform data for table (reducer may store { data, count } or array)
   const tableData = useMemo(() => {
-    if (!product_list?.data) return [];
-    return product_list.data.map(product => ({
+    const data = Array.isArray(product_list)
+      ? product_list
+      : product_list?.data ?? [];
+    if (!data.length && !product_list) return [];
+    return data.map(product => ({
       id: product.id,
       productCode: product.productCode || '',
       name: product.name || '',
@@ -270,12 +279,9 @@ function Product() {
     }));
   }, [product_list]);
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <div className="product-screen" style={{ background: theme.bg, minHeight: '100%' }}>
+
       {dialog}
 
       {/* Page Header Card */}
@@ -324,13 +330,21 @@ function Product() {
 
       {/* Filters & Table Card */}
       <div
-        className="rounded-xl overflow-hidden"
+        className="rounded-xl overflow-hidden relative"
         style={{
           background: theme.bgWhite,
           border: `1px solid ${theme.border}`,
           boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
+        {loading && (
+          <div
+            className="absolute inset-0 flex items-center justify-center z-10 rounded-xl pointer-events-none"
+            style={{ background: 'rgba(255,255,255,0.8)' }}
+          >
+            <Loader />
+          </div>
+        )}
         {/* Filters Section */}
         <div className="p-6 border-b" style={{ borderColor: theme.border }}>
           <h5 className="text-sm font-semibold mb-4" style={{ color: theme.textPrimary }}>

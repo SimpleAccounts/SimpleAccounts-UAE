@@ -90,7 +90,11 @@ public class PaymentRestHelper {
 		}
 		payment.setInvoiceAmount(paymentModel.getAmount());
 		payment.setPayMode(paymentModel.getPayMode());
-		payment.setDepositeToTransactionCategory(transactionCategoryService.findByPK(paymentModel.getDepositeTo()));
+		if (paymentModel.getDepositeTo() != null) {
+			payment.setDepositeToTransactionCategory(transactionCategoryService.findByPK(paymentModel.getDepositeTo()));
+		} else {
+			payment.setDepositeToTransactionCategory(null);
+		}
 		payment.setNotes(paymentModel.getNotes());
 		if (paymentModel.getAttachmentFile() != null && !paymentModel.getAttachmentFile().isEmpty()) {
 			String filePath = fileHelper.saveFile(paymentModel.getAttachmentFile(), FileTypeEnum.PAYMENT);

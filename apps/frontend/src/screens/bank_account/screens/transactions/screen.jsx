@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
@@ -30,7 +30,12 @@ let strings = new LocalizedStrings(data);
 function BankTransactions() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
+
+  // Support bankId from URL query (e.g. E2E: /admin/banking/bank-account/transaction?bankId=123)
+  const bankAccountId =
+    location.state?.bankAccountId ?? (searchParams.get('bankId') ? Number(searchParams.get('bankId')) : null);
 
   // Redux state
   const bank_transaction_list = useSelector(state => state.bank_account.bank_transaction_list);
@@ -87,9 +92,9 @@ function BankTransactions() {
   }, [language]);
 
   const getnewbackdetails = useCallback(() => {
-    if (location.state && location.state.bankAccountId) {
+    if (bankAccountId) {
       detailBankAccountActionsObj
-        .getBankAccountByID(location.state.bankAccountId)
+        .getBankAccountByID(bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
@@ -110,18 +115,18 @@ function BankTransactions() {
       transactionsActions.getTransactionTypeList();
       initializeData();
     }
-  }, [location.state]);
+  }, [bankAccountId]);
 
   const initializeData = useCallback(() => {
     const data = {
       pageNo: pagination.pageIndex,
       pageSize: pagination.pageSize,
     };
-    if (location.state && location.state.bankAccountId) {
+    if (bankAccountId) {
       const postData = {
         ...filterData,
         ...data,
-        id: location.state.bankAccountId,
+        id: bankAccountId,
         transactionType: transactionType,
       };
       transactionsActions
@@ -151,7 +156,7 @@ function BankTransactions() {
     }
   }, [
     filterData,
-    location.state,
+    bankAccountId,
     pagination,
     transactionType,
     transactionsActions,
@@ -160,9 +165,9 @@ function BankTransactions() {
   ]);
 
   useEffect(() => {
-    if (location.state && location.state.bankAccountId) {
+    if (bankAccountId) {
       detailBankAccountActionsObj
-        .getBankAccountByID(location.state.bankAccountId)
+        .getBankAccountByID(bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
@@ -189,10 +194,10 @@ function BankTransactions() {
       transactionsActions.getTransactionTypeList();
       initializeData();
     } else {
-      // If no bankAccountId in state, redirect to bank accounts list
+      // If no bankAccountId in state or URL, redirect to bank accounts list
       navigate('/admin/banking/bank-account');
     }
-  }, [location.state?.bankAccountId]);
+  }, [bankAccountId]);
 
   useEffect(() => {
     initializeData();
@@ -505,17 +510,14 @@ function BankTransactions() {
                     </div>
                   </div>
                   <div className="d-flex justify-content-end">
-                    {location.state && location.state.bankAccountId !== 1001 && (
+                    {bankAccountId != null && bankAccountId !== 1001 && (
                       <div className="inline-flex rounded-md" role="group">
                         <Button
                           color="info"
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/upload-statement', {
-                              bankAccountId:
-                                location.state && location.state.bankAccountId
-                                  ? location.state.bankAccountId
-                                  : '',
+                              bankAccountId: bankAccountId ?? '',
                             })
                           }
                         >
@@ -532,10 +534,7 @@ function BankTransactions() {
                             onClick={() =>
                               navigate('/admin/banking/bank-account/detail', {
                                 state: {
-                                  bankAccountId:
-                                    location.state && location.state.bankAccountId
-                                      ? location.state.bankAccountId
-                                      : '',
+                                  bankAccountId: bankAccountId ?? '',
                                 },
                               })
                             }
@@ -550,10 +549,7 @@ function BankTransactions() {
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/bank-account/transaction/reconcile', {
-                              bankAccountId:
-                                location.state && location.state.bankAccountId
-                                  ? location.state.bankAccountId
-                                  : '',
+                              bankAccountId: bankAccountId ?? '',
                             })
                           }
                         >
@@ -583,12 +579,10 @@ function BankTransactions() {
                       variant="default"
                       className="btn-square"
                       onClick={() => {
-                        const bankAccountId = location.state && location.state.bankAccountId
-                          ? location.state.bankAccountId
-                          : '';
-                        navigate(`/admin/banking/bank-account/transaction/create?bankId=${bankAccountId}`, {
+                        const navBankAccountId = bankAccountId ?? '';
+                        navigate(`/admin/banking/bank-account/transaction/create?bankId=${navBankAccountId}`, {
                           state: {
-                            bankAccountId: bankAccountId,
+                            bankAccountId: navBankAccountId,
                             currency: location.state?.currency,
                             isRegisteredVat: location.state?.isRegisteredVat,
                           },
@@ -601,7 +595,7 @@ function BankTransactions() {
                   </div>
                   <div>
                     <DataTable
-                      key={location.state?.bankAccountId ? `${location.state.bankAccountId}-${transactionType}` : 'transactions'}
+                      key={bankAccountId != null ? `${bankAccountId}-${transactionType}` : 'transactions'}
                       columns={columns}
                       data={bank_transaction_list.data || []}
                       manualPagination={true}

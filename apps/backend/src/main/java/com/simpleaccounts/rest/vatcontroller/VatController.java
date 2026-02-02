@@ -21,6 +21,7 @@ import com.simpleaccounts.utils.MessageUtil;
 import com.simpleaccounts.utils.SimpleAccountsMessage;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -75,14 +76,15 @@ public class VatController{
 		filterDataMap.put(VatCategoryFilterEnum.DELETE_FLAG, false);
 
 		PaginationResponseModel respone = vatCategoryService.getVatCategoryList(filterDataMap, filterModel);
-		if (respone != null) {
-			List<VatCategoryModel> vatCatModelList =	vatCategoryRestHelper.getList(respone.getData());
-			respone.setData(vatCatModelList);
-			respone.setCount(vatCatModelList.size());
+		if (respone != null && respone.getData() != null) {
+			List<VatCategoryModel> vatCatModelList = vatCategoryRestHelper.getList(respone.getData());
+			respone.setData(vatCatModelList != null ? vatCatModelList : new ArrayList<>());
+			respone.setCount(respone.getData() != null ? ((List<?>) respone.getData()).size() : 0);
 			return new ResponseEntity<>(respone, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		// Return 200 with empty list so frontend can populate dropdown (no 404)
+		PaginationResponseModel empty = new PaginationResponseModel(0, new ArrayList<>());
+		return new ResponseEntity<>(empty, HttpStatus.OK);
 
 	}
 
