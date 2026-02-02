@@ -134,7 +134,7 @@ const ExpenseReducer = (state = initState, action) => {
       };
     }
 
-    case EXPENSE.USER_LIST:
+    case EXPENSE.USER_LIST: {
       let userList = payload;
       if (userList && userList[0] && userList[0].label) {
         // Create a new array instead of mutating the payload
@@ -146,6 +146,7 @@ const ExpenseReducer = (state = initState, action) => {
         ...state,
         user_list: getArray(userList),
       };
+    }
     case EXPENSE.PAY_TO_LIST: {
       let list = payload;
       if (Array.isArray(list)) {

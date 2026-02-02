@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,15 +22,12 @@ import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
 import {
   ArrowUpDown,
-  Copy,
   Eye,
-  File,
   MoreVertical,
   Pencil,
   Plus,
   RefreshCw,
   Search,
-  Send,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

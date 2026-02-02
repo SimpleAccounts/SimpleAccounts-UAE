@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Row, Col } from 'components/migration';
 import * as ExpenseDetailsAction from '../detail/actions';
 import * as ExpenseActions from '../../actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
-import { CommonActions } from 'services/global';
 import './style.scss';
 import { ExpenseTemplate } from './sections/';
 import ActionButtons from 'components/view_actions_buttons';
 import { InvoiceViewJournalEntries } from 'components';
 import { StatusActionList } from 'utils';
-import { FileText, Printer, X } from 'lucide-react';
+import { Printer, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const ViewExpense = () => {

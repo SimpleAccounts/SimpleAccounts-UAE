@@ -190,7 +190,8 @@ const RecordCustomerPayment = props => {
       const [d, m, y] = s.split('-');
       return new Date(parseInt(y, 10), parseInt(m, 10) - 1, parseInt(d, 10));
     }
-    return new Date(s) || new Date();
+    const d = new Date(s);
+    return Number.isNaN(d.getTime()) ? new Date() : d;
   };
   const invoiceDate = parseInvoiceDate(inv.invoiceDate);
 
