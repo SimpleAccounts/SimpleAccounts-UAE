@@ -25,6 +25,19 @@ const initState = {
 };
 
 const CommonReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
@@ -36,7 +49,7 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.COMPANY_CURRENCY:
       return {
         ...state,
-        companyCurrency: Object.assign([], payload),
+        companyCurrency: getArray(payload),
       };
 
     case COMMON.END_LOADING:
@@ -48,7 +61,7 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.USER_ROLE_LIST:
       return {
         ...state,
-        user_role_list: Object.assign([], payload),
+        user_role_list: getArray(payload),
       };
 
     case COMMON.TOSTIFY_ALERT_FUNC:
@@ -76,79 +89,79 @@ const CommonReducer = (state = initState, action) => {
     case COMMON.UNIVERSAL_CURRENCY_LIST:
       return {
         ...state,
-        universal_currency_list: Object.assign([], payload.data),
+        universal_currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
     case COMMON.STATE_LIST:
       return {
         ...state,
-        state_list: Object.assign([], payload),
+        state_list: getArray(payload),
       };
     case COMMON.CURRENCY_CONVERT_LIST:
       return {
         ...state,
-        currency_convert_list: Object.assign([], payload.data),
+        currency_convert_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case COMMON.COMPANY_TYPE:
       return {
         ...state,
-        company_type_list: Object.assign([], payload),
+        company_type_list: getArray(payload),
       };
     case COMMON.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.COMPANY_PROFILE:
       return {
         ...state,
-        company_profile: Object.assign([], payload.data),
+        company_profile: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.TAX_TREATMENT_LIST:
       return {
         ...state,
-        tax_treatment_list: Object.assign([], payload.data),
+        tax_treatment_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.EXCISE_LIST:
       return {
         ...state,
-        excise_list: Object.assign([], payload.data),
+        excise_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.CUSTOMER_LIST:
       return {
         ...state,
-        customer_list: Object.assign([], payload.data),
+        customer_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case COMMON.COMPANY_DETAILS:
       return {
         ...state,
-        company_details: Object.assign([], payload.data),
+        company_details: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case COMMON.SALARY_COMPONENT_LIST:
       return {
         ...state,
-        salary_component_list: Object.assign([], payload.data),
+        salary_component_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     default:
       return state;

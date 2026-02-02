@@ -157,29 +157,29 @@ const LogIn = () => {
 
   if (initialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4">
+      <div className="min-h-screen flex items-center justify-center bg-corp-bg-secondary p-4">
         <SkeletonCard />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-corp-bg-secondary p-4 transition-colors duration-300">
       {/* Theme Toggle - Fixed position */}
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
 
-      <Card className="w-full max-w-md animate-slide-up shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem] overflow-hidden">
-        <CardHeader className="space-y-6 text-center pb-8">
+      <Card className="w-full max-w-md animate-slide-up bg-white border border-corp-border-light shadow-corp-lg rounded-xl overflow-hidden">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-corp-border-light">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-3xl font-bold tracking-tight text-foreground/80">
+            <CardTitle className="text-3xl font-bold tracking-tight text-corp-text-primary">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-base font-medium">
+            <CardDescription className="text-base text-corp-text-secondary">
               Enter your credentials to access your account
             </CardDescription>
           </div>
@@ -187,7 +187,7 @@ const LogIn = () => {
         <CardContent className="animate-fade-in px-8 pb-10" style={{ animationDelay: '200ms' }}>
           {subscriptionMessage && config.VALIDATE_SUBSCRIPTION && (
             <div
-              className="mb-6 p-3 shadow-neu-in dark:shadow-neu-in-dark bg-neu-bg dark:bg-neu-bg-dark text-destructive text-sm rounded-xl animate-shake text-center font-medium"
+              className="mb-6 p-3 bg-corp-danger-light border border-corp-danger/20 text-corp-danger text-sm rounded-lg animate-shake text-center font-medium"
               role="alert"
               aria-live="polite"
             >
@@ -207,7 +207,10 @@ const LogIn = () => {
                 name="username"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-bold ml-1" htmlFor="email-input">
+                    <FormLabel
+                      className="font-semibold text-corp-text-primary"
+                      htmlFor="email-input"
+                    >
                       Email
                     </FormLabel>
                     <Input
@@ -217,11 +220,11 @@ const LogIn = () => {
                       autoComplete="email"
                       aria-describedby={fieldState.error ? 'email-error' : undefined}
                       aria-invalid={!!fieldState.error}
-                      className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark focus:border-[#21d8aa] focus:outline-none focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
+                      className={`h-12 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:outline-none focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                       {...field}
                     />
                     {fieldState.error && (
-                      <FormMessage id="email-error" role="alert" className="ml-1">
+                      <FormMessage id="email-error" role="alert" className="text-corp-danger">
                         {fieldState.error.message}
                       </FormMessage>
                     )}
@@ -234,7 +237,10 @@ const LogIn = () => {
                 name="password"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel className="font-bold ml-1" htmlFor="password-input">
+                    <FormLabel
+                      className="font-semibold text-corp-text-primary"
+                      htmlFor="password-input"
+                    >
                       Password
                     </FormLabel>
                     <div className="relative">
@@ -246,7 +252,7 @@ const LogIn = () => {
                         autoComplete="current-password"
                         aria-describedby={fieldState.error ? 'password-error' : undefined}
                         aria-invalid={!!fieldState.error}
-                        className={`h-12 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-2 border-transparent shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:border-[#21d8aa] focus:outline-none focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] dark:focus:shadow-[inset_2px_2px_5px_rgba(33,216,170,0.2),inset_-2px_-2px_5px_rgba(255,255,255,0.05)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50 border-destructive' : ''}`}
+                        className={`h-12 rounded-lg bg-white border border-corp-border-light pr-12 focus:border-corp-primary focus:outline-none focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                         onPaste={e => e.preventDefault()}
                         onCopy={e => e.preventDefault()}
                         {...field}
@@ -254,7 +260,7 @@ const LogIn = () => {
                       <button
                         type="button"
                         onClick={togglePasswordVisibility}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200 focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-corp-text-muted hover:text-corp-primary transition-colors duration-200 focus:outline-none p-2 rounded-md hover:bg-corp-bg-hover"
                         aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
                         aria-pressed={isPasswordShown}
                       >
@@ -266,7 +272,7 @@ const LogIn = () => {
                       </button>
                     </div>
                     {fieldState.error && (
-                      <FormMessage id="password-error" role="alert" className="ml-1">
+                      <FormMessage id="password-error" role="alert" className="text-corp-danger">
                         {fieldState.error.message}
                       </FormMessage>
                     )}
@@ -292,33 +298,19 @@ const LogIn = () => {
                           e.stopPropagation();
                           field.onChange(!field.value);
                         }}
-                        style={{
-                          background: field.value
-                            ? 'linear-gradient(145deg, var(--primary), hsl(var(--primary) / 0.8))'
-                            : 'var(--neu-bg, #e8eef5)',
-                          boxShadow: field.value
-                            ? '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)'
-                            : 'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                          borderRadius: '9999px',
-                          overflow: 'hidden',
-                        }}
-                        className="relative inline-flex h-8 w-16 flex-shrink-0 cursor-pointer transition-all duration-300 ease-in-out focus:outline-none border-0"
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-corp-primary/20 ${
+                          field.value ? 'bg-corp-primary' : 'bg-corp-border-medium'
+                        }`}
                       >
                         <span
-                          style={{
-                            background: 'linear-gradient(145deg, #ffffff, #f5f5f5)',
-                            boxShadow:
-                              '2px 2px 4px rgba(0,0,0,0.1), -1px -1px 3px rgba(255,255,255,0.8)',
-                            borderRadius: '9999px',
-                          }}
-                          className={`pointer-events-none inline-block h-6 w-6 transform ring-0 transition-all duration-300 ease-in-out ${
-                            field.value ? 'translate-x-9' : 'translate-x-1'
-                          } mt-1`}
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                            field.value ? 'translate-x-5' : 'translate-x-0.5'
+                          } mt-0.5`}
                         />
                       </button>
                       <Label
                         htmlFor="remember-me"
-                        className="text-sm font-medium cursor-pointer text-foreground"
+                        className="text-sm font-medium cursor-pointer text-corp-text-secondary"
                       >
                         Remember me
                       </Label>
@@ -328,7 +320,7 @@ const LogIn = () => {
                 <Button
                   type="button"
                   variant="link"
-                  className="px-0 h-auto text-sm text-primary font-semibold hover:text-primary/80"
+                  className="px-0 h-auto text-sm text-corp-primary font-semibold hover:text-corp-primary-hover"
                   onClick={() => navigate('/reset-password')}
                 >
                   Forgot password?
@@ -337,7 +329,8 @@ const LogIn = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-bold text-lg shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-2px] active:translate-y-[1px] active:shadow-neu-in dark:active:shadow-neu-in-dark transition-all duration-200"
+                className="w-full h-12 rounded-lg bg-corp-primary font-semibold text-base hover:bg-corp-primary-hover active:scale-[0.98] transition-all duration-200"
+                style={{ color: '#ffffff' }}
                 disabled={loading}
                 aria-busy={loading}
               >
@@ -356,10 +349,10 @@ const LogIn = () => {
 
               <div className="relative mt-2">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-muted-foreground/20" />
+                  <span className="w-full border-t border-corp-border-light" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-neu-bg dark:bg-neu-bg-dark px-2 text-muted-foreground font-semibold">
+                  <span className="bg-white px-2 text-corp-text-muted font-medium">
                     Or continue with
                   </span>
                 </div>
@@ -373,11 +366,11 @@ const LogIn = () => {
 
               {companyCount < 1 && (
                 <div className="text-center pt-2">
-                  <p className="text-sm text-muted-foreground mb-2">Don&apos;t have an account?</p>
+                  <p className="text-sm text-corp-text-muted mb-2">Don&apos;t have an account?</p>
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full h-10 rounded-xl border-primary/50 text-primary hover:bg-primary/5 hover:text-primary shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-in dark:hover:shadow-neu-in-dark transition-all"
+                    className="w-full h-10 rounded-lg border-corp-border-light text-corp-primary hover:bg-corp-bg-hover hover:border-corp-primary transition-all"
                     onClick={() => navigate('/register')}
                   >
                     Register Here

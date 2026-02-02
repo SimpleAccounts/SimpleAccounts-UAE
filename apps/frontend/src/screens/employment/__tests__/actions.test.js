@@ -170,7 +170,7 @@ describe('Employment Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
 
@@ -221,7 +221,7 @@ describe('Employment Actions', () => {
       await store.dispatch(actions.getCurrencyList());
 
       const dispatchedActions = store.getActions();
-      expect(dispatchedActions[0].payload.data).toEqual([]);
+      expect(dispatchedActions[0].payload).toEqual([]);
     });
   });
 

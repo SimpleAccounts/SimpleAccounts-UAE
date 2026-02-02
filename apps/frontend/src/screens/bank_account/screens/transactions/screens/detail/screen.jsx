@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -118,9 +119,9 @@ const DetailBankTransaction = ({
   transactionActions,
   transactionDetailActions,
   commonActions,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
   const [loading, setLoading] = useState(true);
   const [disableLeavePage, setDisableLeavePage] = useState(false);
@@ -269,8 +270,8 @@ const DetailBankTransaction = ({
       .then(res => {
         if (res.status === 200) {
           commonActions.tostifyAlert('success', 'Transaction Detail Updated Successfully.');
-          history.push('/admin/banking/bank-account/transaction', {
-            bankAccountId,
+          navigate('/admin/banking/bank-account/transaction', {
+            state: { bankAccountId },
           });
         }
       })
@@ -670,9 +671,11 @@ const DetailBankTransaction = ({
                                 color="secondary"
                                 className="btn-square"
                                 onClick={() =>
-                                  history.push('/admin/banking/bank-account/transaction', {
-                                    bankAccountId: formValues.bankAccountId,
-                                    currency: location.state?.currency,
+                                  navigate('/admin/banking/bank-account/transaction', {
+                                    state: {
+                                      bankAccountId: formValues.bankAccountId,
+                                      currency: location.state?.currency,
+                                    },
                                   })
                                 }
                               >

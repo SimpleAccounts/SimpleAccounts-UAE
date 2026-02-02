@@ -170,7 +170,8 @@ function TaxReport() {
                 <div className="space-y-2">
                   <Label>Period:</Label>
                   <div className="date-range">
-                    <DateRangePicker2 ranges={ranges} opens="left" />
+                    {/* DISABLED: DateRangePicker2 removed due to jQuery dependency */}
+                    {/* <DateRangePicker2 ranges={ranges} opens="left" /> */}
                   </div>
                 </div>
               </div>
@@ -210,7 +211,8 @@ function TaxReport() {
                 <div className="space-y-2">
                   <Label>Period:</Label>
                   <div className="date-range">
-                    <DateRangePicker2 ranges={ranges} opens="left" />
+                    {/* DISABLED: DateRangePicker2 removed due to jQuery dependency */}
+                    {/* <DateRangePicker2 ranges={ranges} opens="left" /> */}
                   </div>
                 </div>
               </div>

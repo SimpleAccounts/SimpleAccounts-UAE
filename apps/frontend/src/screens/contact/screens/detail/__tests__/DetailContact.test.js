@@ -17,7 +17,8 @@ const mockUseLocation = vi.hoisted(() =>
   }))
 );
 
-const mockUseNavigate = vi.hoisted(() => vi.fn(() => vi.fn()));
+const mockNavigate = vi.hoisted(() => vi.fn());
+const mockUseNavigate = vi.hoisted(() => vi.fn(() => mockNavigate));
 const mockUseParams = vi.hoisted(() => vi.fn(() => ({ id: '1' })));
 
 vi.mock('react-router-dom', async () => {
@@ -216,9 +217,10 @@ describe('DetailContact Component', () => {
   it('should render detail contact form', async () => {
     renderComponent();
 
-    // Wait for form to load - use exact text to avoid multiple matches
+    // Wait for form to load - use getAllByText since "Update Contact" appears in breadcrumb and header
     await waitFor(() => {
-      expect(screen.getByText('Update Contact')).toBeInTheDocument();
+      const updateContactElements = screen.getAllByText('Update Contact');
+      expect(updateContactElements.length).toBeGreaterThan(0);
     });
   });
 
@@ -259,25 +261,24 @@ describe('DetailContact Component', () => {
   });
 
   it('should navigate back on cancel', async () => {
-    const mockHistory = {
-      push: vi.fn(),
-      goBack: vi.fn(),
-    };
+    // Clear mockNavigate before this test
+    mockNavigate.mockClear();
 
-    renderComponent({ history: mockHistory });
+    renderComponent();
 
-    // Wait for component to load
+    // Wait for component to load - use getAllByText since "Update Contact" appears in breadcrumb and header
     await waitFor(() => {
-      expect(screen.getByText('Update Contact')).toBeInTheDocument();
+      const updateContactElements = screen.getAllByText('Update Contact');
+      expect(updateContactElements.length).toBeGreaterThan(0);
     });
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });
     fireEvent.click(cancelButton);
 
-    // Cancel button uses history.push('/admin/master/contact')
+    // Cancel button uses navigate('/admin/master/contact') from useNavigate hook
     await waitFor(
       () => {
-        expect(mockHistory.push).toHaveBeenCalledWith('/admin/master/contact');
+        expect(mockNavigate).toHaveBeenCalledWith('/admin/master/contact');
       },
       { timeout: 2000 }
     );

@@ -173,10 +173,9 @@ class CashFlow extends Component {
               <div
                 className="cashflow-card"
                 style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
@@ -186,22 +185,20 @@ class CashFlow extends Component {
                   style={{
                     width: '40px',
                     height: '40px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    background: '#ecfdf5',
                     margin: '0 auto 10px',
                   }}
                 >
-                  <ArrowUpCircle size={20} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+                  <ArrowUpCircle size={20} style={{ color: '#10b981' }} />
                 </div>
                 <p
                   style={{
                     marginBottom: '4px',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: '#9ca3af',
                     fontSize: '0.7rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -212,7 +209,7 @@ class CashFlow extends Component {
                 <h5
                   style={{
                     margin: 0,
-                    color: 'var(--neu-secondary, #21d8aa)',
+                    color: '#10b981',
                     fontWeight: 700,
                     fontSize: '1rem',
                   }}
@@ -230,10 +227,9 @@ class CashFlow extends Component {
               <div
                 className="cashflow-card"
                 style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
@@ -243,22 +239,20 @@ class CashFlow extends Component {
                   style={{
                     width: '40px',
                     height: '40px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    background: '#fef2f2',
                     margin: '0 auto 10px',
                   }}
                 >
-                  <ArrowDownCircle size={20} style={{ color: 'var(--neu-danger, #ff4d6a)' }} />
+                  <ArrowDownCircle size={20} style={{ color: '#ef4444' }} />
                 </div>
                 <p
                   style={{
                     marginBottom: '4px',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: '#9ca3af',
                     fontSize: '0.7rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -269,7 +263,7 @@ class CashFlow extends Component {
                 <h5
                   style={{
                     margin: 0,
-                    color: 'var(--neu-danger, #ff4d6a)',
+                    color: '#ef4444',
                     fontWeight: 700,
                     fontSize: '1rem',
                   }}
@@ -287,10 +281,9 @@ class CashFlow extends Component {
               <div
                 className="cashflow-card"
                 style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
@@ -300,22 +293,20 @@ class CashFlow extends Component {
                   style={{
                     width: '40px',
                     height: '40px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    background: '#eff6ff',
                     margin: '0 auto 10px',
                   }}
                 >
-                  <Scale size={20} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                  <Scale size={20} style={{ color: '#2064d8' }} />
                 </div>
                 <p
                   style={{
                     marginBottom: '4px',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: '#9ca3af',
                     fontSize: '0.7rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -326,9 +317,7 @@ class CashFlow extends Component {
                 <h5
                   style={{
                     margin: 0,
-                    color: isPositive
-                      ? 'var(--neu-secondary, #21d8aa)'
-                      : 'var(--neu-danger, #ff4d6a)',
+                    color: isPositive ? '#10b981' : '#ef4444',
                     fontWeight: 700,
                     fontSize: '1rem',
                   }}

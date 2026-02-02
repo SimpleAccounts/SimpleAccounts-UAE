@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,11 +19,17 @@ import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import Select from 'react-select';
 import { LeavePage, Loader } from 'components';
 import { upperFirst } from 'lodash-es';
-import { selectOptionsFactory, InputValidation, DropdownLists, Lists, selectStyles } from 'utils';
+import { selectOptionsFactory, InputValidation, DropdownLists, Lists } from 'utils';
 import './style.scss';
 import { data } from '../../../Language/index';
 import { AddressComponent } from 'screens/contact/sections';
@@ -59,27 +66,9 @@ const createContactSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),
   middleName: z.string().optional(),
-  currencyCode: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .nullable()
-    .refine(val => val !== null, 'Currency is required'),
-  contactType: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .nullable()
-    .refine(val => val !== null, 'Contact type is required'),
-  taxTreatmentId: z
-    .object({
-      value: z.number(),
-      label: z.string(),
-    })
-    .nullable()
-    .refine(val => val !== null, 'Tax Treatment is required'),
+  currencyCode: z.string().min(1, 'Currency is required'),
+  contactType: z.string().min(1, 'Contact type is required'),
+  taxTreatmentId: z.string().min(1, 'Tax Treatment is required'),
   email: z.string().min(1, 'Email is required').email('Invalid Email'),
   organization: z.string().optional(),
   telephone: z.string().optional(),
@@ -111,7 +100,6 @@ const CreateContact = ({
   contactActions,
   createContactActions,
   commonActions,
-  history,
   contactType,
   country_list,
   currency_list_dropdown,
@@ -122,6 +110,7 @@ const CreateContact = ({
   closeModal,
   confirmCancel,
 }) => {
+  const navigate = useNavigate();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
@@ -136,7 +125,7 @@ const CreateContact = ({
   const [taxTreatmentList, setTaxTreatmentList] = useState([]);
   const [countryList, setCountryList] = useState([]);
   const [disableCountry, setDisableCountry] = useState(false);
-  const [isRegisteredVat, setIsRegisteredVat] = useState(false);
+  const [_isRegisteredVat, setIsRegisteredVat] = useState(false);
   const [trnExist, setTrnExist] = useState(false);
   const [emailExist, setEmailExist] = useState(false);
 
@@ -159,8 +148,8 @@ const CreateContact = ({
         telephone: '',
         fax: '',
       },
-      contactType: contactType || null,
-      currencyCode: null,
+      contactType: contactType ? String(contactType.value || contactType) : '',
+      currencyCode: '',
       email: '',
       firstName: '',
       lastName: '',
@@ -170,7 +159,7 @@ const CreateContact = ({
       telephone: '',
       website: '',
       vatRegistrationNumber: '',
-      taxTreatmentId: null,
+      taxTreatmentId: '',
     },
     mode: 'onChange',
   });
@@ -178,12 +167,11 @@ const CreateContact = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, touchedFields },
+    formState: { errors },
     reset,
     setValue,
     watch,
     setError,
-    clearErrors,
     trigger,
   } = form;
 
@@ -207,6 +195,7 @@ const CreateContact = ({
         setDisabled(false);
         commonActions.tostifyAlert('error', err?.data?.message || err?.message || 'ERROR');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeData = () => {
@@ -215,26 +204,49 @@ const CreateContact = ({
     contactActions.getCountryList();
     if (companyDetails) {
       const { currencyCode, isRegisteredVat } = companyDetails;
-      const currencyOption = currency_list_dropdown?.find(option => option.value === currencyCode);
-      if (currencyOption) {
-        setValue('currencyCode', currencyOption);
+      if (currencyCode) {
+        setValue('currencyCode', String(currencyCode));
       }
       setIsRegisteredVat(isRegisteredVat);
     }
   };
 
   const getData = data => {
+    console.log('🔧 [getData] Starting data transformation');
+    console.log('🔧 [getData] Input data:', JSON.stringify(data, null, 2));
+
     let temp = {};
     for (let item in data) {
       if (typeof data[`${item}`] !== 'object') {
-        temp[`${item}`] = data[`${item}`];
+        // Convert string values to numbers for contactType, currencyCode, and taxTreatmentId
+        if (item === 'contactType' || item === 'currencyCode' || item === 'taxTreatmentId') {
+          const converted = parseInt(data[`${item}`], 10);
+          console.log(`🔧 [getData] Converting ${item}: "${data[item]}" → ${converted}`);
+          temp[`${item}`] = converted;
+        } else {
+          temp[`${item}`] = data[`${item}`];
+        }
       } else if (data[`${item}`] && data[`${item}`].value !== undefined) {
         temp[`${item}`] = data[`${item}`].value;
       }
     }
 
+    console.log('🔧 [getData] Checking billing address:', data.billingAddress);
+    console.log('🔧 [getData] Checking shipping address:', data.shippingAddress);
+
+    if (!data.billingAddress) {
+      console.error('❌ [getData] billingAddress is missing!');
+      throw new Error('Billing address is required');
+    }
+    if (!data.shippingAddress) {
+      console.error('❌ [getData] shippingAddress is missing!');
+      throw new Error('Shipping address is required');
+    }
+
     const billingcountryId = data[`billingAddress`].countryId;
     const shippingCountryId = data[`shippingAddress`].countryId;
+    console.log('🔧 [getData] Billing country ID:', billingcountryId);
+    console.log('🔧 [getData] Shipping country ID:', shippingCountryId);
 
     temp[`isActive`] = isActive;
     temp[`isBillingAndShippingAddressSame`] = isSame;
@@ -271,19 +283,36 @@ const CreateContact = ({
       shippingCountryId: data[`shippingAddress`].countryId,
     };
     temp = { ...temp, ...billingAdress, ...shippingAddress };
+    console.log(
+      '🔧 [getData] Transformation complete. Final output:',
+      JSON.stringify(temp, null, 2)
+    );
     return temp;
   };
 
   const onSubmit = data => {
+    console.log('🚀 [CONTACT_CREATE] onSubmit called');
+    console.log('📋 [CONTACT_CREATE] Form data:', JSON.stringify(data, null, 2));
+
     // Custom validation
+    console.log('✅ [CONTACT_CREATE] Check 1: Mobile number validation');
     if (!(isParentComponentPresent && isParentComponentPresent === true)) {
       if (checkmobileNumberParam === true) {
+        console.error('❌ [CONTACT_CREATE] Mobile number validation failed');
         setError('mobileNumber', { type: 'manual', message: 'Invalid mobile number' });
         return;
       }
     }
+    console.log('✅ [CONTACT_CREATE] Mobile number validation passed');
+
+    console.log(
+      '✅ [CONTACT_CREATE] Check 2: VAT registration (isRegisteredForVat:',
+      isRegisteredForVat,
+      ')'
+    );
     if (isRegisteredForVat === true) {
       if (data.vatRegistrationNumber === '') {
+        console.error('❌ [CONTACT_CREATE] VAT number required but empty');
         setError('vatRegistrationNumber', {
           type: 'manual',
           message: 'Tax registration number is required',
@@ -291,6 +320,10 @@ const CreateContact = ({
         return;
       }
       if (data.vatRegistrationNumber.length !== 15) {
+        console.error(
+          '❌ [CONTACT_CREATE] VAT number length invalid:',
+          data.vatRegistrationNumber?.length
+        );
         setError('vatRegistrationNumber', {
           type: 'manual',
           message: 'Please enter 15 digit Tax registration number',
@@ -298,40 +331,88 @@ const CreateContact = ({
         return;
       }
     }
+    console.log('✅ [CONTACT_CREATE] VAT registration validation passed');
+
+    console.log('✅ [CONTACT_CREATE] Check 3: TRN exists check (trnExist:', trnExist, ')');
     if (trnExist === true) {
+      console.error('❌ [CONTACT_CREATE] TRN already exists');
       setError('vatRegistrationNumber', {
         type: 'manual',
         message: 'Tax registration number already exists',
       });
       return;
     }
+    console.log('✅ [CONTACT_CREATE] TRN check passed');
+
+    console.log('✅ [CONTACT_CREATE] Check 4: Email exists check (emailExist:', emailExist, ')');
     if (emailExist === true) {
+      console.error('❌ [CONTACT_CREATE] Email already exists');
       setError('email', { type: 'manual', message: 'Email already exists' });
       return;
     }
+    console.log('✅ [CONTACT_CREATE] Email check passed');
 
-    const shippingAddressError = InputValidation.addressValidation(data.shippingAddress);
-    if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
-      setError('shippingAddress', { type: 'manual', message: 'Invalid shipping address' });
-      return;
+    console.log('✅ [CONTACT_CREATE] Check 5: Shipping address validation');
+    console.log('📦 [CONTACT_CREATE] Is billing and shipping address same:', isSame);
+
+    // Only validate shipping address if billing and shipping addresses are different
+    if (!isSame) {
+      console.log(
+        '📦 [CONTACT_CREATE] Shipping address data:',
+        JSON.stringify(data.shippingAddress, null, 2)
+      );
+      const shippingAddressError = InputValidation.addressValidation(data.shippingAddress);
+      console.log(
+        '📦 [CONTACT_CREATE] Shipping address errors:',
+        JSON.stringify(shippingAddressError, null, 2)
+      );
+      if (shippingAddressError && Object.values(shippingAddressError).length > 0) {
+        console.error(
+          '❌ [CONTACT_CREATE] Shipping address validation failed:',
+          shippingAddressError
+        );
+        setError('shippingAddress', { type: 'manual', message: 'Invalid shipping address' });
+        return;
+      }
+      console.log('✅ [CONTACT_CREATE] Shipping address validation passed');
+    } else {
+      console.log('✅ [CONTACT_CREATE] Shipping address validation skipped (same as billing)');
     }
+
+    console.log('✅ [CONTACT_CREATE] Check 6: Billing address validation');
+    console.log(
+      '📦 [CONTACT_CREATE] Billing address data:',
+      JSON.stringify(data.billingAddress, null, 2)
+    );
     const billingAddressError = InputValidation.addressValidation(data.billingAddress);
+    console.log(
+      '📦 [CONTACT_CREATE] Billing address errors:',
+      JSON.stringify(billingAddressError, null, 2)
+    );
     if (billingAddressError && Object.values(billingAddressError).length > 0) {
+      console.error('❌ [CONTACT_CREATE] Billing address validation failed:', billingAddressError);
       setError('billingAddress', { type: 'manual', message: 'Invalid billing address' });
       return;
     }
+    console.log('✅ [CONTACT_CREATE] Billing address validation passed');
 
+    console.log('✅ [CONTACT_CREATE] All validations passed! Proceeding with contact creation...');
     setLoading(true);
     setDisableLeavePage(true);
     setLoadingMsg('Creating Contact...');
     setDisabled(true);
 
+    console.log('🔄 [CONTACT_CREATE] Calling getData() to transform form data...');
     const postData = getData(data);
+    console.log('📤 [CONTACT_CREATE] Post data prepared:', JSON.stringify(postData, null, 2));
 
+    console.log('🌐 [CONTACT_CREATE] Calling API: POST /rest/contact/save');
     createContactActions
       .createContact(postData)
       .then(res => {
+        console.log('✅ [CONTACT_CREATE] API response received:', res);
         if (res.status === 200) {
+          console.log('🎉 [CONTACT_CREATE] Contact created successfully!');
           setDisabled(false);
           setLoading(false);
           commonActions.tostifyAlert('success', 'Contact Created Successfully');
@@ -348,12 +429,8 @@ const CreateContact = ({
                 telephone: '',
                 fax: '',
               },
-              contactType: contactType || null,
-              currencyCode: companyDetails
-                ? currency_list_dropdown?.find(
-                    option => option.value === companyDetails.currencyCode
-                  )
-                : null,
+              contactType: contactType ? String(contactType.value || contactType) : '',
+              currencyCode: companyDetails?.currencyCode ? String(companyDetails.currencyCode) : '',
               email: '',
               firstName: '',
               lastName: '',
@@ -363,7 +440,7 @@ const CreateContact = ({
               telephone: '',
               website: '',
               vatRegistrationNumber: '',
-              taxTreatmentId: null,
+              taxTreatmentId: '',
             });
             setCreateMore(false);
             setDisableLeavePage(false);
@@ -372,13 +449,20 @@ const CreateContact = ({
               getCurrentContactData(res.data);
               closeModal(true);
             } else {
-              history.push('/admin/master/contact');
+              navigate('/admin/master/contact');
             }
             setLoading(false);
           }
         }
       })
       .catch(err => {
+        console.error('❌ [CONTACT_CREATE] API call failed:', err);
+        console.error('❌ [CONTACT_CREATE] Error details:', {
+          message: err?.message,
+          data: err?.data,
+          status: err?.status,
+          response: err?.response,
+        });
         // Error handled by error boundary or user notification
         setDisabled(false);
         setLoading(false);
@@ -470,20 +554,14 @@ const CreateContact = ({
     return <Loader loadingMsg={loadingMsg} />;
   }
 
-  // Neumorphic theme constants
+  // Corporate theme constants
   const theme = {
-    bg: '#e8eef5',
-    shadowDark: '#c4c9cf',
-    shadowLight: '#ffffff',
-  };
-
-  const shadows = {
-    raised: {
-      lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    },
-    pressed: {
-      sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    },
+    bg: '#f8f9fa',
+    bgWhite: '#ffffff',
+    primary: '#2064d8',
+    textPrimary: '#111827',
+    textSecondary: '#4b5563',
+    border: '#e5e7eb',
   };
 
   return (
@@ -493,13 +571,14 @@ const CreateContact = ({
     >
       <div className="animated fadeIn max-w-7xl mx-auto">
         <Card
-          className="rounded-2xl overflow-hidden"
+          className="rounded-xl overflow-hidden"
           style={{
-            background: theme.bg,
-            boxShadow: shadows.raised.lg,
+            background: theme.bgWhite,
+            border: `1px solid ${theme.border}`,
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
           }}
         >
-          <CardHeader className="border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+          <CardHeader className="border-b" style={{ borderColor: theme.border }}>
             <CardTitle className="flex items-center gap-2">
               <IdCard className="h-5 w-5" style={{ color: '#1e6eff' }} />
               <span>{strings.CreateContact}</span>
@@ -575,14 +654,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -613,14 +688,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -654,14 +725,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -676,10 +743,7 @@ const CreateContact = ({
                 </div>
 
                 {/* Contact Details Section */}
-                <div
-                  className="space-y-4 border-t pt-6"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
-                >
+                <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                   <h4 className="text-lg font-semibold mb-4">{strings.ContactDetails}</h4>
 
                   {/* Contact Type, Organization, Email */}
@@ -707,33 +771,41 @@ const CreateContact = ({
                                 </Tooltip>
                               </TooltipProvider>
                             </FormLabel>
-                            <FormControl>
-                              <Select
-                                {...field}
-                                options={
-                                  contact_type_list
-                                    ? selectOptionsFactory.renderOptions(
-                                        'label',
-                                        'value',
-                                        contact_type_list,
-                                        'Contact '
-                                      )
-                                    : []
-                                }
-                                isDisabled={contactType ? true : false}
-                                placeholder={strings.Select + strings.ContactType}
-                                styles={{
-                                  ...selectStyles,
-                                  control: (base, state) => ({
-                                    ...selectStyles.control(base, state),
-                                    borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
-                                  }),
-                                }}
-                              />
-                            </FormControl>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              disabled={contactType ? true : false}
+                            >
+                              <FormControl>
+                                <SelectTrigger
+                                  className={cn(
+                                    'rounded-lg',
+                                    fieldState?.error && 'border-red-500'
+                                  )}
+                                >
+                                  <SelectValue
+                                    placeholder={strings.Select + ' ' + strings.ContactType}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {contact_type_list
+                                  ?.filter(
+                                    (type, index, self) =>
+                                      type.value != null &&
+                                      type.value !== '' &&
+                                      self.findIndex(t => t.value === type.value) === index
+                                  )
+                                  .map((type, index) => (
+                                    <SelectItem
+                                      key={`contact-type-${type.value}-${index}`}
+                                      value={String(type.value)}
+                                    >
+                                      {type.label}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                             {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
@@ -761,14 +833,10 @@ const CreateContact = ({
                                     field.onChange(upperFirst(value));
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -800,14 +868,10 @@ const CreateContact = ({
                                   field.onChange(e);
                                   emailvalidationCheck(e.target.value);
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -844,23 +908,37 @@ const CreateContact = ({
                                 </Tooltip>
                               </TooltipProvider>
                             </FormLabel>
-                            <FormControl>
-                              <Select
-                                {...field}
-                                options={currency_list_dropdown}
-                                placeholder={strings.Select + strings.Currency}
-                                styles={{
-                                  ...selectStyles,
-                                  control: (base, state) => ({
-                                    ...selectStyles.control(base, state),
-                                    borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
-                                  }),
-                                }}
-                              />
-                            </FormControl>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger
+                                  className={cn(
+                                    'rounded-lg',
+                                    fieldState?.error && 'border-red-500'
+                                  )}
+                                >
+                                  <SelectValue
+                                    placeholder={strings.Select + ' ' + strings.Currency}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {currency_list_dropdown
+                                  ?.filter(
+                                    (currency, index, self) =>
+                                      currency.value != null &&
+                                      currency.value !== '' &&
+                                      self.findIndex(c => c.value === currency.value) === index
+                                  )
+                                  .map((currency, index) => (
+                                    <SelectItem
+                                      key={`currency-${currency.value}-${index}`}
+                                      value={String(currency.value)}
+                                    >
+                                      {currency.label}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                             {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
@@ -888,14 +966,10 @@ const CreateContact = ({
                                     field.onChange(e);
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -956,14 +1030,10 @@ const CreateContact = ({
                                     field.onChange(e);
                                   }
                                 }}
-                                className={cn(
-                                  'rounded-xl border-0',
-                                  fieldState?.error && 'border-red-500',
-                                  shadows.pressed.sm
-                                )}
+                                className={cn('rounded-lg', fieldState?.error && 'border-red-500')}
                                 style={{
-                                  background: theme.bg,
-                                  boxShadow: shadows.pressed.sm,
+                                  background: theme.bgWhite,
+                                  border: `1px solid ${theme.border}`,
                                 }}
                               />
                             </FormControl>
@@ -1000,60 +1070,64 @@ const CreateContact = ({
                                 </Tooltip>
                               </TooltipProvider>
                             </FormLabel>
-                            <FormControl>
-                              <Select
-                                {...field}
-                                options={
-                                  taxTreatmentList
-                                    ? selectOptionsFactory.renderOptions(
-                                        'name',
-                                        'id',
-                                        taxTreatmentList,
-                                        'VAT'
-                                      )
-                                    : []
-                                }
-                                placeholder={strings.Select + strings.TaxTreatment}
-                                onChange={option => {
-                                  field.onChange(option);
-                                  if (option && option.value) {
-                                    resetCountryList(option.value);
-                                    if (
-                                      option.value === 1 ||
-                                      option.value === 3 ||
-                                      option.value === 5
-                                    ) {
-                                      setIsRegisteredForVat(true);
-                                    } else {
-                                      setIsRegisteredForVat(false);
-                                    }
-                                    if (
-                                      option.value === 1 ||
-                                      option.value === 2 ||
-                                      option.value === 3 ||
-                                      option.value === 4
-                                    ) {
-                                      setDisableCountry(true);
-                                    } else {
-                                      setDisableCountry(false);
-                                    }
+                            <Select
+                              onValueChange={value => {
+                                field.onChange(value);
+                                if (value) {
+                                  const numValue = parseInt(value, 10);
+                                  resetCountryList(numValue);
+                                  if (numValue === 1 || numValue === 3 || numValue === 5) {
+                                    setIsRegisteredForVat(true);
+                                  } else {
+                                    setIsRegisteredForVat(false);
+                                  }
+                                  if (
+                                    numValue === 1 ||
+                                    numValue === 2 ||
+                                    numValue === 3 ||
+                                    numValue === 4
+                                  ) {
+                                    setDisableCountry(true);
                                   } else {
                                     setDisableCountry(false);
                                   }
-                                  setValue('vatRegistrationNumber', '');
-                                }}
-                                styles={{
-                                  ...selectStyles,
-                                  control: (base, state) => ({
-                                    ...selectStyles.control(base, state),
-                                    borderRadius: '12px',
-                                    border: fieldState?.error ? '1px solid #ef4444' : 'none',
-                                    boxShadow: shadows.pressed.sm,
-                                    backgroundColor: theme.bg,
-                                  }),
-                                }}
-                              />
-                            </FormControl>
+                                } else {
+                                  setDisableCountry(false);
+                                }
+                                setValue('vatRegistrationNumber', '');
+                              }}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger
+                                  className={cn(
+                                    'rounded-lg',
+                                    fieldState?.error && 'border-red-500'
+                                  )}
+                                >
+                                  <SelectValue
+                                    placeholder={strings.Select + ' ' + strings.TaxTreatment}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {taxTreatmentList
+                                  ?.filter(
+                                    (treatment, index, self) =>
+                                      treatment.id != null &&
+                                      treatment.id !== '' &&
+                                      self.findIndex(t => t.id === treatment.id) === index
+                                  )
+                                  .map((treatment, index) => (
+                                    <SelectItem
+                                      key={`tax-treatment-${treatment.id}-${index}`}
+                                      value={String(treatment.id)}
+                                    >
+                                      {treatment.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
                             {fieldState?.error && (
                               <FormMessage>{fieldState.error.message}</FormMessage>
                             )}
@@ -1061,14 +1135,14 @@ const CreateContact = ({
                         )}
                       />
                     </div>
-                    {watchedValues?.taxTreatmentId && watchedValues.taxTreatmentId.value && (
+                    {watchedValues?.taxTreatmentId && (
                       <div
                         className={cn(
                           'col-span-1 md:col-span-4',
                           !(
-                            watchedValues.taxTreatmentId.value === 1 ||
-                            watchedValues.taxTreatmentId.value === 3 ||
-                            watchedValues.taxTreatmentId.value === 5
+                            parseInt(watchedValues.taxTreatmentId, 10) === 1 ||
+                            parseInt(watchedValues.taxTreatmentId, 10) === 3 ||
+                            parseInt(watchedValues.taxTreatmentId, 10) === 5
                           ) && 'hidden'
                         )}
                       >
@@ -1096,14 +1170,10 @@ const CreateContact = ({
                                       validationCheck(value);
                                     }
                                   }}
-                                  className={cn(
-                                    'rounded-xl border-0',
-                                    fieldState.error && 'border-red-500',
-                                    shadows.pressed.sm
-                                  )}
+                                  className={cn('rounded-lg', fieldState.error && 'border-red-500')}
                                   style={{
-                                    background: theme.bg,
-                                    boxShadow: shadows.pressed.sm,
+                                    background: theme.bgWhite,
+                                    border: `1px solid ${theme.border}`,
                                   }}
                                 />
                               </FormControl>
@@ -1129,10 +1199,7 @@ const CreateContact = ({
                 </div>
 
                 {/* Contact Address Details Section */}
-                <div
-                  className="space-y-4 border-t pt-6"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
-                >
+                <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                   <h2 className="text-xl font-semibold mb-4">{strings.ContactAddressDetails}</h2>
 
                   {/* Billing Address */}
@@ -1156,10 +1223,7 @@ const CreateContact = ({
                   </div>
 
                   {/* Shipping Address */}
-                  <div
-                    className="space-y-4 border-t pt-6"
-                    style={{ borderColor: `${theme.shadowDark}40` }}
-                  >
+                  <div className="space-y-4 border-t pt-6" style={{ borderColor: theme.border }}>
                     <h5 className="text-lg font-medium mb-4">{strings.ShippingDetails}</h5>
                     <div className="mb-4">
                       <div className="flex items-center space-x-2">
@@ -1210,7 +1274,7 @@ const CreateContact = ({
                 {/* Action Buttons */}
                 <div
                   className="flex justify-end gap-3 mt-8 pt-6 border-t"
-                  style={{ borderColor: `${theme.shadowDark}40` }}
+                  style={{ borderColor: theme.border }}
                 >
                   <Button
                     type="button"
@@ -1224,10 +1288,9 @@ const CreateContact = ({
                       setCreateMore(false);
                       handleSubmit(onSubmit)();
                     }}
-                    className="rounded-xl"
+                    className="rounded-lg"
                     style={{
-                      background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
-                      boxShadow: shadows.raised.lg,
+                      background: theme.primary,
                     }}
                   >
                     <CircleDot className="h-4 w-4" />
@@ -1247,10 +1310,9 @@ const CreateContact = ({
                         setIsSame(false);
                         handleSubmit(onSubmit)();
                       }}
-                      className="rounded-xl"
+                      className="rounded-lg"
                       style={{
-                        background: `linear-gradient(145deg, #1e6eff, #0052cc)`,
-                        boxShadow: shadows.raised.lg,
+                        background: theme.primary,
                       }}
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -1260,16 +1322,16 @@ const CreateContact = ({
                   <Button
                     type="button"
                     variant="outline"
-                    className="rounded-xl"
+                    className="rounded-lg"
                     onClick={() => {
                       if (isParentComponentPresent && isParentComponentPresent === true) {
                         confirmCancel(true);
                       } else {
-                        history.push('/admin/master/contact');
+                        navigate('/admin/master/contact');
                       }
                     }}
                     style={{
-                      boxShadow: shadows.raised.sm,
+                      border: `1px solid ${theme.border}`,
                     }}
                   >
                     <Ban className="h-4 w-4" />

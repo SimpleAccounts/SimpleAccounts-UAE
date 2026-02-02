@@ -486,3 +486,298 @@ th {
   content: 'There are no records to display';
   left: 45%;
 }
+
+// ============================================
+// DARK MODE OVERRIDES
+// ============================================
+
+.dark {
+  // Body and main backgrounds
+  body,
+  .main .container-fluid {
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+
+  // Form controls
+  .form-control {
+    background-color: #1e293b;
+    border-color: #334155 !important;
+    color: #f8fafc;
+
+    &:focus {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  ::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  // Cards
+  .card {
+    background-color: #1e293b;
+    border-color: #334155;
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.3),
+      0 2px 4px -2px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .card-header {
+    background-color: #1e293b !important;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+
+  .tab-card {
+    background: #1e293b !important;
+  }
+
+  // Filter panel
+  .filter-panel {
+    border-color: #334155;
+  }
+
+  // Dropdowns
+  .dropdown-menu {
+    background-color: #1e293b;
+    border-color: #334155;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.4),
+      0 4px 6px -4px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .dropdown-item {
+    color: #e2e8f0;
+
+    &:hover {
+      background-color: #334155;
+      color: #f8fafc;
+    }
+  }
+
+  // Tables
+  .react-bs-table-container {
+    .react-bs-table {
+      th {
+        background-color: #0f172a;
+        color: #f8fafc;
+        border-color: #334155;
+      }
+
+      td {
+        background-color: #1e293b;
+        color: #e2e8f0;
+        border-color: #334155;
+      }
+
+      tr:hover td {
+        background-color: #334155;
+      }
+    }
+  }
+
+  // Modals
+  .modal-dialog {
+    .modal-content {
+      background-color: #1e293b;
+      border-color: #334155;
+
+      .modal-header {
+        background-color: #3b82f6;
+        border-color: #334155;
+      }
+
+      .modal-body {
+        background-color: #1e293b;
+        color: #f8fafc;
+      }
+
+      .modal-footer {
+        background-color: #1e293b;
+        border-color: #334155;
+      }
+    }
+  }
+
+  // React Select
+  .Select-control {
+    background-color: #1e293b;
+    border-color: #334155;
+
+    .Select-value span {
+      color: #f8fafc !important;
+    }
+  }
+
+  .Select-menu-outer {
+    background-color: #1e293b;
+    border-color: #334155;
+  }
+
+  .Select-option {
+    background-color: #1e293b;
+    color: #e2e8f0;
+
+    &:hover,
+    &.is-focused {
+      background-color: #334155;
+    }
+  }
+
+  // React Autosuggest
+  .react-autosuggest__input {
+    background-color: #1e293b;
+    border-color: #334155 !important;
+    color: #f8fafc;
+  }
+
+  // React Datepicker
+  .react-datepicker-popper {
+    background: #1e293b !important;
+
+    .react-datepicker {
+      background-color: #1e293b;
+      color: #f8fafc;
+
+      .react-datepicker__header {
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+
+      .react-datepicker__day-name,
+      .react-datepicker__day {
+        color: #e2e8f0;
+      }
+
+      .react-datepicker__day:hover {
+        background-color: #334155;
+      }
+
+      .react-datepicker__day--selected,
+      .react-datepicker__day--keyboard-selected {
+        background-color: #3b82f6;
+        color: #ffffff;
+      }
+
+      .react-datepicker__current-month {
+        color: #f8fafc;
+      }
+    }
+  }
+
+  // Date range picker
+  .daterangepicker {
+    background-color: #1e293b;
+    border-color: #334155;
+
+    .calendar-table {
+      background-color: #1e293b;
+
+      th,
+      td {
+        color: #e2e8f0;
+      }
+    }
+
+    td.available:hover {
+      background-color: #334155;
+    }
+
+    td.active {
+      background-color: #3b82f6;
+    }
+  }
+
+  // MUI inputs
+  .MuiInputBase-multiline {
+    background-color: #1e293b;
+    color: #f8fafc;
+    outline-color: #334155;
+  }
+
+  .MuiInputBase-inputMultiline {
+    color: #f8fafc !important;
+  }
+
+  .Mui-focused {
+    outline-color: #3b82f6;
+  }
+
+  // Invalid state
+  .is-invalidMobile {
+    border-color: #f87171;
+  }
+
+  // Phone input
+  .react-tel-input {
+    .form-control {
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
+
+    .flag-dropdown {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+
+    .country-list {
+      background-color: #1e293b;
+
+      .country:hover {
+        background-color: #334155;
+      }
+    }
+  }
+
+  // Toast notifications
+  .Toastify__toast {
+    background-color: #1e293b;
+    color: #f8fafc;
+  }
+
+  // Navigation
+  .nav-link {
+    color: #e2e8f0;
+
+    &:hover {
+      color: #f8fafc;
+    }
+  }
+
+  // Input group
+  .input-group-text {
+    background-color: #334155;
+    border-color: #334155;
+    color: #e2e8f0;
+  }
+
+  // Button group
+  .btn-group .btn {
+    border-color: #334155;
+  }
+
+  // Pagination
+  .react-bs-table-pagination {
+    .page-link {
+      background-color: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+
+      &:hover {
+        background-color: #334155;
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+    }
+  }
+
+  // No data message
+  .react-bs-table-no-data:after {
+    color: #94a3b8;
+  }
+}

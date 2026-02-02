@@ -7,23 +7,36 @@ const initState = {
 };
 
 const TempReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case RECEIPT.RECEIPT_LIST:
       return {
         ...state,
-        receipt_list: Object.assign([], payload),
+        receipt_list: getArray(payload),
       };
     case RECEIPT.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload),
+        contact_list: getArray(payload),
       };
     case RECEIPT.INVOICE_LIST:
       return {
         ...state,
-        invoice_list: Object.assign([], payload),
+        invoice_list: getArray(payload),
       };
     default:
       return state;

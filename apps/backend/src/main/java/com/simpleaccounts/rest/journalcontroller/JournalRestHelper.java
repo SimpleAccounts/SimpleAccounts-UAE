@@ -76,12 +76,18 @@ public class JournalRestHelper {
 		}
 		journal.setJournlReferencenNo(journalRequestModel.getJournalReferenceNo());
 		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(11);
-		if (journalRequestModel.getJournalReferenceNo()!=null && !journalRequestModel.getJournalReferenceNo().isEmpty()) {
+		if (journalRequestModel.getJournalReferenceNo()!=null && !journalRequestModel.getJournalReferenceNo().isEmpty() && template != null) {
 			String suffix = invoiceNumberUtil.fetchSuffixFromString(journalRequestModel.getJournalReferenceNo());
-			template.setSuffix(Integer.parseInt(suffix));
-			String prefix = journal.getJournlReferencenNo().substring(0, journal.getJournlReferencenNo().lastIndexOf(suffix));
-			template.setPrefix(prefix);
-			customizeInvoiceTemplateService.persist(template);
+			if (suffix != null && !suffix.isEmpty()) {
+				try {
+					template.setSuffix(Integer.parseInt(suffix));
+					String prefix = journal.getJournlReferencenNo().substring(0, journal.getJournlReferencenNo().lastIndexOf(suffix));
+					template.setPrefix(prefix);
+					customizeInvoiceTemplateService.persist(template);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse suffix {} as Integer from journal reference no {}", suffix, journalRequestModel.getJournalReferenceNo());
+				}
+			}
 		}
 		getJournalDate(journalRequestModel, journal);
 		journal.setDescription(journalRequestModel.getDescription());
@@ -183,8 +189,10 @@ public class JournalRestHelper {
 	}
 
 	public JournalModel getModel(Journal journal, boolean list) {
-
-		boolean isManual = journal.getPostingReferenceType().equals(PostingReferenceTypeEnum.MANUAL);
+		if (journal == null) {
+			return null;
+		}
+		boolean isManual = PostingReferenceTypeEnum.MANUAL.equals(journal.getPostingReferenceType());
 
 		JournalModel model = new JournalModel();
 		model.setJournalId(journal.getId());
@@ -218,12 +226,16 @@ public class JournalRestHelper {
 				model.setCreatedByName(user.getFirstName() + " " + user.getLastName());
 			}
 		}
-		model.setPostingReferenceType(journal.getPostingReferenceType());
-		model.setPostingReferenceTypeDisplayName(journal.getPostingReferenceType().getDisplayName());
+		if (journal.getPostingReferenceType() != null) {
+			model.setPostingReferenceType(journal.getPostingReferenceType());
+			model.setPostingReferenceTypeDisplayName(journal.getPostingReferenceType().getDisplayName());
+		}
 		List<JournalLineItemRequestModel> requestModels = new ArrayList<>();
 		if (journal.getJournalLineItems() != null && !journal.getJournalLineItems().isEmpty()) {
 			for (JournalLineItem lineItem : journal.getJournalLineItems()) {
-				if (lineItem.getTransactionCategory()!=null && lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName()!=null) {
+				if (lineItem.getTransactionCategory() != null
+						&& lineItem.getTransactionCategory().getChartOfAccount() != null
+						&& lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName() != null) {
 					model.setJournalTransactionCategoryLabel(lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
 				}
 				JournalLineItemRequestModel requestModel = getLineItemModel(lineItem, list);
@@ -244,14 +256,16 @@ public class JournalRestHelper {
 		if (lineItem.getTransactionCategory() != null) {
 			requestModel.setTransactionCategoryId(lineItem.getTransactionCategory().getTransactionCategoryId());
 			requestModel.setTransactionCategoryName(lineItem.getTransactionCategory().getTransactionCategoryName());
-			requestModel.setJournalTransactionCategoryLabel(lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
+			if (lineItem.getTransactionCategory().getChartOfAccount() != null) {
+				requestModel.setJournalTransactionCategoryLabel(lineItem.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
+			}
 		}
 		BigDecimal creditVatAmt = BigDecimal.valueOf(0);
 		BigDecimal debitVatAmt = BigDecimal.valueOf(0);
 
 		if (lineItem.getVatCategory() != null) {
 			requestModel.setVatCategoryId(lineItem.getVatCategory().getId());
-			if (list && !lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
+			if (list && lineItem.getVatCategory().getVat() != null && !lineItem.getVatCategory().getVat().equals(BigDecimal.valueOf(0))) {
 				creditVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))
 						.multiply(lineItem.getCreditAmount());
 				debitVatAmt = lineItem.getVatCategory().getVat().divide(BigDecimal.valueOf(100))

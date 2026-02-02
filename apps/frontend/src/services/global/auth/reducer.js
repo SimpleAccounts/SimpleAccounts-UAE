@@ -25,13 +25,13 @@ const AuthReducer = (state = initState, action) => {
     case AUTH.USER_PROFILE:
       return {
         ...state,
-        profile: Object.assign({}, payload.data),
+        profile: payload?.data || payload || {},
       };
 
     case AUTH.COMPANYCOUNT:
       return {
         ...state,
-        ccount: Object.assign({}, payload.data),
+        ccount: payload?.data || payload || {},
       };
 
     default:

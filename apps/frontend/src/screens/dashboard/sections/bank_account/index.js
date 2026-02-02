@@ -207,18 +207,17 @@ class BankAccount extends Component {
                 style={{
                   width: '44px',
                   height: '44px',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    '3px 3px 6px var(--neu-shadow-dark, #c4c9cf), -3px -3px 6px var(--neu-shadow-light, #ffffff)',
+                  background: '#f8f9fa',
+                  border: '1px solid #e5e7eb',
                   marginRight: '12px',
                   flexShrink: 0,
                 }}
               >
-                <Landmark size={22} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                <Landmark size={22} style={{ color: '#2064d8' }} />
               </div>
               <select
                 className="form-control bank-type-select card-select"
@@ -235,10 +234,7 @@ class BankAccount extends Component {
 
             {/* Last Updated */}
             <div className="last-updated">
-              <Calendar
-                size={14}
-                style={{ color: 'var(--neu-text-muted, #98afc2)', marginRight: '6px' }}
-              />
+              <Calendar size={14} style={{ color: '#9ca3af', marginRight: '6px' }} />
               <span>
                 {strings.Lastupdatedon} {graphData.updatedDate || '--'}
               </span>
@@ -249,10 +245,9 @@ class BankAccount extends Component {
               <div
                 className="balance-card"
                 style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
@@ -262,22 +257,20 @@ class BankAccount extends Component {
                   style={{
                     width: '36px',
                     height: '36px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    background: '#eff6ff',
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Wallet size={18} style={{ color: 'var(--neu-primary, #2064d8)' }} />
+                  <Wallet size={18} style={{ color: '#2064d8' }} />
                 </div>
                 <p
                   style={{
                     marginBottom: '4px',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: '#9ca3af',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -285,9 +278,7 @@ class BankAccount extends Component {
                 >
                   {strings.BALANCE}
                 </p>
-                <h5
-                  style={{ margin: 0, color: 'var(--neu-text-primary, #1e3a5f)', fontWeight: 700 }}
-                >
+                <h5 style={{ margin: 0, color: '#111827', fontWeight: 700 }}>
                   {universal_currency_list[0] && (
                     <Currency
                       value={this.props.bank_account_graph?.balance || 0}
@@ -300,10 +291,9 @@ class BankAccount extends Component {
               <div
                 className="balance-card"
                 style={{
-                  background: 'var(--neu-bg, #e8eef5)',
-                  boxShadow:
-                    'inset 2px 2px 4px var(--neu-shadow-dark, #c4c9cf), inset -2px -2px 4px var(--neu-shadow-light, #ffffff)',
-                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '10px',
                   padding: '16px',
                   textAlign: 'center',
                 }}
@@ -313,22 +303,20 @@ class BankAccount extends Component {
                   style={{
                     width: '36px',
                     height: '36px',
-                    borderRadius: '10px',
+                    borderRadius: '8px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'var(--neu-bg, #e8eef5)',
-                    boxShadow:
-                      '2px 2px 4px var(--neu-shadow-dark, #c4c9cf), -2px -2px 4px var(--neu-shadow-light, #ffffff)',
+                    background: '#ecfdf5',
                     margin: '0 auto 8px',
                   }}
                 >
-                  <Building2 size={18} style={{ color: 'var(--neu-secondary, #21d8aa)' }} />
+                  <Building2 size={18} style={{ color: '#10b981' }} />
                 </div>
                 <p
                   style={{
                     marginBottom: '4px',
-                    color: 'var(--neu-text-muted, #98afc2)',
+                    color: '#9ca3af',
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     textTransform: 'uppercase',
@@ -336,9 +324,7 @@ class BankAccount extends Component {
                 >
                   {strings.ALLBANKACCOUNTS}
                 </p>
-                <h5
-                  style={{ margin: 0, color: 'var(--neu-text-primary, #1e3a5f)', fontWeight: 700 }}
-                >
+                <h5 style={{ margin: 0, color: '#111827', fontWeight: 700 }}>
                   {universal_currency_list[0] && (
                     <Currency
                       value={this.state.totalBalance}

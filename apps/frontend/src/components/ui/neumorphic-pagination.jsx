@@ -1,30 +1,19 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  textSecondary: '#3d5a80',
-  textMuted: '#98afc2',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  raised: {
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-  },
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-  },
+  primaryHover: '#1a56b8',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
-
-const gradients = {
-  primary: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-};
 
 // Generate page numbers array with ellipsis
 function getPageNumbers(currentPage, totalPages) {
@@ -78,13 +67,12 @@ export function NeumorphicPagination({ table, totalCount }) {
   const pages = getPageNumbers(currentPage, pageCount);
 
   const buttonBase = {
-    width: '40px',
-    height: '40px',
-    borderRadius: '12px',
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: 'none',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
     fontWeight: 500,
@@ -93,32 +81,31 @@ export function NeumorphicPagination({ table, totalCount }) {
 
   const buttonNormal = {
     ...buttonBase,
-    background: theme.bg,
-    boxShadow: shadows.raised.sm,
+    background: theme.bgWhite,
+    border: `1px solid ${theme.border}`,
     color: theme.textSecondary,
   };
 
   const buttonActive = {
     ...buttonBase,
-    background: gradients.primary,
-    boxShadow: shadows.raised.sm,
+    background: theme.primary,
+    border: `1px solid ${theme.primary}`,
     color: 'white',
   };
 
   const buttonDisabled = {
     ...buttonBase,
     background: theme.bg,
-    boxShadow: 'none',
+    border: `1px solid ${theme.border}`,
     color: theme.textMuted,
     opacity: 0.5,
     cursor: 'not-allowed',
   };
 
   const selectStyle = {
-    background: theme.bg,
-    boxShadow: shadows.pressed.sm,
-    border: 'none',
-    borderRadius: '10px',
+    background: theme.bgWhite,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '8px',
     padding: '8px 12px',
     paddingRight: '32px',
     fontSize: '14px',
@@ -127,9 +114,10 @@ export function NeumorphicPagination({ table, totalCount }) {
     cursor: 'pointer',
     outline: 'none',
     appearance: 'none',
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233d5a80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right 10px center',
+    transition: 'border-color 0.2s ease',
   };
 
   return (
@@ -158,6 +146,8 @@ export function NeumorphicPagination({ table, totalCount }) {
               table.setPageSize(Number(e.target.value));
             }}
             style={selectStyle}
+            onFocus={e => (e.target.style.borderColor = theme.primary)}
+            onBlur={e => (e.target.style.borderColor = theme.border)}
           >
             {PAGE_SIZE_OPTIONS.map(size => (
               <option key={size} value={size}>
@@ -177,11 +167,15 @@ export function NeumorphicPagination({ table, totalCount }) {
             style={table.getCanPreviousPage() ? buttonNormal : buttonDisabled}
             onMouseEnter={e => {
               if (table.getCanPreviousPage()) {
-                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.borderColor = theme.primary;
+                e.currentTarget.style.color = theme.primary;
               }
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)';
+              if (table.getCanPreviousPage()) {
+                e.currentTarget.style.borderColor = theme.border;
+                e.currentTarget.style.color = theme.textSecondary;
+              }
             }}
           >
             <ChevronLeft className="w-5 h-5" />
@@ -200,18 +194,22 @@ export function NeumorphicPagination({ table, totalCount }) {
                     ? {
                         ...buttonNormal,
                         cursor: 'default',
-                        boxShadow: 'none',
+                        border: 'none',
                         background: 'transparent',
                       }
                     : buttonNormal
               }
               onMouseEnter={e => {
                 if (page !== '...' && page !== currentPage) {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.borderColor = theme.primary;
+                  e.currentTarget.style.color = theme.primary;
                 }
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
+                if (page !== '...' && page !== currentPage) {
+                  e.currentTarget.style.borderColor = theme.border;
+                  e.currentTarget.style.color = theme.textSecondary;
+                }
               }}
             >
               {page}
@@ -225,11 +223,15 @@ export function NeumorphicPagination({ table, totalCount }) {
             style={table.getCanNextPage() ? buttonNormal : buttonDisabled}
             onMouseEnter={e => {
               if (table.getCanNextPage()) {
-                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.borderColor = theme.primary;
+                e.currentTarget.style.color = theme.primary;
               }
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)';
+              if (table.getCanNextPage()) {
+                e.currentTarget.style.borderColor = theme.border;
+                e.currentTarget.style.color = theme.textSecondary;
+              }
             }}
           >
             <ChevronRight className="w-5 h-5" />

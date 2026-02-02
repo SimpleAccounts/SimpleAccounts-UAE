@@ -1,4 +1,4 @@
-// Cash Card - Neumorphic Design
+// Cash Card - Corporate Design
 .cash-card {
   border: none !important;
   background: transparent !important;
@@ -11,7 +11,7 @@
 
   h1 {
     font-size: 1.125rem;
-    color: var(--neu-primary, #2064d8);
+    color: #2064d8;
     font-weight: 700;
     margin: 0;
   }
@@ -37,12 +37,13 @@
   }
 
   .cashflow-card {
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     min-width: 80px;
     flex: 1 1 auto;
 
     &:hover {
       transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -105,13 +106,13 @@
 }
 
 .card-shadow {
-  box-shadow:
-    6px 6px 12px var(--neu-shadow-dark, #c4c9cf),
-    -6px -6px 12px var(--neu-shadow-light, #ffffff);
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .flex-color {
-  background-color: var(--neu-bg, #e8eef5);
+  background-color: #f8f9fa;
 }
 
 .card-h1 {
@@ -129,7 +130,7 @@
 }
 
 .title-bottom-border {
-  border-bottom: 2px solid rgba(30, 110, 255, 0.1);
+  border-bottom: 1px solid #e5e7eb;
   padding-bottom: 12px;
   margin-bottom: 12px;
 }

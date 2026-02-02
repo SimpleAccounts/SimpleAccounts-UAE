@@ -18,37 +18,25 @@ import './style.scss';
 
 const strings = new LocalizedStrings(data);
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
   warning: '#f59e0b',
-  danger: '#ff4d6a',
-  textPrimary: '#1e3a5f',
-  textSecondary: '#3d5a80',
-  textMuted: '#98afc2',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  raised: {
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
-    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
-  },
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
-  },
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 /**
  * Modern Contact List Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function Contact() {
   const navigate = useNavigate();
@@ -135,10 +123,10 @@ function Contact() {
     initializeData();
   }, [pagination, sorting]);
 
-  // Navigate to detail
+  // Navigate to view page (read-only)
   const goToDetail = useCallback(
     row => {
-      navigate('/admin/master/contact/detail', { state: { id: row.id } });
+      navigate('/admin/master/contact/view', { state: { id: row.id } });
     },
     [navigate]
   );
@@ -190,9 +178,9 @@ function Contact() {
         header: strings.CONTACTTYPE,
         cell: ({ row }) => (
           <span
-            className="px-2 py-1 rounded-lg text-xs font-medium"
+            className="px-2 py-1 rounded text-xs font-medium"
             style={{
-              background: `${theme.primary}15`,
+              background: '#eff6ff',
               color: theme.primary,
             }}
           >
@@ -206,11 +194,38 @@ function Contact() {
         cell: ({ row }) => <span style={{ color: theme.textSecondary }}>{row.original.email}</span>,
       },
       {
+        accessorKey: 'telephone',
+        header: strings.Telephone || 'Telephone',
+        cell: ({ row }) => (
+          <span style={{ color: theme.textSecondary }}>{row.original.telephone || '-'}</span>
+        ),
+      },
+      {
         accessorKey: 'mobileNumber',
         header: strings.MOBILENUMBER,
         cell: ({ row }) => {
           const mobile = row.original.mobileNumber;
-          return <span style={{ color: theme.textSecondary }}>{mobile ? `+${mobile}` : ''}</span>;
+          return <span style={{ color: theme.textSecondary }}>{mobile ? `+${mobile}` : '-'}</span>;
+        },
+      },
+      {
+        accessorKey: 'dueAmount',
+        header: strings.DueAmount || 'Due Amount',
+        cell: ({ row }) => {
+          const dueAmount = row.original.dueAmount;
+          if (!dueAmount || dueAmount === 0) {
+            return <span style={{ color: theme.textMuted }}>-</span>;
+          }
+          return (
+            <span
+              className="font-semibold"
+              style={{
+                color: theme.danger,
+              }}
+            >
+              {row.original.currencySymbol || ''} {Number(dueAmount).toFixed(2)}
+            </span>
+          );
         },
       },
       {
@@ -220,9 +235,9 @@ function Contact() {
           const isActive = row.original.isActive;
           return (
             <span
-              className="px-2 py-1 rounded-lg text-xs font-medium"
+              className="px-2 py-1 rounded text-xs font-medium"
               style={{
-                background: isActive ? `${theme.secondary}15` : `${theme.danger}15`,
+                background: isActive ? '#ecfdf5' : '#fef2f2',
                 color: isActive ? theme.secondary : theme.danger,
               }}
             >
@@ -241,7 +256,7 @@ function Contact() {
               label: strings.Edit,
               icon: Edit,
               onClick: () =>
-                navigate('/admin/master/contact/detail', {
+                navigate('/admin/master/contact/edit', {
                   state: { id: contact.id },
                 }),
             },
@@ -254,18 +269,32 @@ function Contact() {
     [navigate]
   );
 
-  // Transform data for table
+  // Transform data for table (reducer getArray returns array with .count; not { data })
   const tableData = useMemo(() => {
-    if (!contact_list?.data) return [];
-    return contact_list.data.map(contact => ({
-      id: contact.id,
-      fullName: contact.fullName || '',
-      organization: contact.organization || '',
-      contactTypeString: contact.contactTypeString || '',
-      email: contact.email || '',
-      mobileNumber: contact.mobileNumber || '',
-      isActive: contact.isActive,
-    }));
+    const data = Array.isArray(contact_list) ? contact_list : (contact_list?.data ?? []);
+    if (!data.length && !contact_list) return [];
+    return data.map(contact => {
+      // Build fullName from firstName, middleName, lastName
+      const nameParts = [];
+      if (contact.firstName) nameParts.push(contact.firstName);
+      if (contact.middleName) nameParts.push(contact.middleName);
+      if (contact.lastName) nameParts.push(contact.lastName);
+      const fullName = nameParts.join(' ') || '-';
+
+      return {
+        id: contact.id,
+        fullName: fullName,
+        organization: contact.organization || '',
+        contactTypeString: contact.contactTypeString || '',
+        email: contact.email || '',
+        telephone: contact.telephone || '',
+        mobileNumber: contact.mobileNumber || '',
+        currencySymbol: contact.currencySymbol || '',
+        dueAmount: contact.dueAmount || 0,
+        nextDueDate: contact.nextDueDate || null,
+        isActive: contact.isActive,
+      };
+    });
   }, [contact_list]);
 
   if (loading) {
@@ -278,20 +307,20 @@ function Contact() {
 
       {/* Page Header Card */}
       <div
-        className="rounded-2xl p-6 mb-6"
+        className="rounded-xl p-6 mb-6"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* Title Section */}
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
+                background: '#eff6ff',
               }}
             >
               <Users className="w-6 h-6" style={{ color: theme.primary }} />
@@ -309,10 +338,9 @@ function Contact() {
           {/* Actions Section */}
           <button
             onClick={() => navigate('/admin/master/contact/create')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
             style={{
-              background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-              boxShadow: shadows.raised.sm,
+              background: theme.primary,
             }}
           >
             <Plus className="w-4 h-4" />
@@ -323,14 +351,15 @@ function Contact() {
 
       {/* Filters & Table Card */}
       <div
-        className="rounded-2xl overflow-hidden"
+        className="rounded-xl overflow-hidden"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         {/* Filters Section */}
-        <div className="p-6 border-b" style={{ borderColor: `${theme.shadowDark}40` }}>
+        <div className="p-6 border-b" style={{ borderColor: theme.border }}>
           <h5 className="text-sm font-semibold mb-4" style={{ color: theme.textPrimary }}>
             {strings.Filter}:
           </h5>
@@ -338,42 +367,45 @@ function Contact() {
             <input
               value={filterData.name}
               placeholder={`${strings.Enter} ${strings.Name}`}
-              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              className="px-4 py-2.5 rounded-lg outline-none w-full transition-all duration-200"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.pressed.sm,
+                background: theme.bgWhite,
+                border: `1px solid ${theme.border}`,
                 color: theme.textPrimary,
               }}
+              onFocus={e => (e.target.style.borderColor = theme.primary)}
+              onBlur={e => (e.target.style.borderColor = theme.border)}
               onChange={e => handleFilterChange('name', e.target.value)}
             />
             <input
               value={filterData.email}
               placeholder={`${strings.Enter} ${strings.Email}`}
-              className="px-4 py-2 rounded-xl border-0 outline-none w-full"
+              className="px-4 py-2.5 rounded-lg outline-none w-full transition-all duration-200"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.pressed.sm,
+                background: theme.bgWhite,
+                border: `1px solid ${theme.border}`,
                 color: theme.textPrimary,
               }}
+              onFocus={e => (e.target.style.borderColor = theme.primary)}
+              onBlur={e => (e.target.style.borderColor = theme.border)}
               onChange={e => handleFilterChange('email', e.target.value)}
             />
             <div className="flex gap-2">
               <button
                 onClick={handleSearch}
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-90"
                 style={{
-                  background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.primary,
                 }}
               >
                 <Search className="w-4 h-4 text-white" />
               </button>
               <button
                 onClick={clearAll}
-                className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:bg-gray-50"
                 style={{
-                  background: theme.bg,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.bgWhite,
+                  border: `1px solid ${theme.border}`,
                 }}
               >
                 <RefreshCw className="w-4 h-4" style={{ color: theme.textSecondary }} />
@@ -395,7 +427,6 @@ function Contact() {
             onSortingChange={setSorting}
             sorting={sorting}
             onRowClick={goToDetail}
-            neumorphicPagination
             totalCount={contact_list?.count || 0}
           />
         </div>

@@ -101,12 +101,18 @@ public class ExpenseRestHelper {
 	private void updateInvoiceTemplateIfNeeded(ExpenseModel model, Expense expense) {
 		CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(10);
 		expense.setExpenseNumber(model.getExpenseNumber());
-		if (model.getExpenseNumber() != null) {
+		if (model.getExpenseNumber() != null && template != null) {
 			String suffix = invoiceNumberUtil.fetchSuffixFromString(model.getExpenseNumber());
-			template.setSuffix(Integer.parseInt(suffix));
-			String prefix = expense.getExpenseNumber().substring(0, expense.getExpenseNumber().lastIndexOf(suffix));
-			template.setPrefix(prefix);
-			customizeInvoiceTemplateService.persist(template);
+			if (suffix != null && !suffix.isEmpty()) {
+				try {
+					template.setSuffix(Integer.parseInt(suffix));
+					String prefix = expense.getExpenseNumber().substring(0, expense.getExpenseNumber().lastIndexOf(suffix));
+					template.setPrefix(prefix);
+					customizeInvoiceTemplateService.persist(template);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse suffix {} as Integer from expense number {}", suffix, model.getExpenseNumber());
+				}
+			}
 		}
 	}
 

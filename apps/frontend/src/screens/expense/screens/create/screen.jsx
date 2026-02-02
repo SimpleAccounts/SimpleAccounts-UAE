@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
@@ -174,9 +175,9 @@ const CreateExpense = ({
   bank_list,
   currency_convert_list,
   pay_to_list,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [disableLeavePage, setDisableLeavePage] = useState(false);
@@ -503,7 +504,7 @@ const CreateExpense = ({
             setDisabled(false);
             getExpenseNumber();
           } else {
-            history.push('/admin/expense/expense');
+            navigate('/admin/expense/expense');
             setDisabled(false);
             setLoading(false);
           }
@@ -1455,10 +1456,10 @@ const CreateExpense = ({
                                   className="btn-square"
                                   onClick={() => {
                                     if (location?.state?.renderURL) {
-                                      history.push(`${location?.state?.renderURL}`, {
-                                        expenseId: location?.state?.renderID,
+                                      navigate(`${location?.state?.renderURL}`, {
+                                        state: { expenseId: location?.state?.renderID },
                                       });
-                                    } else history.push('/admin/expense/expense');
+                                    } else navigate('/admin/expense/expense');
                                   }}
                                 >
                                   <Ban className="h-4 w-4" /> {strings.Cancel}

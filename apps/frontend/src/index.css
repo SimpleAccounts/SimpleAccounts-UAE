@@ -292,6 +292,107 @@
 }
 
 /* ============================================
+   NAVIGATION/SIDEBAR MENU STYLES
+   ============================================ */
+
+/* Base menu item styling */
+.corp-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem; /* rounded-md */
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none; /* Remove underlines */
+}
+
+/* Menu item - default state */
+.corp-menu-item-default {
+  background-color: transparent;
+  color: var(--corp-text-primary);
+}
+
+.corp-menu-item-default:hover {
+  background-color: var(--corp-bg-secondary);
+}
+
+.corp-menu-item-default .menu-icon {
+  color: var(--corp-text-secondary);
+}
+
+/* Menu item - active state */
+.corp-menu-item-active {
+  background-color: var(--corp-primary);
+  color: #ffffff;
+}
+
+.corp-menu-item-active .menu-icon {
+  color: #ffffff;
+}
+
+/* Menu item - expanded/has active child */
+.corp-menu-item-expanded {
+  background-color: var(--corp-primary-light);
+  border-color: var(--corp-primary);
+}
+
+.corp-menu-item-expanded .menu-icon {
+  color: var(--corp-primary);
+}
+
+.corp-menu-item-expanded .menu-text {
+  color: var(--corp-primary);
+}
+
+/* Submenu item styling */
+.corp-submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem; /* rounded-md */
+  transition: all 0.2s ease;
+  border-left: 2px solid transparent;
+  font-size: 0.875rem;
+  text-decoration: none; /* Remove underlines */
+}
+
+.corp-submenu-item-default {
+  background-color: transparent;
+  color: var(--corp-text-secondary);
+}
+
+.corp-submenu-item-default:hover {
+  background-color: var(--corp-bg-secondary);
+}
+
+.corp-submenu-item-default .submenu-icon {
+  color: var(--corp-text-muted);
+}
+
+.corp-submenu-item-active {
+  background-color: var(--corp-primary-light);
+  border-left-color: var(--corp-primary);
+  color: var(--corp-primary);
+  font-weight: 600;
+}
+
+.corp-submenu-item-active .submenu-icon {
+  color: var(--corp-primary);
+}
+
+/* Ensure no underlines on hover or focus */
+.corp-menu-item:hover,
+.corp-menu-item:focus,
+.corp-submenu-item:hover,
+.corp-submenu-item:focus {
+  text-decoration: none;
+}
+
+/* ============================================
    LEGACY STYLES (Preserve existing functionality)
    ============================================ */
 
@@ -448,4 +549,9 @@
 
 .product-cotact-input button {
   margin: 0 !important;
+}
+
+/* Force white background for ZIP/PO Box inputs */
+.bg-white-important {
+  background-color: #ffffff !important;
 }

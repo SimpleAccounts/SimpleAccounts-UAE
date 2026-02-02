@@ -84,6 +84,7 @@ public class PaymentController {
 	private final TransactionExplanationRepository transactionExplanationRepository;
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getlist")
 	public ResponseEntity<PaginationResponseModel> getPaymentList(PaymentRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -129,6 +130,7 @@ public class PaymentController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getpaymentbyid")
 	public ResponseEntity<PaymentPersistModel> getPaymentById(@RequestParam("paymentId") Integer paymentId) {
 		try {
@@ -151,75 +153,94 @@ public class PaymentController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userServiceNew.findByPK(userId);
 			Payment payment = paymentRestHelper.convertToPayment(paymentModel);
-			payment.setCreatedBy(user.getUserId());
-			payment.setCreatedDate(LocalDateTime.now());
-			Transaction transaction = new Transaction();
+		payment.setCreatedBy(user.getUserId());
+		payment.setCreatedDate(LocalDateTime.now());
+		Transaction transaction = new Transaction();
+		// #region agent log
+		logger.info("DEBUG_PAYMENT: Before persist - payMode={}, hasInvoice={}, depositeToTxnCat={}", 
+			paymentModel.getPayMode(), payment.getInvoice() != null, payment.getDepositeToTransactionCategory() != null);
+		// #endregion
 
-			paymentService.persist(payment);
+		paymentService.persist(payment);
 
-			if (paymentModel.getPayMode()== PayMode.CASH){
+		// Create and persist bank transaction for both CASH and BANK so paymentPosting and mapping have valid transaction
+		if (paymentModel.getPayMode() == PayMode.CASH || paymentModel.getPayMode() == PayMode.BANK) {
+			// #region agent log
+			logger.info("DEBUG_PAYMENT: Creating bank transaction - payMode={}", paymentModel.getPayMode());
+			// #endregion
 				Map<String, Object> param = new HashMap<>();
-				param.put("transactionCategory", payment.getDepositeToTransactionCategory());
 				param.put("deleteFlag", false);
-				List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
-				BankAccount bankAccount =  bankAccountList!= null && !bankAccountList.isEmpty()
-						? bankAccountList.get(0)
-						: null;
-				transaction.setCreatedBy(payment.getCreatedBy());
-				transaction.setTransactionDate(payment.getPaymentDate().atStartOfDay());
-				transaction.setBankAccount(bankAccount);
-				transaction.setTransactionAmount(payment.getInvoiceAmount());
-				transaction.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
-				transaction.setTransactionDescription("Manual Transaction Created Against ReceiptNo "+payment.getPaymentNo());
-				transaction.setDebitCreditFlag('D');
-				transaction.setExplinationVendor(payment.getSupplier());
-				transaction.setExchangeRate(BigDecimal.valueOf(1));
-				transaction.setTransactionDueAmount(BigDecimal.ZERO);
-				transaction.setCoaCategory(chartOfAccountCategoryService.findByPK(ChartOfAccountCategoryIdEnumConstant.EXPENSE.getId()));
-				transactionService.persist(transaction);
-				BigDecimal currentBalance = bankAccount.getCurrentBalance();
-				currentBalance = currentBalance.subtract(transaction.getTransactionAmount());
-				bankAccount.setCurrentBalance(currentBalance);
-				bankAccountService.update(bankAccount);
-
-				TransactionExplanation transactionExplanation = new TransactionExplanation();
-				transactionExplanation.setCreatedBy(userId);
-				transactionExplanation.setCreatedDate(LocalDateTime.now());
-				transactionExplanation.setTransaction(transaction);
-				transactionExplanation.setPaidAmount(transaction.getTransactionAmount());
-				transactionExplanation.setCurrentBalance(transaction.getCurrentBalance());
-				transactionExplanation.setExplanationContact(payment.getSupplier().getContactId());
-				transactionExplanation.setExplainedTransactionCategory(transaction.getExplainedTransactionCategory());
-				transactionExplanation.setExchangeGainOrLossAmount(BigDecimal.ZERO);
-				transactionExplanation.setCoaCategory(chartOfAccountCategoryService.findByPK(ChartOfAccountCategoryIdEnumConstant.EXPENSE.getId()));
-
-				List<TransactionExplinationLineItem> transactionExplinationLineItems = new ArrayList<>();
-				TransactionExplinationLineItem transactionExplinationLineItem = new TransactionExplinationLineItem();
-				transactionExplinationLineItem.setCreatedBy(userId);
-				transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
-				transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
-				transactionExplinationLineItem.setReferenceId(payment.getInvoice().getId());
-				transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
-				transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
-				transactionExplinationLineItems.add(transactionExplinationLineItem);
-				transactionExplinationLineItem.setExplainedAmount(transaction.getTransactionAmount());
-				transactionExplinationLineItem.setConvertedAmount(transaction.getTransactionAmount());
-				transactionExplinationLineItem.setExchangeRate(transaction.getExchangeRate());
-				if(payment.getInvoice().getDueAmount().subtract(payment.getInvoiceAmount()).compareTo(BigDecimal.ZERO) == 0) {
-					transactionExplinationLineItem.setPartiallyPaid(Boolean.FALSE);
-				}else{
-					transactionExplinationLineItem.setPartiallyPaid(Boolean.TRUE);
+				if (payment.getDepositeToTransactionCategory() != null) {
+					param.put("transactionCategory", payment.getDepositeToTransactionCategory());
 				}
-				//sum of all explained invoices
-				transactionExplanationRepository.save(transactionExplanation);
+				List<BankAccount> bankAccountList = bankAccountService.findByAttributes(param);
+			BankAccount bankAccount = bankAccountList != null && !bankAccountList.isEmpty()
+					? bankAccountList.get(0)
+					: null;
+			// #region agent log
+			logger.info("DEBUG_PAYMENT: Bank account search - found={}, listSize={}", 
+				bankAccount != null, bankAccountList != null ? bankAccountList.size() : 0);
+			// #endregion
 
-				TransactionStatus status = new TransactionStatus();
-				status.setCreatedBy(userId);
-				status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
-				status.setTransaction(transaction);
-				status.setRemainingToExplain((payment.getInvoice().getDueAmount().subtract(paymentModel.getAmount())));
-				status.setInvoice(payment.getInvoice());
-				transactionStatusService.persist(status);
+			if (bankAccount != null) {
+					if (payment.getDepositeToTransactionCategory() == null) {
+						payment.setDepositeToTransactionCategory(bankAccount.getTransactionCategory());
+					}
+					transaction.setCreatedBy(payment.getCreatedBy());
+					transaction.setTransactionDate(payment.getPaymentDate().atStartOfDay());
+					transaction.setBankAccount(bankAccount);
+					transaction.setTransactionAmount(payment.getInvoiceAmount());
+					transaction.setTransactionExplinationStatusEnum(TransactionExplinationStatusEnum.FULL);
+					transaction.setTransactionDescription("Manual Transaction Created Against ReceiptNo " + payment.getPaymentNo());
+					transaction.setDebitCreditFlag('D');
+					transaction.setExplinationVendor(payment.getSupplier());
+					transaction.setExchangeRate(BigDecimal.valueOf(1));
+					transaction.setTransactionDueAmount(BigDecimal.ZERO);
+					transaction.setCoaCategory(chartOfAccountCategoryService.findByPK(ChartOfAccountCategoryIdEnumConstant.EXPENSE.getId()));
+					transactionService.persist(transaction);
+					BigDecimal currentBalance = bankAccount.getCurrentBalance();
+					currentBalance = currentBalance.subtract(transaction.getTransactionAmount());
+					bankAccount.setCurrentBalance(currentBalance);
+					bankAccountService.update(bankAccount);
+
+					TransactionExplanation transactionExplanation = new TransactionExplanation();
+					transactionExplanation.setCreatedBy(userId);
+					transactionExplanation.setCreatedDate(LocalDateTime.now());
+					transactionExplanation.setTransaction(transaction);
+					transactionExplanation.setPaidAmount(transaction.getTransactionAmount());
+					transactionExplanation.setCurrentBalance(transaction.getCurrentBalance());
+					transactionExplanation.setExplanationContact(payment.getSupplier().getContactId());
+					transactionExplanation.setExplainedTransactionCategory(transaction.getExplainedTransactionCategory());
+					transactionExplanation.setExchangeGainOrLossAmount(BigDecimal.ZERO);
+					transactionExplanation.setCoaCategory(chartOfAccountCategoryService.findByPK(ChartOfAccountCategoryIdEnumConstant.EXPENSE.getId()));
+
+					List<TransactionExplinationLineItem> transactionExplinationLineItems = new ArrayList<>();
+					TransactionExplinationLineItem transactionExplinationLineItem = new TransactionExplinationLineItem();
+					transactionExplinationLineItem.setCreatedBy(userId);
+					transactionExplinationLineItem.setCreatedDate(LocalDateTime.now());
+					transactionExplinationLineItem.setReferenceType(PostingReferenceTypeEnum.INVOICE);
+					transactionExplinationLineItem.setReferenceId(payment.getInvoice().getId());
+					transactionExplinationLineItem.setTransactionExplanation(transactionExplanation);
+					transactionExplanation.setExplanationLineItems(transactionExplinationLineItems);
+					transactionExplinationLineItems.add(transactionExplinationLineItem);
+					transactionExplinationLineItem.setExplainedAmount(transaction.getTransactionAmount());
+					transactionExplinationLineItem.setConvertedAmount(transaction.getTransactionAmount());
+					transactionExplinationLineItem.setExchangeRate(transaction.getExchangeRate());
+					if (payment.getInvoice().getDueAmount().subtract(payment.getInvoiceAmount()).compareTo(BigDecimal.ZERO) == 0) {
+						transactionExplinationLineItem.setPartiallyPaid(Boolean.FALSE);
+					} else {
+						transactionExplinationLineItem.setPartiallyPaid(Boolean.TRUE);
+					}
+					transactionExplanationRepository.save(transactionExplanation);
+
+					TransactionStatus status = new TransactionStatus();
+					status.setCreatedBy(userId);
+					status.setExplinationStatus(TransactionExplinationStatusEnum.FULL);
+					status.setTransaction(transaction);
+					status.setRemainingToExplain((payment.getInvoice().getDueAmount().subtract(paymentModel.getAmount())));
+					status.setInvoice(payment.getInvoice());
+					transactionStatusService.persist(status);
+				}
 			}
 			//Apply Debits.
 			if (paymentModel.getListOfDebitNotes()!=null){
@@ -252,20 +273,35 @@ public class PaymentController {
 				}
 			}
 			// save data in Mapping Table
-			List<SupplierInvoicePayment> supplierInvoicePaymentList = paymentRestHelper
-					.getSupplierInvoicePaymentEntity(paymentModel);
-			for (SupplierInvoicePayment supplierInvoicePayment : supplierInvoicePaymentList) {
-				supplierInvoicePayment.setTransaction(transaction);
+            List<SupplierInvoicePayment> supplierInvoicePaymentList = paymentRestHelper
+                    .getSupplierInvoicePaymentEntity(paymentModel);
+            boolean hasPersistedTransaction = transaction.getTransactionId() != null;
+            for (SupplierInvoicePayment supplierInvoicePayment : supplierInvoicePaymentList) {
+                if (hasPersistedTransaction) {
+                    supplierInvoicePayment.setTransaction(transaction);
+                }
 				supplierInvoicePayment.setPayment(payment);
 				supplierInvoicePayment.setCreatedBy(userId);
 				Contact contact=contactService.findByPK(paymentModel.getContactId());
 				contactService.sendInvoiceThankYouMail(contact,2,supplierInvoicePayment.getSupplierInvoice().getReferenceNumber(),paymentModel.getAmount().setScale(2, RoundingMode.HALF_EVEN).toString(),dateFormtUtil.getLocalDateTimeAsString(payment.getPaymentDate().atStartOfDay(),"dd/MM/yyyy").replace("/","-"), supplierInvoicePayment.getDueAmount(), request);
 				supplierInvoicePaymentService.persist(supplierInvoicePayment);
 			}
-			// Post journal
+			// Post journal (need non-null depositeTo for journal line; use first bank if not set)
+			com.simpleaccounts.entity.bankaccount.TransactionCategory depositeToForJournal = payment.getDepositeToTransactionCategory();
+			if (depositeToForJournal == null) {
+				Map<String, Object> paramBank = new HashMap<>();
+				paramBank.put("deleteFlag", false);
+				List<BankAccount> list = bankAccountService.findByAttributes(paramBank);
+				if (list != null && !list.isEmpty() && list.get(0).getTransactionCategory() != null) {
+					depositeToForJournal = list.get(0).getTransactionCategory();
+				}
+			}
+			if (depositeToForJournal == null) {
+				throw new IllegalArgumentException("No bank account or deposit category available for payment journal. Please add a bank account or set depositeTo.");
+			}
 			Journal journal = paymentRestHelper.paymentPosting(
 					new PostingRequestModel(payment.getPaymentId(), payment.getInvoiceAmount()), userId,
-					payment.getDepositeToTransactionCategory(),transaction.getTransactionId());
+					depositeToForJournal, transaction.getTransactionId());
 			journalService.persist(journal);
 //pay
 			return new ResponseEntity<>(HttpStatus.OK);

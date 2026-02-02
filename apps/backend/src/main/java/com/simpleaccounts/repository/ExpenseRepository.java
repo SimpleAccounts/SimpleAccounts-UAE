@@ -12,4 +12,6 @@ public interface ExpenseRepository extends JpaRepository<Expense,Integer> {
     List<Expense> findAllByTransactionCategory(TransactionCategory transactionCategory);
 
     List<Expense> findAllByDeleteFlag(boolean deleteFlag);
+
+    boolean existsByDeleteFlag(Boolean deleteFlag);
 }

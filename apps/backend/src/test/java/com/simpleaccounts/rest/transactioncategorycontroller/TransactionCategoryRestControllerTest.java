@@ -357,19 +357,21 @@ class TransactionCategoryRestControllerTest {
         @DisplayName("Should return categories for expenses")
         void shouldReturnCategoriesForExpenses() throws Exception {
             List<TransactionCategory> categories = Collections.singletonList(testCategory);
-            when(transactionExpensesRepository.getTransactionCategory(any())).thenReturn(categories);
+            when(transactionCategoryService.getTransactionCategoryListForPurchaseProduct()).thenReturn(categories);
 
             mockMvc.perform(get("/rest/transactioncategory/getForExpenses"))
                     .andExpect(status().isOk());
         }
 
         @Test
-        @DisplayName("Should return error when no categories")
+        @DisplayName("Should return empty list when no categories")
         void shouldReturnErrorWhenNoCategories() throws Exception {
-            when(transactionExpensesRepository.getTransactionCategory(any())).thenReturn(null);
+            when(transactionCategoryService.getTransactionCategoryListForPurchaseProduct()).thenReturn(null);
 
             mockMvc.perform(get("/rest/transactioncategory/getForExpenses"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$").isArray())
+                    .andExpect(jsonPath("$").isEmpty());
         }
     }
 

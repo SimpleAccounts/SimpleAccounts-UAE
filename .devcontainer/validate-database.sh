@@ -34,17 +34,17 @@ print_check() {
 
 print_success() {
     echo -e "  ${GREEN}✓${NC} $1"
-    ((CHECKS_PASSED++))
+    CHECKS_PASSED=$((CHECKS_PASSED + 1))
 }
 
 print_error() {
     echo -e "  ${RED}✗${NC} $1"
-    ((CHECKS_FAILED++))
+    CHECKS_FAILED=$((CHECKS_FAILED + 1))
 }
 
 print_warning() {
     echo -e "  ${YELLOW}⚠${NC} $1"
-    ((CHECKS_WARNING++))
+    CHECKS_WARNING=$((CHECKS_WARNING + 1))
 }
 
 print_info() {
@@ -102,9 +102,10 @@ print_header "3. Databases"
 
 # Check main database
 print_check "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
-        -lqt | cut -d \| -f 1 | grep -qw "${SIMPLEACCOUNTS_DB:-simpleaccounts}"; then
+        -d postgres \
+        -tAc "SELECT 1 FROM pg_database WHERE datname='${SIMPLEACCOUNTS_DB:-simpleaccounts}'" | grep -q 1; then
     print_success "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' exists"
 else
     print_error "Database '${SIMPLEACCOUNTS_DB:-simpleaccounts}' NOT found"
@@ -112,9 +113,10 @@ fi
 
 # Check test database
 print_check "Database 'simpleaccounts_test' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
-        -lqt | cut -d \| -f 1 | grep -qw "simpleaccounts_test"; then
+        -d postgres \
+        -tAc "SELECT 1 FROM pg_database WHERE datname='simpleaccounts_test'" | grep -q 1; then
     print_success "Database 'simpleaccounts_test' exists"
 else
     print_warning "Database 'simpleaccounts_test' NOT found (optional)"
@@ -129,7 +131,7 @@ echo ""
 print_header "4. Database Users"
 
 print_check "User '${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}' exists"
-if psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
+if PGPASSWORD="${POSTGRES_PASSWORD}" psql -h "${SIMPLEACCOUNTS_DB_HOST:-localhost}" \
         -U "${POSTGRES_USER:-postgres}" \
         -tAc "SELECT 1 FROM pg_roles WHERE rolname='${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}'" | grep -q 1; then
     print_success "User '${SIMPLEACCOUNTS_DB_USER:-simpleaccounts}' exists"

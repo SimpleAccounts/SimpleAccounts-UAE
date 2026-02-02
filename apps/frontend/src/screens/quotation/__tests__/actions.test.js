@@ -63,9 +63,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.QUOTATION_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -104,9 +102,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.EXCISE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -133,9 +129,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.PROJECT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -207,7 +201,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.STATUS_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });
@@ -229,9 +223,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.VAT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
@@ -255,9 +247,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.DEPOSIT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -279,9 +269,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.PAY_MODE,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -328,7 +316,7 @@ describe('Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: QUOTATION.SUPPLIER_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });

@@ -63,9 +63,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.REQUEST_FOR_QUOTATION_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -142,9 +140,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.PROJECT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -171,9 +167,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.EXCISE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -238,7 +232,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.STATUS_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });
@@ -260,9 +254,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.VAT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
@@ -286,9 +278,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.DEPOSIT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -315,9 +305,7 @@ describe('Request For Quotation Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: REQUEST_FOR_QUOTATION.PAY_MODE,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });

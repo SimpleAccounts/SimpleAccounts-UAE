@@ -245,9 +245,7 @@ export const getTransactionList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

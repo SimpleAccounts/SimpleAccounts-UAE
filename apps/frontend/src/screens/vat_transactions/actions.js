@@ -32,9 +32,7 @@ export const vatTransactionList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: VAT_TRANSACTIONS.VAT_TRANSACTION_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;

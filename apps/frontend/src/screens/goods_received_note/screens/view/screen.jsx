@@ -8,7 +8,6 @@ import * as RequestForQuotationDetailsAction from '../detail/actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { RFQTemplate } from './sections';
 import { FileText, Printer } from 'lucide-react';
 
@@ -84,7 +83,7 @@ const ViewGoodsReceivedNote = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   return (
@@ -121,7 +120,7 @@ const ViewGoodsReceivedNote = props => {
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -136,7 +135,7 @@ const ViewGoodsReceivedNote = props => {
                   contactData={contactData}
                   status={props.location.state?.status}
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

@@ -12,6 +12,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     List<Product> findAllByDeleteFlag(boolean deleteFlag);
 
+    boolean existsByDeleteFlag(Boolean deleteFlag);
+
     @Query("SELECT p FROM Product p WHERE LOWER(p.productName) = LOWER(:productName) AND p.deleteFlag = :deleteFlag")
     List<Product> findByProductNameAndDeleteFlagIgnoreCase(@Param("productName") String productName, @Param("deleteFlag") boolean deleteFlag);
 

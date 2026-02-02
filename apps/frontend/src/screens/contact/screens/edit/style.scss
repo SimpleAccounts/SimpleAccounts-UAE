@@ -1,0 +1,17 @@
+.edit-contact-screen {
+  .corp-input {
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: var(--corp-primary);
+      box-shadow: 0 0 0 3px rgba(32, 100, 216, 0.1);
+    }
+  }
+
+  .radio-group-item {
+    &[data-state='checked'] {
+      border-color: var(--corp-primary);
+      background-color: var(--corp-primary);
+    }
+  }
+}

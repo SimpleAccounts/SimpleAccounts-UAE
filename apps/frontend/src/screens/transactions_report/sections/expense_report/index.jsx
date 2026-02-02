@@ -94,7 +94,8 @@ const ExpenseReport = () => {
                   </FormGroup>
                   <FormGroup>
                     <div className="date-range">
-                      <DateRangePicker2 ranges={ranges} opens={'left'} />
+                      {/* DISABLED: DateRangePicker2 removed due to jQuery dependency */}
+                      {/* <DateRangePicker2 ranges={ranges} opens={'left'} /> */}
                     </div>
                   </FormGroup>
                 </div>
@@ -107,9 +108,11 @@ const ExpenseReport = () => {
                   <Input type="text" placeholder="Receipt Number" />
                 </Col>
                 <Col lg={2} className="mb-1">
-                  <DateRangePicker>
+                  {/* DISABLED: DateRangePicker removed due to jQuery dependency */}
+                  {/* <DateRangePicker>
                     <Input type="text" placeholder="Expense Date" readOnly />
-                  </DateRangePicker>
+                  </DateRangePicker> */}
+                  <Input type="text" placeholder="Expense Date" readOnly />
                 </Col>
                 <Col lg={2} className="mb-1">
                   <Button color="secondary" className="btn-square" type="button" onClick={() => {}}>

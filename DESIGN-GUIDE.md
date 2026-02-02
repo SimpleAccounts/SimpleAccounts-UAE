@@ -2,6 +2,8 @@
 
 **Modern, Minimal, Professional**
 
+> **📖 Note:** For the complete, authoritative theme reference, see **[docs/THEME-GUIDELINES.md](./docs/THEME-GUIDELINES.md)**. This document provides an overview and quick examples.
+
 This design system follows industry best practices from Stripe, Linear, and OpenAI's UI guidelines for clean, professional business applications.
 
 ---
@@ -54,9 +56,8 @@ This design system follows industry best practices from Stripe, Linear, and Open
 ### Primary Colors (Brand)
 
 ```css
---corp-primary: #2064d8 /* Primary blue - from logo */ --corp-primary-hover: #1a4fa8
-  /* Hover state */ --corp-primary-light: #e3f2fd /* Light backgrounds */ --corp-secondary: #21d8aa
-  /* Success/teal */ --corp-secondary-hover: #1ab78e;
+--corp-primary: #2064d8; /* Primary blue - from logo */
+--corp-primary-dark: #1a56b8; /* Hover state */
 ```
 
 **Usage:**
@@ -68,8 +69,9 @@ This design system follows industry best practices from Stripe, Linear, and Open
 ### Background Colors
 
 ```css
---corp-bg-primary: #ffffff /* Main background */ --corp-bg-secondary: #f8f9fa /* Subtle contrast */
-  --corp-bg-tertiary: #f1f3f5 /* Deeper contrast */ --corp-bg-hover: #f8f9fa /* Hover states */;
+--corp-bg-primary: #ffffff; /* Main background */
+--corp-bg-secondary: #f8f9fa; /* Subtle contrast */
+--corp-bg-tertiary: #f3f4f6; /* Deeper contrast, table headers */
 ```
 
 **Usage:**
@@ -82,25 +84,25 @@ This design system follows industry best practices from Stripe, Linear, and Open
 ### Semantic Colors
 
 ```css
---corp-success: #10b981 /* Green for success */ --corp-success-light: #d1fae5
-  --corp-warning: #f59e0b /* Amber for warnings */ --corp-warning-light: #fef3c7
-  --corp-danger: #ef4444 /* Red for errors */ --corp-danger-light: #fee2e2 --corp-info: #3b82f6
-  /* Blue for info */ --corp-info-light: #dbeafe;
+--corp-success: #10b981; /* Green for success */
+--corp-warning: #f59e0b; /* Amber for warnings */
+--corp-danger: #ef4444; /* Red for errors */
+--corp-info: #3b82f6; /* Blue for info */
 ```
 
 ### Text Colors
 
 ```css
---corp-text-primary: #111827 /* Headings, important text */ --corp-text-secondary: #4b5563
-  /* Body text */ --corp-text-tertiary: #6b7280 /* Labels, captions */ --corp-text-muted: #9ca3af
-  /* Placeholders, hints */ --corp-text-disabled: #d1d5db /* Disabled states */;
+--corp-text-primary: #111827; /* Headings, important text */
+--corp-text-secondary: #4b5563; /* Body text */
+--corp-text-muted: #9ca3af; /* Placeholders, hints */
 ```
 
 ### Border Colors
 
 ```css
---corp-border-light: #e5e7eb /* Default borders */ --corp-border-medium: #d1d5db
-  /* Emphasized borders */ --corp-border-dark: #9ca3af /* Strong dividers */;
+--corp-border-light: #e5e7eb; /* Default borders */
+--corp-border-dark: #d1d5db; /* Emphasized borders */
 ```
 
 ---

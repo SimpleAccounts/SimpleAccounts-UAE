@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,7 +92,7 @@ class VatControllerTest {
         }
 
         @Test
-        @DisplayName("Should return NOT_FOUND when response is null")
+        @DisplayName("Should return OK with empty list when response is null")
         void getVatListReturnsNotFoundWhenNull() throws Exception {
             // Arrange
             User user = createTestUser();
@@ -99,9 +100,11 @@ class VatControllerTest {
             when(userService.findByPK(1)).thenReturn(user);
             when(vatCategoryService.getVatCategoryList(any(), any())).thenReturn(null);
 
-            // Act & Assert
+            // Act & Assert - API returns 200 with empty data for better frontend UX
             mockMvc.perform(get("/rest/vat/getList"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.count").value(0));
         }
     }
 

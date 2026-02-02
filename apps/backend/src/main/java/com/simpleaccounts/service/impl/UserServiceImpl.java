@@ -50,6 +50,12 @@ public class UserServiceImpl extends UserService{
 	private final EmailSender emailSender;
 	private final ResourceLoader resourceLoader;
 	private final DateUtils dateUtils;
+	
+	// Self-injection to ensure REQUIRES_NEW works through proxy (lazy to avoid circular dependency)
+	@org.springframework.beans.factory.annotation.Autowired
+	@org.springframework.beans.factory.annotation.Qualifier("userService")
+	@org.springframework.context.annotation.Lazy
+	private UserServiceImpl self;
 
 	public UserServiceImpl(
 			UserJpaRepository userJpaRepo,
@@ -101,6 +107,7 @@ public class UserServiceImpl extends UserService{
 	}
 
 	@Override
+	@org.springframework.transaction.annotation.Transactional
 	public void deleteByIds(List<Integer> ids) {
 		getDao().deleteByIds(ids);
 	}
@@ -111,25 +118,151 @@ public class UserServiceImpl extends UserService{
 	}
 
 	@Override
-	public boolean updateForgotPasswordToken(User user, JwtRequest jwtRequest) {
-
-		String token = randomString.getAlphaNumericString(30);
-		try {
-			emailSender.send(user.getUserEmail(), "Reset Password",
- 					emailSender.RESET_PASSWORD.replace("LINK",jwtRequest.getUrl()+ "/reset-password?token=" + token)
-							       			 .replace("{UserName}", user.getFirstName()+" "+user.getLastName()),
-					EmailConstant.ADMIN_SUPPORT_EMAIL,
-					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
-		} catch (MessagingException e) {
-			logger.error(LOG_ERROR, e);
+	public boolean updateForgotPasswordToken(String userEmail, String firstName, String lastName, JwtRequest jwtRequest) {
+		if (userEmail == null || userEmail.trim().isEmpty()) {
+			logger.error("User email is null or empty");
 			return false;
 		}
 
-		user.setForgotPasswordToken(token);
-		user.setForgotPasswordTokenExpiryDate(dateUtils.add(LocalDateTime.now(), 1));
-		persist(user);
+		// Clear EntityManager to ensure no stale entities interfere
+		try {
+			getDao().getEntityManager().clear();
+		} catch (Exception e) {
+			logger.warn("Could not clear EntityManager: {}", e.getMessage());
+		}
+
+		String token = randomString.getAlphaNumericString(30);
+		
+		// Save token first (important: token must be saved even if email fails)
+		// Use the DAO method which has REQUIRES_NEW propagation to ensure it commits independently
+		LocalDateTime expiryDate = dateUtils.add(LocalDateTime.now(), 1);
+		try {
+			java.sql.Timestamp expiryTimestamp = java.sql.Timestamp.valueOf(expiryDate);
+			java.sql.Timestamp updateTimestamp = java.sql.Timestamp.valueOf(LocalDateTime.now());
+			
+			boolean updated = getDao().updateForgotPasswordTokenByEmail(userEmail, token, expiryTimestamp, updateTimestamp);
+			
+			if (!updated) {
+				logger.error("Token update failed for email: {}", userEmail);
+				return false;
+			}
+			
+			logger.info("Token saved successfully for email: {}", userEmail);
+			
+			// Clear EntityManager after DAO method completes to prevent any managed entities from overwriting the token
+			try {
+				getDao().getEntityManager().clear();
+			} catch (Exception e) {
+				logger.warn("Could not clear entity manager after token save: {}", e.getMessage());
+			}
+		} catch (Exception e) {
+			logger.error("Failed to save password reset token for email: {} - Exception: {}", userEmail, e.getMessage(), e);
+			return false;
+		}
+		
+		// Try to send email (will gracefully fail if SMTP not configured)
+		// Token is already saved, so this is best-effort
+		try {
+			String baseUrl = jwtRequest != null && jwtRequest.getUrl() != null ? jwtRequest.getUrl() : "http://localhost:3000";
+			String resetLink = baseUrl + "/reset-password?token=" + token;
+			
+			// Use the firstName/lastName parameters passed in (no User entity query needed to avoid Hibernate issues)
+			String firstNameStr = firstName != null ? firstName : "";
+			String lastNameStr = lastName != null ? lastName : "";
+			String userName = (firstNameStr + " " + lastNameStr).trim();
+			if (userName.isEmpty()) {
+				userName = userEmail;
+			}
+			
+			emailSender.send(userEmail, "Reset Password",
+					EmailSender.RESET_PASSWORD.replace("LINK", resetLink)
+							.replace("{UserName}", userName),
+					EmailConstant.ADMIN_SUPPORT_EMAIL,
+					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
+			
+			logger.info("Password reset email sent successfully for email: {}", userEmail);
+		} catch (MessagingException e) {
+			logger.warn("Email not sent (SMTP may not be configured): {}. Token was saved and can be used directly.", e.getMessage());
+		} catch (Exception e) {
+			logger.warn("Failed to send password reset email for user: {}. Token was saved.", userEmail, e);
+		}
+		
 		return true;
 	}
+	
+	@Override
+	public String updateForgotPasswordTokenAndReturnToken(String userEmail, String firstName, String lastName, JwtRequest jwtRequest) {
+		if (userEmail == null || userEmail.trim().isEmpty()) {
+			logger.error("User email is null or empty");
+			return null;
+		}
+
+		// Clear EntityManager to ensure no stale entities interfere
+		try {
+			getDao().getEntityManager().clear();
+		} catch (Exception e) {
+			logger.warn("Could not clear EntityManager: {}", e.getMessage());
+		}
+
+		String token = randomString.getAlphaNumericString(30);
+		
+		// Save token first (important: token must be saved even if email fails)
+		// Use the DAO method which has REQUIRES_NEW propagation to ensure it commits independently
+		LocalDateTime expiryDate = dateUtils.add(LocalDateTime.now(), 1);
+		try {
+			java.sql.Timestamp expiryTimestamp = java.sql.Timestamp.valueOf(expiryDate);
+			java.sql.Timestamp updateTimestamp = java.sql.Timestamp.valueOf(LocalDateTime.now());
+			
+			boolean updated = getDao().updateForgotPasswordTokenByEmail(userEmail, token, expiryTimestamp, updateTimestamp);
+			
+			if (!updated) {
+				logger.error("Token update failed for email: {}", userEmail);
+				return null;
+			}
+			
+			logger.info("Token saved successfully for email: {}", userEmail);
+			
+			// Clear EntityManager after DAO method completes to prevent any managed entities from overwriting the token
+			try {
+				getDao().getEntityManager().clear();
+			} catch (Exception e) {
+				logger.warn("Could not clear entity manager after token save: {}", e.getMessage());
+			}
+		} catch (Exception e) {
+			logger.error("Failed to save password reset token for email: {} - Exception: {}", userEmail, e.getMessage(), e);
+			return null;
+		}
+		
+		// Try to send email (will gracefully fail if SMTP not configured)
+		// Token is already saved, so this is best-effort
+		try {
+			String baseUrl = jwtRequest != null && jwtRequest.getUrl() != null ? jwtRequest.getUrl() : "http://localhost:3000";
+			String resetLink = baseUrl + "/reset-password?token=" + token;
+			
+			// Use the firstName/lastName parameters passed in (no User entity query needed to avoid Hibernate issues)
+			String firstNameStr = firstName != null ? firstName : "";
+			String lastNameStr = lastName != null ? lastName : "";
+			String userName = (firstNameStr + " " + lastNameStr).trim();
+			if (userName.isEmpty()) {
+				userName = userEmail;
+			}
+			
+			emailSender.send(userEmail, "Reset Password",
+					EmailSender.RESET_PASSWORD.replace("LINK", resetLink)
+							.replace("{UserName}", userName),
+					EmailConstant.ADMIN_SUPPORT_EMAIL,
+					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
+			
+			logger.info("Password reset email sent successfully for email: {}", userEmail);
+		} catch (MessagingException e) {
+			logger.warn("Email not sent (SMTP may not be configured): {}. Token was saved and can be used directly.", e.getMessage());
+		} catch (Exception e) {
+			logger.warn("Failed to send password reset email for user: {}. Token was saved.", userEmail, e);
+		}
+		
+		return token;
+	}
+	
 
 	@Override
 	public String createPassword(User user,UserModel selectedUser,User sender) {
@@ -188,7 +321,7 @@ public class UserServiceImpl extends UserService{
 					testContent,
 					EmailConstant.ADMIN_SUPPORT_EMAIL,
 					EmailConstant.ADMIN_EMAIL_SENDER_NAME, true);
-			System.out.println("################# ########################## Mail Sent =  "+testContent);
+			logger.info("Test email sent successfully to: {}", user.getUserEmail());
 		} catch (MessagingException e) {
 			logger.error(LOG_ERROR, e);
 			return false;
@@ -208,5 +341,10 @@ public class UserServiceImpl extends UserService{
 	@Override
 	public Optional<User> findUserById(Integer id){
 		return userJpaRepo.findById(id);
+	}
+	
+	@Override
+	public String verifyTokenFromDatabase(String userEmail) {
+		return getDao().verifyTokenFromDatabase(userEmail);
 	}
 }

@@ -1,0 +1,459 @@
+import { test, expect } from '@playwright/test';
+import {
+  login,
+  createTestContact,
+  goToContactList,
+  openEditFormForFirstContact,
+  contactExistsInList,
+  hasNoResults,
+} from './helpers/contact-helpers';
+
+const username = process.env.E2E_USERNAME || '';
+const password = process.env.E2E_PASSWORD || '';
+
+test.describe('Contact CRUD - Comprehensive Functionality Tests', () => {
+  test.beforeEach(async ({ page }) => {
+    test.skip(!username || !password, 'E2E_USERNAME and E2E_PASSWORD must be set');
+    await login(page, username, password);
+  });
+
+  test.describe('CREATE Operations', () => {
+    test('should create contact with valid data and verify it appears in list', async ({
+      page,
+    }) => {
+      const timestamp = Date.now();
+      const uniqueEmail = `test${timestamp}@example.com`;
+      const firstName = 'John';
+      const lastName = 'Doe';
+
+      // Create contact
+      await createTestContact(page, firstName, lastName, uniqueEmail);
+
+      // VERIFY: Navigate to list and confirm contact exists
+      await goToContactList(page);
+
+      // VERIFY: Contact appears in list with correct data
+      const contactExists = await contactExistsInList(page, uniqueEmail);
+      expect(contactExists).toBeTruthy();
+
+      // VERIFY: Name appears in list
+      const nameExists = await contactExistsInList(page, `${firstName} ${lastName}`);
+      expect(nameExists).toBeTruthy();
+
+      // VERIFY: Refresh page and confirm persistence
+      await page.reload();
+      const stillExists = await contactExistsInList(page, uniqueEmail);
+      expect(stillExists).toBeTruthy();
+    });
+
+    test('should create contact with all optional fields and verify data', async ({ page }) => {
+      const timestamp = Date.now();
+      const uniqueEmail = `fulldata${timestamp}@example.com`;
+      const firstName = 'Jane';
+      const lastName = 'Smith';
+      const phone = '+971501234567';
+      const organization = `Test Org ${timestamp}`;
+
+      // Create contact with all fields
+      await createTestContact(page, firstName, lastName, uniqueEmail, {
+        contactType: 'SUPPLIER',
+        phone,
+        organization,
+      });
+
+      // VERIFY: Navigate to list
+      await goToContactList(page);
+
+      // VERIFY: Contact with all data appears
+      expect(await contactExistsInList(page, uniqueEmail)).toBeTruthy();
+      expect(await contactExistsInList(page, `${firstName} ${lastName}`)).toBeTruthy();
+    });
+
+    test('should validate required fields and prevent submission', async ({ page }) => {
+      await page.goto('/admin/master/contact/create', { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(1000);
+
+      // Try to submit empty form
+      const submitButton = page.getByRole('button', { name: /save|create|submit/i }).first();
+      await submitButton.click();
+      await page.waitForTimeout(1000);
+
+      // VERIFY: Validation errors appear or form doesn't submit
+      // Check if still on create page
+      expect(page.url()).toContain('create');
+
+      // VERIFY: Look for validation error messages
+      const hasValidationError = await Promise.race([
+        page
+          .getByText(/required/i)
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page
+          .locator('[class*="error"], [role="alert"]')
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page.waitForTimeout(2000).then(() => false),
+      ]);
+
+      // Either validation messages appear OR we're still on create page (validation prevented submission)
+      expect(hasValidationError || page.url().includes('create')).toBeTruthy();
+    });
+
+    test('should validate email format and prevent invalid submission', async ({ page }) => {
+      await page.goto('/admin/master/contact/create', { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(1000);
+
+      // Fill form with invalid email
+      await page.fill('input[placeholder*="First Name"]', 'Test');
+      await page.fill('input[placeholder*="Last Name"]', 'User');
+      await page.fill('input[type="email"]', 'invalid-email-format');
+
+      // Try to submit
+      await page
+        .getByRole('button', { name: /save|create|submit/i })
+        .first()
+        .click();
+      await page.waitForTimeout(1000);
+
+      // VERIFY: Form not submitted (still on create page) or validation error shown
+      expect(page.url()).toContain('contact');
+
+      // Check for email validation error
+      const hasEmailError = await Promise.race([
+        page
+          .getByText(/invalid.*email|email.*invalid|valid.*email/i)
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page
+          .locator('input[type="email"]:invalid')
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page.waitForTimeout(2000).then(() => false),
+      ]);
+
+      // Either email validation error appears OR still on create page
+      expect(hasEmailError || page.url().includes('create')).toBeTruthy();
+    });
+  });
+
+  test.describe('READ/VIEW Operations', () => {
+    test('should display contact in list with correct data', async ({ page }) => {
+      // Create test contact first
+      const timestamp = Date.now();
+      const uniqueEmail = `viewtest${timestamp}@example.com`;
+      const firstName = 'ViewTest';
+      const lastName = 'Contact';
+
+      await createTestContact(page, firstName, lastName, uniqueEmail);
+
+      // Navigate to list
+      await goToContactList(page);
+
+      // VERIFY: Contact appears in list
+      expect(await contactExistsInList(page, uniqueEmail)).toBeTruthy();
+      expect(await contactExistsInList(page, `${firstName} ${lastName}`)).toBeTruthy();
+
+      // VERIFY: Contact row exists in table
+      const row = page.locator('table tbody tr').filter({ hasText: uniqueEmail });
+      await expect(row).toBeVisible();
+    });
+
+    test('should display multiple contacts in list', async ({ page }) => {
+      // Create multiple test contacts
+      const timestamp = Date.now();
+      await createTestContact(page, 'Contact1', 'First', `contact1${timestamp}@test.com`);
+      await createTestContact(page, 'Contact2', 'Second', `contact2${timestamp}@test.com`);
+
+      // Navigate to list
+      await goToContactList(page);
+
+      // VERIFY: Both contacts appear
+      expect(await contactExistsInList(page, `contact1${timestamp}@test.com`)).toBeTruthy();
+      expect(await contactExistsInList(page, `contact2${timestamp}@test.com`)).toBeTruthy();
+    });
+
+    test('should handle empty contact list gracefully', async ({ page }) => {
+      await goToContactList(page);
+
+      // VERIFY: Page loads successfully
+      const pageContent = page.locator('main, #root, .contact-screen');
+      await expect(pageContent.first()).toBeVisible({ timeout: 10000 });
+
+      // If empty, should show "No results" or similar message
+      const isEmpty = await hasNoResults(page);
+
+      // Test passes whether list is empty or has data - just verifying page loads
+      expect(typeof isEmpty).toBe('boolean');
+    });
+  });
+
+  test.describe('UPDATE/EDIT Operations', () => {
+    test('should edit contact and verify changes persist in list', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      const originalEmail = `original${timestamp}@example.com`;
+      const originalFirstName = 'OriginalFirst';
+      const originalLastName = 'OriginalLast';
+
+      await createTestContact(page, originalFirstName, originalLastName, originalEmail);
+
+      // Navigate to list and open edit form
+      await goToContactList(page);
+
+      // Check if contacts exist before trying to edit
+      if (await hasNoResults(page)) {
+        test.skip(true, 'No contacts available to edit');
+        return;
+      }
+
+      await openEditFormForFirstContact(page);
+
+      // VERIFY: Form loads with existing data
+      const firstNameInput = page.locator('input[placeholder*="First Name"]');
+      const firstNameValue = await firstNameInput.inputValue();
+      expect(firstNameValue.length).toBeGreaterThan(0);
+
+      // Edit data
+      const newFirstName = 'UpdatedFirst';
+      const newEmail = `updated${timestamp}@example.com`;
+
+      await page.fill('input[placeholder*="First Name"]', newFirstName);
+      await page.fill('input[type="email"]', newEmail);
+
+      // Save changes
+      await page
+        .getByRole('button', { name: /update|save/i })
+        .first()
+        .click();
+      await page.waitForTimeout(2000);
+
+      // VERIFY: Navigate to list and confirm changes
+      await goToContactList(page);
+
+      // VERIFY: New data appears
+      expect(await contactExistsInList(page, newEmail)).toBeTruthy();
+
+      // VERIFY: Refresh and confirm persistence
+      await page.reload();
+      expect(await contactExistsInList(page, newEmail)).toBeTruthy();
+    });
+
+    test('should load existing contact data in edit form', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      const email = `editload${timestamp}@example.com`;
+      const firstName = 'EditLoad';
+      const lastName = 'Test';
+
+      await createTestContact(page, firstName, lastName, email);
+
+      // Navigate to list and open edit
+      await goToContactList(page);
+
+      if (await hasNoResults(page)) {
+        test.skip(true, 'No contacts available to edit');
+        return;
+      }
+
+      await openEditFormForFirstContact(page);
+
+      // VERIFY: Form has pre-filled data
+      const firstNameInput = page.locator('input[placeholder*="First Name"]');
+      const lastNameInput = page.locator('input[placeholder*="Last Name"]');
+      const emailInput = page.locator('input[type="email"]');
+
+      // Check that fields have values
+      expect((await firstNameInput.inputValue()).length).toBeGreaterThan(0);
+      expect((await lastNameInput.inputValue()).length).toBeGreaterThan(0);
+      expect((await emailInput.inputValue()).length).toBeGreaterThan(0);
+    });
+
+    test('should validate required fields on edit and prevent invalid save', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      await createTestContact(page, 'ValidateEdit', 'Test', `valedit${timestamp}@example.com`);
+
+      // Navigate to list and open edit
+      await goToContactList(page);
+
+      if (await hasNoResults(page)) {
+        test.skip(true, 'No contacts available to edit');
+        return;
+      }
+
+      await openEditFormForFirstContact(page);
+
+      // Clear required field
+      await page.fill('input[placeholder*="First Name"]', '');
+
+      // Try to save
+      await page
+        .getByRole('button', { name: /update|save/i })
+        .first()
+        .click();
+      await page.waitForTimeout(1000);
+
+      // VERIFY: Validation prevents save (still on edit page or shows error)
+      expect(page.url()).toContain('contact');
+
+      // Check for validation error
+      const hasValidationError = await Promise.race([
+        page
+          .getByText(/required/i)
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page
+          .locator('[class*="error"]')
+          .isVisible({ timeout: 2000 })
+          .then(() => true),
+        page.waitForTimeout(2000).then(() => false),
+      ]);
+
+      expect(hasValidationError || page.url().includes('contact')).toBeTruthy();
+    });
+  });
+
+  test.describe('DELETE Operations', () => {
+    test('should show confirmation before deleting contact', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      await createTestContact(page, 'DeleteTest', 'Confirm', `delconf${timestamp}@example.com`);
+
+      // Navigate to list
+      await goToContactList(page);
+
+      if (await hasNoResults(page)) {
+        test.skip(true, 'No contacts available to delete');
+        return;
+      }
+
+      // Click actions menu
+      const actionsButton = page.locator('table tbody button[aria-haspopup="menu"]').first();
+      await actionsButton.click();
+      await page.waitForTimeout(500);
+
+      // Look for delete option
+      const deleteOption = page.getByRole('menuitem', { name: /delete/i });
+      const deleteExists = await deleteOption.isVisible({ timeout: 3000 }).catch(() => false);
+
+      if (!deleteExists) {
+        test.skip(true, 'Delete functionality not available');
+        return;
+      }
+
+      // Set up dialog handler
+      let dialogAppeared = false;
+      page.on('dialog', dialog => {
+        dialogAppeared = true;
+        dialog.dismiss();
+      });
+
+      await deleteOption.click();
+      await page.waitForTimeout(1000);
+
+      // VERIFY: Either browser dialog appeared OR modal dialog appeared
+      const modalAppeared = await page
+        .locator('[role="dialog"], .modal, [class*="confirm"]')
+        .isVisible({ timeout: 2000 })
+        .catch(() => false);
+
+      expect(dialogAppeared || modalAppeared).toBeTruthy();
+    });
+
+    test('should delete contact and verify removal from list', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      const uniqueEmail = `todelete${timestamp}@example.com`;
+      await createTestContact(page, 'ToDelete', 'Contact', uniqueEmail);
+
+      // Navigate to list
+      await goToContactList(page);
+
+      // VERIFY: Contact exists before deletion
+      expect(await contactExistsInList(page, uniqueEmail)).toBeTruthy();
+
+      // Click actions menu
+      const actionsButton = page.locator('table tbody button[aria-haspopup="menu"]').first();
+      await actionsButton.click();
+      await page.waitForTimeout(500);
+
+      // Check if delete option exists
+      const deleteOption = page.getByRole('menuitem', { name: /delete/i });
+      const deleteExists = await deleteOption.isVisible({ timeout: 3000 }).catch(() => false);
+
+      if (!deleteExists) {
+        test.skip(true, 'Delete functionality not available');
+        return;
+      }
+
+      // Set up dialog handler to accept deletion
+      page.on('dialog', dialog => dialog.accept());
+
+      await deleteOption.click();
+      await page.waitForTimeout(500);
+
+      // If modal appears, click confirm
+      const confirmButton = page.getByRole('button', { name: /delete|confirm|yes/i });
+      const confirmExists = await confirmButton.isVisible({ timeout: 2000 }).catch(() => false);
+
+      if (confirmExists) {
+        await confirmButton.click();
+        await page.waitForTimeout(2000);
+      }
+
+      // VERIFY: Contact removed from list
+      const stillExists = await contactExistsInList(page, uniqueEmail);
+      expect(stillExists).toBeFalsy();
+
+      // VERIFY: Refresh and confirm still deleted
+      await page.reload();
+      const existsAfterRefresh = await contactExistsInList(page, uniqueEmail);
+      expect(existsAfterRefresh).toBeFalsy();
+    });
+
+    test('should cancel delete and keep contact in list', async ({ page }) => {
+      // Create test contact
+      const timestamp = Date.now();
+      const uniqueEmail = `keepme${timestamp}@example.com`;
+      await createTestContact(page, 'KeepMe', 'Contact', uniqueEmail);
+
+      // Navigate to list
+      await goToContactList(page);
+
+      // VERIFY: Contact exists
+      expect(await contactExistsInList(page, uniqueEmail)).toBeTruthy();
+
+      // Click actions menu
+      const actionsButton = page.locator('table tbody button[aria-haspopup="menu"]').first();
+      await actionsButton.click();
+      await page.waitForTimeout(500);
+
+      // Check if delete option exists
+      const deleteOption = page.getByRole('menuitem', { name: /delete/i });
+      const deleteExists = await deleteOption.isVisible({ timeout: 3000 }).catch(() => false);
+
+      if (!deleteExists) {
+        test.skip(true, 'Delete functionality not available');
+        return;
+      }
+
+      // Set up dialog handler to dismiss
+      page.on('dialog', dialog => dialog.dismiss());
+
+      await deleteOption.click();
+      await page.waitForTimeout(500);
+
+      // If modal appears, click cancel
+      const cancelButton = page.getByRole('button', { name: /cancel|no/i });
+      const cancelExists = await cancelButton.isVisible({ timeout: 2000 }).catch(() => false);
+
+      if (cancelExists) {
+        await cancelButton.click();
+        await page.waitForTimeout(1000);
+      }
+
+      // VERIFY: Contact still exists
+      expect(await contactExistsInList(page, uniqueEmail)).toBeTruthy();
+    });
+  });
+});

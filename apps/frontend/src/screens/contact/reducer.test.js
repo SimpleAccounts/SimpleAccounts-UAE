@@ -94,9 +94,7 @@ describe('ContactReducer', () => {
       ];
       const action = { type: CONTACT.CITY_LIST, payload };
       const newState = ContactReducer(initialState, action);
-      // Note: The reducer has a bug - it updates currency_list instead of city_list
-      // Testing the actual behavior
-      expect(newState.currency_list).toEqual(payload);
+      expect(newState.city_list).toEqual(payload);
     });
   });
 

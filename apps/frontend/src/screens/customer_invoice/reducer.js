@@ -18,74 +18,87 @@ const initState = {
 const CustomerInvoiceReducer = (state = initState, action) => {
   const { type, payload } = action;
 
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   switch (type) {
     case CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST:
       return {
         ...state,
-        customer_invoice_list: Object.assign([], payload.data),
+        customer_invoice_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.CUSTOMER_LIST:
       return {
         ...state,
-        customer_list: Object.assign([], payload.data),
+        customer_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: getArray(payload),
       };
 
     case CUSTOMER_INVOICE.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: getArray(payload),
       };
     case CUSTOMER_INVOICE.EXCISE_LIST:
       return {
         ...state,
-        excise_list: Object.assign([], payload.data),
+        excise_list: getArray(payload),
       };
     case CUSTOMER_INVOICE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
     case CUSTOMER_INVOICE.PLACE_OF_SUPPLY:
       return {
         ...state,
-        place_of_supply: Object.assign([], payload),
+        place_of_supply: getArray(payload),
       };
 
     default:

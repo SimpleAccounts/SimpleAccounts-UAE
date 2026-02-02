@@ -16,78 +16,96 @@ const initState = {
 };
 
 const RequestForQuotationReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case QUOTATION.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case QUOTATION.EXCISE_LIST:
       return {
         ...state,
-        excise_list: Object.assign([], payload.data),
+        excise_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
     case QUOTATION.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: Array.isArray(payload.data) ? payload.data : payload || [],
       };
 
     case QUOTATION.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
 
-    case QUOTATION.QUOTATION_LIST:
-      return {
-        ...state,
-        quotation_list: Object.assign([], payload),
-      };
+    case QUOTATION.QUOTATION_LIST: {
+      // Backend returns { data: [...], count, totalRecords }; preserve full payload so list and pagination work
+      if (payload != null && Array.isArray(payload.data)) {
+        return { ...state, quotation_list: { ...payload, data: [...payload.data] } };
+      }
+      if (Array.isArray(payload)) {
+        return { ...state, quotation_list: payload };
+      }
+      return { ...state, quotation_list: [] };
+    }
     default:
       return state;
   }

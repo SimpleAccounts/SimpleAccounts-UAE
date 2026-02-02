@@ -30,9 +30,7 @@ export const getTransactionList = obj => {
           if (!obj.paginationDisable) {
             dispatch({
               type: BANK_ACCOUNT.BANK_TRANSACTION_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -71,7 +69,7 @@ export const getTransactionTypeList = () => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: '/rest/datalist/getTransactionTypes',
+      url: '/rest/datalist/getBankTransactionTypes',
     };
     return authApi(data)
       .then(res => {
@@ -121,9 +119,7 @@ export const getCustomerInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -146,9 +142,7 @@ export const getCustomerExplainedInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CUSTOMER_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -170,9 +164,30 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.CURRENCY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
+          });
+          return res;
+        }
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
+};
+
+export const getCustomerList = contactType => {
+  return dispatch => {
+    const type = contactType || 2; // 2 = Customer
+    let data = {
+      method: 'get',
+      url: `/rest/contact/getContactsForDropdown?contactType=${type}`,
+    };
+    return authApi(data)
+      .then(res => {
+        if (res.status === 200) {
+          dispatch({
+            type: BANK_ACCOUNT.CUSTOMER_LIST,
+            payload: res.data,
           });
           return res;
         }
@@ -194,7 +209,7 @@ export const getVendorList = bankId => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -215,9 +230,7 @@ export const getVendorInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -239,9 +252,7 @@ export const getVendorExplainedInvoiceList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.VENDOR_INVOICE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -263,9 +274,7 @@ export const getExpensesList = param => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.EXPENSE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -372,9 +381,37 @@ export const getChartOfCategoryList = type => {
 
 export const getTransactionCategoryListForExplain = (id, bankId) => {
   return dispatch => {
+    // Only include bankId in URL if it's a valid positive integer
+    // Exclude: null, undefined, empty string, string "null", string "undefined", 0, negative numbers, NaN
+    let validBankId = null;
+
+    // Explicit check: if bankId is falsy, null, undefined, empty string, or string "null"/"undefined", exclude it
+    if (
+      bankId == null ||
+      bankId === undefined ||
+      bankId === '' ||
+      bankId === 'null' ||
+      bankId === 'undefined'
+    ) {
+      validBankId = null;
+    }
+    // Check if it's a valid positive integer
+    else {
+      const numBankId = Number(bankId);
+      if (!isNaN(numBankId) && Number.isInteger(numBankId) && numBankId > 0) {
+        validBankId = numBankId;
+      } else {
+        validBankId = null;
+      }
+    }
+
+    // Only include bankId parameter if we have a valid value
+    const bankIdParam = validBankId ? `&bankId=${validBankId}` : '';
+    const finalUrl = `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}${bankIdParam}`;
+
     let data = {
       method: 'get',
-      url: `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}&bankId=${bankId}`,
+      url: finalUrl,
     };
     return authApi(data)
       .then(res => {
@@ -474,9 +511,7 @@ export const getUnPaidPayrollsList = () => {
         if (res.status === 200) {
           dispatch({
             type: BANK_ACCOUNT.UNPAID_PAYROLLS,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }

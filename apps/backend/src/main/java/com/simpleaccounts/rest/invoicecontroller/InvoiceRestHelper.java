@@ -137,8 +137,13 @@ public class InvoiceRestHelper {
 		}
 
 		if (invoiceModel.getPlaceOfSupplyId() !=null){
-			PlaceOfSupply placeOfSupply = placeOfSupplyService.findByPK(invoiceModel.getPlaceOfSupplyId());
-			invoice.setPlaceOfSupplyId(placeOfSupply);
+			try {
+				PlaceOfSupply placeOfSupply = placeOfSupplyService.findByPK(invoiceModel.getPlaceOfSupplyId());
+				invoice.setPlaceOfSupplyId(placeOfSupply);
+			} catch (Exception e) {
+				logger.error("Error finding PlaceOfSupply with ID: " + invoiceModel.getPlaceOfSupplyId(), e);
+				throw e;
+			}
 		}
 		if(invoiceModel.getFootNote()!=null){
 			invoice.setFootNote(invoiceModel.getFootNote());
@@ -190,19 +195,35 @@ public class InvoiceRestHelper {
 			CustomizeInvoiceTemplate template = customizeInvoiceTemplateService.getInvoiceTemplate(invoiceType);
 
 			String suffix=invoiceNumberUtil.fetchSuffixFromString(invoiceModel.getReferenceNumber());
-			template.setSuffix(Integer.parseInt(suffix));
-			String prefix= invoice.getReferenceNumber().substring(0,invoice.getReferenceNumber().lastIndexOf(suffix));
-			template.setPrefix(prefix);
-			customizeInvoiceTemplateService.persist(template);
+			if (suffix != null && !suffix.isEmpty()) {
+				try {
+					template.setSuffix(Integer.parseInt(suffix));
+					String prefix = invoice.getReferenceNumber().substring(0, invoice.getReferenceNumber().lastIndexOf(suffix));
+					template.setPrefix(prefix);
+					customizeInvoiceTemplateService.persist(template);
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse suffix {} as Integer from reference number {}", suffix, invoiceModel.getReferenceNumber());
+				}
+			}
 
 		}
 		if (invoiceModel.getProjectId() != null) {
-			Project project = projectService.findByPK(invoiceModel.getProjectId());
-			invoice.setProject(project);
+			try {
+				Project project = projectService.findByPK(invoiceModel.getProjectId());
+				invoice.setProject(project);
+			} catch (Exception e) {
+				logger.error("Error finding Project with ID: " + invoiceModel.getProjectId(), e);
+				throw e;
+			}
 		}
 		if (invoiceModel.getContactId() != null) {
-			Contact contact = contactService.findByPK(invoiceModel.getContactId());
-			invoice.setContact(contact);
+			try {
+				Contact contact = contactService.findByPK(invoiceModel.getContactId());
+				invoice.setContact(contact);
+			} catch (Exception e) {
+				logger.error("Error finding Contact with ID: " + invoiceModel.getContactId(), e);
+				throw e;
+			}
 		}
 		LocalDate invoiceDate = dateFormatHelper.convertToLocalDateViaSqlDate(invoiceModel.getInvoiceDate());
 		invoice.setInvoiceDate(invoiceDate);
@@ -211,8 +232,13 @@ public class InvoiceRestHelper {
 		invoice.setInvoiceDueDate(invoiceDueDate);
 
 		if (invoiceModel.getCurrencyCode() != null) {
-			Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
-			invoice.setCurrency(currency);
+			try {
+				Currency currency = currencyService.findByPK(invoiceModel.getCurrencyCode());
+				invoice.setCurrency(currency);
+			} catch (Exception e) {
+				logger.error("Error finding Currency with ID: " + invoiceModel.getCurrencyCode(), e);
+				throw e;
+			}
 		}
 		List<InvoiceLineItemModel> itemModels = new ArrayList<>();
 		lineItemString(invoiceModel, userId, invoice, itemModels);
@@ -280,7 +306,12 @@ public class InvoiceRestHelper {
 					lineItem.setExciseAmount(model.getExciseAmount());
 				}
 				if (model.getVatCategoryId() != null) {
-					lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
+					try {
+						lineItem.setVatCategory(vatCategoryService.findByPK(Integer.parseInt(model.getVatCategoryId())));
+					} catch (Exception e) {
+						logger.error("Error finding VatCategory with ID: " + model.getVatCategoryId(), e);
+						throw e;
+					}
 				}
 				if (model.getVatAmount()!=null){
 					lineItem.setVatAmount(model.getVatAmount());
@@ -292,8 +323,14 @@ public class InvoiceRestHelper {
 					lineItem.setDiscountType(model.getDiscountType());
 				}
 				lineItem.setInvoice(invoice);
-				if (model.getProductId() != null)
-					lineItem.setProduct(productService.findByPK(model.getProductId()));
+				if (model.getProductId() != null) {
+					try {
+						lineItem.setProduct(productService.findByPK(model.getProductId()));
+					} catch (Exception e) {
+						logger.error("Error finding Product with ID: " + model.getProductId(), e);
+						throw e;
+					}
+				}
 				Map<String, Object> attribute = new HashMap<>();
 				attribute.put("product", lineItem.getProduct());
 				if (invoice.getType()==2) {
@@ -311,7 +348,25 @@ public class InvoiceRestHelper {
 					}
 				}
 				else {
-					lineItem.setTrnsactioncCategory(transactionCategoryService.findByPK(model.getTransactionCategoryId()));
+					if (model.getTransactionCategoryId() != null) {
+						try {
+							lineItem.setTrnsactioncCategory(transactionCategoryService.findByPK(model.getTransactionCategoryId()));
+						} catch (Exception e) {
+							logger.error("Error finding TransactionCategory with ID: " + model.getTransactionCategoryId(), e);
+							throw e;
+						}
+					} else if (lineItem.getProduct() != null) {
+						// Fallback to product's purchase transaction category
+						Map<String, Object> productAttr = new HashMap<>();
+						productAttr.put("product", lineItem.getProduct());
+						productAttr.put("priceType", ProductPriceType.PURCHASE);
+						List<ProductLineItem> productLineItemList = productLineItemService.findByAttributes(productAttr);
+						if (productLineItemList != null && !productLineItemList.isEmpty()) {
+							lineItem.setTrnsactioncCategory(productLineItemList.get(0).getTransactioncategory());
+						} else {
+							logger.warn("No ProductLineItem found for product ID: " + lineItem.getProduct().getProductID() + " with priceType: PURCHASE");
+						}
+					}
 				}
 
 				lineItems.add(lineItem);
@@ -669,10 +724,16 @@ public class InvoiceRestHelper {
 				model.setId(invoice.getId());
 				contact(invoice, model);
 
-				model.setCurrencyName(
-						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyName() : "-");
-				model.setCurrencySymbol(
-						invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
+				try {
+					model.setCurrencyName(
+							invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyName() : "-");
+					model.setCurrencySymbol(
+							invoice.getCurrency() != null ? invoice.getCurrency().getCurrencyIsoCode() : "-");
+				} catch (org.hibernate.LazyInitializationException e) {
+					// Avoid breaking invoice listing when Currency is a lazy proxy outside session.
+					model.setCurrencyName("-");
+					model.setCurrencySymbol("-");
+				}
 
 				model.setReferenceNumber(invoice.getReferenceNumber());
 				invoiceDate(invoice, model);
@@ -689,7 +750,12 @@ public class InvoiceRestHelper {
 				}
 				model.setStatusEnum(CommonStatusEnum.getInvoiceTypeByValue(invoice.getStatus()));
 				if (invoice.getContact() != null) {
-					model.setContactId(invoice.getContact().getContactId());
+					try {
+						// Proxy id access is usually safe, but guard anyway.
+						model.setContactId(invoice.getContact().getContactId());
+					} catch (org.hibernate.LazyInitializationException e) {
+						// leave as null
+					}
 				}
 				model.setCnCreatedOnPaidInvoice(invoice.getCnCreatedOnPaidInvoice());
 				model.setDueAmount(invoice.getDueAmount() == null ? invoice.getTotalAmount() : invoice.getDueAmount());
@@ -740,12 +806,20 @@ public class InvoiceRestHelper {
 	}
 
 	private void contact(Invoice invoice, InvoiceListModel model) {
-		if (invoice.getContact() != null) {
+		if (invoice.getContact() == null) return;
+		try {
 			if (invoice.getContact().getOrganization() != null && !invoice.getContact().getOrganization().isEmpty() ) {
 				model.setName(invoice.getContact().getOrganization());
 			}
 			else {
 				model.setName(invoice.getContact().getFirstName() + " " + invoice.getContact().getLastName());
+			}
+		} catch (org.hibernate.LazyInitializationException e) {
+			// Avoid breaking invoice listing when Contact is a lazy proxy outside session.
+			try {
+				model.setName("Contact #" + invoice.getContact().getContactId());
+			} catch (Exception ignored) {
+				model.setName("-");
 			}
 		}
 	}
@@ -2743,12 +2817,16 @@ public class InvoiceRestHelper {
 		return journalLineItem;
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	public Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+
+		if (invoice.getContact() == null) {
+			logger.error("Invoice {} has no contact assigned", invoice.getReferenceNumber());
+			throw new RuntimeException("Invoice must have a contact assigned before posting. Please update the invoice.");
+		}
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -2756,25 +2834,28 @@ public class InvoiceRestHelper {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 
 			Map<String, Object> map = new HashMap<>();
-			map.put("contact",invoice.getContact());
-			map.put("contactType", invoice.getType());
-		    map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
-			ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
+			map.put("contact", invoice.getContact());
+			map.put("contactType", isCustomerInvoice ? 2 : 1);
+		    map.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
+			List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
+			if (relations.isEmpty()) {
+				logger.error("No ContactTransactionCategoryRelation found for contact ID: {}, contactType: {}",
+						invoice.getContact().getContactId(), (isCustomerInvoice ? 2 : 1));
+				throw new RuntimeException("No transaction category is configured for this contact. Please assign a transaction category to the contact in Settings.");
+			}
+			ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 
-		BigDecimal amountWithoutDiscount = invoice.getTotalAmount();
+		BigDecimal amountWithoutDiscount = invoice.getTotalAmount() != null ? invoice.getTotalAmount() : BigDecimal.ZERO;
+		BigDecimal exchangeRate = invoice.getExchangeRate() != null ? invoice.getExchangeRate() : BigDecimal.ONE;
 		if (isCustomerInvoice)
-
-			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
-
-		else
-
-		if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
-			BigDecimal amnt = amountWithoutDiscount.subtract(invoice.getTotalVatAmount());
-			journalLineItem1.setCreditAmount(amnt.multiply(invoice.getExchangeRate()));
-		}
-		else {
-			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
+			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(exchangeRate));
+		else if (Boolean.TRUE.equals(invoice.getIsReverseChargeEnabled())) {
+			BigDecimal totalVat = invoice.getTotalVatAmount() != null ? invoice.getTotalVatAmount() : BigDecimal.ZERO;
+			BigDecimal amnt = amountWithoutDiscount.subtract(totalVat);
+			journalLineItem1.setCreditAmount(amnt.multiply(exchangeRate));
+		} else {
+			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(exchangeRate));
 		}
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
@@ -2948,7 +3029,10 @@ public class InvoiceRestHelper {
 										 userId) {
 		TransactionCategory category;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-
+			if (lineItem.getProduct() == null) {
+				logger.error("Invoice line item {} has no product assigned", lineItem.getId());
+				throw new RuntimeException("Invoice line item has no product assigned. Please update the invoice and ensure all line items have a product.");
+			}
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
 								if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
 								{
@@ -3064,7 +3148,8 @@ public class InvoiceRestHelper {
 	}
 
 	private void getPostZipCode(Invoice invoice, Map<String, String> invoiceDataMap, String value) {
-		if (invoice.getContact() != null && !invoice.getContact().getPostZipCode().isEmpty()) {
+		if (invoice.getContact() != null && invoice.getContact().getPostZipCode() != null
+				&& !invoice.getContact().getPostZipCode().isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = invoice.getContact();
 			if (c.getPostZipCode() != null && !c.getPostZipCode().isEmpty()) {
@@ -3078,7 +3163,7 @@ public class InvoiceRestHelper {
 
 	}
 	private void getPostZipCode(Contact contact, Map<String, String> invoiceDataMap, String value) {
-		if (contact != null && !contact.getPostZipCode().isEmpty()) {
+		if (contact != null && contact.getPostZipCode() != null && !contact.getPostZipCode().isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			Contact c = contact;
 			if (c.getPostZipCode() != null && !c.getPostZipCode().isEmpty()) {
@@ -3198,9 +3283,16 @@ public class InvoiceRestHelper {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("contact",invoice.getContact());
-		map.put("contactType", invoice.getType());
+		map.put("contactType", isCustomerInvoice ? 2 : 1);
 		map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
-		ContactTransactionCategoryRelation contactTransactionCategoryRelation = contactTransactionCategoryService.findByAttributes(map).get(0);
+		List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
+		if (relations.isEmpty()) {
+			logger.error("No ContactTransactionCategoryRelation found for contact ID: " + 
+					invoice.getContact().getContactId() + ", contactType: " + (isCustomerInvoice ? 2 : 1));
+			throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " + 
+					invoice.getContact().getContactId());
+		}
+		ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 
 		BigDecimal amountWithoutDiscount = invoice.getTotalAmount();

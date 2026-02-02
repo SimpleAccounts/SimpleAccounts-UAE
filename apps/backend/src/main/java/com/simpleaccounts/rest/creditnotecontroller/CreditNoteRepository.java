@@ -18,6 +18,8 @@ public interface CreditNoteRepository extends JpaRepository<CreditNote, Integer>
 
     List<CreditNote> findByDeleteFlag(boolean deleteFlag);
 
+    boolean existsByDeleteFlag(Boolean deleteFlag);
+
     Page<CreditNote> findByDeleteFlagAndType(boolean deleteFlag,Integer type, Pageable paging);
 
     @Query(value="select * from credit_note where contact_id =:contact and type=:type and delete_flag = false", nativeQuery=true)

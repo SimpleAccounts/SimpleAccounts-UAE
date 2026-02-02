@@ -64,7 +64,12 @@ export default [
   },
   {
     // Test files configuration
-    files: ['**/*.test.{js,jsx}', '**/__tests__/**/*.{js,jsx}'],
+    files: [
+      '**/*.test.{js,jsx}',
+      '**/__tests__/**/*.{js,jsx}',
+      '**/setupTests.js',
+      '**/vitest.setup.js',
+    ],
     languageOptions: {
       globals: {
         ...globals.jest,
@@ -76,6 +81,7 @@ export default [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        jest: 'readonly',
       },
     },
   },

@@ -9,7 +9,6 @@ import * as RequestForQuotationViewAction from '../view/actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { RFQTemplate } from './sections';
 import { Card, Table } from 'components/migration';
 import dayjs from '@/utils/date';
@@ -105,7 +104,7 @@ const ViewRequestForQuotation = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   strings.setLanguage(language);
@@ -144,7 +143,7 @@ const ViewRequestForQuotation = props => {
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -159,7 +158,7 @@ const ViewRequestForQuotation = props => {
                   companyData={companyData}
                   contactData={contactData}
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

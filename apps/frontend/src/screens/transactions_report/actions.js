@@ -19,9 +19,7 @@ export const getCustomerInvoiceReport = inputObj => {
         if (res.status === 200) {
           dispatch({
             type: TEMP.CUSTOMER_INVOICE_REPORT,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -103,9 +101,7 @@ export const getContactNameList = () => {
         if (res.status === 200) {
           dispatch({
             type: TEMP.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -126,9 +122,7 @@ export const getAccountTypeList = () => {
         if (res.status === 200) {
           dispatch({
             type: TEMP.ACCOUNT_TYPE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -149,9 +143,7 @@ export const getTransactionTypeList = () => {
         if (res.status === 200) {
           dispatch({
             type: TEMP.TRANSACTION_TYPE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -172,9 +164,7 @@ export const getTransactionCategoryList = () => {
         if (res.status === 200) {
           dispatch({
             type: TEMP.TRANSACTION_CATEGORY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

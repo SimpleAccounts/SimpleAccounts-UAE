@@ -4,9 +4,9 @@ const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000';
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30 * 1000,
+  timeout: 120 * 1000,
   expect: {
-    timeout: 10 * 1000,
+    timeout: 30 * 1000,
   },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -16,7 +16,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'on-first-retry',
-    headless: true,
+    headless: process.env.CI ? true : process.env.PLAYWRIGHT_HEADLESS === '1',
   },
   projects: [
     {

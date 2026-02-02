@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useForm, Controller } from 'react-hook-form';
@@ -76,8 +77,8 @@ const CreateProductCategory = ({
   commonActions,
   createProductCategoryActions,
   productCategoryActions,
-  history,
 }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading');
   const [createMore, setCreateMore] = useState(false);
@@ -150,7 +151,7 @@ const CreateProductCategory = ({
             setCreateMore(false);
             setDisableLeavePage(false);
           } else {
-            history.push('/admin/master/product-category');
+            navigate('/admin/master/product-category');
             setLoading(false);
           }
         }
@@ -302,7 +303,7 @@ const CreateProductCategory = ({
                             color="secondary"
                             className="btn-square"
                             onClick={() => {
-                              history.push('/admin/master/product-category');
+                              navigate('/admin/master/product-category');
                             }}
                           >
                             <Ban className="h-4 w-4" />

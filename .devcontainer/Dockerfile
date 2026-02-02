@@ -82,11 +82,34 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         libevdev2 \
         libnotify4 \
         libflite1 \
+        # VNC packages for browser testing and UI preview
+        xvfb \
+        x11vnc \
+        novnc \
+        websockify \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Set Playwright to use system Chromium
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+# Set Playwright browsers path for consistent caching
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/vscode/.cache/ms-playwright
+
+# VNC configuration
+ENV DISPLAY=:99
+ENV VNC_PORT=5900
+ENV NOVNC_PORT=6080
+
+# Create index.html redirect for noVNC (Coder subdomain apps request / instead of /vnc.html)
+RUN echo '<!DOCTYPE html>\n\
+<html>\n\
+<head>\n\
+    <meta charset="utf-8">\n\
+    <title>noVNC - Redirecting...</title>\n\
+    <meta http-equiv="refresh" content="0; url=vnc.html?autoconnect=true">\n\
+</head>\n\
+<body>\n\
+    <p>Redirecting to VNC...</p>\n\
+    <p>If you are not redirected, <a href="vnc.html?autoconnect=true">click here</a>.</p>\n\
+</body>\n\
+</html>' > /usr/share/novnc/index.html
 
 # Install global npm packages and AI CLI tools
 RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g npm@latest" 2>&1
@@ -108,8 +131,8 @@ ARG SONARQUBE_MCP_VERSION="1.5.0.1706"
 RUN mkdir -p /home/vscode/.local/share/mcp-servers/storage \
     && curl -fsSL -o /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.jar \
        "https://github.com/SonarSource/sonarqube-mcp-server/releases/download/${SONARQUBE_MCP_VERSION}/sonarqube-mcp-server-${SONARQUBE_MCP_VERSION}.jar" \
-    && chown -R vscode:vscode /home/vscode/.local/share/mcp-servers \
-    && echo "${SONARQUBE_MCP_VERSION}" > /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.version
+    && echo "${SONARQUBE_MCP_VERSION}" > /home/vscode/.local/share/mcp-servers/sonarqube-mcp-server.version \
+    && chown -R vscode:vscode /home/vscode/.local
 
 # Create symlinks in /usr/local/bin for npm global packages
 # This ensures CLI tools are in PATH regardless of NVM sourcing
@@ -123,6 +146,10 @@ RUN NVM_BIN=$(su vscode -c "source /usr/local/share/nvm/nvm.sh && echo \$(npm pr
 # Copy CLI tools update script
 COPY --chown=vscode:vscode .devcontainer/install-cli-tools.sh /usr/local/bin/install-cli-tools
 RUN chmod +x /usr/local/bin/install-cli-tools
+
+# Copy VNC startup script
+COPY --chown=vscode:vscode .devcontainer/start-vnc.sh /usr/local/bin/start-vnc
+RUN chmod +x /usr/local/bin/start-vnc
 
 # Provide Cursor CLI shim in PATH (resolves actual binary at runtime)
 COPY --chown=vscode:vscode .devcontainer/cursor-cli.sh /usr/local/bin/cursor
@@ -156,6 +183,10 @@ WORKDIR /tmp/frontend
 COPY --chown=vscode:vscode apps/frontend/package.json apps/frontend/package-lock.json apps/frontend/.npmrc* ./
 RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts || npm install --legacy-peer-deps --ignore-scripts || true)
 
+# Install Playwright browsers (baked into image for faster test execution)
+# This prevents the need to run 'npx playwright install' every time tests run
+RUN . /usr/local/share/nvm/nvm.sh && npx playwright install chromium
+
 # Clean up temp directories
 USER root
 RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
@@ -164,6 +195,9 @@ RUN rm -rf /tmp/backend /tmp/root /tmp/frontend
 USER vscode
 RUN mkdir -p ~/.m2/repository ~/.m2/wrapper/dists ~/.npm ~/.cache/ms-playwright \
     && chmod -R 755 ~/.m2 ~/.npm ~/.cache
+
+# Note: code-server and vscode-server directories are created in entrypoint.sh
+# as root to avoid permission issues during image build
 
 # Reset working directory and user
 USER root

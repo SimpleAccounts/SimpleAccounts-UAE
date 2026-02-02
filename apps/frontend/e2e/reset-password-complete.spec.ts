@@ -155,8 +155,9 @@ async function getResetTokenFromDB(): Promise<string | null> {
 test.describe('Reset Password Complete Flow', () => {
   test.beforeEach(async ({ page }) => {
     test.setTimeout(180_000); // 3 minutes per test
-    // Clear database before each test
-    await clearDatabase();
+    // Note: clearDatabase() removed as it clears all user data
+    // The test will register its own user if needed
+    // await clearDatabase();
     // Wait a moment for backend to be ready
     await page.waitForTimeout(2000);
   });

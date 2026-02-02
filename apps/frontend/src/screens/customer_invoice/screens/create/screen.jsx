@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardHeader,
@@ -48,7 +48,7 @@ import dayjs from '@/utils/date';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { AddressComponent } from 'screens/contact/sections';
-import { FileText, Plus, CircleDot, RefreshCw, Ban } from 'lucide-react';
+import { FileText, Plus, CircleDot, RefreshCw, Ban, CheckCircle } from 'lucide-react';
 
 const mapStateToProps = state => {
   const contact_list = state.customer_invoice.customer_list;
@@ -121,12 +121,13 @@ const createCustomerInvoiceSchema = z
       ),
     currencyCode: z.union([
       z.string().min(1, 'Currency is required'),
-      z.object({ value: z.string(), label: z.string() }),
+      z.number().positive('Currency is required'),
+      z.object({ value: z.union([z.string(), z.number()]), label: z.string() }),
     ]),
     invoiceDate: z
       .union([z.string(), z.date()])
       .refine(val => val !== '', { message: 'Invoice date is required' }),
-    invoiceDueDate: z.string().optional(),
+    invoiceDueDate: z.union([z.string(), z.date()]).optional(),
     placeOfSupplyId: z
       .union([z.string(), z.object({ value: z.string(), label: z.string() })])
       .optional(),
@@ -223,12 +224,15 @@ const CreateCustomerInvoice = ({
   history,
   location: locationProp,
 }) => {
-  // Use useLocation hook for React Router v6 compatibility
+  // Use useLocation and useNavigate hooks for React Router v6 compatibility
   const locationFromHook = useLocation();
   const location = locationProp || locationFromHook;
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [disabled, setDisabled] = useState(false);
+  const [invoiceCreated, setInvoiceCreated] = useState(false);
   const [discountOptions] = useState([
     { value: 'FIXED', label: 'FIXED' },
     { value: 'PERCENTAGE', label: '%' },
@@ -380,12 +384,17 @@ const CreateCustomerInvoice = ({
 
   const validationCheck = useCallback(
     value => {
+      const referenceToValidate = value ? `${prefix || ''}${value}` : value;
       const validationData = {
         moduleType: 6,
-        name: value,
+        name: referenceToValidate,
       };
       customerInvoiceCreateActions.checkValidation(validationData).then(response => {
-        if (response.data === 'Invoice Number Already Exists') {
+        if (
+          response.data === 'Invoice Number Already Exists' ||
+          response.data === 'Invoice Number Already Exist.' ||
+          response.data === 'Invoice Number Already Exist'
+        ) {
           setExist(true);
           setError('invoice_number', {
             type: 'manual',
@@ -698,8 +707,14 @@ const CreateCustomerInvoice = ({
       'referenceNumber',
       formData.invoice_number !== null ? prefix + formData.invoice_number : ''
     );
-    postFormData.append('invoiceDueDate', formData.invoiceDueDate ? formData.invoiceDueDate : null);
-    postFormData.append('invoiceDate', formData.invoiceDate ? formData.invoiceDate : null);
+    postFormData.append(
+      'invoiceDueDate',
+      formData.invoiceDueDate ? dayjs(formData.invoiceDueDate).format('DD/MM/YYYY') : null
+    );
+    postFormData.append(
+      'invoiceDate',
+      formData.invoiceDate ? dayjs(formData.invoiceDate).format('DD/MM/YYYY') : null
+    );
     postFormData.append(
       'receiptNumber',
       formData.receiptNumber !== null ? formData.receiptNumber : ''
@@ -767,58 +782,63 @@ const CreateCustomerInvoice = ({
       .then(res => {
         setDisabled(false);
         setLoading(false);
-        commonActions.tostifyAlert(
-          'success',
-          res.data ? strings.InvoiceCreatedSuccessfully : res.data.message
-        );
+        setInvoiceCreated(true);
 
-        if (createMore) {
-          setCreateMore(false);
-          setSelectedContact('');
-          setExchangeRate('');
-          setDisableLeavePage(false);
-          setProducttype([]);
-          setData([
-            {
-              id: 0,
-              description: '',
-              quantity: 1,
-              unitPrice: '',
-              vatCategoryId: '',
-              taxtreatment: '',
-              subTotal: 0,
-              discount: 0,
+        // Show success message
+        const successMessage = res.data ? strings.InvoiceCreatedSuccessfully : res.data.message;
+        commonActions.tostifyAlert('success', successMessage);
+
+        // Navigate after showing success feedback
+        setTimeout(() => {
+          if (createMore) {
+            setCreateMore(false);
+            setSelectedContact('');
+            setExchangeRate('');
+            setDisableLeavePage(false);
+            setProducttype([]);
+            setData([
+              {
+                id: 0,
+                description: '',
+                quantity: 1,
+                unitPrice: '',
+                vatCategoryId: '',
+                taxtreatment: '',
+                subTotal: 0,
+                discount: 0,
+                discountType: 'FIXED',
+                vatAmount: 0,
+                productId: '',
+              },
+            ]);
+
+            reset({
+              ...watch(),
+              totalNet: 0,
+              totalVatAmount: 0,
+              totalAmount: 0,
               discountType: 'FIXED',
-              vatAmount: 0,
-              productId: '',
-            },
-          ]);
+              discount: 0,
+              discountPercentage: '',
+              totalExciseAmount: 0,
+              contactId: '',
+              placeOfSupplyId: '',
+              currencyCode: null,
+              taxTreatmentId: '',
+              term: '',
+              changeShippingAddress: false,
+            });
 
-          reset({
-            ...watch(),
-            totalNet: 0,
-            totalVatAmount: 0,
-            totalAmount: 0,
-            discountType: 'FIXED',
-            discount: 0,
-            discountPercentage: '',
-            totalExciseAmount: 0,
-            contactId: '',
-            placeOfSupplyId: '',
-            currencyCode: null,
-            taxTreatmentId: '',
-            term: '',
-            changeShippingAddress: false,
-          });
-
-          setContactId('');
-          setPlaceOfSupplyId('');
-          getInvoiceNo();
-          setValue('lineItemsString', data, { shouldValidate: false });
-        } else {
-          history.push('/admin/income/customer-invoice');
-          setLoading(false);
-        }
+            setContactId('');
+            setPlaceOfSupplyId('');
+            getInvoiceNo();
+            setValue('lineItemsString', data, { shouldValidate: false });
+          } else {
+            // Navigate to invoice list after successful creation
+            navigate('/admin/income/customer-invoice');
+            setLoading(false);
+          }
+        }, 1500);
       })
       .catch(err => {
         setDisabled(false);
@@ -1250,7 +1270,7 @@ const CreateCustomerInvoice = ({
                           <hr />
                           <Row>
                             <Col>
-                              <FormGroup check inline className="mb-3">
+                              <FormGroup check className="mb-3 form-check-inline">
                                 <div>
                                   <Controller
                                     name="changeShippingAddress"
@@ -1339,22 +1359,12 @@ const CreateCustomerInvoice = ({
                                 <span className="mr-4">{strings.Exclusive}</span>
                               )}
                               <Switch
-                                value={taxType}
                                 checked={taxType}
-                                onChange={newTaxType => {
-                                  setTaxType(newTaxType);
+                                onCheckedChange={newTaxType => {
+                                  setTaxType(!!newTaxType);
                                   updateAmount(data);
                                 }}
-                                onColor="#1e6eff"
-                                onHandleColor="#2693e6"
-                                handleDiameter={25}
-                                uncheckedIcon={false}
-                                checkedIcon={false}
-                                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                height={20}
-                                width={48}
-                                className="react-switch "
+                                className="react-switch"
                               />
                               {taxType === true ? (
                                 <span style={{ color: '#0069d9' }} className="ml-4">
@@ -1453,6 +1463,12 @@ const CreateCustomerInvoice = ({
                               className="mt-5 d-flex flex-wrap align-items-center justify-content-between"
                             >
                               <FormGroup className="text-right w-100">
+                                {invoiceCreated && (
+                                  <div className="alert alert-success mb-3 d-flex align-items-center">
+                                    <CheckCircle className="h-5 w-5 mr-2" />
+                                    <span>{strings.InvoiceCreatedSuccessfully}</span>
+                                  </div>
+                                )}
                                 <Button
                                   type="submit"
                                   color="primary"
@@ -1510,11 +1526,11 @@ const CreateCustomerInvoice = ({
                                   className="btn-square"
                                   onClick={() => {
                                     if (location?.state?.renderURL) {
-                                      history.push(`${location?.state?.renderURL}`, {
-                                        id: location?.state?.renderID,
+                                      navigate(`${location?.state?.renderURL}`, {
+                                        state: { id: location?.state?.renderID },
                                       });
                                     } else {
-                                      history.push('/admin/income/customer-invoice');
+                                      navigate('/admin/income/customer-invoice');
                                     }
                                   }}
                                 >

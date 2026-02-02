@@ -17,8 +17,8 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    'absolute top-5 left-1/2 w-full h-[6px] rounded-full transition-all duration-500 ease-in-out shadow-neu-in dark:shadow-neu-in-dark',
-                    isCompleted ? 'bg-primary/20' : 'bg-transparent'
+                    'absolute top-5 left-1/2 w-full h-[6px] rounded-full transition-all duration-500 ease-in-out',
+                    isCompleted ? 'bg-primary/20' : 'bg-gray-200'
                   )}
                   aria-hidden="true"
                 />
@@ -39,13 +39,13 @@ export function StepWizard({ steps, currentStep, onStepClick, className }) {
                 {/* Circle */}
                 <span
                   className={cn(
-                    'relative z-10 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300',
+                    'relative z-10 flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 border',
                     isCompleted
-                      ? 'bg-neu-bg dark:bg-neu-bg-dark text-primary shadow-neu-in dark:shadow-neu-in-dark'
+                      ? 'bg-white text-primary border-primary/30'
                       : isCurrent
-                        ? 'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark scale-110'
-                        : 'bg-neu-bg dark:bg-neu-bg-dark text-muted-foreground shadow-neu-out dark:shadow-neu-out-dark',
-                    isClickable && !isCompleted && 'group-hover:translate-y-[-1px]'
+                        ? 'bg-primary text-primary-foreground border-primary scale-110 shadow-md'
+                        : 'bg-white text-muted-foreground border-gray-200',
+                    isClickable && !isCompleted && 'group-hover:border-gray-300'
                   )}
                 >
                   {isCompleted ? (
@@ -110,9 +110,9 @@ export function StepNavigation({
         onClick={onPrevious}
         disabled={isFirstStep}
         className={cn(
-          'px-6 py-2 rounded-xl font-bold transition-all duration-200',
-          'bg-neu-bg dark:bg-neu-bg-dark text-foreground border-none shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-in dark:hover:shadow-neu-in-dark',
-          'disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none',
+          'px-6 py-2 rounded-lg font-bold transition-all duration-200',
+          'bg-white text-foreground border border-gray-200 hover:bg-gray-50 hover:border-gray-300',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
         aria-label={`Go to previous step`}
@@ -126,8 +126,8 @@ export function StepNavigation({
           onClick={onSubmit}
           disabled={!canProceed || isSubmitting}
           className={cn(
-            'px-6 py-2 rounded-xl font-bold transition-all duration-200',
-            'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark',
+            'px-6 py-2 rounded-lg font-bold transition-all duration-200',
+            'bg-primary text-primary-foreground hover:opacity-90',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}
@@ -141,8 +141,8 @@ export function StepNavigation({
           onClick={onNext}
           disabled={!canProceed}
           className={cn(
-            'px-6 py-2 rounded-xl font-bold transition-all duration-200',
-            'bg-primary text-primary-foreground shadow-neu-out dark:shadow-neu-out-dark hover:translate-y-[-1px] active:shadow-neu-in dark:active:shadow-neu-in-dark',
+            'px-6 py-2 rounded-lg font-bold transition-all duration-200',
+            'bg-primary text-primary-foreground hover:opacity-90',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
           )}

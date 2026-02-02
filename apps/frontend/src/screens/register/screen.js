@@ -152,6 +152,7 @@ const Register = () => {
   // Local state
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checkingCompany, setCheckingCompany] = useState(true);
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false);
   const [timezone, setTimezone] = useState([]);
@@ -218,6 +219,19 @@ const Register = () => {
   };
 
   const getInitialData = () => {
+    // First check if company already exists - redirect immediately if so
+    dispatch(AuthActions.getCompanyCount())
+      .then(res => {
+        if (res?.data > 0) {
+          navigate('/login');
+        } else {
+          setCheckingCompany(false);
+        }
+      })
+      .catch(() => {
+        setCheckingCompany(false);
+      });
+
     dispatch(AuthActions.getTimeZoneList())
       .then(action => {
         if (action?.data && Array.isArray(action.data)) {
@@ -229,11 +243,6 @@ const Register = () => {
     dispatch(CommonActions.getStateList()).catch(() => {});
     dispatch(CommonActions.getCompanyTypeListRegister()).catch(() => {});
     dispatch(AuthActions.getCurrencyList()).catch(() => {});
-    dispatch(AuthActions.getCompanyCount())
-      .then(action => {
-        if (action?.payload > 0) navigate('/login');
-      })
-      .catch(() => {});
   };
 
   const validateCurrentStep = async () => {
@@ -406,35 +415,55 @@ const Register = () => {
     control: (base, state) => ({
       ...base,
       minHeight: '44px',
-      borderRadius: '0.75rem',
-      borderColor: 'transparent',
-      boxShadow: state.isFocused
-        ? 'inset 2px 2px 5px rgba(0,0,0,0.1), inset -2px -2px 5px rgba(255,255,255,0.7)'
-        : '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)',
-      backgroundColor: '#e0e5ec', // using neu-bg hex directly as react-select handles styles in JS
-      '&:hover': { borderColor: 'transparent' },
-      transition: 'all 0.3s ease',
+      borderRadius: '0.5rem',
+      borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
+      boxShadow: state.isFocused ? '0 0 0 3px rgba(32, 100, 216, 0.1)' : 'none',
+      backgroundColor: 'hsl(var(--background))',
+      '&:hover': { borderColor: 'hsl(var(--ring))' },
+      transition: 'all 0.2s ease',
     }),
     menu: base => ({
       ...base,
-      backgroundColor: '#e0e5ec',
-      borderRadius: '1rem',
-      boxShadow: '9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5)',
-      padding: '0.5rem',
+      backgroundColor: 'hsl(var(--background))',
+      borderRadius: '0.5rem',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      border: '1px solid hsl(var(--border))',
+      padding: '0.25rem',
       zIndex: 50,
+    }),
+    menuList: base => ({
+      ...base,
+      backgroundColor: 'hsl(var(--background))',
     }),
     option: (base, state) => ({
       ...base,
-      backgroundColor: state.isFocused ? '#cbd5e1' : 'transparent',
-      color: '#334155',
-      borderRadius: '0.5rem',
-      '&:active': { backgroundColor: '#94a3b8' },
+      backgroundColor: state.isSelected
+        ? 'hsl(var(--primary))'
+        : state.isFocused
+          ? 'hsl(var(--accent))'
+          : 'transparent',
+      color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+      borderRadius: '0.375rem',
+      '&:active': { backgroundColor: 'hsl(var(--accent))' },
       cursor: 'pointer',
     }),
-    singleValue: base => ({ ...base, color: '#334155', fontWeight: 500 }),
-    input: base => ({ ...base, color: '#334155' }),
-    placeholder: base => ({ ...base, color: '#94a3b8' }),
+    singleValue: base => ({ ...base, color: 'hsl(var(--foreground))', fontWeight: 500 }),
+    input: base => ({ ...base, color: 'hsl(var(--foreground))' }),
+    placeholder: base => ({ ...base, color: 'hsl(var(--muted-foreground))' }),
+    dropdownIndicator: base => ({
+      ...base,
+      color: 'hsl(var(--muted-foreground))',
+      '&:hover': { color: 'hsl(var(--foreground))' },
+    }),
+    indicatorSeparator: base => ({
+      ...base,
+      backgroundColor: 'hsl(var(--border))',
+    }),
   };
+
+  if (checkingCompany) {
+    return <LoadingOverlay message="Checking registration status..." submessage="Please wait" />;
+  }
 
   if (loading) {
     return (
@@ -447,18 +476,20 @@ const Register = () => {
 
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 transition-colors duration-300">
+      <div className="min-h-screen flex items-center justify-center bg-corp-bg-secondary p-4 transition-colors duration-300">
         <div className="fixed top-4 right-4 z-50">
           <ThemeToggle />
         </div>
-        <Card className="w-full max-w-md animate-scale-in shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem]">
+        <Card className="w-full max-w-md animate-scale-in bg-white border border-corp-border-light shadow-corp-lg rounded-xl">
           <CardContent className="flex flex-col items-center gap-6 py-12">
-            <div className="h-24 w-24 rounded-full bg-neu-bg dark:bg-neu-bg-dark flex items-center justify-center animate-scale-in shadow-neu-out dark:shadow-neu-out-dark text-green-600 dark:text-green-400">
+            <div className="h-24 w-24 rounded-full bg-corp-success-light flex items-center justify-center animate-scale-in text-corp-success">
               <CheckCircle2 className="h-12 w-12" />
             </div>
             <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold text-foreground">Registration Successful!</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-bold text-corp-text-primary">
+                Registration Successful!
+              </h2>
+              <p className="text-corp-text-secondary">
                 Your account has been created. Redirecting to login...
               </p>
             </div>
@@ -469,31 +500,31 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neu-bg dark:bg-neu-bg-dark p-4 py-8 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-corp-bg-secondary p-4 py-8 transition-colors duration-300">
       <div className="fixed top-4 right-4 z-50">
         <ThemeToggle />
       </div>
       <div className="fixed top-4 left-4 z-50">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => navigate('/login')}
-          className="gap-2 hover:bg-transparent hover:text-primary transition-all shadow-neu-out dark:shadow-neu-out-dark rounded-xl px-4 py-2 bg-neu-bg dark:bg-neu-bg-dark text-foreground border-none active:shadow-neu-in dark:active:shadow-neu-in-dark"
+          className="gap-2 bg-white border border-corp-border-light hover:bg-corp-bg-hover hover:border-corp-border-medium rounded-lg px-4 py-2 text-corp-text-secondary transition-all"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Login
         </Button>
       </div>
 
-      <Card className="w-full max-w-4xl animate-slide-up shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-[2rem] overflow-visible">
-        <CardHeader className="space-y-6 text-center pb-8 border-b border-muted/10">
+      <Card className="w-full max-w-4xl animate-slide-up bg-white border border-corp-border-light shadow-corp-lg rounded-xl overflow-visible">
+        <CardHeader className="space-y-6 text-center pb-8 border-b border-corp-border-light">
           <div className="flex justify-center animate-fade-in">
-            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto drop-shadow-sm" />
+            <img src={logo} alt="SimpleAccounts Logo" className="h-16 w-auto" />
           </div>
           <div className="animate-fade-in space-y-2" style={{ animationDelay: '100ms' }}>
-            <CardTitle className="text-3xl font-bold tracking-tight text-foreground/80">
+            <CardTitle className="text-3xl font-bold tracking-tight text-corp-text-primary">
               Create Your Account
             </CardTitle>
-            <CardDescription className="text-base font-medium">
+            <CardDescription className="text-base text-corp-text-secondary">
               Complete the steps below to get started
             </CardDescription>
           </div>
@@ -528,15 +559,15 @@ const Register = () => {
               {/* Step 1: Company Details */}
               <StepContent isActive={currentStep === 1}>
                 <div className="space-y-8">
-                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
-                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-corp-border-light">
+                    <div className="p-3 bg-corp-primary-light rounded-lg text-corp-primary">
                       <Building2 className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-corp-text-primary">
                         {strings.CompanyDetails}
                       </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
+                      <p className="text-sm text-corp-text-secondary">
                         Enter your business information below
                       </p>
                     </div>
@@ -547,8 +578,11 @@ const Register = () => {
                       name="companyName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyName" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="companyName"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyName}
@@ -559,11 +593,11 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -575,13 +609,15 @@ const Register = () => {
                       name="companyTypeCode"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel className="font-semibold text-corp-text-primary">
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyBusinessType}
                           </FormLabel>
                           <Select
+                            id="companyTypeCode"
+                            inputId="companyTypeCode-input"
                             styles={customSelectStyles}
                             aria-label="Select company type"
                             options={
@@ -599,7 +635,7 @@ const Register = () => {
                             placeholder="Select Business Type"
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -613,8 +649,11 @@ const Register = () => {
                       name="companyAddress1"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyAddress1" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="companyAddress1"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.CompanyAddressLine1}
@@ -625,11 +664,11 @@ const Register = () => {
                             maxLength={250}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                             {...field}
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -641,14 +680,17 @@ const Register = () => {
                       name="companyAddress2"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor="companyAddress2" className="font-bold ml-1">
+                          <FormLabel
+                            htmlFor="companyAddress2"
+                            className="font-semibold text-corp-text-primary"
+                          >
                             {strings.CompanyAddressLine2}
                           </FormLabel>
                           <Input
                             id="companyAddress2"
                             placeholder="Enter Company Address (Optional)"
                             maxLength={250}
-                            className="h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300"
+                            className="h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200"
                             {...field}
                           />
                         </FormItem>
@@ -661,7 +703,9 @@ const Register = () => {
                       name="currencyCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-bold ml-1">{strings.Currency}</FormLabel>
+                          <FormLabel className="font-semibold text-corp-text-primary">
+                            {strings.Currency}
+                          </FormLabel>
                           <Select
                             isDisabled
                             styles={customSelectStyles}
@@ -697,7 +741,7 @@ const Register = () => {
                       name="timeZone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-bold ml-1">
+                          <FormLabel className="font-semibold text-corp-text-primary">
                             {strings.TimeZonePreference}
                           </FormLabel>
                           <Select
@@ -717,15 +761,15 @@ const Register = () => {
               {/* Step 2: Location & VAT */}
               <StepContent isActive={currentStep === 2}>
                 <div className="space-y-8">
-                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
-                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-corp-border-light">
+                    <div className="p-3 bg-corp-primary-light rounded-lg text-corp-primary">
                       <MapPin className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-corp-text-primary">
                         Location & VAT Details
                       </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
+                      <p className="text-sm text-corp-text-secondary">
                         Set up your company location and tax info
                       </p>
                     </div>
@@ -736,7 +780,9 @@ const Register = () => {
                       name="countryId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-bold ml-1">{strings.Country}</FormLabel>
+                          <FormLabel className="font-semibold text-corp-text-primary">
+                            {strings.Country}
+                          </FormLabel>
                           <Select
                             isDisabled
                             styles={customSelectStyles}
@@ -760,8 +806,8 @@ const Register = () => {
                       name="stateId"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel className="font-semibold text-corp-text-primary">
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.Emirate}
@@ -789,7 +835,7 @@ const Register = () => {
                             placeholder="Select Emirate"
                           />
                           {fieldState.error && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -802,8 +848,8 @@ const Register = () => {
                     name="phoneNumber"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel className="font-bold ml-1">
-                          <span className="text-primary" aria-hidden="true">
+                        <FormLabel className="font-semibold text-corp-text-primary">
+                          <span className="text-corp-danger" aria-hidden="true">
                             *{' '}
                           </span>
                           {strings.MobileNumber}
@@ -819,14 +865,14 @@ const Register = () => {
                             field.onChange(value);
                             setCheckPhoneNumberParam(value.length !== 12);
                           }}
-                          inputClass={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 w-full pl-12 transition-all duration-300 ${fieldState.error ? 'text-destructive' : ''}`}
-                          containerClass="phone-input-container rounded-xl shadow-neu-in dark:shadow-neu-in-dark"
+                          inputClass={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 w-full pl-12 transition-all duration-200 ${fieldState.error ? 'text-corp-danger border-corp-danger' : ''}`}
+                          containerClass="phone-input-container-corp rounded-lg border border-corp-border-light"
                           buttonClass="bg-transparent border-none"
-                          dropdownClass="shadow-neu-out dark:shadow-neu-out-dark bg-neu-bg dark:bg-neu-bg-dark border-none rounded-xl"
+                          dropdownClass="shadow-corp-md bg-white border border-corp-border-light rounded-lg"
                           searchClass="search-box"
                         />
                         {fieldState.error && (
-                          <FormMessage role="alert" className="ml-1 text-red-500">
+                          <FormMessage role="alert" className="text-corp-danger">
                             {fieldState.error.message}
                           </FormMessage>
                         )}
@@ -835,7 +881,9 @@ const Register = () => {
                   />
                   {/* Company Location Type Section */}
                   <div className="space-y-4 pt-4">
-                    <Label className="font-bold text-foreground ml-1">Company Location Type</Label>
+                    <Label className="font-semibold text-corp-text-primary">
+                      Company Location Type
+                    </Label>
                     <FormField
                       control={form.control}
                       name="isDesignatedZone"
@@ -848,62 +896,62 @@ const Register = () => {
                           {/* Mainland Option */}
                           <Label
                             htmlFor="mainland"
-                            className={`relative flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                            className={`relative flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all duration-200 bg-white border ${
                               !field.value
-                                ? 'shadow-neu-in dark:shadow-neu-in-dark'
-                                : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                                ? 'border-corp-primary bg-corp-primary-light'
+                                : 'border-corp-border-light hover:border-corp-border-medium'
                             }`}
                           >
                             <RadioGroupItem value="mainland" id="mainland" className="sr-only" />
                             <div
-                              className={`p-3 rounded-xl transition-all duration-200 ${
+                              className={`p-3 rounded-lg transition-all duration-200 ${
                                 !field.value
-                                  ? 'bg-primary/10 text-primary'
-                                  : 'bg-muted/50 text-muted-foreground'
+                                  ? 'bg-corp-primary/10 text-corp-primary'
+                                  : 'bg-corp-bg-secondary text-corp-text-muted'
                               }`}
                             >
                               <Building2 className="h-6 w-6" />
                             </div>
                             <span
                               className={`font-semibold text-sm ${
-                                !field.value ? 'text-primary' : 'text-foreground'
+                                !field.value ? 'text-corp-primary' : 'text-corp-text-primary'
                               }`}
                             >
                               {strings.Mainland}
                             </span>
                             {!field.value && (
-                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-primary" />
+                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-corp-primary" />
                             )}
                           </Label>
 
                           {/* Freezone Option */}
                           <Label
                             htmlFor="freezone"
-                            className={`relative flex flex-col items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                            className={`relative flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all duration-200 bg-white border ${
                               field.value
-                                ? 'shadow-neu-in dark:shadow-neu-in-dark'
-                                : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                                ? 'border-corp-primary bg-corp-primary-light'
+                                : 'border-corp-border-light hover:border-corp-border-medium'
                             }`}
                           >
                             <RadioGroupItem value="freezone" id="freezone" className="sr-only" />
                             <div
-                              className={`p-3 rounded-xl transition-all duration-200 ${
+                              className={`p-3 rounded-lg transition-all duration-200 ${
                                 field.value
-                                  ? 'bg-primary/10 text-primary'
-                                  : 'bg-muted/50 text-muted-foreground'
+                                  ? 'bg-corp-primary/10 text-corp-primary'
+                                  : 'bg-corp-bg-secondary text-corp-text-muted'
                               }`}
                             >
                               <Landmark className="h-6 w-6" />
                             </div>
                             <span
                               className={`font-semibold text-sm ${
-                                field.value ? 'text-primary' : 'text-foreground'
+                                field.value ? 'text-corp-primary' : 'text-corp-text-primary'
                               }`}
                             >
                               {strings.Freezone}
                             </span>
                             {field.value && (
-                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-primary" />
+                              <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-corp-primary" />
                             )}
                           </Label>
                         </RadioGroup>
@@ -918,28 +966,28 @@ const Register = () => {
                       name="IsRegistered"
                       render={({ field }) => (
                         <div
-                          className={`flex items-center justify-between p-4 rounded-xl cursor-pointer transition-all duration-200 bg-neu-bg dark:bg-neu-bg-dark ${
+                          className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-200 bg-white border ${
                             field.value
-                              ? 'shadow-neu-in dark:shadow-neu-in-dark'
-                              : 'shadow-neu-out dark:shadow-neu-out-dark hover:shadow-neu-out-sm dark:hover:shadow-neu-out-sm-dark'
+                              ? 'border-corp-primary bg-corp-primary-light'
+                              : 'border-corp-border-light hover:border-corp-border-medium'
                           }`}
                           onClick={() => field.onChange(!field.value)}
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`p-2.5 rounded-xl transition-all duration-200 ${
+                              className={`p-2.5 rounded-lg transition-all duration-200 ${
                                 field.value
-                                  ? 'bg-primary/10 text-primary'
-                                  : 'bg-muted/50 text-muted-foreground'
+                                  ? 'bg-corp-primary/10 text-corp-primary'
+                                  : 'bg-corp-bg-secondary text-corp-text-muted'
                               }`}
                             >
                               <FileCheck className="h-5 w-5" />
                             </div>
                             <div>
-                              <span className="font-semibold text-foreground block">
+                              <span className="font-semibold text-corp-text-primary block">
                                 VAT Registered
                               </span>
-                              <p className="text-xs text-muted-foreground mt-0.5">
+                              <p className="text-xs text-corp-text-muted mt-0.5">
                                 Is your company registered for VAT?
                               </p>
                             </div>
@@ -952,12 +1000,12 @@ const Register = () => {
                               e.stopPropagation();
                               field.onChange(!field.value);
                             }}
-                            className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${
-                              field.value ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-corp-primary/20 ${
+                              field.value ? 'bg-corp-primary' : 'bg-corp-border-medium'
                             }`}
                           >
                             <span
-                              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
                                 field.value ? 'translate-x-5' : 'translate-x-0.5'
                               } mt-0.5`}
                             />
@@ -973,8 +1021,11 @@ const Register = () => {
                         name="TaxRegistrationNumber"
                         render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel htmlFor="trn" className="font-bold ml-1">
-                              <span className="text-primary" aria-hidden="true">
+                            <FormLabel
+                              htmlFor="trn"
+                              className="font-semibold text-corp-text-primary"
+                            >
+                              <span className="text-corp-danger" aria-hidden="true">
                                 *{' '}
                               </span>
                               {strings.TaxRegistrationNumber}
@@ -986,7 +1037,7 @@ const Register = () => {
                               maxLength={15}
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
-                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                              className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                               {...field}
                               onChange={e => {
                                 if (e.target.value === '' || /^[0-9]+$/.test(e.target.value))
@@ -994,7 +1045,7 @@ const Register = () => {
                               }}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert" className="ml-1 text-red-500">
+                              <FormMessage role="alert" className="text-corp-danger">
                                 {fieldState.error.message}
                               </FormMessage>
                             )}
@@ -1002,7 +1053,7 @@ const Register = () => {
                               href="https://tax.gov.ae/en/default.aspx"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-primary hover:underline ml-1"
+                              className="text-xs text-corp-primary hover:underline"
                             >
                               Verify TRN
                             </a>
@@ -1014,8 +1065,8 @@ const Register = () => {
                         name="vatRegistrationDate"
                         render={({ field, fieldState }) => (
                           <FormItem>
-                            <FormLabel className="font-bold ml-1">
-                              <span className="text-primary" aria-hidden="true">
+                            <FormLabel className="font-semibold text-corp-text-primary">
+                              <span className="text-corp-danger" aria-hidden="true">
                                 *{' '}
                               </span>
                               VAT Registered On
@@ -1031,10 +1082,10 @@ const Register = () => {
                               placeholderText="Select Date"
                               selected={field.value}
                               onChange={date => field.onChange(date)}
-                              className={`flex h-11 w-full rounded-xl border-none bg-neu-bg dark:bg-neu-bg-dark px-3 py-2 text-sm shadow-neu-in dark:shadow-neu-in-dark focus:outline-none transition-all duration-300 ${fieldState.error ? 'text-destructive placeholder:text-destructive' : ''}`}
+                              className={`flex h-11 w-full rounded-lg bg-white border border-corp-border-light px-3 py-2 text-sm focus:border-corp-primary focus:outline-none focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${fieldState.error ? 'text-corp-danger placeholder:text-corp-danger border-corp-danger' : ''}`}
                             />
                             {fieldState.error && (
-                              <FormMessage role="alert" className="ml-1 text-red-500">
+                              <FormMessage role="alert" className="text-corp-danger">
                                 {fieldState.error.message}
                               </FormMessage>
                             )}
@@ -1049,20 +1100,20 @@ const Register = () => {
               {/* Step 3: Admin Account */}
               <StepContent isActive={currentStep === 3}>
                 <div className="space-y-8">
-                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-muted/10">
-                    <div className="p-3 bg-neu-bg dark:bg-neu-bg-dark rounded-xl text-primary shadow-neu-out dark:shadow-neu-out-dark">
+                  <div className="flex items-center gap-4 mb-6 pb-4 border-b border-corp-border-light">
+                    <div className="p-3 bg-corp-primary-light rounded-lg text-corp-primary">
                       <User className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold tracking-tight text-foreground">
+                      <h3 className="text-xl font-bold tracking-tight text-corp-text-primary">
                         Super Admin Account
                       </h3>
-                      <p className="text-sm text-muted-foreground font-medium">
+                      <p className="text-sm text-corp-text-secondary">
                         Create the main administrator for this account
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-200 dark:border-amber-800 mb-6 flex items-start gap-3 shadow-sm">
+                  <p className="text-sm text-corp-warning bg-corp-warning-light p-4 rounded-lg border border-corp-warning/20 mb-6 flex items-start gap-3">
                     <span className="mt-0.5">⚠️</span> This account will have full administrative
                     access. Details cannot be changed easily after registration.
                   </p>
@@ -1072,8 +1123,11 @@ const Register = () => {
                       name="firstName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="firstName" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="firstName"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.FirstName}
@@ -1084,7 +1138,7 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('firstName', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${shouldShowStep3Error('firstName', fieldState) ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
@@ -1096,7 +1150,7 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('firstName', fieldState) && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1108,8 +1162,11 @@ const Register = () => {
                       name="lastName"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="lastName" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="lastName"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             {strings.LastName}
@@ -1120,7 +1177,7 @@ const Register = () => {
                             maxLength={100}
                             aria-required="true"
                             aria-invalid={!!fieldState.error}
-                            className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('lastName', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                            className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${shouldShowStep3Error('lastName', fieldState) ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                             {...field}
                             onChange={e => {
                               if (e.target.value === '' || /^[a-zA-Z ]+$/.test(e.target.value))
@@ -1132,7 +1189,7 @@ const Register = () => {
                             }}
                           />
                           {shouldShowStep3Error('lastName', fieldState) && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1145,8 +1202,8 @@ const Register = () => {
                     name="email"
                     render={({ field, fieldState }) => (
                       <FormItem>
-                        <FormLabel htmlFor="email" className="font-bold ml-1">
-                          <span className="text-primary" aria-hidden="true">
+                        <FormLabel htmlFor="email" className="font-semibold text-corp-text-primary">
+                          <span className="text-corp-danger" aria-hidden="true">
                             *{' '}
                           </span>
                           {strings.EmailAddress}
@@ -1159,7 +1216,7 @@ const Register = () => {
                           autoComplete="email"
                           aria-required="true"
                           aria-invalid={!!fieldState.error}
-                          className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('email', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                          className={`h-11 rounded-lg bg-white border border-corp-border-light focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${shouldShowStep3Error('email', fieldState) ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                           {...field}
                           onBlur={e => {
                             field.onBlur(e);
@@ -1167,7 +1224,7 @@ const Register = () => {
                           }}
                         />
                         {shouldShowStep3Error('email', fieldState) && (
-                          <FormMessage role="alert" className="ml-1 text-red-500">
+                          <FormMessage role="alert" className="text-corp-danger">
                             {fieldState.error.message}
                           </FormMessage>
                         )}
@@ -1180,8 +1237,11 @@ const Register = () => {
                       name="password"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="reg-password" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="reg-password"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             Password
@@ -1195,7 +1255,7 @@ const Register = () => {
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
                               aria-describedby="password-strength"
-                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('password', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                              className={`h-11 rounded-lg bg-white border border-corp-border-light pr-12 focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${shouldShowStep3Error('password', fieldState) ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
@@ -1207,7 +1267,7 @@ const Register = () => {
                             <button
                               type="button"
                               onClick={() => setIsPasswordShown(!isPasswordShown)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-corp-text-muted hover:text-corp-primary transition-colors focus:outline-none p-2 rounded-md hover:bg-corp-bg-hover"
                               aria-label={isPasswordShown ? 'Hide password' : 'Show password'}
                               aria-pressed={isPasswordShown}
                             >
@@ -1219,7 +1279,7 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('password', fieldState) && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
@@ -1234,8 +1294,11 @@ const Register = () => {
                       name="confirmPassword"
                       render={({ field, fieldState }) => (
                         <FormItem>
-                          <FormLabel htmlFor="confirmPassword" className="font-bold ml-1">
-                            <span className="text-primary" aria-hidden="true">
+                          <FormLabel
+                            htmlFor="confirmPassword"
+                            className="font-semibold text-corp-text-primary"
+                          >
+                            <span className="text-corp-danger" aria-hidden="true">
                               *{' '}
                             </span>
                             Confirm Password
@@ -1248,7 +1311,7 @@ const Register = () => {
                               autoComplete="new-password"
                               aria-required="true"
                               aria-invalid={!!fieldState.error}
-                              className={`h-11 rounded-xl bg-neu-bg dark:bg-neu-bg-dark border-none shadow-neu-in dark:shadow-neu-in-dark pr-12 focus:ring-0 focus:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all duration-300 ${shouldShowStep3Error('confirmPassword', fieldState) ? 'text-destructive placeholder:text-destructive/50' : ''}`}
+                              className={`h-11 rounded-lg bg-white border border-corp-border-light pr-12 focus:border-corp-primary focus:ring-2 focus:ring-corp-primary/10 transition-all duration-200 ${shouldShowStep3Error('confirmPassword', fieldState) ? 'text-corp-danger placeholder:text-corp-danger/50 border-corp-danger' : ''}`}
                               onPaste={e => e.preventDefault()}
                               onCopy={e => e.preventDefault()}
                               {...field}
@@ -1260,7 +1323,7 @@ const Register = () => {
                             <button
                               type="button"
                               onClick={() => setIsConfirmPasswordShown(!isConfirmPasswordShown)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none p-2 rounded-full active:shadow-neu-in dark:active:shadow-neu-in-dark"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-corp-text-muted hover:text-corp-primary transition-colors focus:outline-none p-2 rounded-md hover:bg-corp-bg-hover"
                               aria-label={
                                 isConfirmPasswordShown ? 'Hide password' : 'Show password'
                               }
@@ -1274,12 +1337,12 @@ const Register = () => {
                             </button>
                           </div>
                           {shouldShowStep3Error('confirmPassword', fieldState) && (
-                            <FormMessage role="alert" className="ml-1 text-red-500">
+                            <FormMessage role="alert" className="text-corp-danger">
                               {fieldState.error.message}
                             </FormMessage>
                           )}
                           {password && confirmPassword && password === confirmPassword && (
-                            <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1 mt-1 animate-fade-in ml-1">
+                            <p className="text-xs text-corp-success flex items-center gap-1 mt-1 animate-fade-in">
                               <CheckCircle2 className="h-3 w-3" /> Passwords match
                             </p>
                           )}
@@ -1301,13 +1364,13 @@ const Register = () => {
                 submitLabel="Create Account"
               />
 
-              <p className="text-center text-xs text-muted-foreground pt-4">
+              <p className="text-center text-xs text-corp-text-muted pt-4">
                 By registering, you agree to our{' '}
                 <a
                   href="https://www.simpleaccounts.io/privacy-policy/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline font-semibold"
+                  className="text-corp-primary hover:underline font-semibold"
                 >
                   Privacy Policy
                 </a>

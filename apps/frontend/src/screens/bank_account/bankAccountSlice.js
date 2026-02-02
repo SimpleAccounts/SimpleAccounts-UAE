@@ -80,7 +80,8 @@ const bankAccountSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(BANK_ACCOUNT.BANK_ACCOUNT_LIST, (state, action) => {
-        state.bank_account_list = action.payload?.data || action.payload || [];
+        // Preserve pagination structure: { data: [...], count: X }
+        state.bank_account_list = action.payload || { data: [], count: 0 };
       })
       .addCase(BANK_ACCOUNT.BANK_TRANSACTION_LIST, (state, action) => {
         state.bank_transaction_list = action.payload?.data || action.payload || [];

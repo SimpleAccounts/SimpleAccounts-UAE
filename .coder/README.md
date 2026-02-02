@@ -40,12 +40,14 @@ After workspace creation, you'll have:
 ```
 Frontend:  https://<username>-<workspace>.dev.simpleaccounts.io
 Backend:   https://<username>-<workspace>-api.dev.simpleaccounts.io
+VNC:       https://<username>-<workspace>-vnc.dev.simpleaccounts.io/vnc.html
 ```
 
 Example for user `john` with workspace `dev`:
 
 - Frontend: https://john-dev.dev.simpleaccounts.io
 - Backend: https://john-dev-api.dev.simpleaccounts.io
+- VNC: https://john-dev-vnc.dev.simpleaccounts.io/vnc.html
 
 ## What's Included
 
@@ -57,6 +59,7 @@ Example for user `john` with workspace `dev`:
 | Redis                 | 7       | `redis:6379` |
 | Frontend (Vite)       | -       | Port 3000    |
 | Backend (Spring Boot) | -       | Port 8080    |
+| VNC Browser           | -       | Port 6080    |
 
 ### Database Connection
 
@@ -153,6 +156,31 @@ cd apps/frontend && npm test
 
 # Backend tests
 cd apps/backend && ./mvnw test
+```
+
+### VNC Browser (UI Testing)
+
+VNC provides a virtual browser for UI testing and Playwright headed tests.
+
+**Access Methods:**
+
+- **Workspace App**: Click "VNC Browser" icon in the workspace apps panel
+- **External URL**: `https://<username>-<workspace>-vnc.dev.simpleaccounts.io/vnc.html`
+
+**Run Playwright Tests in Headed Mode:**
+
+```bash
+# Watch tests execute in VNC
+DISPLAY=:99 npx playwright test --headed --project=chromium
+
+# Run specific test
+DISPLAY=:99 npx playwright test e2e/my-test.spec.ts --headed --project=chromium --workers=1
+```
+
+**VNC starts automatically** when your workspace starts. If needed manually:
+
+```bash
+start-vnc
 ```
 
 ### Install Dependencies
@@ -379,6 +407,7 @@ If you need more resources, contact your Coder admin.
 │ Traefik Reverse Proxy                                        │
 │ - john-dev.dev.simpleaccounts.io        → :3000             │
 │ - john-dev-api.dev.simpleaccounts.io    → :8080             │
+│ - john-dev-vnc.dev.simpleaccounts.io    → :6080             │
 └─────────────────────────────────────────────────────────────┘
 ```
 

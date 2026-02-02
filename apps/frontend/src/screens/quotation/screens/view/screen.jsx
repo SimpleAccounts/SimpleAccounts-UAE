@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button, Row, Col } from 'components/migration';
@@ -6,14 +7,17 @@ import * as SupplierInvoiceDetailActions from './actions';
 import * as SupplierInvoiceActions from '../../actions';
 import * as QuotationDetailsAction from '../detail/actions';
 import * as PurchaseOrderDetailsAction from '../detail/actions';
-import ReactToPrint from 'react-to-print';
+import { useReactToPrint } from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
-import { RFQTemplate } from './sections';
+import RFQTemplate from './sections/invoice_template';
 import ActionButtons from 'components/view_actions_buttons';
 import { StatusActionList } from 'utils';
 import { FileText, Printer } from 'lucide-react';
+
+// Guard against undefined components (e.g. lazy chunk or alias resolution)
+const SafeActionButtons = ActionButtons || (() => null);
+const SafeRFQTemplate = RFQTemplate || (() => null);
 
 const mapStateToProps = state => {
   return {
@@ -31,6 +35,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 const ViewQuotation = props => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [QuotationData, setQuotationData] = useState({});
   const [totalNet, setTotalNet] = useState(0);
   const [currencyData, setCurrencyData] = useState({});
@@ -43,6 +49,10 @@ const ViewQuotation = props => {
 
   const pdfExportComponent = useRef(null);
   const componentRef = useRef(null);
+  const quotationId = location?.state?.id;
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const termList = [
     { label: 'Net 7', value: 'NET_7' },
@@ -54,7 +64,7 @@ const ViewQuotation = props => {
   useEffect(() => {
     initializeData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [quotationId]);
 
   const initializeData = () => {
     props.supplierInvoiceDetailActions.getCompanyDetails().then(res => {
@@ -63,8 +73,8 @@ const ViewQuotation = props => {
       }
     });
 
-    if (props.location.state && props.location.state.id) {
-      props.quotationDetailsAction.getQuotationById(props.location.state.id).then(res => {
+    if (quotationId) {
+      props.quotationDetailsAction.getQuotationById(quotationId).then(res => {
         if (res.status === 200) {
           const data = res.data;
           const status = data.status ?? '';
@@ -92,8 +102,19 @@ const ViewQuotation = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
+
+  if (!quotationId) {
+    return (
+      <div className="view-invoice-screen p-4">
+        <p className="text-muted">No quotation selected.</p>
+        <Button color="primary" onClick={() => navigate('/admin/income/quotation')}>
+          Back to Quotations
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="view-invoice-screen">
@@ -101,9 +122,9 @@ const ViewQuotation = props => {
         <Row>
           <Col lg={12} className="mx-auto">
             <div className="pull-left">
-              <ActionButtons
-                id={props.location.state.id}
-                history={props.history}
+              <SafeActionButtons
+                id={quotationId}
+                history={{ push: navigate }}
                 URL={'/admin/income/quotation'}
                 invoiceData={invoiceData}
                 postingRefType={'QUOTATION'}
@@ -125,33 +146,27 @@ const ViewQuotation = props => {
               >
                 <FileText className="h-4 w-4" />
               </Button>
-              <ReactToPrint
-                trigger={() => (
-                  <Button type="button" className="ml-1 mb-1 mr-1 print-btn-cont btn-lg">
-                    <Printer className="h-4 w-4" />
-                  </Button>
-                )}
-                content={() => componentRef.current}
-              />
+              <Button
+                type="button"
+                className="ml-1 mb-1 mr-1 print-btn-cont btn-lg"
+                onClick={handlePrint}
+              >
+                <Printer className="h-4 w-4" />
+              </Button>
               <Button
                 type="button"
                 className="close-btn mb-1 btn-lg print-btn-cont"
                 style={{ color: 'black' }}
                 onClick={() => {
-                  props.history.push('/admin/income/quotation');
+                  navigate('/admin/income/quotation');
                 }}
               >
                 X
               </Button>
             </div>
             <div>
-              <PDFExport
-                ref={pdfExportComponent}
-                scale={0.8}
-                paperSize="A3"
-                fileName={QuotationData.quotationNumber + '.pdf'}
-              >
-                <RFQTemplate
+              <div ref={pdfExportComponent}>
+                <SafeRFQTemplate
                   QuotationData={QuotationData}
                   currencyData={currencyData}
                   ref={componentRef}
@@ -159,7 +174,7 @@ const ViewQuotation = props => {
                   companyData={companyData}
                   contactData={contactData}
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

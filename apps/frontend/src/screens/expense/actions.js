@@ -70,9 +70,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: EXPENSE.CURRENCY_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -261,7 +259,7 @@ export const getBankList = () => {
         if (res.status === 200) {
           dispatch({
             type: EXPENSE.BANK_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })

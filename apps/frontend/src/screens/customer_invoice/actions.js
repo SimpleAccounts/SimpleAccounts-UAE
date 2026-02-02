@@ -37,9 +37,7 @@ export const getCustomerInvoiceList = postObj => {
           if (!postObj.paginationDisable) {
             dispatch({
               type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-              payload: {
-                data: res.data,
-              },
+              payload: res.data,
             });
           }
           return res;
@@ -62,9 +60,7 @@ export const getProjectList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.PROJECT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -86,9 +82,7 @@ export const getCustomerList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.CUSTOMER_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
         return res;
@@ -110,9 +104,7 @@ export const getPlaceOfSuppliyList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.PLACE_OF_SUPPLY,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -132,7 +124,7 @@ export const getCurrencyList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.CURRENCY_LIST,
-            payload: res,
+            payload: res.data,
           });
           return res;
         }
@@ -154,9 +146,7 @@ export const getVatList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.VAT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -177,9 +167,7 @@ export const getExciseList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.EXCISE_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -200,9 +188,7 @@ export const getProductList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.PRODUCT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
           return res;
         }
@@ -223,9 +209,7 @@ export const getDepositList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.DEPOSIT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -247,9 +231,7 @@ export const getContactList = nameCode => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.CONTACT_LIST,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })
@@ -270,7 +252,7 @@ export const getStatusList = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.STATUS_LIST,
-            payload: res,
+            payload: res.data,
           });
         }
       })
@@ -346,9 +328,7 @@ export const getPaymentMode = () => {
         if (res.status === 200) {
           dispatch({
             type: CUSTOMER_INVOICE.PAY_MODE,
-            payload: {
-              data: res.data,
-            },
+            payload: res.data,
           });
         }
       })

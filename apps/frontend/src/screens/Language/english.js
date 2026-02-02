@@ -78,6 +78,7 @@ const en = {
   EFFECTIVEDATE: 'EFFECTIVE DATE',
   EffectiveDate: 'Effective Date',
   OPENINGBALANCE: 'OPENING BALANCE',
+  CURRENTBALANCE: 'CURRENT BALANCE',
   NewOpeningBalance: 'New Opening Balance',
   TransactionCategory: 'Transaction Category',
   TransactionDetails: 'Transaction Details',

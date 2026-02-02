@@ -75,6 +75,26 @@ ensure_dir "$TARGET_HOME/.vscode-server"
 ensure_dir "$TARGET_HOME/.vscode-server/bin"
 ensure_dir "$TARGET_HOME/.vscode-server/extensions"
 
+# Ensure code-server directories exist with correct permissions
+ensure_dir "$TARGET_HOME/.local"
+ensure_dir "$TARGET_HOME/.local/share"
+ensure_dir "$TARGET_HOME/.local/share/code-server"
+ensure_dir "$TARGET_HOME/.config/code-server"
+
+# ============================================
+# Configure git safe directory
+# ============================================
+echo "🔧 Configuring git safe directory..."
+# Mark workspace as safe directory to avoid ownership warnings
+if [ "$(id -u)" = "0" ]; then
+    # Running as root - configure for vscode user
+    su - "$TARGET_USER" -c "git config --global --add safe.directory /workspaces/SimpleAccounts-UAE" 2>/dev/null || true
+else
+    # Running as vscode user - configure directly
+    git config --global --add safe.directory /workspaces/SimpleAccounts-UAE 2>/dev/null || true
+fi
+echo "  ✅ Git safe directory configured"
+
 # ============================================
 # Install npm dependencies
 # ============================================
@@ -102,9 +122,10 @@ cd ../..
 # Setup Playwright
 # ============================================
 echo "🎭 Setting up Playwright..."
-# Playwright browser deps are installed in Dockerfile
-# Just ensure the cache directory exists
+# Playwright Chromium browser is pre-installed in the Docker image
+# Just ensure the cache directory has correct permissions
 ensure_dir "$TARGET_HOME/.cache/ms-playwright"
+fix_ownership "$TARGET_HOME/.cache/ms-playwright"
 
 # ============================================
 # Download Maven dependencies

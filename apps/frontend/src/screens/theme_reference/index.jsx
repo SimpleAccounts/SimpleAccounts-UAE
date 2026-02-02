@@ -182,48 +182,51 @@ import { SocialLoginButtons } from '@/components/ui/social-login-buttons';
 import { Currency, Loader as AppLoader } from '@/components';
 
 /*
- * SIMPLE ACCOUNTS - NEUMORPHISM UI COMPONENT LIBRARY
+ * SIMPLE ACCOUNTS - CORPORATE UI COMPONENT LIBRARY
  */
 
 const theme = {
-  bg: '#e8eef5',
-  shadowDark: '#c4c9cf',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
+  shadowDark: '#e5e7eb', // Border color for legacy compatibility
   shadowLight: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
-  secondaryDark: '#00a67a',
-  textPrimary: '#1e3a5f',
-  textSecondary: '#3d5a80',
-  textTertiary: '#6b8299',
-  textMuted: '#98afc2',
-  danger: '#ff4d6a',
-  dangerDark: '#e6325a',
-  warning: '#ffb020',
-  warningDark: '#e69500',
+  primaryDark: '#1a56b8',
+  secondary: '#10b981',
+  secondaryDark: '#059669',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textTertiary: '#6b7280',
+  textMuted: '#9ca3af',
+  danger: '#ef4444',
+  dangerDark: '#dc2626',
+  warning: '#f59e0b',
+  warningDark: '#d97706',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 const shadows = {
   raised: {
-    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
-    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    xl: `8px 8px 16px ${theme.shadowDark}, -8px -8px 16px ${theme.shadowLight}`,
+    xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
   },
   inset: {
-    xs: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    sm: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
-    md: `inset 4px 4px 8px ${theme.shadowDark}, inset -4px -4px 8px ${theme.shadowLight}`,
-    lg: `inset 6px 6px 12px ${theme.shadowDark}, inset -6px -6px 12px ${theme.shadowLight}`,
+    xs: 'inset 0 1px 2px rgba(0, 0, 0, 0.05)',
+    sm: 'inset 0 2px 4px rgba(0, 0, 0, 0.05)',
+    md: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
+    lg: 'inset 0 4px 6px rgba(0, 0, 0, 0.1)',
   },
 };
 
 const gradients = {
-  primary: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-  secondary: `linear-gradient(145deg, ${theme.secondary}, ${theme.secondaryDark})`,
-  danger: `linear-gradient(145deg, ${theme.danger}, ${theme.dangerDark})`,
-  warning: `linear-gradient(145deg, ${theme.warning}, ${theme.warningDark})`,
+  primary: theme.primary,
+  secondary: theme.secondary,
+  danger: theme.danger,
+  warning: theme.warning,
 };
 
 // Code Block Component with Copy functionality
@@ -825,46 +828,47 @@ export default function ComponentLibrary() {
 
               <ComponentCard
                 title="Theme Configuration"
-                description="Copy this theme object to use the neumorphic design system in your components."
-                code={`// Theme colors
+                description="Copy this theme object to use the corporate design system in your components."
+                code={`// Corporate Theme Colors
 const theme = {
-  bg: '#e8eef5',           // Main background
-  shadowDark: '#c4c9cf',   // Dark shadow color
-  shadowLight: '#ffffff',  // Light shadow color
+  bg: '#f8f9fa',           // Main background
+  bgWhite: '#ffffff',      // White background
+  border: '#e5e7eb',       // Border color
+  borderHover: '#d1d5db',  // Border hover color
   primary: '#2064d8',      // Primary brand color
-  primaryDark: '#1a4fa8',  // Primary gradient end
-  secondary: '#21d8aa',    // Success/secondary
-  danger: '#ff4d6a',       // Error/danger
-  warning: '#ffb020',      // Warning
-  textPrimary: '#1e3a5f',  // Main text
-  textSecondary: '#3d5a80', // Secondary text
-  textTertiary: '#6b8299', // Muted text
-  textMuted: '#98afc2',    // Very muted text
+  primaryDark: '#1a56b8',  // Primary hover
+  secondary: '#10b981',    // Success/secondary
+  danger: '#ef4444',       // Error/danger
+  warning: '#f59e0b',      // Warning
+  textPrimary: '#111827',  // Main text
+  textSecondary: '#4b5563', // Secondary text
+  textMuted: '#9ca3af',    // Muted text
 };
 
-// Shadow definitions
+// Shadow definitions (clean, minimal)
 const shadows = {
-  raised: {
-    xs: \`2px 2px 4px \${theme.shadowDark}, -2px -2px 4px \${theme.shadowLight}\`,
-    sm: \`3px 3px 6px \${theme.shadowDark}, -3px -3px 6px \${theme.shadowLight}\`,
-    md: \`4px 4px 8px \${theme.shadowDark}, -4px -4px 8px \${theme.shadowLight}\`,
-    lg: \`6px 6px 12px \${theme.shadowDark}, -6px -6px 12px \${theme.shadowLight}\`,
-    xl: \`8px 8px 16px \${theme.shadowDark}, -8px -8px 16px \${theme.shadowLight}\`,
-  },
-  inset: {
-    xs: \`inset 2px 2px 4px \${theme.shadowDark}, inset -2px -2px 4px \${theme.shadowLight}\`,
-    sm: \`inset 3px 3px 6px \${theme.shadowDark}, inset -3px -3px 6px \${theme.shadowLight}\`,
-    md: \`inset 4px 4px 8px \${theme.shadowDark}, inset -4px -4px 8px \${theme.shadowLight}\`,
-    lg: \`inset 6px 6px 12px \${theme.shadowDark}, inset -6px -6px 12px \${theme.shadowLight}\`,
-  },
+  xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+  sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
 };
 
-// Gradients for colored elements
-const gradients = {
-  primary: \`linear-gradient(145deg, \${theme.primary}, \${theme.primaryDark})\`,
-  secondary: \`linear-gradient(145deg, \${theme.secondary}, \${theme.secondaryDark})\`,
-  danger: \`linear-gradient(145deg, \${theme.danger}, \${theme.dangerDark})\`,
-  warning: \`linear-gradient(145deg, \${theme.warning}, \${theme.warningDark})\`,
+// Component styling pattern
+const cardStyle = {
+  background: theme.bgWhite,
+  border: \`1px solid \${theme.border}\`,
+  borderRadius: '12px',
+  boxShadow: shadows.sm,
+};
+
+const buttonStyle = {
+  background: theme.primary,
+  color: '#ffffff',
+  border: 'none',
+  borderRadius: '8px',
+  padding: '10px 20px',
+  fontWeight: 600,
 };`}
               >
                 <div className="grid md:grid-cols-2 gap-6">
@@ -921,25 +925,22 @@ const gradients = {
 
               <ComponentCard
                 title="Tailwind CSS Integration"
-                description="Use these custom Tailwind classes defined in tailwind.config.js for neumorphic styling."
+                description="Use these custom Tailwind classes defined in tailwind.config.js for corporate styling."
                 code={`// tailwind.config.js
 module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        'neu-raised-sm': '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
-        'neu-raised': '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff',
-        'neu-raised-lg': '10px 10px 20px #c4c9cf, -10px -10px 20px #ffffff',
-        'neu-pressed-sm': 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff',
-        'neu-pressed': 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
-        'neu-btn': '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
-        'neu-input': 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff',
+        'corp-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        'corp-md': '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        'corp-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+        'corp-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
       },
       colors: {
-        neu: {
-          bg: '#e8eef5',
-          'shadow-dark': '#c4c9cf',
-          'shadow-light': '#ffffff',
+        corp: {
+          bg: { primary: '#ffffff', secondary: '#f8f9fa' },
+          border: { light: '#e5e7eb', dark: '#d1d5db' },
+          text: { primary: '#111827', secondary: '#4b5563', muted: '#9ca3af' },
         }
       }
     }
@@ -947,35 +948,43 @@ module.exports = {
 }
 
 // Usage in components:
-<button className="shadow-neu-raised hover:shadow-neu-raised-lg">
-  Raised Button
+<button className="bg-primary text-white shadow-corp-sm hover:shadow-corp-md">
+  Primary Button
 </button>
 
-<input className="shadow-neu-input focus:shadow-neu-pressed" />
+<input className="border border-corp-border-light focus:border-primary focus:ring-2" />
 
-<div className="bg-neu-bg shadow-neu-raised rounded-xl p-4">
+<div className="bg-white border border-corp-border-light shadow-corp-sm rounded-lg p-4">
   Card Content
 </div>`}
               >
                 <div className="space-y-4">
                   <div className="flex flex-wrap gap-3">
                     <div
-                      className="px-4 py-2 rounded-xl text-sm"
-                      style={{ background: theme.bg, boxShadow: shadows.raised.sm }}
+                      className="px-4 py-2 rounded-lg text-sm"
+                      style={{
+                        background: theme.bgWhite,
+                        border: `1px solid ${theme.border}`,
+                        boxShadow: shadows.raised.sm,
+                      }}
                     >
-                      <code style={{ color: theme.primary }}>shadow-neu-raised</code>
+                      <code style={{ color: theme.primary }}>shadow-corp-sm</code>
                     </div>
                     <div
-                      className="px-4 py-2 rounded-xl text-sm"
-                      style={{ background: theme.bg, boxShadow: shadows.inset.sm }}
+                      className="px-4 py-2 rounded-lg text-sm"
+                      style={{
+                        background: theme.bgWhite,
+                        border: `1px solid ${theme.border}`,
+                        boxShadow: shadows.raised.md,
+                      }}
                     >
-                      <code style={{ color: theme.primary }}>shadow-neu-pressed</code>
+                      <code style={{ color: theme.primary }}>shadow-corp-md</code>
                     </div>
                     <div
-                      className="px-4 py-2 rounded-xl text-sm"
-                      style={{ background: theme.bg, boxShadow: shadows.raised.xs }}
+                      className="px-4 py-2 rounded-lg text-sm"
+                      style={{ background: theme.bgWhite, border: `1px solid ${theme.border}` }}
                     >
-                      <code style={{ color: theme.primary }}>bg-neu-bg</code>
+                      <code style={{ color: theme.primary }}>border-corp-border-light</code>
                     </div>
                   </div>
                 </div>
@@ -983,15 +992,16 @@ module.exports = {
 
               <ComponentCard
                 title="Basic Usage Pattern"
-                description="The fundamental pattern for creating neumorphic components."
-                code={`// Basic Neumorphic Component Pattern
-function NeuCard({ children }) {
+                description="The fundamental pattern for creating corporate-themed components."
+                code={`// Basic Corporate Card Pattern
+function CorpCard({ children }) {
   return (
     <div
-      className="p-6 rounded-xl"
+      className="p-6 rounded-lg"
       style={{
-        background: '#e8eef5',
-        boxShadow: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       }}
     >
       {children}
@@ -999,22 +1009,15 @@ function NeuCard({ children }) {
   );
 }
 
-// Interactive Button with States
-function NeuButton({ children, onClick }) {
-  const [pressed, setPressed] = useState(false);
-
+// Primary Button
+function CorpButton({ children, onClick }) {
   return (
     <button
       onClick={onClick}
-      onMouseDown={() => setPressed(true)}
-      onMouseUp={() => setPressed(false)}
-      onMouseLeave={() => setPressed(false)}
-      className="px-5 py-2.5 rounded-xl font-medium transition-all"
+      className="px-5 py-2.5 rounded-lg font-medium text-white transition-all"
       style={{
-        background: '#e8eef5',
-        boxShadow: pressed
-          ? 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff'
-          : '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
+        background: '#2064d8',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
       }}
     >
       {children}
@@ -1023,15 +1026,17 @@ function NeuButton({ children, onClick }) {
 }
 
 // Input Field
-function NeuInput({ ...props }) {
+function CorpInput({ ...props }) {
   return (
     <input
-      className="px-4 py-2.5 rounded-xl outline-none w-full"
+      className="px-4 py-2.5 rounded-lg outline-none w-full transition-all"
       style={{
-        background: '#e8eef5',
-        boxShadow: 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff',
-        color: '#1e3a5f',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        color: '#111827',
       }}
+      onFocus={(e) => e.target.style.borderColor = '#2064d8'}
+      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
       {...props}
     />
   );
@@ -1067,35 +1072,34 @@ function NeuInput({ ...props }) {
               <SectionTitle title="Buttons" subtitle="Various button styles and states" />
 
               <ComponentCard
-                title="Raised Buttons"
-                description="Raised buttons create a 3D effect using dual shadows (dark + light). Use for primary actions that need visual prominence."
-                code={`// Default Raised Button
+                title="Corporate Buttons"
+                description="Clean, minimal buttons with subtle shadows and borders. Use for primary actions that need visual prominence."
+                code={`// Default Button (outline style)
 <button
-  className="px-5 py-2.5 rounded-xl font-medium transition-all hover:scale-105"
+  className="px-5 py-2.5 rounded-lg font-medium transition-all"
   style={{
-    background: '#e8eef5',
-    boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
-    color: '#3d5a80',
+    background: '#ffffff',
+    border: '1px solid #e5e7eb',
+    color: '#4b5563',
   }}
 >
   Default
 </button>
 
-// Primary Raised Button
+// Primary Button (solid style)
 <button
-  className="px-5 py-2.5 rounded-xl font-medium text-white transition-all hover:scale-105"
+  className="px-5 py-2.5 rounded-lg font-medium text-white transition-all"
   style={{
-    background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-    boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
+    background: '#2064d8',
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
   }}
 >
   Primary
 </button>
 
-// Using Tailwind with custom shadows
-<button className="px-5 py-2.5 rounded-xl font-medium text-white
-  bg-gradient-to-br from-blue-500 to-blue-700
-  shadow-neu-raised hover:shadow-neu-raised-lg transition-all">
+// Using Tailwind classes
+<button className="px-5 py-2.5 rounded-lg font-medium text-white
+  bg-primary hover:bg-primary-dark shadow-sm hover:shadow-md transition-all">
   Primary
 </button>`}
               >
@@ -1144,8 +1148,8 @@ function NeuInput({ ...props }) {
 <button
   className="px-5 py-2.5 rounded-xl font-medium"
   style={{
-    background: '#e8eef5',
-    boxShadow: 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+    background: '#f8f9fa',
+    boxShadow: 'inset 3px 3px 6px #e5e7eb, inset -3px -3px 6px #ffffff',
     color: '#2064d8',
   }}
 >
@@ -1158,10 +1162,10 @@ const [isActive, setIsActive] = useState(false);
 <button
   onClick={() => setIsActive(!isActive)}
   style={{
-    background: '#e8eef5',
+    background: '#f8f9fa',
     boxShadow: isActive
-      ? 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff'
-      : '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
+      ? 'inset 3px 3px 6px #e5e7eb, inset -3px -3px 6px #ffffff'
+      : '4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff',
   }}
 >
   {isActive ? 'Active' : 'Inactive'}
@@ -1433,15 +1437,15 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Text Inputs"
-                description="Neumorphic inputs use inset shadows to appear pressed into the surface, creating a natural input field effect."
+                description="Corporate inputs use subtle borders and clean backgrounds for a professional appearance."
                 code={`// Basic Inset Input
 <input
   type="text"
   placeholder="Enter text..."
   className="w-full px-4 py-3 rounded-xl outline-none"
   style={{
-    background: '#e8eef5',
-    boxShadow: 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+    background: '#f8f9fa',
+    boxShadow: 'inset 3px 3px 6px #e5e7eb, inset -3px -3px 6px #ffffff',
     color: '#1e3a5f',
   }}
 />
@@ -1455,8 +1459,8 @@ const [isActive, setIsActive] = useState(false);
     placeholder="Search..."
     className="w-full pl-12 pr-4 py-3 rounded-xl outline-none"
     style={{
-      background: '#e8eef5',
-      boxShadow: 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+      background: '#f8f9fa',
+      boxShadow: 'inset 3px 3px 6px #e5e7eb, inset -3px -3px 6px #ffffff',
       color: '#1e3a5f',
     }}
   />
@@ -1468,8 +1472,8 @@ const [isActive, setIsActive] = useState(false);
   placeholder="Raised style..."
   className="w-full px-4 py-3 rounded-xl outline-none"
   style={{
-    background: '#e8eef5',
-    boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+    background: '#f8f9fa',
+    boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
     color: '#1e3a5f',
   }}
 />`}
@@ -1652,8 +1656,8 @@ const [isActive, setIsActive] = useState(false);
   <select
     className="w-full px-4 py-3 rounded-xl outline-none appearance-none cursor-pointer"
     style={{
-      background: '#e8eef5',
-      boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+      background: '#f8f9fa',
+      boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
       color: '#1e3a5f',
     }}
   >
@@ -1691,10 +1695,10 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Checkboxes"
-                description="Custom neumorphic checkboxes that toggle between raised (unchecked) and gradient-filled (checked) states."
+                description="Corporate checkboxes with clean borders and primary color fill when checked."
                 code={`const [checked, setChecked] = useState(false);
 
-// Neumorphic Checkbox
+// Corporate Checkbox
 <label className="flex items-center gap-3 cursor-pointer">
   <div
     onClick={() => setChecked(!checked)}
@@ -1702,11 +1706,11 @@ const [isActive, setIsActive] = useState(false);
     style={checked
       ? {
           background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-          boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
+          boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff'
         }
       : {
-          background: '#e8eef5',
-          boxShadow: 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff'
+          background: '#f8f9fa',
+          boxShadow: 'inset 2px 2px 4px #e5e7eb, inset -2px -2px 4px #ffffff'
         }
     }
   >
@@ -1742,7 +1746,7 @@ const [isActive, setIsActive] = useState(false);
 
               <ComponentCard
                 title="Radio Buttons"
-                description="Neumorphic radio buttons with a centered dot indicator for the selected state."
+                description="Corporate radio buttons with clean styling and primary color indicator."
                 code={`const [radioValue, setRadioValue] = useState('option1');
 
 // Radio Button
@@ -1752,13 +1756,13 @@ const [isActive, setIsActive] = useState(false);
     className="w-6 h-6 rounded-full flex items-center justify-center transition-all"
     style={radioValue === 'option1'
       ? {
-          background: '#e8eef5',
-          boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+          background: '#f8f9fa',
+          boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff',
           border: '2px solid #2064d8',
         }
       : {
-          background: '#e8eef5',
-          boxShadow: 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff'
+          background: '#f8f9fa',
+          boxShadow: 'inset 2px 2px 4px #e5e7eb, inset -2px -2px 4px #ffffff'
         }
     }
   >
@@ -1812,19 +1816,15 @@ const [isActive, setIsActive] = useState(false);
     onClick={() => setToggle(!toggle)}
     className="w-14 h-8 rounded-full p-1 transition-all duration-300"
     style={{
-      background: toggle
-        ? 'linear-gradient(145deg, #2064d8, #1a4fa8)'
-        : '#e8eef5',
-      boxShadow: toggle
-        ? '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
-        : 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff',
+      background: toggle ? theme.primary : '#e5e7eb',
+      boxShadow: shadows.raised.xs,
     }}
   >
     <div
       className="w-6 h-6 rounded-full transition-all duration-300"
       style={{
-        background: '#e8eef5',
-        boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+        background: '#f8f9fa',
+        boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff',
         transform: toggle ? 'translateX(24px)' : 'translateX(0)',
       }}
     />
@@ -1874,8 +1874,8 @@ const [isActive, setIsActive] = useState(false);
   <div
     className="relative h-3 rounded-full"
     style={{
-      background: '#e8eef5',
-      boxShadow: 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff'
+      background: '#f8f9fa',
+      boxShadow: 'inset 2px 2px 4px #e5e7eb, inset -2px -2px 4px #ffffff'
     }}
   >
     {/* Filled track */}
@@ -1899,8 +1899,8 @@ const [isActive, setIsActive] = useState(false);
     <div
       className="absolute w-6 h-6 rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2"
       style={{
-        background: '#e8eef5',
-        boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+        background: '#f8f9fa',
+        boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
         left: \`\${sliderValue}%\`,
         border: '2px solid #2064d8',
       }}
@@ -2108,8 +2108,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <div
   className="p-4 rounded-xl"
   style={{
-    background: '#e8eef5',
-    boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff'
+    background: '#f8f9fa',
+    boxShadow: '4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff'
   }}
 >
   <div className="flex items-center justify-between mb-3">
@@ -2118,7 +2118,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
       className="w-10 h-10 rounded-lg flex items-center justify-center"
       style={{
         background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-        boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
+        boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff'
       }}
     >
       <DollarSign className="w-5 h-5 text-white" />
@@ -2212,8 +2212,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <div
   className="w-64 p-6 rounded-2xl text-center"
   style={{
-    background: '#e8eef5',
-    boxShadow: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff'
+    background: '#f8f9fa',
+    boxShadow: '6px 6px 12px #e5e7eb, -6px -6px 12px #ffffff'
   }}
 >
   {/* Avatar */}
@@ -2221,7 +2221,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
     className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold text-white"
     style={{
       background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-      boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff'
+      boxShadow: '4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff'
     }}
   >
     JD
@@ -2238,7 +2238,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
       className="px-4 py-2 rounded-lg text-sm font-medium text-white"
       style={{
         background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-        boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
+        boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff'
       }}
     >
       Follow
@@ -2246,8 +2246,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
     <button
       className="px-4 py-2 rounded-lg text-sm font-medium"
       style={{
-        background: '#e8eef5',
-        boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+        background: '#f8f9fa',
+        boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
         color: '#3d5a80',
       }}
     >
@@ -2438,13 +2438,13 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 
               <ComponentCard
                 title="Alert Boxes"
-                description="Neumorphic alert boxes with colored left border and icon indicator for different status types."
+                description="Corporate alert boxes with colored left border and icon for different status types."
                 code={`// Alert Box with Left Border
 <div
   className="flex items-start gap-4 p-4 rounded-xl"
   style={{
-    background: '#e8eef5',
-    boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff',
+    background: '#f8f9fa',
+    boxShadow: '4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff',
     borderLeft: '4px solid #2064d8', // primary=blue, secondary=green, warning=yellow, danger=red
   }}
 >
@@ -2543,8 +2543,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <div
   className="flex items-center gap-3 px-4 py-3 rounded-xl min-w-56"
   style={{
-    background: '#e8eef5',
-    boxShadow: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff'
+    background: '#f8f9fa',
+    boxShadow: '6px 6px 12px #e5e7eb, -6px -6px 12px #ffffff'
   }}
 >
   <div
@@ -2562,8 +2562,8 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 <div
   className="flex items-center gap-3 px-4 py-3 rounded-xl min-w-56"
   style={{
-    background: '#e8eef5',
-    boxShadow: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff'
+    background: '#f8f9fa',
+    boxShadow: '6px 6px 12px #e5e7eb, -6px -6px 12px #ffffff'
   }}
 >
   <div
@@ -2700,12 +2700,12 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
   Success
 </span>
 
-// Neumorphic Badge (no gradient)
+// Corporate Badge
 <span
   className="px-3 py-1 rounded-full text-xs font-semibold"
   style={{
-    background: '#e8eef5',
-    boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+    background: '#f8f9fa',
+    boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff',
     color: '#3d5a80',
   }}
 >
@@ -2803,7 +2803,7 @@ import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
                 </div>
               </ComponentCard>
 
-              <ComponentCard title="Neumorphic Badges">
+              <ComponentCard title="Corporate Badges">
                 <div className="flex flex-wrap gap-3">
                   <span
                     className="px-4 py-1.5 rounded-xl text-xs font-semibold"
@@ -3009,7 +3009,7 @@ function CollapsibleSidebarDemo({ theme, shadows, gradients }) {
 
               <ComponentCard
                 title="Tabs"
-                description="Neumorphic tab navigation with raised inactive tabs and gradient-filled active tab."
+                description="Corporate tab navigation with clean styling and primary color active state."
                 code={`const [activeTab, setActiveTab] = useState(0);
 const tabs = ['Overview', 'Analytics', 'Reports', 'Settings'];
 
@@ -3023,12 +3023,12 @@ const tabs = ['Overview', 'Analytics', 'Reports', 'Settings'];
       style={activeTab === i
         ? {
             background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
             color: 'white',
           }
         : {
-            background: '#e8eef5',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+            background: '#f8f9fa',
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
             color: '#3d5a80',
           }
       }
@@ -3107,8 +3107,8 @@ const pages = [1, 2, 3, '...', 10];
   <button
     className="w-10 h-10 rounded-xl flex items-center justify-center"
     style={{
-      background: '#e8eef5',
-      boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+      background: '#f8f9fa',
+      boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
       color: '#3d5a80',
     }}
   >
@@ -3124,12 +3124,12 @@ const pages = [1, 2, 3, '...', 10];
       style={page === currentPage
         ? {
             background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
             color: 'white',
           }
         : {
-            background: '#e8eef5',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+            background: '#f8f9fa',
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
             color: '#3d5a80',
           }
       }
@@ -3142,8 +3142,8 @@ const pages = [1, 2, 3, '...', 10];
   <button
     className="w-10 h-10 rounded-xl flex items-center justify-center"
     style={{
-      background: '#e8eef5',
-      boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+      background: '#f8f9fa',
+      boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
       color: '#3d5a80',
     }}
   >
@@ -3297,24 +3297,24 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
 
               <ComponentCard
                 title="Basic Table"
-                description="Neumorphic data table with inset container, hover states, and action buttons."
+                description="Corporate data table with clean borders, hover states, and action buttons."
                 code={`const tableData = [
   { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
   { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
   { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Editor', status: 'Inactive' },
 ];
 
-// Neumorphic Table
+// Corporate Table
 <div
   className="rounded-xl overflow-hidden"
   style={{
-    background: '#e8eef5',
-    boxShadow: 'inset 3px 3px 6px #c4c9cf, inset -3px -3px 6px #ffffff'
+    background: '#f8f9fa',
+    boxShadow: 'inset 3px 3px 6px #e5e7eb, inset -3px -3px 6px #ffffff'
   }}
 >
   <table className="w-full">
     <thead>
-      <tr style={{ borderBottom: '2px solid #c4c9cf' }}>
+      <tr style={{ borderBottom: '2px solid #e5e7eb' }}>
         <th className="text-left px-4 py-3 font-semibold text-sm" style={{ color: '#1e3a5f' }}>
           Name
         </th>
@@ -3328,7 +3328,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
     </thead>
     <tbody>
       {tableData.map((row) => (
-        <tr key={row.id} style={{ borderBottom: '1px solid #c4c9cf' }}>
+        <tr key={row.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
           <td className="px-4 py-3 text-sm" style={{ color: '#3d5a80' }}>
             {row.name}
           </td>
@@ -3347,8 +3347,8 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
             <button
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{
-                background: '#e8eef5',
-                boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
+                background: '#f8f9fa',
+                boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff'
               }}
             >
               <Edit className="w-4 h-4" style={{ color: '#2064d8' }} />
@@ -3639,7 +3639,7 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
 
               <ComponentCard
                 title="Progress Bars"
-                description="Neumorphic progress bars with inset track and gradient-filled indicator."
+                description="Corporate progress bars with subtle track and primary color indicator."
                 code={`// Progress Bar with Label
 <div>
   <div className="flex justify-between mb-2">
@@ -3654,8 +3654,8 @@ import { DropdownMenu, ... } from '@/components/ui/dropdown-menu';
   <div
     className="h-3 rounded-full overflow-hidden"
     style={{
-      background: '#e8eef5',
-      boxShadow: 'inset 2px 2px 4px #c4c9cf, inset -2px -2px 4px #ffffff'
+      background: '#f8f9fa',
+      boxShadow: 'inset 2px 2px 4px #e5e7eb, inset -2px -2px 4px #ffffff'
     }}
   >
     {/* Gradient fill */}
@@ -3886,13 +3886,13 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
               <ComponentCard
                 title="Avatar Sizes"
-                description="Neumorphic avatars with gradient background and raised shadow effect."
+                description="Corporate avatars with clean styling and subtle shadow."
                 code={`// Avatar Component
 <div
   className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
   style={{
     background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-    boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
+    boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff'
   }}
 >
   JD
@@ -3904,7 +3904,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
     className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-white"
     style={{
       background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-      boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
+      boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff'
     }}
   >
     JD
@@ -3914,7 +3914,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
     className="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2"
     style={{
       background: '#21d8aa', // online=green, away=yellow, busy=red
-      borderColor: '#e8eef5'
+      borderColor: '#e5e7eb'
     }}
   />
 </div>
@@ -3927,8 +3927,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
       className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white border-2"
       style={{
         background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-        borderColor: '#e8eef5',
-        boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff',
+        borderColor: '#e5e7eb',
+        boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff',
       }}
     >
       {initials}
@@ -4089,8 +4089,8 @@ const items = [
       key={i}
       className="rounded-xl overflow-hidden"
       style={{
-        background: '#e8eef5',
-        boxShadow: '4px 4px 8px #c4c9cf, -4px -4px 8px #ffffff'
+        background: '#f8f9fa',
+        boxShadow: '4px 4px 8px #e5e7eb, -4px -4px 8px #ffffff'
       }}
     >
       <button
@@ -4449,7 +4449,7 @@ import { toast } from 'sonner';
 
               <ComponentCard
                 title="Inline Modal Preview"
-                description="Neumorphic modal dialogs with raised card appearance, header, content, and action buttons."
+                description="Corporate modal dialogs with clean card appearance, header, content, and action buttons."
                 code={`const [showModal, setShowModal] = useState(false);
 
 // Modal Component
@@ -4458,8 +4458,8 @@ import { toast } from 'sonner';
     <div
       className="p-6 rounded-2xl w-full max-w-md"
       style={{
-        background: '#e8eef5',
-        boxShadow: '6px 6px 12px #c4c9cf, -6px -6px 12px #ffffff'
+        background: '#f8f9fa',
+        boxShadow: '6px 6px 12px #e5e7eb, -6px -6px 12px #ffffff'
       }}
     >
       {/* Header */}
@@ -4471,8 +4471,8 @@ import { toast } from 'sonner';
           onClick={() => setShowModal(false)}
           className="w-8 h-8 rounded-lg flex items-center justify-center"
           style={{
-            background: '#e8eef5',
-            boxShadow: '2px 2px 4px #c4c9cf, -2px -2px 4px #ffffff'
+            background: '#f8f9fa',
+            boxShadow: '2px 2px 4px #e5e7eb, -2px -2px 4px #ffffff'
           }}
         >
           <X className="w-5 h-5" style={{ color: '#98afc2' }} />
@@ -4490,8 +4490,8 @@ import { toast } from 'sonner';
           onClick={() => setShowModal(false)}
           className="px-4 py-2 rounded-xl font-medium"
           style={{
-            background: '#e8eef5',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff',
+            background: '#f8f9fa',
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff',
             color: '#3d5a80',
           }}
         >
@@ -4501,7 +4501,7 @@ import { toast } from 'sonner';
           className="px-4 py-2 rounded-xl font-medium text-white"
           style={{
             background: 'linear-gradient(145deg, #2064d8, #1a4fa8)',
-            boxShadow: '3px 3px 6px #c4c9cf, -3px -3px 6px #ffffff'
+            boxShadow: '3px 3px 6px #e5e7eb, -3px -3px 6px #ffffff'
           }}
         >
           Confirm

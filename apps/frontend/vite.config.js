@@ -64,6 +64,7 @@ export default defineConfig({
       'zod',
       '@hookform/resolvers',
       'react-hook-form',
+      'react-datepicker', // Include react-datepicker for optimization to ensure React is available
       // NOTE: Removed 'bootstrap' - using TailwindCSS instead
     ],
     // Exclude large dependencies from optimization to save memory
@@ -82,14 +83,10 @@ export default defineConfig({
       'react-router-navigation-prompt',
       // Exclude heavy libraries - they should be lazy-loaded
       'exceljs',
-      '@progress/kendo-react-pdf',
-      '@progress/kendo-drawing',
       // Exclude framer-motion - replaced with CSS animations in Loader component
       'framer-motion',
       // NOTE: lucide-react must be pre-bundled - excluding it causes hundreds of
       // individual module requests which breaks page load
-      // Exclude date picker library - large and only used in specific screens
-      'react-datepicker',
     ],
     // Reduce memory usage during optimization
     force: false, // Don't force re-optimization
@@ -243,19 +240,14 @@ export default defineConfig({
             if (id.includes('exceljs')) {
               return 'exceljs';
             }
-            if (id.includes('@progress/kendo')) {
-              return 'kendo-pdf';
-            }
 
             // Split lucide-react icons into separate chunk (loaded on-demand)
             if (id.includes('lucide-react')) {
               return 'icons';
             }
 
-            // Split date picker library - large and only used in forms
-            if (id.includes('react-datepicker')) {
-              return 'datepickers';
-            }
+            // Don't split react-datepicker - keep it with vendor bundle to ensure React is available
+            // Splitting it causes "Cannot read properties of undefined (reading 'Component')" error
 
             // Split animation library
             if (id.includes('framer-motion')) {

@@ -17,37 +17,25 @@ import './style.scss';
 
 const strings = new LocalizedStrings(data);
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
   warning: '#f59e0b',
-  danger: '#ff4d6a',
-  textPrimary: '#1e3a5f',
-  textSecondary: '#3d5a80',
-  textMuted: '#98afc2',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  raised: {
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
-    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
-  },
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
-  },
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 /**
  * Modern Chart of Accounts Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function ChartAccount() {
   const navigate = useNavigate();
@@ -161,10 +149,10 @@ function ChartAccount() {
     }));
   }, []);
 
-  // Navigate to detail
+  // Navigate to detail (allow navigation even if not editable - user can view)
   const goToDetailPage = useCallback(
     row => {
-      if (row.editableFlag) {
+      if (row.transactionCategoryId != null) {
         navigate('/admin/master/chart-account/detail', {
           state: { id: row.transactionCategoryId },
         });
@@ -309,8 +297,8 @@ function ChartAccount() {
                       disabled={!isEditable}
                       className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200"
                       style={{
-                        background: theme.bg,
-                        boxShadow: isEditable ? shadows.raised.xs : 'none',
+                        background: theme.bgWhite,
+                        border: `1px solid ${theme.border}`,
                         opacity: isEditable ? 1 : 0.5,
                         cursor: isEditable ? 'pointer' : 'not-allowed',
                       }}
@@ -333,8 +321,8 @@ function ChartAccount() {
                       disabled={!isEditable}
                       className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200"
                       style={{
-                        background: theme.bg,
-                        boxShadow: isEditable ? shadows.raised.xs : 'none',
+                        background: theme.bgWhite,
+                        border: `1px solid ${theme.border}`,
                         opacity: isEditable ? 1 : 0.5,
                         cursor: isEditable ? 'pointer' : 'not-allowed',
                       }}
@@ -366,8 +354,11 @@ function ChartAccount() {
 
   // Transform data for table
   const tableData = useMemo(() => {
-    if (!transaction_category_list?.data) return [];
-    return transaction_category_list.data.map(item => ({
+    const data = Array.isArray(transaction_category_list)
+      ? transaction_category_list
+      : (transaction_category_list?.data ?? []);
+    if (!data.length && !transaction_category_list) return [];
+    return data.map(item => ({
       transactionCategoryId: item.transactionCategoryId,
       transactionCategoryCode: item.transactionCategoryCode || '',
       transactionCategoryName: item.transactionCategoryName || '',
@@ -378,23 +369,22 @@ function ChartAccount() {
 
   // Input styles
   const inputStyle = {
-    background: theme.bg,
-    boxShadow: shadows.pressed.sm,
-    border: 'none',
-    borderRadius: '12px',
+    background: theme.bgWhite,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '8px',
     padding: '10px 16px',
     paddingLeft: '40px',
     fontSize: '14px',
     color: theme.textPrimary,
     outline: 'none',
     width: '280px',
+    transition: 'border-color 0.2s ease',
   };
 
   const selectStyle = {
-    background: theme.bg,
-    boxShadow: shadows.pressed.sm,
-    border: 'none',
-    borderRadius: '12px',
+    background: theme.bgWhite,
+    border: `1px solid ${theme.border}`,
+    borderRadius: '8px',
     padding: '10px 16px',
     paddingRight: '36px',
     fontSize: '14px',
@@ -403,9 +393,10 @@ function ChartAccount() {
     appearance: 'none',
     cursor: 'pointer',
     minWidth: '180px',
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233d5a80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right 12px center',
+    transition: 'border-color 0.2s ease',
   };
 
   if (loading) {
@@ -418,10 +409,11 @@ function ChartAccount() {
 
       {/* Main Card */}
       <div
-        className="rounded-2xl p-6 mb-6"
+        className="rounded-xl p-6 mb-6"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         {/* Header Row with Title, Search, Filter, and Actions */}
@@ -429,10 +421,9 @@ function ChartAccount() {
           {/* Title Section */}
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
+                background: '#dbeafe',
               }}
             >
               <BarChart3 className="w-6 h-6" style={{ color: theme.primary }} />
@@ -472,8 +463,11 @@ function ChartAccount() {
                 style={selectStyle}
               >
                 <option value="">Filter by Account Type</option>
-                {transaction_type_list?.map(type => (
-                  <option key={type.id} value={type.id}>
+                {transaction_type_list?.map((type, index) => (
+                  <option
+                    key={type.id ?? type.transactionTypeId ?? index}
+                    value={type.id ?? type.transactionTypeId ?? ''}
+                  >
                     {type.transactionTypeName}
                   </option>
                 ))}
@@ -482,10 +476,9 @@ function ChartAccount() {
               {/* Action Buttons */}
               <button
                 onClick={() => navigate('/admin/master/chart-account/create')}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
                 style={{
-                  background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.primary,
                 }}
               >
                 <Plus className="w-4 h-4" />
@@ -494,10 +487,10 @@ function ChartAccount() {
 
               <button
                 onClick={getCsvData}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
                 style={{
-                  background: theme.bg,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.bgWhite,
+                  border: `1px solid ${theme.border}`,
                   color: theme.textSecondary,
                 }}
               >
@@ -516,10 +509,10 @@ function ChartAccount() {
 
               <button
                 onClick={handlePrint}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
                 style={{
-                  background: theme.bg,
-                  boxShadow: shadows.raised.sm,
+                  background: theme.bgWhite,
+                  border: `1px solid ${theme.border}`,
                   color: theme.textSecondary,
                 }}
               >
@@ -547,7 +540,6 @@ function ChartAccount() {
             onSortingChange={setSorting}
             sorting={sorting}
             onRowClick={goToDetailPage}
-            neumorphicPagination
             totalCount={transaction_category_list?.count || 0}
             showPaginationTop={!hideForPrint}
             showPaginationBottom={!hideForPrint}

@@ -74,7 +74,6 @@ public class CompanyRestHelper{
 	}
 
 	public CompanyModel getModel(Company company) {
-
 		CompanyModel companyModel = new CompanyModel();
 
 		companyModel.setCompanyName(company.getCompanyName());
@@ -138,16 +137,16 @@ public class CompanyRestHelper{
 		companyModel.setCompanyBankCode(company.getCompanyBankCode() != null ? company.getCompanyBankCode() : "");
 		companyModel.setCompanyNumber(company.getCompanyNumber() != null ? company.getCompanyNumber() : "");
 
-		List<Invoice> invoiceList = invoiceRepository.findAllByDeleteFlag(Boolean.FALSE);
-		List<Expense> expenseList = expenseRepository.findAllByDeleteFlag(Boolean.FALSE);
-		List<CreditNote> creditNoteList = creditNoteRepository.findByDeleteFlag(Boolean.FALSE);
-		List<VatReportFiling> vatReportFilingList = vatReportFilingRepository.findAll();
-		List<PoQuatation> poQuatationList = poQuatationRepository.findByDeleteFlag(Boolean.FALSE);
-		List<Product> productList = productRepository.findAllByDeleteFlag(Boolean.FALSE);
-		if
-		(!invoiceList.isEmpty() || !expenseList.isEmpty() || !creditNoteList.isEmpty() || !vatReportFilingList.isEmpty()
-				|| !poQuatationList.isEmpty() || !productList.isEmpty()) { companyModel.setIsVatEditable(Boolean.FALSE); }
-		else {
+		// Use EXISTS to avoid loading full lists; only need to know if any exist for isVatEditable
+		boolean hasInvoices = invoiceRepository.existsByDeleteFlag(Boolean.FALSE);
+		boolean hasExpenses = expenseRepository.existsByDeleteFlag(Boolean.FALSE);
+		boolean hasCreditNotes = creditNoteRepository.existsByDeleteFlag(Boolean.FALSE);
+		boolean hasVatReportFilings = vatReportFilingRepository.existsAny();
+		boolean hasPoQuatations = poQuatationRepository.existsByDeleteFlag(Boolean.FALSE);
+		boolean hasProducts = productRepository.existsByDeleteFlag(Boolean.FALSE);
+		if (hasInvoices || hasExpenses || hasCreditNotes || hasVatReportFilings || hasPoQuatations || hasProducts) {
+			companyModel.setIsVatEditable(Boolean.FALSE);
+		} else {
 			companyModel.setIsVatEditable(Boolean.TRUE);
 		}
 		return companyModel;

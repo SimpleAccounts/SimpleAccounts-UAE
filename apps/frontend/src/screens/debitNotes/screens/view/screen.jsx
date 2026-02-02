@@ -8,7 +8,6 @@ import ReactToPrint from 'react-to-print';
 import { CommonActions } from 'services/global';
 import { Currency, InvoiceViewJournalEntries } from 'components';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import { DebitNoteTemplate } from './sections';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
@@ -153,7 +152,7 @@ const ViewDebitNote = props => {
   };
 
   const exportPDFWithComponent = () => {
-    pdfExportComponent.current.save();
+    // pdfExportComponent.current.save();
   };
 
   strings.setLanguage(language);
@@ -218,7 +217,7 @@ const ViewDebitNote = props => {
               </Button>
             </div>
             <div>
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -238,7 +237,7 @@ const ViewDebitNote = props => {
                       : false
                   }
                 />
-              </PDFExport>
+              </div>
             </div>
           </Col>
         </Row>

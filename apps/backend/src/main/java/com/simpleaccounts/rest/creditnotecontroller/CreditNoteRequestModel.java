@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -32,6 +33,7 @@ public class CreditNoteRequestModel {
     private DiscountType discountType;
     private BigDecimal discount;
     private double discountPercentage;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date creditNoteDate;
     private String taxTreatment;
     //fields for Invoice

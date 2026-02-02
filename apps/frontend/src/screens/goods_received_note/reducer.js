@@ -16,78 +16,91 @@ const initState = {
 };
 
 const RequestForQuotationReducer = (state = initState, action) => {
+  // Helper to ensure we get an array and preserve count for pagination
+  const getArray = val => {
+    if (Array.isArray(val)) return [...val];
+    if (Array.isArray(val?.data)) {
+      const arr = [...val.data];
+      if (val.count !== undefined) {
+        arr.count = val.count;
+      }
+      return arr;
+    }
+    return [];
+  };
+
   const { type, payload } = action;
 
   switch (type) {
     case GOODS_RECEVED_NOTE.PROJECT_LIST:
       return {
         ...state,
-        project_list: Object.assign([], payload.data),
+        project_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.CONTACT_LIST:
       return {
         ...state,
-        contact_list: Object.assign([], payload.data),
+        contact_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.STATUS_LIST:
       return {
         ...state,
-        status_list: Object.assign([], payload.data),
+        status_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.CURRENCY_LIST:
       return {
         ...state,
-        currency_list: Object.assign([], payload.data),
+        currency_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.SUPPLIER_LIST:
       return {
         ...state,
-        supplier_list: Object.assign([], payload.data),
+        supplier_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.VAT_LIST:
       return {
         ...state,
-        vat_list: Object.assign([], payload.data),
+        vat_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.PAY_MODE:
       return {
         ...state,
-        pay_mode: Object.assign([], payload.data),
+        pay_mode: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.PRODUCT_LIST:
       return {
         ...state,
-        product_list: Object.assign([], payload.data),
+        product_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.DEPOSIT_LIST:
       return {
         ...state,
-        deposit_list: Object.assign([], payload.data),
+        deposit_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.COUNTRY_LIST:
       return {
         ...state,
-        country_list: Object.assign([], payload),
+        country_list: getArray(payload),
       };
 
     case GOODS_RECEVED_NOTE.GOODS_RECEVED_NOTE_LIST:
       return {
         ...state,
-        goods_received_note_list: Object.assign([], payload),
+        goods_received_note_list: getArray(payload),
       };
     case GOODS_RECEVED_NOTE.PO_LIST:
       return {
         ...state,
-        po_list: Object.assign([], payload.data),
+        po_list: getArray(payload),
       };
     default:
       return state;

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LeavePage, Loader } from 'components';
 import { bindActionCreators } from 'redux';
@@ -165,9 +166,9 @@ const DetailExpense = ({
   pay_to_list,
   currency_convert_list,
   vat_list,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [language] = useState(window['localStorage'].getItem('language'));
   const [loading, setLoading] = useState(true);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
@@ -353,7 +354,7 @@ const DetailExpense = ({
           setLoading(false);
         });
     } else {
-      history.push('/admin/expense/expense');
+      navigate('/admin/expense/expense');
     }
   };
 
@@ -449,7 +450,7 @@ const DetailExpense = ({
             'success',
             res.data ? res.data.message : 'Expense Updated Successfully'
           );
-          history.push('/admin/expense/expense');
+          navigate('/admin/expense/expense');
           setLoading(false);
         }
       })
@@ -534,7 +535,7 @@ const DetailExpense = ({
             'success',
             res.data ? res.data.message : 'Expense Deleted Successfully'
           );
-          history.push('/admin/expense/expense');
+          navigate('/admin/expense/expense');
           setLoading(false);
         }
       })
@@ -1506,10 +1507,10 @@ const DetailExpense = ({
                                     className="btn-square"
                                     onClick={() => {
                                       if (location?.state?.renderURL) {
-                                        history.push(`${location?.state?.renderURL}`, {
-                                          expenseId: location?.state?.expenseId,
+                                        navigate(`${location?.state?.renderURL}`, {
+                                          state: { expenseId: location?.state?.expenseId },
                                         });
-                                      } else history.push('/admin/expense/expense');
+                                      } else navigate('/admin/expense/expense');
                                     }}
                                   >
                                     <Ban className="h-4 w-4" />{' '}

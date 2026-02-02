@@ -76,7 +76,8 @@ public class TransactionCategoryBalanceRestHelper {
 					model.setOpeningBalance(balance.getOpeningBalance());
 					model.setRunningBalance(balance.getRunningBalance());
 					model.setTransactionCategoryName(balance.getTransactionCategory().getTransactionCategoryName());
-					model.setChartOfAccount(balance.getTransactionCategory().getChartOfAccount().getChartOfAccountName());
+					TransactionCategory tc = balance.getTransactionCategory();
+					model.setChartOfAccount(tc.getChartOfAccount() != null ? tc.getChartOfAccount().getChartOfAccountName() : null);
 
 					modelList.add(model);
 				}
@@ -95,7 +96,9 @@ public class TransactionCategoryBalanceRestHelper {
 		transactioncategoryBalancePersistModel.setTransactionCategoryBalanceId(transactionCategoryBalance.getId());
 		transactioncategoryBalancePersistModel.setOpeningBalance(transactionCategoryBalance.getOpeningBalance());
 		transactioncategoryBalancePersistModel.setEffectiveDate(transactionCategoryBalance.getEffectiveDate());
-		transactioncategoryBalancePersistModel.setTransactionCategoryId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+		if (transactionCategoryBalance.getTransactionCategory() != null) {
+			transactioncategoryBalancePersistModel.setTransactionCategoryId(transactionCategoryBalance.getTransactionCategory().getTransactionCategoryId());
+		}
 		return transactioncategoryBalancePersistModel;
 	}
 }

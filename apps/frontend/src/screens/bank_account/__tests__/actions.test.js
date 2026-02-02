@@ -42,9 +42,7 @@ describe('Bank Account Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: BANK_ACCOUNT.ACCOUNT_TYPE_LIST,
-        payload: {
-          data: mockAccountTypes,
-        },
+        payload: mockAccountTypes,
       });
     });
 
@@ -79,9 +77,7 @@ describe('Bank Account Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: BANK_ACCOUNT.CURRENCY_LIST,
-        payload: {
-          data: mockCurrencies,
-        },
+        payload: mockCurrencies,
       });
 
       expect(result.status).toBe(200);
@@ -123,9 +119,7 @@ describe('Bank Account Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
-        payload: {
-          data: mockBankAccounts,
-        },
+        payload: mockBankAccounts,
       });
 
       expect(result.status).toBe(200);
@@ -278,7 +272,7 @@ describe('Bank Account Actions', () => {
 
       expect(authApi).toHaveBeenCalledWith({
         method: 'get',
-        url: `/rest/transaction/getExplainedTransactionCount/?bankAccountId=${bankAccountId}`,
+        url: `/rest/transaction/getExplainedTransactionCount?bankAccountId=${bankAccountId}`,
       });
 
       expect(result.status).toBe(200);
@@ -336,9 +330,7 @@ describe('Bank Account Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: BANK_ACCOUNT.BANK_ACCOUNT_LIST,
-        payload: {
-          data: [],
-        },
+        payload: [],
       });
     });
 
@@ -367,9 +359,7 @@ describe('Bank Account Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: BANK_ACCOUNT.CURRENCY_LIST,
-        payload: {
-          data: undefined,
-        },
+        payload: undefined,
       });
     });
   });

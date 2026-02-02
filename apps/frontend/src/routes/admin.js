@@ -115,7 +115,8 @@ import {
   DetailChartAccount,
   Contact,
   CreateContact,
-  DetailContact,
+  ViewContact,
+  EditContact,
   ViewEmployee,
   Product,
   CreateProduct,
@@ -372,7 +373,7 @@ const adminRoutes = [
   },
   Config.INCOME_IR && {
     path: 'income/receipt/detail',
-    name: 'Detail',
+    name: 'Customer Receipts',
     component: DetailReceipt.screen,
   },
   Config.INCOME_IR && {
@@ -965,9 +966,19 @@ const adminRoutes = [
     component: CreateContact.screen,
   },
   Config.MASTER_CONTACT && {
+    path: 'master/contact/view',
+    name: 'Contact',
+    component: ViewContact.screen,
+  },
+  Config.MASTER_CONTACT && {
+    path: 'master/contact/edit',
+    name: 'Update Contact',
+    component: EditContact.screen,
+  },
+  Config.MASTER_CONTACT && {
     path: 'master/contact/detail',
     name: 'Update Contact',
-    component: DetailContact.screen,
+    component: EditContact.screen,
   },
   Config.MASTER_CONTACT && {
     path: 'master/contact',

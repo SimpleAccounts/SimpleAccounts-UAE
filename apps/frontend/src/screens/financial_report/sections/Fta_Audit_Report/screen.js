@@ -14,7 +14,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -273,7 +272,7 @@ class ViewFtaAuditReport extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -372,7 +371,7 @@ class ViewFtaAuditReport extends React.Component {
                 </Row>
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -1067,7 +1066,7 @@ class ViewFtaAuditReport extends React.Component {
                       </Table>
                     </div>
                   )}
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

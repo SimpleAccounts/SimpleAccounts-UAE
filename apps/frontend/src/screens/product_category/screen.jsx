@@ -17,37 +17,25 @@ import './style.scss';
 
 const strings = new LocalizedStrings(data);
 
-// Neumorphic theme constants
+// Corporate theme constants
 const theme = {
-  bg: '#e8eef5',
+  bg: '#f8f9fa',
+  bgWhite: '#ffffff',
   primary: '#2064d8',
-  primaryDark: '#1a4fa8',
-  secondary: '#21d8aa',
+  primaryHover: '#1a56b8',
+  secondary: '#10b981',
   warning: '#f59e0b',
-  danger: '#ff4d6a',
-  textPrimary: '#1e3a5f',
-  textSecondary: '#3d5a80',
-  textMuted: '#98afc2',
-  shadowDark: '#c4c9cf',
-  shadowLight: '#ffffff',
-};
-
-const shadows = {
-  raised: {
-    sm: `3px 3px 6px ${theme.shadowDark}, -3px -3px 6px ${theme.shadowLight}`,
-    md: `4px 4px 8px ${theme.shadowDark}, -4px -4px 8px ${theme.shadowLight}`,
-    lg: `6px 6px 12px ${theme.shadowDark}, -6px -6px 12px ${theme.shadowLight}`,
-    xs: `2px 2px 4px ${theme.shadowDark}, -2px -2px 4px ${theme.shadowLight}`,
-  },
-  pressed: {
-    sm: `inset 2px 2px 4px ${theme.shadowDark}, inset -2px -2px 4px ${theme.shadowLight}`,
-    md: `inset 3px 3px 6px ${theme.shadowDark}, inset -3px -3px 6px ${theme.shadowLight}`,
-  },
+  danger: '#ef4444',
+  textPrimary: '#111827',
+  textSecondary: '#4b5563',
+  textMuted: '#9ca3af',
+  border: '#e5e7eb',
+  borderHover: '#d1d5db',
 };
 
 /**
  * Modern Product Category Screen
- * Uses functional components with Neumorphic design
+ * Uses functional components with Corporate design
  */
 function ProductCategory() {
   const navigate = useNavigate();
@@ -176,10 +164,13 @@ function ProductCategory() {
     []
   );
 
-  // Transform data for table
+  // Transform data for table (reducer stores array with .count when API returns { data, count })
   const tableData = useMemo(() => {
-    if (!product_category_list?.data) return [];
-    return product_category_list.data.map(item => ({
+    const data = Array.isArray(product_category_list)
+      ? product_category_list
+      : product_category_list?.data || [];
+    if (!data.length && !product_category_list) return [];
+    return data.map(item => ({
       id: item.id,
       productCategoryCode: item.productCategoryCode || '',
       productCategoryName: item.productCategoryName || '',
@@ -201,20 +192,20 @@ function ProductCategory() {
 
       {/* Page Header Card */}
       <div
-        className="rounded-2xl p-6 mb-6"
+        className="rounded-xl p-6 mb-6"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* Title Section */}
           <div className="flex items-center gap-3">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-12 h-12 rounded-lg flex items-center justify-center"
               style={{
-                background: theme.bg,
-                boxShadow: shadows.raised.sm,
+                background: '#eff6ff',
               }}
             >
               <Boxes className="w-6 h-6" style={{ color: theme.primary }} />
@@ -232,10 +223,9 @@ function ProductCategory() {
           {/* Actions Section */}
           <button
             onClick={() => navigate('/admin/master/product-category/create')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white transition-all duration-200 hover:-translate-y-0.5"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90"
             style={{
-              background: `linear-gradient(145deg, ${theme.primary}, ${theme.primaryDark})`,
-              boxShadow: shadows.raised.sm,
+              background: theme.primary,
             }}
           >
             <Plus className="w-4 h-4" />
@@ -246,10 +236,11 @@ function ProductCategory() {
 
       {/* Data Table Card */}
       <div
-        className="rounded-2xl overflow-hidden"
+        className="rounded-xl overflow-hidden"
         style={{
-          background: theme.bg,
-          boxShadow: shadows.raised.lg,
+          background: theme.bgWhite,
+          border: `1px solid ${theme.border}`,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         <div className="p-6">
@@ -264,7 +255,6 @@ function ProductCategory() {
             onSortingChange={setSorting}
             sorting={sorting}
             onRowClick={handleRowClick}
-            neumorphicPagination
             totalCount={product_category_list?.count || 0}
           />
         </div>

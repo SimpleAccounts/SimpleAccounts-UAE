@@ -13,7 +13,6 @@ import {
   DropdownItem,
 } from 'components/migration';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader, Currency } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -114,7 +113,9 @@ const InvoiceDetails = () => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const viewFilter = () => setView(!view);
-  const exportPDFWithComponent = () => pdfExportComponent.current.save();
+  const exportPDFWithComponent = () => {
+    /* pdfExportComponent.current.save() */
+  };
 
   return (
     <div className="transactions-report-screen">
@@ -201,7 +202,7 @@ const InvoiceDetails = () => {
               <FilterComponent2 viewFilter={viewFilter} generateReport={generateReport} />{' '}
             </div>
             <CardBody id="section-to-print">
-              <PDFExport
+              <div
                 ref={pdfExportComponent}
                 scale={0.8}
                 paperSize="A3"
@@ -373,7 +374,7 @@ const InvoiceDetails = () => {
                   {' '}
                   {strings.PoweredBy} <b>SimpleAccounts</b>
                 </div>
-              </PDFExport>
+              </div>
             </CardBody>
           </div>
         </Card>

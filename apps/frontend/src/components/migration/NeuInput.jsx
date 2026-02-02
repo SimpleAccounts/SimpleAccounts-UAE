@@ -61,6 +61,8 @@ const NeuInput = React.forwardRef(
       plaintext = false,
       addon: _addon = false,
       style,
+      children,
+      dangerouslySetInnerHTML,
       ...props
     },
     ref
@@ -68,10 +70,17 @@ const NeuInput = React.forwardRef(
     const [isFocused, setIsFocused] = React.useState(false);
     const sizeClass = SIZE_CLASSES[bsSize] || SIZE_CLASSES.md;
 
+    // Determine background color based on disabled state
+    const isDisabled = props.disabled || props.readOnly;
+    const backgroundColor = isDisabled
+      ? 'var(--corp-bg-secondary, #f8f9fa)' // Light gray for disabled/read-only fields
+      : '#ffffff'; // White for editable fields
+
     const inputStyle = {
       ...NEU_INPUT_STYLES.input,
+      background: backgroundColor,
       ...(type === 'select' ? NEU_INPUT_STYLES.select : {}),
-      ...(isFocused ? NEU_INPUT_STYLES.inputFocus : {}),
+      ...(isFocused && !isDisabled ? NEU_INPUT_STYLES.inputFocus : {}),
       ...(invalid
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(255, 77, 106, 0.3)` }
         : {}),
@@ -79,8 +88,12 @@ const NeuInput = React.forwardRef(
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(0, 200, 150, 0.3)` }
         : {}),
       ...(plaintext ? { background: 'transparent', boxShadow: 'none' } : {}),
+      ...(isDisabled ? { cursor: 'not-allowed', opacity: 0.7 } : {}),
       ...style,
     };
+
+    // Ensure value is never null to avoid React warning
+    const safeValue = props.value === null ? '' : props.value;
 
     const commonProps = {
       ref,
@@ -95,10 +108,12 @@ const NeuInput = React.forwardRef(
         props.onBlur?.(e);
       },
       ...props,
+      // Override value with safe value (null -> '')
+      ...(props.value !== undefined ? { value: safeValue } : {}),
     };
 
     if (type === 'select') {
-      return <select {...commonProps}>{props.children}</select>;
+      return <select {...commonProps}>{children}</select>;
     }
 
     if (type === 'textarea') {
@@ -110,40 +125,53 @@ const NeuInput = React.forwardRef(
       );
     }
 
+    // input is a void element: never pass children or dangerouslySetInnerHTML
     return <input type={type} {...commonProps} />;
   }
 );
 NeuInput.displayName = 'NeuInput';
 
-const NeuLabel = React.forwardRef(({ children, className, htmlFor, style, ...props }, ref) => (
-  <label
-    ref={ref}
-    htmlFor={htmlFor}
-    className={cn('block mb-2', className)}
-    style={{ ...NEU_INPUT_STYLES.label, ...style }}
-    {...props}
-  >
-    {children}
-  </label>
-));
+const NeuLabel = React.forwardRef(
+  ({ children, className, htmlFor, style, check, ...props }, ref) => {
+    // Filter out React-specific props that shouldn't be passed to DOM
+    // 'check' is a reactstrap prop for checkbox labels, not a DOM attribute
+    return (
+      <label
+        ref={ref}
+        htmlFor={htmlFor}
+        className={cn('block mb-2', className, check && 'form-check-label')}
+        style={{ ...NEU_INPUT_STYLES.label, ...style }}
+        {...props}
+      >
+        {children}
+      </label>
+    );
+  }
+);
 NeuLabel.displayName = 'NeuLabel';
 
 const NeuFormGroup = React.forwardRef(
-  ({ children, className, row = false, check = false, style, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'mb-4',
-        row && 'flex flex-wrap items-center',
-        check && 'flex items-center gap-2',
-        className
-      )}
-      style={style}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ children, className, row = false, check = false, inline = false, style, ...props }, ref) => {
+    // Filter out React-specific props that shouldn't be passed to DOM
+    const { check: _check, row: _row, inline: _inline, ...domProps } = props;
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'mb-4',
+          row && 'flex flex-wrap items-center',
+          check && 'flex items-center gap-2',
+          inline && 'inline-flex items-center',
+          className
+        )}
+        style={style}
+        {...domProps}
+      >
+        {children}
+      </div>
+    );
+  }
 );
 NeuFormGroup.displayName = 'NeuFormGroup';
 

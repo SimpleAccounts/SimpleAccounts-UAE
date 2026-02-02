@@ -182,14 +182,16 @@ class BankAccountControllerTest {
         }
 
         @Test
-        @DisplayName("Should return internal server error when service returns null")
+        @DisplayName("Should return empty response when service returns null")
         void shouldReturnErrorWhenServiceReturnsNull() throws Exception {
             when(jwtTokenUtil.getUserIdFromHttpRequest(any())).thenReturn(1);
             when(userService.findByPK(1)).thenReturn(testUser);
             when(bankAccountService.getBankAccounts(any(), any())).thenReturn(null);
 
             mockMvc.perform(get("/rest/bank/list"))
-                    .andExpect(status().isInternalServerError());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.count").value(0));
         }
     }
 

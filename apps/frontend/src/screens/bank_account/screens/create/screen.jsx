@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -104,7 +105,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const regExAlpha = /^[a-zA-Z ]+$/;
+const regExAlpha = /^[a-zA-Z0-9 -]+$/; // Allow alphanumeric characters, spaces, and hyphens
 const regEx = /^[0-9]+$/;
 const regDecimal = /^[0-9][0-9]*[.]?[0-9]{0,2}$$/;
 
@@ -121,8 +122,8 @@ const CreateBankAccount = ({
   commonActions,
   currencyConvertActions,
   createBankAccountActions,
-  history,
 }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [createMore, setCreateMore] = useState(false);
@@ -270,7 +271,7 @@ const CreateBankAccount = ({
             newBankName: '',
           });
         } else {
-          history.push('/admin/banking/bank-account');
+          navigate('/admin/banking/bank-account');
         }
       })
       .catch(err => {
@@ -325,6 +326,7 @@ const CreateBankAccount = ({
                                     id="account_name"
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.AccountName}
+                                    style={{ background: 'white' }}
                                     {...field}
                                     onChange={e => {
                                       if (
@@ -360,24 +362,47 @@ const CreateBankAccount = ({
                                     placeholder={strings.Select + strings.Currency}
                                     options={
                                       currency_convert_list
-                                        ? selectCurrencyFactory.renderOptions(
-                                            'currencyName',
-                                            'currencyCode',
-                                            currency_convert_list,
-                                            'Currency'
-                                          )
+                                        ? (() => {
+                                            const options = selectCurrencyFactory.renderOptions(
+                                              'currencyName',
+                                              'currencyCode',
+                                              currency_convert_list,
+                                              'Currency'
+                                            );
+                                            // Deduplicate by value (currencyCode)
+                                            const seen = new Set();
+                                            return options.filter(option => {
+                                              if (seen.has(option.value)) {
+                                                return false;
+                                              }
+                                              seen.add(option.value);
+                                              return true;
+                                            });
+                                          })()
                                         : []
                                     }
                                     value={
                                       currency_convert_list &&
-                                      selectCurrencyFactory
-                                        .renderOptions(
+                                      (() => {
+                                        const options = selectCurrencyFactory.renderOptions(
                                           'currencyName',
                                           'currencyCode',
                                           currency_convert_list,
                                           'Currency'
-                                        )
-                                        .find(option => option.value === +field.value)
+                                        );
+                                        // Deduplicate before finding
+                                        const seen = new Set();
+                                        const uniqueOptions = options.filter(option => {
+                                          if (seen.has(option.value)) {
+                                            return false;
+                                          }
+                                          seen.add(option.value);
+                                          return true;
+                                        });
+                                        return uniqueOptions.find(
+                                          option => option.value === +field.value
+                                        );
+                                      })()
                                     }
                                     onChange={option => {
                                       field.onChange(option ? option.value : '');
@@ -408,6 +433,7 @@ const CreateBankAccount = ({
                                     id="opening_balance"
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.OpeningBalance}
+                                    style={{ background: 'white' }}
                                     {...field}
                                     onChange={e => {
                                       if (
@@ -576,9 +602,14 @@ const CreateBankAccount = ({
                                     id="account_number"
                                     autoComplete="off"
                                     placeholder={strings.Enter + strings.AccountNumber}
+                                    style={{ background: 'white' }}
                                     {...field}
                                     onChange={e => {
-                                      if (e.target.value === '' || regEx.test(e.target.value)) {
+                                      // Allow alphanumeric characters (letters, numbers, hyphens, underscores)
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                       validationCheck(e.target.value);
@@ -759,7 +790,7 @@ const CreateBankAccount = ({
                                 color="secondary"
                                 className="btn-square"
                                 onClick={() => {
-                                  history.push('/admin/banking/bank-account');
+                                  navigate('/admin/banking/bank-account');
                                 }}
                               >
                                 <Ban className="h-4 w-4" /> {strings.Cancel}

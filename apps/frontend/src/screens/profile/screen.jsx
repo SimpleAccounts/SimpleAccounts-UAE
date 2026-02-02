@@ -98,33 +98,54 @@ const companyProfileSchema = z.object({
   fax: z.string().optional(),
 });
 
-// Custom select styles for dark mode
+// Corporate select styles - Dark mode compatible
 const selectStyles = {
   control: (base, state) => ({
     ...base,
-    borderColor: state.isFocused ? 'hsl(var(--primary))' : 'hsl(var(--input))',
+    minHeight: '40px',
+    borderRadius: '0.5rem',
+    borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
+    boxShadow: state.isFocused ? '0 0 0 3px rgba(32, 100, 216, 0.1)' : 'none',
     backgroundColor: 'hsl(var(--background))',
-    '&:hover': {
-      borderColor: 'hsl(var(--primary))',
-    },
+    '&:hover': { borderColor: 'hsl(var(--ring))' },
+    transition: 'all 0.2s ease',
   }),
   menu: base => ({
     ...base,
     backgroundColor: 'hsl(var(--background))',
+    borderRadius: '0.5rem',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
     border: '1px solid hsl(var(--border))',
+    padding: '0.25rem',
+    zIndex: 50,
+  }),
+  menuList: base => ({
+    ...base,
+    backgroundColor: 'hsl(var(--background))',
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? 'hsl(var(--accent))' : 'transparent',
-    color: 'hsl(var(--foreground))',
+    backgroundColor: state.isSelected
+      ? 'hsl(var(--primary))'
+      : state.isFocused
+        ? 'hsl(var(--accent))'
+        : 'transparent',
+    color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+    borderRadius: '0.375rem',
+    '&:active': { backgroundColor: 'hsl(var(--accent))' },
+    cursor: 'pointer',
   }),
-  singleValue: base => ({
+  singleValue: base => ({ ...base, color: 'hsl(var(--foreground))', fontWeight: 500 }),
+  input: base => ({ ...base, color: 'hsl(var(--foreground))' }),
+  placeholder: base => ({ ...base, color: 'hsl(var(--muted-foreground))' }),
+  dropdownIndicator: base => ({
     ...base,
-    color: 'hsl(var(--foreground))',
+    color: 'hsl(var(--muted-foreground))',
+    '&:hover': { color: 'hsl(var(--foreground))' },
   }),
-  input: base => ({
+  indicatorSeparator: base => ({
     ...base,
-    color: 'hsl(var(--foreground))',
+    backgroundColor: 'hsl(var(--border))',
   }),
 };
 

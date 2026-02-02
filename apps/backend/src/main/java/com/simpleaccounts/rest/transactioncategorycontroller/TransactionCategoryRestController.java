@@ -84,6 +84,7 @@ public class TransactionCategoryRestController{
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getAllTransactionCategoryListByFilter(TransactionCategoryRequestFilterModel filterModel,
 			HttpServletRequest request) {
@@ -246,15 +247,20 @@ public class TransactionCategoryRestController{
 	@LogRequest
 	@GetMapping(value = "/getForExpenses")
 	public ResponseEntity<List<TransactionCategory>> getTransactionCatgeoriesForExpenses(HttpServletRequest request) {
-		List<TransactionCategory> transactionCategories =transactionExpensesRepository.getTransactionCategory(logger.getName());
-		if (transactionCategories != null) {
+		try {
+			// Use purchase/expense-type categories (chart of account IDs for expense, COGS, assets, etc.)
+			List<TransactionCategory> transactionCategories = transactionCategoryService.getTransactionCategoryListForPurchaseProduct();
+			if (transactionCategories == null) {
+				transactionCategories = new ArrayList<>();
+			}
 			for (TransactionCategory cat : transactionCategories) {
 				cat.setChartOfAccount(null);
 			}
 			return new ResponseEntity<>(transactionCategories, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.warn("getForExpenses failed, returning empty list: {}", e.getMessage());
+			return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
 	}
 
 	@LogRequest

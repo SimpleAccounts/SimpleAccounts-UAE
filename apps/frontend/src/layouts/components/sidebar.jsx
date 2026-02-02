@@ -86,18 +86,11 @@ export function Sidebar({
     setExpandedMenus(prev => ({ ...prev, [menuName]: !prev[menuName] }));
   };
 
-  // Corporate theme colors
+  // Corporate theme colors - using CSS variables
   const theme = {
-    bg: '#ffffff',
-    bgSecondary: '#f8f9fa',
-    primary: '#2064d8',
-    secondary: '#21d8aa',
-    textPrimary: '#111827',
-    textSecondary: '#4b5563',
-    textMuted: '#9ca3af',
-    border: '#e5e7eb',
-    borderMedium: '#d1d5db',
-    danger: '#ef4444',
+    border: 'var(--corp-border-light)',
+    borderMedium: 'var(--corp-border-medium)',
+    secondary: 'var(--corp-secondary)',
   };
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -186,33 +179,24 @@ export function Sidebar({
                   <button
                     onClick={() => toggleSubmenu(item.name)}
                     className={cn(
-                      'w-full flex items-center gap-3 p-2 rounded-lg transition-all duration-200',
+                      'corp-menu-item w-full',
                       minimized ? 'justify-center' : '',
                       isChildActive || isExpanded
-                        ? 'bg-corp-primary-light border border-corp-primary'
-                        : 'hover:bg-corp-bg-secondary border border-transparent'
+                        ? 'corp-menu-item-expanded'
+                        : 'corp-menu-item-default'
                     )}
                     title={minimized ? item.name : undefined}
                   >
                     {/* Icon */}
-                    <Icon
-                      className="w-5 h-5 flex-shrink-0"
-                      style={{ color: isChildActive ? theme.primary : theme.textSecondary }}
-                    />
+                    <Icon className="w-5 h-5 flex-shrink-0 menu-icon" />
                     {!minimized && (
                       <>
-                        <span
-                          className="flex-1 text-left font-medium text-sm"
-                          style={{ color: isChildActive ? theme.primary : theme.textPrimary }}
-                        >
-                          {item.name}
-                        </span>
+                        <span className="flex-1 text-left menu-text">{item.name}</span>
                         <ChevronUp
                           className={cn(
-                            'w-4 h-4 transition-transform duration-200',
+                            'w-4 h-4 transition-transform duration-200 text-corp-text-muted',
                             isExpanded ? '' : 'rotate-180'
                           )}
-                          style={{ color: theme.textMuted }}
                         />
                       </>
                     )}
@@ -221,27 +205,15 @@ export function Sidebar({
                   <NavLink
                     to={item.url}
                     className={cn(
-                      'w-full flex items-center gap-3 p-2 rounded-lg transition-all duration-200',
+                      'corp-menu-item w-full',
                       minimized ? 'justify-center' : '',
-                      isActive
-                        ? 'bg-corp-primary text-white'
-                        : 'hover:bg-corp-bg-secondary border border-transparent'
+                      isActive ? 'corp-menu-item-active' : 'corp-menu-item-default'
                     )}
                     title={minimized ? item.name : undefined}
                   >
                     {/* Icon */}
-                    <Icon
-                      className="w-5 h-5 flex-shrink-0"
-                      style={{ color: isActive ? '#ffffff' : theme.textSecondary }}
-                    />
-                    {!minimized && (
-                      <span
-                        className="flex-1 text-left font-medium text-sm"
-                        style={{ color: isActive ? '#ffffff' : theme.textPrimary }}
-                      >
-                        {item.name}
-                      </span>
-                    )}
+                    <Icon className="w-5 h-5 flex-shrink-0 menu-icon" />
+                    {!minimized && <span className="flex-1 text-left menu-text">{item.name}</span>}
                   </NavLink>
                 )}
 
@@ -275,28 +247,14 @@ export function Sidebar({
                               key={child.name || child.url}
                               to={child.url}
                               className={cn(
-                                'flex items-center gap-2 py-1.5 px-3 rounded-md transition-all duration-200',
+                                'corp-submenu-item',
                                 isSubActive
-                                  ? 'bg-corp-primary-light border-l-2'
-                                  : 'hover:bg-corp-bg-secondary border-l-2 border-transparent'
+                                  ? 'corp-submenu-item-active'
+                                  : 'corp-submenu-item-default'
                               )}
-                              style={{
-                                borderLeftColor: isSubActive ? theme.primary : 'transparent',
-                              }}
                             >
-                              <ChildIcon
-                                className="w-4 h-4"
-                                style={{ color: isSubActive ? theme.primary : theme.textMuted }}
-                              />
-                              <span
-                                className="text-sm whitespace-nowrap"
-                                style={{
-                                  color: isSubActive ? theme.primary : theme.textSecondary,
-                                  fontWeight: isSubActive ? 600 : 400,
-                                }}
-                              >
-                                {child.name}
-                              </span>
+                              <ChildIcon className="w-4 h-4 submenu-icon" />
+                              <span className="whitespace-nowrap">{child.name}</span>
                             </NavLink>
                           );
                         })}
@@ -316,16 +274,12 @@ export function Sidebar({
           <DropdownMenuTrigger asChild>
             <button
               className={cn(
-                'w-full flex items-center gap-3 p-2 rounded-lg cursor-pointer',
-                'transition-all duration-200 hover:bg-corp-bg-secondary',
+                'corp-menu-item corp-menu-item-default w-full cursor-pointer',
                 minimized ? 'justify-center' : ''
               )}
             >
               {/* Avatar */}
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0"
-                style={{ background: theme.primary }}
-              >
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 bg-corp-primary">
                 {user?.firstName?.[0] || user?.name?.[0] || 'U'}
                 {user?.lastName?.[0] || ''}
               </div>

@@ -9,7 +9,6 @@ import * as PurchaseOrderDetailsAction from '../detail/actions';
 import ReactToPrint from 'react-to-print';
 import 'react-datepicker/dist/react-datepicker.css';
 import './style.scss';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import './style.scss';
 import { RFQTemplate } from './sections';
 
@@ -103,7 +102,7 @@ class ViewQuotation extends React.Component {
   };
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
 
   render() {
@@ -173,7 +172,7 @@ class ViewQuotation extends React.Component {
                 </Button>
               </div>
               <div>
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -187,7 +186,7 @@ class ViewQuotation extends React.Component {
                     companyData={this.state && this.state.companyData ? this.state.companyData : ''}
                     contactData={this.state.contactData}
                   />
-                </PDFExport>
+                </div>
               </div>
             </Col>
           </Row>

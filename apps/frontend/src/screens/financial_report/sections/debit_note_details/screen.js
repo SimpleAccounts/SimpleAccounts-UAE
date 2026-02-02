@@ -12,7 +12,6 @@ import {
 } from 'components/migration';
 import { ReportTables } from 'screens/financial_report/sections';
 import dayjs from '@/utils/date';
-import { PDFExport } from '@progress/kendo-react-pdf';
 import XLSX from 'utils/excelExport';
 import { Loader } from 'components';
 import * as FinancialReportActions from '../../actions';
@@ -161,7 +160,7 @@ class DebitNoteDetailsReport extends React.Component {
     });
 
   exportPDFWithComponent = () => {
-    this.pdfExportComponent.save();
+    // this.pdfExportComponent.save();
   };
   hideExportOptionsFunctionality = val => {
     this.setState({ hideExportOptions: val });
@@ -283,7 +282,7 @@ class DebitNoteDetailsReport extends React.Component {
                 />
               </CardHeader>
               <CardBody id="section-to-print">
-                <PDFExport
+                <div
                   ref={component => (this.pdfExportComponent = component)}
                   scale={0.8}
                   paperSize="A3"
@@ -340,7 +339,7 @@ class DebitNoteDetailsReport extends React.Component {
                     {' '}
                     {strings.PoweredBy} <b>SimpleAccounts</b>
                   </div>
-                </PDFExport>
+                </div>
               </CardBody>
             </div>
           </Card>

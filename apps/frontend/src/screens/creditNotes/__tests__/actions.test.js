@@ -63,9 +63,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.CUSTOMER_INVOICE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
 
@@ -122,9 +120,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.PROJECT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -151,9 +147,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.EXCISE_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -200,9 +194,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.PLACE_OF_SUPPLY,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -224,7 +216,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.CURRENCY_LIST,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
 
       expect(result).toEqual(mockResponse);
@@ -248,9 +240,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.VAT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
 
       expect(authApi).toHaveBeenCalledWith({
@@ -300,9 +290,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.DEPOSIT_LIST,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -324,9 +312,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.PAY_MODE,
-        payload: {
-          data: mockResponse.data,
-        },
+        payload: mockResponse.data,
       });
     });
   });
@@ -395,7 +381,7 @@ describe('Credit Notes Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions[0]).toEqual({
         type: CUSTOMER_INVOICE.INVOICE_LIST_FOR_DROPDOWN,
-        payload: mockResponse,
+        payload: mockResponse.data,
       });
     });
   });

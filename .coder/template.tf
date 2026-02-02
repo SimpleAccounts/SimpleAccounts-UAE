@@ -122,6 +122,56 @@ EOF
   }
 }
 
+# Prepare database init scripts (must exist before postgres container starts)
+resource "null_resource" "db_init_scripts" {
+  # Re-run when workspace is rebuilt
+  triggers = {
+    workspace_id = data.coder_workspace.me.id
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      #!/bin/bash
+      set -e
+
+      # Directory for database init scripts (persists across workspace rebuilds)
+      SCRIPT_DIR="/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
+      mkdir -p "$SCRIPT_DIR"
+
+      # Clone repository to temporary location to get init scripts
+      TEMP_DIR=$(mktemp -d)
+      trap "rm -rf $TEMP_DIR" EXIT
+
+      echo "📦 Fetching database init scripts from repository..."
+      git clone --depth 1 --branch ${data.coder_parameter.git_clone_url.value != "" ? "develop" : "develop"} \
+        ${data.coder_parameter.git_clone_url.value != "" ? data.coder_parameter.git_clone_url.value : "https://github.com/SimpleAccounts/SimpleAccounts-UAE.git"} \
+        "$TEMP_DIR" --quiet || true
+
+      # Copy init scripts to persistent location
+      if [ -f "$TEMP_DIR/.devcontainer/init-db.sh" ]; then
+        cp "$TEMP_DIR/.devcontainer/init-db.sh" "$SCRIPT_DIR/init-db.sh"
+        chmod +x "$SCRIPT_DIR/init-db.sh"
+        echo "✅ Copied init-db.sh"
+      else
+        echo "⚠️  Warning: init-db.sh not found in repository"
+      fi
+
+      if [ -f "$TEMP_DIR/.devcontainer/postgres-startup-hook.sh" ]; then
+        cp "$TEMP_DIR/.devcontainer/postgres-startup-hook.sh" "$SCRIPT_DIR/postgres-startup-hook.sh"
+        chmod +x "$SCRIPT_DIR/postgres-startup-hook.sh"
+        echo "✅ Copied postgres-startup-hook.sh"
+      else
+        echo "⚠️  Warning: postgres-startup-hook.sh not found in repository"
+      fi
+
+      echo "✅ Database init scripts prepared"
+    EOT
+    interpreter = ["bash", "-c"]
+  }
+
+  depends_on = [null_resource.host_directories]
+}
+
 # Random password for PostgreSQL (generated once per workspace)
 # NOTE: This password persists in Terraform state across workspace stop/start cycles.
 # However, if Terraform state is reset while the volume persists, password mismatch occurs.
@@ -186,15 +236,17 @@ resource "docker_container" "postgres" {
   }
 
   # Database initialization script (creates extensions and test database)
+  # Note: Mounted from persistent location prepared by null_resource.db_init_scripts
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/init-db.sh"
+    host_path      = "/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}/init-db.sh"
     container_path = "/docker-entrypoint-initdb.d/init-db.sh"
     read_only      = true
   }
 
   # Password sync hook (runs on every startup to fix password mismatch)
+  # Note: Mounted from persistent location prepared by null_resource.db_init_scripts
   volumes {
-    host_path      = "/workspaces/SimpleAccounts-UAE/.devcontainer/postgres-startup-hook.sh"
+    host_path      = "/home/coder/.coder-db-scripts/${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}/postgres-startup-hook.sh"
     container_path = "/usr/local/bin/password-sync.sh"
     read_only      = true
   }
@@ -219,6 +271,9 @@ resource "docker_container" "postgres" {
   ]
 
   restart = "unless-stopped"
+
+  # Ensure init scripts are prepared before container starts
+  depends_on = [null_resource.db_init_scripts]
 }
 
 # Redis container
@@ -327,6 +382,13 @@ resource "coder_agent" "main" {
       bash .devcontainer/post-start.sh || echo "⚠️  Post-start script had issues"
     fi
 
+    # Start VNC server for browser testing
+    echo "🖥️  Starting VNC server..."
+    if [ -x /usr/local/bin/start-vnc ]; then
+      /usr/local/bin/start-vnc &
+      echo "✅ VNC server started on port 6080"
+    fi
+
     echo "✅ Workspace ready!"
     echo ""
     echo "Quick start commands:"
@@ -336,6 +398,8 @@ resource "coder_agent" "main" {
     echo "Or from app directories:"
     echo "  Frontend: cd apps/frontend && npm start"
     echo "  Backend:  cd apps/backend && ./mvnw spring-boot:run"
+    echo ""
+    echo "VNC Browser: https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io/vnc.html"
   EOT
 
   # Display apps (for web access)
@@ -399,8 +463,8 @@ module "code-server" {
   # Auto-install extensions from devcontainer.json
   auto_install_extensions = true
 
-  # Display in Web Editors group
-  group = "Web Editors"
+  # Disable grouping to show individual apps with their own icons
+  group = null
 }
 
 # Frontend application (React + Vite on port 3000)
@@ -455,6 +519,24 @@ resource "coder_app" "swagger" {
   url          = "http://localhost:8080/swagger-ui.html"
   subdomain    = false
   share        = "owner"
+}
+
+# VNC Browser for UI testing and preview
+# Always enabled - useful for Playwright tests and visual debugging
+resource "coder_app" "vnc" {
+  agent_id     = coder_agent.main.id
+  slug         = "vnc"
+  display_name = "VNC Browser"
+  icon         = "/icon/desktop.svg"
+  url          = "http://localhost:6080/"
+  subdomain    = true
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:6080"
+    interval  = 10
+    threshold = 20
+  }
 }
 
 # Main workspace container
@@ -629,6 +711,22 @@ resource "docker_container" "workspace" {
     value = "8080"
   }
 
+  # VNC routing (port 6080)
+  labels {
+    label = "traefik.http.routers.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.rule"
+    value = "Host(`${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io`)"
+  }
+
+  labels {
+    label = "traefik.http.routers.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.service"
+    value = "${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc"
+  }
+
+  labels {
+    label = "traefik.http.services.${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.loadbalancer.server.port"
+    value = "6080"
+  }
+
   # Depend on database containers and host directory setup
   depends_on = [
     docker_container.postgres,
@@ -657,6 +755,11 @@ resource "coder_metadata" "workspace_info" {
   item {
     key   = "backend_url"
     value = "https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-api.dev.simpleaccounts.io"
+  }
+
+  item {
+    key   = "vnc_url"
+    value = "https://${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}-vnc.dev.simpleaccounts.io/vnc.html"
   }
 
   item {

@@ -192,7 +192,7 @@ describe('Employee Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: { status: 200, data: mockCurrencies },
+        payload: mockCurrencies,
       });
     });
 
@@ -227,7 +227,7 @@ describe('Employee Actions', () => {
       const dispatchedActions = store.getActions();
       expect(dispatchedActions).toContainEqual({
         type: EMPLOYEE.CURRENCY_LIST,
-        payload: { status: 200, data: [] },
+        payload: [],
       });
     });
   });

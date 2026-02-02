@@ -109,12 +109,12 @@ public class CreditNoteRestController {
                     new SimpleAccountsMessage("0027",
                             MessageUtil.getMessage("creditnote.created.successful.msg.0027"), false),
                     HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error(ERROR, e);
-            return new ResponseEntity<>(new SimpleAccountsMessage("",
-                    MessageUtil.getMessage("create.unsuccessful.msg"), true),
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+		} catch (Exception e) {
+			logger.error("Error in CreditNoteRestController.save: ", e);
+			return new ResponseEntity<>(new SimpleAccountsMessage("",
+					MessageUtil.getMessage("create.unsuccessful.msg"), true),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
 
     @LogRequest
@@ -328,6 +328,7 @@ public class CreditNoteRestController {
             return null;
     }
     @LogRequest
+    @Transactional(readOnly = true)
     @GetMapping(value = "/getCreditNoteByInvoiceId")
     public ResponseEntity<CreditNoteRequestModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
         try {

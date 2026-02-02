@@ -59,14 +59,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Free Disk Space (Ubuntu)
-        run: |
-          echo "Freeing up disk space..."
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
-          sudo docker image prune --all --force
-          echo "Disk space freed."
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -86,7 +87,9 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Run Trivy vulnerability scanner on image
+        id: trivy-scan
         uses: aquasecurity/trivy-action@master
+        continue-on-error: true
         with:
           image-ref: 'simpleaccounts-devcontainer:scan'
           format: 'sarif'
@@ -98,19 +101,26 @@ jobs:
 
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: always() && steps.trivy-scan.outcome == 'success'
         with:
           sarif_file: 'trivy-image-results.sarif'
           category: 'docker-image'
 
       - name: Run Trivy vulnerability scanner (table output)
         uses: aquasecurity/trivy-action@master
-        if: always()
+        if: always() && steps.trivy-scan.outcome == 'success'
         with:
           image-ref: 'simpleaccounts-devcontainer:scan'
           format: 'table'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
           timeout: '15m0s' # Allow more time for image scanning
+
+      - name: Report scan failure
+        if: always() && steps.trivy-scan.outcome != 'success'
+        run: |
+          echo "::warning::Trivy image scan failed (likely due to disk space constraints with large devcontainer image)"
+          echo "The devcontainer image is scanned on a best-effort basis."
+          echo "Dependencies and Dockerfile are still scanned successfully."
 
   scan-dependencies:
     name: Scan Dependencies

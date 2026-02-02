@@ -40,7 +40,10 @@ public class ChartOfAccountCacheService {
                 List<ChartOfAccount> categoryList = entry.getValue();
                 List<DropdownModel> dropDownModelList = new ArrayList<>();
                 for (ChartOfAccount chartOfAccount : categoryList) {
-                    parentCategory = chartOfAccount.getParentChartOfAccount().getChartOfAccountName();
+                    if (chartOfAccount.getParentChartOfAccount() != null) {
+                        String name = chartOfAccount.getParentChartOfAccount().getChartOfAccountName();
+                        parentCategory = (name != null) ? name : "";
+                    }
                     dropDownModelList
                             .add(new DropdownModel(chartOfAccount.getChartOfAccountId(), chartOfAccount.getChartOfAccountName()));
                 }
