@@ -20,15 +20,7 @@ import dayjs from '@/utils/date';
 import './style.scss';
 import { data } from '../Language/index';
 import LocalizedStrings from 'react-localization';
-import {
-  ArrowUpDown,
-  Eye,
-  MoreVertical,
-  Pencil,
-  Plus,
-  RefreshCw,
-  Search,
-} from 'lucide-react';
+import { ArrowUpDown, Eye, MoreVertical, Pencil, Plus, RefreshCw, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const customStyles = {
