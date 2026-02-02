@@ -71,8 +71,7 @@ const SUPPORTED_FORMAT = [
 
 // Validation schema
 const createValidationSchema = () => {
-  return z
-    .object({
+  return z.object({
     transactionDate: z.any().refine(val => val, { message: 'Transaction Date is Required' }),
     transactionAmount: z
       .any()
@@ -96,7 +95,7 @@ const createValidationSchema = () => {
     isReverseChargeEnabled: z.boolean().optional(),
     exclusiveVat: z.boolean().optional(),
     expenseType: z.boolean().optional(),
-      attachment: z
+    attachment: z
       .any()
       .optional()
       .refine(
@@ -113,9 +112,9 @@ const createValidationSchema = () => {
         },
         { message: '*File Size is too large' }
       ),
-    });
-    // Note: transactionCategoryId is optional - some transaction types don't require a category
-    // The backend handles cases where no category is selected
+  });
+  // Note: transactionCategoryId is optional - some transaction types don't require a category
+  // The backend handles cases where no category is selected
 };
 
 const CreateBankTransaction = () => {
@@ -143,7 +142,8 @@ const CreateBankTransaction = () => {
   );
   const vendor_invoice_list = useSelector(state => state.bank_account?.vendor_invoice_list || []);
   const expense_categories_list = useSelector(
-    state => state.bank_account?.expense_categories_list || state.expense?.expense_categories_list || []
+    state =>
+      state.bank_account?.expense_categories_list || state.expense?.expense_categories_list || []
   );
   const user_list = useSelector(state => state.bank_account?.user_list || []);
   const currency_list = useSelector(state => state.bank_account?.currency_list || []);
@@ -349,7 +349,10 @@ const CreateBankTransaction = () => {
         });
     } else {
       // If no bank account ID is available, show an error and redirect
-      commonActionsDispatch.tostifyAlert('error', 'Bank account ID is required to create a transaction');
+      commonActionsDispatch.tostifyAlert(
+        'error',
+        'Bank account ID is required to create a transaction'
+      );
       navigate('/admin/banking/bank-account');
     }
 
@@ -362,7 +365,7 @@ const CreateBankTransaction = () => {
           // Ensure res.data is an array
           const dataArray = Array.isArray(res.data) ? res.data : [];
           console.log('Transaction type data array:', dataArray);
-          
+
           if (dataArray.length > 0) {
             // Transform ChartOfAccountCategory objects to { value, label } format
             const transformedData = selectOptionsFactory.renderOptions(
@@ -463,7 +466,7 @@ const CreateBankTransaction = () => {
         // Pass undefined instead of null to ensure it's not included in URL
         // Debug logging to verify the value
         console.log('getTransactionCategoryList - id value:', id, 'type:', typeof id);
-        
+
         // More explicit check: if id is falsy, null, undefined, empty string, or string "null"/"undefined", use undefined
         let bankId = undefined;
         if (id != null && id !== undefined && id !== '' && id !== 'null' && id !== 'undefined') {
@@ -472,9 +475,9 @@ const CreateBankTransaction = () => {
             bankId = numId;
           }
         }
-        
+
         console.log('getTransactionCategoryList - bankId value:', bankId, 'type:', typeof bankId);
-        
+
         const res = await transactionActionsDispatch.getTransactionCategoryListForExplain(
           type.value,
           bankId
@@ -646,11 +649,11 @@ const CreateBankTransaction = () => {
   };
 
   const setcustomexchnage = (customerinvoice, exrate) => {
-    const bankCurrencyCode = bankCurrency?.bankAccountCurrency ?? bankCurrency?.bankAccountCurrency?.currencyCode;
+    const bankCurrencyCode =
+      bankCurrency?.bankAccountCurrency ?? bankCurrency?.bankAccountCurrency?.currencyCode;
     const baseCurrencyCode = basecurrency?.currencyCode ?? basecurrency;
     let exchange;
-    const convertor =
-      bankCurrencyCode === baseCurrencyCode ? customerinvoice : bankCurrencyCode;
+    const convertor = bankCurrencyCode === baseCurrencyCode ? customerinvoice : bankCurrencyCode;
     const result = (currency_convert_list ?? []).filter(obj => obj.currencyCode === convertor);
     const ex = exrate || result[0]?.exchangeRate || 1;
     setValue('exchangeRate', ex);
@@ -667,7 +670,8 @@ const CreateBankTransaction = () => {
   const basecurrencyconvertor = customerinvoice => {
     const baseCurrencyCode = basecurrency?.currencyCode ?? basecurrency;
     if (customerinvoice !== baseCurrencyCode) {
-      const result = currency_convert_list?.filter(obj => obj.currencyCode === customerinvoice) ?? [];
+      const result =
+        currency_convert_list?.filter(obj => obj.currencyCode === customerinvoice) ?? [];
       return result[0]?.exchangeRate || 1;
     }
     return 1;
@@ -738,7 +742,7 @@ const CreateBankTransaction = () => {
     if (!bankAccountId) {
       bankAccountId = getBankAccountId();
     }
-    
+
     let {
       transactionDate,
       description,
@@ -792,7 +796,8 @@ const CreateBankTransaction = () => {
         invoiceIdList
           ? JSON.stringify(
               invoiceIdList.map(i => {
-                const exRate = i.exchangeRate && Number(i.exchangeRate) !== 0 ? Number(i.exchangeRate) : 1;
+                const exRate =
+                  i.exchangeRate && Number(i.exchangeRate) !== 0 ? Number(i.exchangeRate) : 1;
                 const explained = Number(i.explainedAmount) || 0;
                 return {
                   invoiceId: i.value ?? i.invoiceId ?? i.id,
@@ -897,7 +902,10 @@ const CreateBankTransaction = () => {
     // Handle VAT Payment/Claim
     if (coaCategoryId?.label === 'VAT Payment' || coaCategoryId?.label === 'VAT Claim') {
       if (!VATReportId || !VATReportId.value) {
-        commonActionsDispatch.tostifyAlert('error', 'Please select a VAT report for VAT transactions');
+        commonActionsDispatch.tostifyAlert(
+          'error',
+          'Please select a VAT report for VAT transactions'
+        );
         setDisabled(false);
         setLoading(false);
         setDisableLeavePage(false);
@@ -905,7 +913,10 @@ const CreateBankTransaction = () => {
       }
       const info = { ...VATlist.find(i => i.id === VATReportId?.value) };
       if (!info || !info.id) {
-        commonActionsDispatch.tostifyAlert('error', 'Selected VAT report not found. Please select a valid VAT report');
+        commonActionsDispatch.tostifyAlert(
+          'error',
+          'Selected VAT report not found. Please select a valid VAT report'
+        );
         setDisabled(false);
         setLoading(false);
         setDisableLeavePage(false);
@@ -919,7 +930,10 @@ const CreateBankTransaction = () => {
     // Handle Corporate Tax Payment
     if (coaCategoryId?.label === 'Corporate Tax Payment') {
       if (!ct_taxPeriod || ct_taxPeriod.value === undefined || ct_taxPeriod.value === null) {
-        commonActionsDispatch.tostifyAlert('error', 'Please select a corporate tax period for corporate tax payment transactions');
+        commonActionsDispatch.tostifyAlert(
+          'error',
+          'Please select a corporate tax period for corporate tax payment transactions'
+        );
         setDisabled(false);
         setLoading(false);
         setDisableLeavePage(false);
@@ -927,7 +941,10 @@ const CreateBankTransaction = () => {
       }
       const report = { ...corporateTaxList.find((obj, index) => index === ct_taxPeriod?.value) };
       if (!report || !report.id) {
-        commonActionsDispatch.tostifyAlert('error', 'Selected corporate tax report not found. Please select a valid corporate tax period');
+        commonActionsDispatch.tostifyAlert(
+          'error',
+          'Selected corporate tax report not found. Please select a valid corporate tax period'
+        );
         setDisabled(false);
         setLoading(false);
         setDisableLeavePage(false);
@@ -956,7 +973,9 @@ const CreateBankTransaction = () => {
       .catch(err => {
         // Backend returns 400 with plain string body; axios puts it in err.data
         const msg =
-          (typeof err?.data === 'object' && err?.data?.message) || err?.data || 'Something Went Wrong';
+          (typeof err?.data === 'object' && err?.data?.message) ||
+          err?.data ||
+          'Something Went Wrong';
         commonActionsDispatch.tostifyAlert('error', msg);
         setDisabled(false);
         setLoading(false);
@@ -1027,7 +1046,9 @@ const CreateBankTransaction = () => {
                                     value={
                                       chartOfAccountCategoryList &&
                                       chartOfAccountCategoryList.find(
-                                        option => option.value === field.value?.value || option.value === field.value
+                                        option =>
+                                          option.value === field.value?.value ||
+                                          option.value === field.value
                                       )
                                     }
                                     onChange={option => {
@@ -1052,7 +1073,10 @@ const CreateBankTransaction = () => {
                                       if (option?.label === 'Sales') {
                                         transactionActionsDispatch.getCustomerList(2);
                                       }
-                                      if (option?.label === 'Supplier Invoice' || option?.label === 'Invoice') {
+                                      if (
+                                        option?.label === 'Supplier Invoice' ||
+                                        option?.label === 'Invoice'
+                                      ) {
                                         getVendorList();
                                       }
                                       if (option?.label === 'VAT Payment') {

@@ -12,7 +12,10 @@ test.describe('Receipt list navigation', () => {
   };
 
   test.beforeEach(async ({ page }) => {
-    test.skip(!credentials.username || !credentials.password, 'E2E_USERNAME and E2E_PASSWORD required');
+    test.skip(
+      !credentials.username || !credentials.password,
+      'E2E_USERNAME and E2E_PASSWORD required'
+    );
     await loginTestUser(page, credentials.username, credentials.password);
     await page.waitForURL(/\/admin/, { timeout: 15000 });
   });
@@ -27,18 +30,23 @@ test.describe('Receipt list navigation', () => {
 
     const dataRows = page.locator('table tbody tr');
     const count = await dataRows.count();
-    test.skip(count === 0, 'No receipt rows: create at least one receipt to test row click navigation');
+    test.skip(
+      count === 0,
+      'No receipt rows: create at least one receipt to test row click navigation'
+    );
 
     // Click first data row (row click triggers navigate to detail with state.id)
     await dataRows.first().click();
     await page.waitForURL(/\/admin\/income\/receipt\/detail/, { timeout: 8000 }).catch(() => {});
 
     // When row has onRowClick, should navigate to receipt detail
-    const onDetail = await page.waitForURL(/\/admin\/income\/receipt\/detail/, { timeout: 5000 }).catch(() => false);
+    const onDetail = await page
+      .waitForURL(/\/admin\/income\/receipt\/detail/, { timeout: 5000 })
+      .catch(() => false);
     if (onDetail) {
-      await expect(
-        page.getByText(/receipt|reference|amount|customer/i).first()
-      ).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText(/receipt|reference|amount|customer/i).first()).toBeVisible({
+        timeout: 5000,
+      });
     }
     // If still on list, row click may not fire (e.g. row structure); receipt list and navigation path fix are verified elsewhere
   });

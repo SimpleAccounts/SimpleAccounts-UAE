@@ -381,7 +381,9 @@ const Quatation = () => {
                   </Row>
 
                   <DataTable
-                    data={Array.isArray(quotation_list) ? quotation_list : (quotation_list?.data ?? [])}
+                    data={
+                      Array.isArray(quotation_list) ? quotation_list : (quotation_list?.data ?? [])
+                    }
                     columns={columns}
                     manualPagination={true}
                     manualSorting={true}

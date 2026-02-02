@@ -13,7 +13,11 @@ import {
   generateAccountNumber,
 } from './helpers/bank-account-helpers';
 import { createTestContact } from './helpers/contact-helpers';
-import { createProductViaAPI, generateProductName, generateProductCode } from './helpers/product-helpers';
+import {
+  createProductViaAPI,
+  generateProductName,
+  generateProductCode,
+} from './helpers/product-helpers';
 import { getApiBaseUrl, getFrontendBaseUrl } from './helpers/test-setup-helpers';
 
 /**
@@ -183,17 +187,22 @@ test.describe.serial('Invoice -> Sales -> Journal Workflow', () => {
     );
     await page.waitForTimeout(2000);
 
-    const errText = await page.locator('.text-red-600, .invalid-feedback, [role="alert"]').first().textContent().catch(() => '');
+    const errText = await page
+      .locator('.text-red-600, .invalid-feedback, [role="alert"]')
+      .first()
+      .textContent()
+      .catch(() => '');
     if (errText && errText.includes('500')) {
       throw new Error('Transaction save failed with 500');
     }
   });
 
   test('3. Journal list page loads without 500', async ({ page }) => {
-    const respPromise = page.waitForResponse(
-      r => r.url().includes('/rest/journal/getList') && r.status() === 200,
-      { timeout: 15_000 }
-    ).catch(() => null);
+    const respPromise = page
+      .waitForResponse(r => r.url().includes('/rest/journal/getList') && r.status() === 200, {
+        timeout: 15_000,
+      })
+      .catch(() => null);
 
     await page.goto(`${BASE}/admin/accountant/journal`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(3000);
@@ -215,7 +224,9 @@ test.describe.serial('Invoice -> Sales -> Journal Workflow', () => {
       test.skip(true, 'Invoice row not found in list');
     }
 
-    const actionsBtn = row.locator('button[aria-haspopup="menu"], button[data-radix-collection-item]').first();
+    const actionsBtn = row
+      .locator('button[aria-haspopup="menu"], button[data-radix-collection-item]')
+      .first();
     if (await actionsBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
       await actionsBtn.click();
       await page.waitForTimeout(500);
@@ -238,7 +249,9 @@ test.describe.serial('Invoice -> Sales -> Journal Workflow', () => {
     if (!(await row.isVisible({ timeout: 5000 }).catch(() => false))) {
       test.skip(true, 'Invoice row not found');
     }
-    const actionsBtn = row.locator('button[aria-haspopup="menu"], button[data-radix-collection-item]').first();
+    const actionsBtn = row
+      .locator('button[aria-haspopup="menu"], button[data-radix-collection-item]')
+      .first();
     if (await actionsBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
       await actionsBtn.click();
       await page.waitForTimeout(500);
@@ -255,10 +268,9 @@ test.describe.serial('Invoice -> Sales -> Journal Workflow', () => {
 
     const journalRow = page.locator('[class*="journal"] table tbody tr, table tbody tr').first();
     if (await journalRow.isVisible({ timeout: 3000 }).catch(() => false)) {
-      const getByIdResp = page.waitForResponse(
-        r => r.url().includes('/rest/journal/getById'),
-        { timeout: 10_000 }
-      ).catch(() => null);
+      const getByIdResp = page
+        .waitForResponse(r => r.url().includes('/rest/journal/getById'), { timeout: 10_000 })
+        .catch(() => null);
 
       await journalRow.click();
       await page.waitForTimeout(2000);

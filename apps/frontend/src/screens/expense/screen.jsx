@@ -113,7 +113,13 @@ const Expense = () => {
 
   useEffect(() => {
     initializeData();
-  }, [pagination, sorting, filterData.expenseDate, filterData.transactionCategoryId, filterData.payee]);
+  }, [
+    pagination,
+    sorting,
+    filterData.expenseDate,
+    filterData.transactionCategoryId,
+    filterData.payee,
+  ]);
 
   const goToDetail = row => {
     navigate('/admin/expense/expense/detail', {
@@ -438,7 +444,12 @@ const Expense = () => {
                         >
                           <Search className="h-4 w-4" />
                         </Button>
-                        <Button type="button" variant="default" className="btn-square" onClick={clearAll}>
+                        <Button
+                          type="button"
+                          variant="default"
+                          className="btn-square"
+                          onClick={clearAll}
+                        >
                           <RefreshCw className="h-4 w-4" />
                         </Button>
                       </div>

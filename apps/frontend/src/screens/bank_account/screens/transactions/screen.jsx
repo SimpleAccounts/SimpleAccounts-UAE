@@ -35,7 +35,8 @@ function BankTransactions() {
 
   // Support bankId from URL query (e.g. E2E: /admin/banking/bank-account/transaction?bankId=123)
   const bankAccountId =
-    location.state?.bankAccountId ?? (searchParams.get('bankId') ? Number(searchParams.get('bankId')) : null);
+    location.state?.bankAccountId ??
+    (searchParams.get('bankId') ? Number(searchParams.get('bankId')) : null);
 
   // Redux state
   const bank_transaction_list = useSelector(state => state.bank_account.bank_transaction_list);
@@ -580,13 +581,16 @@ function BankTransactions() {
                       className="btn-square"
                       onClick={() => {
                         const navBankAccountId = bankAccountId ?? '';
-                        navigate(`/admin/banking/bank-account/transaction/create?bankId=${navBankAccountId}`, {
-                          state: {
-                            bankAccountId: navBankAccountId,
-                            currency: location.state?.currency,
-                            isRegisteredVat: location.state?.isRegisteredVat,
-                          },
-                        });
+                        navigate(
+                          `/admin/banking/bank-account/transaction/create?bankId=${navBankAccountId}`,
+                          {
+                            state: {
+                              bankAccountId: navBankAccountId,
+                              currency: location.state?.currency,
+                              isRegisteredVat: location.state?.isRegisteredVat,
+                            },
+                          }
+                        );
                       }}
                     >
                       <Plus className="h-4 w-4" />
@@ -595,7 +599,11 @@ function BankTransactions() {
                   </div>
                   <div>
                     <DataTable
-                      key={bankAccountId != null ? `${bankAccountId}-${transactionType}` : 'transactions'}
+                      key={
+                        bankAccountId != null
+                          ? `${bankAccountId}-${transactionType}`
+                          : 'transactions'
+                      }
                       columns={columns}
                       data={bank_transaction_list.data || []}
                       manualPagination={true}

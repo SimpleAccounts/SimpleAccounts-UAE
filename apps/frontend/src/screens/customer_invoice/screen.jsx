@@ -149,7 +149,10 @@ function CustomerInvoice() {
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert({ status: 'error', message: err?.data?.message || 'Something Went Wrong' });
+        commonActions.tostifyAlert({
+          status: 'error',
+          message: err?.data?.message || 'Something Went Wrong',
+        });
         setLoading(false);
       });
   }, [customerInvoiceActions, commonActions, filterData, pagination, sorting, location.state?.id]);
@@ -163,7 +166,10 @@ function CustomerInvoice() {
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert({ status: 'error', message: err?.data?.message || 'Something Went Wrong' });
+        commonActions.tostifyAlert({
+          status: 'error',
+          message: err?.data?.message || 'Something Went Wrong',
+        });
       });
   }, [customerInvoiceActions, commonActions, filterData.contactType]);
 
@@ -207,7 +213,7 @@ function CustomerInvoice() {
               status: 'success',
               message: markAsSent
                 ? strings.InvoiceStatusChangedSuccessfully
-                : strings.InvoiceSentSuccessfully
+                : strings.InvoiceSentSuccessfully,
             });
             setLoading(false);
             getOverdue();
@@ -224,7 +230,7 @@ function CustomerInvoice() {
             'Customer Invoice Posted Unsuccessfully';
           commonActions.tostifyAlert({
             status: 'error',
-            message: typeof msg === 'string' ? msg : 'Customer Invoice Posted Unsuccessfully'
+            message: typeof msg === 'string' ? msg : 'Customer Invoice Posted Unsuccessfully',
           });
           setLoading(false);
         });
@@ -245,14 +251,20 @@ function CustomerInvoice() {
         .unPostInvoice(postingRequestModel)
         .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert({ status: 'success', message: strings.InvoiceMovedToDraftSuccessfully });
+            commonActions.tostifyAlert({
+              status: 'success',
+              message: strings.InvoiceMovedToDraftSuccessfully,
+            });
             setLoading(false);
             getOverdue();
             initializeData();
           }
         })
         .catch(() => {
-          commonActions.tostifyAlert({ status: 'error', message: 'Invoice Moved To Draft Unsuccessfully!' });
+          commonActions.tostifyAlert({
+            status: 'error',
+            message: 'Invoice Moved To Draft Unsuccessfully!',
+          });
           setLoading(false);
         });
     },
@@ -290,7 +302,7 @@ function CustomerInvoice() {
       if (status === 'Paid') {
         commonActions.tostifyAlert({
           status: 'error',
-          message: 'Please delete the receipt first to delete the invoice'
+          message: 'Please delete the receipt first to delete the invoice',
         });
       } else {
         setDialog(
@@ -301,7 +313,7 @@ function CustomerInvoice() {
               customerInvoiceActions.deleteInvoice(id).then(res => {
                 commonActions.tostifyAlert({
                   status: 'success',
-                  message: res.data?.message || 'Customer Invoice Deleted Successfully'
+                  message: res.data?.message || 'Customer Invoice Deleted Successfully',
                 });
                 initializeData();
               });
@@ -459,7 +471,7 @@ function CustomerInvoice() {
                 } else {
                   commonActions.tostifyAlert({
                     status: 'error',
-                    message: 'You cannot edit transactions for which VAT is recorded'
+                    message: 'You cannot edit transactions for which VAT is recorded',
                   });
                 }
               },
@@ -503,7 +515,7 @@ function CustomerInvoice() {
                 } else {
                   commonActions.tostifyAlert({
                     status: 'error',
-                    message: 'You cannot edit transactions for which VAT is recorded'
+                    message: 'You cannot edit transactions for which VAT is recorded',
                   });
                 }
               },

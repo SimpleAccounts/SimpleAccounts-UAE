@@ -261,9 +261,7 @@ function Product() {
 
   // Transform data for table (reducer may store { data, count } or array)
   const tableData = useMemo(() => {
-    const data = Array.isArray(product_list)
-      ? product_list
-      : product_list?.data ?? [];
+    const data = Array.isArray(product_list) ? product_list : (product_list?.data ?? []);
     if (!data.length && !product_list) return [];
     return data.map(product => ({
       id: product.id,
@@ -281,7 +279,6 @@ function Product() {
 
   return (
     <div className="product-screen" style={{ background: theme.bg, minHeight: '100%' }}>
-
       {dialog}
 
       {/* Page Header Card */}

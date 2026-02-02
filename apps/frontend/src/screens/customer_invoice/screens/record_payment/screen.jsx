@@ -93,14 +93,16 @@ const recordPaymentSchema = z.object({
     },
     { message: 'Amount cannot be empty or 0' }
   ),
-  payMode: z.any().refine(
-    val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '',
-    { message: 'Payment mode is required' }
-  ),
-  depositeTo: z.any().refine(
-    val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '',
-    { message: 'Received through is required' }
-  ),
+  payMode: z
+    .any()
+    .refine(val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '', {
+      message: 'Payment mode is required',
+    }),
+  depositeTo: z
+    .any()
+    .refine(val => val != null && (val?.value != null || val?.value === 0) && val?.value !== '', {
+      message: 'Received through is required',
+    }),
   notes: z.union([z.string(), z.number()]).optional(),
   referenceCode: z.union([z.string(), z.number()]).optional(),
   attachmentFile: z
@@ -163,7 +165,17 @@ const RecordCustomerPayment = props => {
         renderURL: invoiceData.renderURL,
         renderID: invoiceData.renderID ?? invoiceData.id,
       }
-    : { id: null, invoiceNumber: '', invoiceDate: '', invoiceDueDate: '', invoiceAmount: 0, dueAmount: 0, contactId: null, renderURL: '', renderID: null };
+    : {
+        id: null,
+        invoiceNumber: '',
+        invoiceDate: '',
+        invoiceDueDate: '',
+        invoiceAmount: 0,
+        dueAmount: 0,
+        contactId: null,
+        renderURL: '',
+        renderID: null,
+      };
 
   const invoiceId = inv.id;
 
@@ -221,7 +233,10 @@ const RecordCustomerPayment = props => {
 
   useEffect(() => {
     if (!invoiceData) {
-      props.commonActions.tostifyAlert('error', 'Invoice data is missing. Please select an invoice and try again.');
+      props.commonActions.tostifyAlert(
+        'error',
+        'Invoice data is missing. Please select an invoice and try again.'
+      );
       navigate('/admin/income/customer-invoice');
     }
   }, [invoiceData, navigate, props.commonActions]);
@@ -245,7 +260,7 @@ const RecordCustomerPayment = props => {
   }, [inv.contactId, setValue]);
 
   useEffect(() => {
-    const list = Array.isArray(deposit_list) ? deposit_list : deposit_list?.data ?? [];
+    const list = Array.isArray(deposit_list) ? deposit_list : (deposit_list?.data ?? []);
     if (list.length > 0) {
       let firstOpt = null;
       for (const group of list) {
@@ -294,9 +309,7 @@ const RecordCustomerPayment = props => {
         : contactId;
 
     const receiptDateVal =
-      typeof receiptDate === 'string'
-        ? dayjs(receiptDate, 'DD-MM-YYYY').toDate()
-        : receiptDate;
+      typeof receiptDate === 'string' ? dayjs(receiptDate, 'DD-MM-YYYY').toDate() : receiptDate;
     const receiptDateStr =
       receiptDateVal instanceof Date
         ? dayjs(receiptDateVal).format('DD-MM-YYYY')
@@ -309,28 +322,19 @@ const RecordCustomerPayment = props => {
     );
     submitData.append('receiptDate', receiptDateStr);
     submitData.append('paidInvoiceListStr', JSON.stringify(formData.paidInvoiceListStr));
-    submitData.append(
-      'invoiceNumber',
-      inv.invoiceNumber ? inv.invoiceNumber : 'Invoice-00000'
-    );
-    submitData.append(
-      'invoiceAmount',
-      inv.invoiceAmount != null ? inv.invoiceAmount : '00000'
-    );
-    const amountStr =
-      amount != null && amount !== ''
-        ? String(amount).replace(/,/g, '')
-        : '';
+    submitData.append('invoiceNumber', inv.invoiceNumber ? inv.invoiceNumber : 'Invoice-00000');
+    submitData.append('invoiceAmount', inv.invoiceAmount != null ? inv.invoiceAmount : '00000');
+    const amountStr = amount != null && amount !== '' ? String(amount).replace(/,/g, '') : '';
     submitData.append('amount', amountStr);
     submitData.append('notes', notes !== null ? notes : '');
     submitData.append('referenceCode', referenceCode !== null ? referenceCode : '');
     submitData.append(
       'depositeTo',
-      depositeTo != null && typeof depositeTo === 'object' ? depositeTo.value : depositeTo ?? ''
+      depositeTo != null && typeof depositeTo === 'object' ? depositeTo.value : (depositeTo ?? '')
     );
     submitData.append(
       'payMode',
-      payMode != null && typeof payMode === 'object' ? payMode.value : payMode ?? 'CASH'
+      payMode != null && typeof payMode === 'object' ? payMode.value : (payMode ?? 'CASH')
     );
     if (contactIdVal != null && contactIdVal !== '') {
       submitData.append('contactId', contactIdVal);
@@ -342,7 +346,10 @@ const RecordCustomerPayment = props => {
     setLoadingMsg('Payment Recording...');
     props.CustomerRecordPaymentActions.recordPayment(submitData)
       .then(res => {
-        const msg = res?.data?.message ?? strings.PaymentRecordedSuccessfully ?? 'Payment recorded successfully';
+        const msg =
+          res?.data?.message ??
+          strings.PaymentRecordedSuccessfully ??
+          'Payment recorded successfully';
         toast.success(msg, { duration: 4000 });
         props.commonActions.tostifyAlert('success', msg);
         navigate('/admin/income/customer-invoice');
@@ -351,7 +358,8 @@ const RecordCustomerPayment = props => {
       .catch(err => {
         setDisabled(false);
         setLoading(false);
-        const errMsg = err?.data?.message ?? err?.response?.data?.message ?? 'Payment could not be recorded';
+        const errMsg =
+          err?.data?.message ?? err?.response?.data?.message ?? 'Payment could not be recorded';
         toast.error(errMsg, { duration: 5000 });
         props.commonActions.tostifyAlert('error', errMsg);
       });
@@ -428,7 +436,8 @@ const RecordCustomerPayment = props => {
 
   let tmpcustomer_list = [];
   (customer_list || []).forEach(item => {
-    const label = item?.label?.contactName ?? item?.label ?? (item?.value != null ? String(item.value) : '');
+    const label =
+      item?.label?.contactName ?? item?.label ?? (item?.value != null ? String(item.value) : '');
     if (item?.value != null) {
       tmpcustomer_list.push({ label, value: item.value });
     }
@@ -471,7 +480,8 @@ const RecordCustomerPayment = props => {
                           onSubmit={handleSubmit(onSubmit, errors => {
                             const firstError =
                               errors && Object.keys(errors).length > 0
-                                ? Object.values(errors)[0]?.message || 'Please fill all mandatory fields'
+                                ? Object.values(errors)[0]?.message ||
+                                  'Please fill all mandatory fields'
                                 : 'Please fill all mandatory fields';
                             toast.error(firstError, { duration: 5000 });
                             props.commonActions.tostifyAlert('error', firstError);
@@ -489,26 +499,28 @@ const RecordCustomerPayment = props => {
                                   control={control}
                                   render={({ field }) => {
                                     const option =
-                                      tmpcustomer_list?.find(o => String(o.value) === String(field.value)) ||
+                                      tmpcustomer_list?.find(
+                                        o => String(o.value) === String(field.value)
+                                      ) ||
                                       (field.value != null && field.value !== ''
                                         ? { value: field.value, label: String(field.value) }
                                         : null);
                                     return (
-                                    <Select
-                                      ref={field.ref}
-                                      value={option}
-                                      onChange={e => field.onChange(e?.value ?? e)}
-                                      onBlur={field.onBlur}
-                                      options={tmpcustomer_list || []}
-                                      styles={customStyles}
-                                      id="contactId"
-                                      isDisabled
-                                      className={
-                                        errors.contactId && touchedFields.contactId
-                                          ? 'is-invalid'
-                                          : ''
-                                      }
-                                    />
+                                      <Select
+                                        ref={field.ref}
+                                        value={option}
+                                        onChange={e => field.onChange(e?.value ?? e)}
+                                        onBlur={field.onBlur}
+                                        options={tmpcustomer_list || []}
+                                        styles={customStyles}
+                                        id="contactId"
+                                        isDisabled
+                                        className={
+                                          errors.contactId && touchedFields.contactId
+                                            ? 'is-invalid'
+                                            : ''
+                                        }
+                                      />
                                     );
                                   }}
                                 />
@@ -790,10 +802,7 @@ const RecordCustomerPayment = props => {
                           {Object.keys(errors).length > 0 && (
                             <Row>
                               <Col lg={12}>
-                                <div
-                                  className="alert alert-danger mb-3"
-                                  role="alert"
-                                >
+                                <div className="alert alert-danger mb-3" role="alert">
                                   <strong>Please fix the following:</strong>
                                   <ul className="mb-0 mt-2">
                                     {Object.entries(errors).map(([key, err]) => (

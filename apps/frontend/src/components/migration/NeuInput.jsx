@@ -94,7 +94,7 @@ const NeuInput = React.forwardRef(
 
     // Ensure value is never null to avoid React warning
     const safeValue = props.value === null ? '' : props.value;
-    
+
     const commonProps = {
       ref,
       className: cn('w-full', sizeClass, className),

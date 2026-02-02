@@ -24,17 +24,29 @@ export const createTransaction = obj => {
 export const getTransactionCategoryListForExplain = (id, bankId) => {
   return dispatch => {
     // Debug logging
-    console.log('getTransactionCategoryListForExplain called with:', { id, bankId, bankIdType: typeof bankId });
-    
+    console.log('getTransactionCategoryListForExplain called with:', {
+      id,
+      bankId,
+      bankIdType: typeof bankId,
+    });
+
     // Only include bankId in URL if it's a valid positive integer
     // Exclude: null, undefined, empty string, string "null", string "undefined", 0, negative numbers, NaN
     let validBankId = null;
-    
+
     // Explicit check: if bankId is falsy, null, undefined, empty string, or string "null"/"undefined", exclude it
-    if (bankId == null || bankId === undefined || bankId === '' || bankId === 'null' || bankId === 'undefined') {
+    if (
+      bankId == null ||
+      bankId === undefined ||
+      bankId === '' ||
+      bankId === 'null' ||
+      bankId === 'undefined'
+    ) {
       validBankId = null;
-      console.log('getTransactionCategoryListForExplain - bankId is invalid/null/undefined, excluding from URL');
-    } 
+      console.log(
+        'getTransactionCategoryListForExplain - bankId is invalid/null/undefined, excluding from URL'
+      );
+    }
     // Check if it's a valid positive integer
     else {
       const numBankId = Number(bankId);
@@ -43,15 +55,17 @@ export const getTransactionCategoryListForExplain = (id, bankId) => {
         console.log('getTransactionCategoryListForExplain - valid bankId:', validBankId);
       } else {
         validBankId = null;
-        console.log('getTransactionCategoryListForExplain - bankId is not a valid positive integer, excluding from URL');
+        console.log(
+          'getTransactionCategoryListForExplain - bankId is not a valid positive integer, excluding from URL'
+        );
       }
     }
-    
+
     // Only include bankId parameter if we have a valid value
     const bankIdParam = validBankId ? `&bankId=${validBankId}` : '';
     const finalUrl = `/rest/reconsile/getTransactionCat?chartOfAccountCategoryId=${id}${bankIdParam}`;
     console.log('getTransactionCategoryListForExplain - final URL:', finalUrl);
-    
+
     let data = {
       method: 'get',
       url: finalUrl,

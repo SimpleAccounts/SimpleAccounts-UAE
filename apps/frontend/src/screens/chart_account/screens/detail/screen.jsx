@@ -150,7 +150,13 @@ const DetailChartAccount = ({
     } else {
       setLoading(false);
     }
-  }, [location?.state?.id, detailChartOfAccontActions, getSubTransactionTypes, commonActions, reset]);
+  }, [
+    location?.state?.id,
+    detailChartOfAccontActions,
+    getSubTransactionTypes,
+    commonActions,
+    reset,
+  ]);
 
   useEffect(() => {
     initializeData();

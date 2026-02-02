@@ -37,7 +37,7 @@ test.describe('BankId Fix Verification', () => {
     await menuButton.scrollIntoViewIfNeeded();
     await menuButton.click({ force: true });
     await page.waitForTimeout(1000);
-    
+
     const addTransactionMenuItem = page.getByRole('menuitem', { name: /add.*transaction/i });
     await addTransactionMenuItem.waitFor({ state: 'visible', timeout: 10000 });
     await addTransactionMenuItem.click();
@@ -50,8 +50,8 @@ test.describe('BankId Fix Verification', () => {
     // Set up response listener to capture the getTransactionCat API call
     let capturedUrl = '';
     let hasBankIdNull = false;
-    
-    page.on('response', (response) => {
+
+    page.on('response', response => {
       const url = response.url();
       if (url.includes('/rest/reconsile/getTransactionCat')) {
         capturedUrl = url;
@@ -71,7 +71,7 @@ test.describe('BankId Fix Verification', () => {
     // Find and click the transaction type dropdown
     const reactSelectContainer = page.locator('[class*="react-select"]').first();
     await reactSelectContainer.waitFor({ state: 'attached', timeout: 15000 });
-    
+
     // Click on the control div
     const controlDiv = reactSelectContainer.locator('div[class*="control"]').first();
     await controlDiv.click({ force: true });
@@ -79,12 +79,12 @@ test.describe('BankId Fix Verification', () => {
 
     // Wait for options menu
     await page.waitForSelector('[role="listbox"]', { timeout: 15000 });
-    
+
     // Select first option
     const firstOption = page.getByRole('option').first();
     await firstOption.waitFor({ state: 'visible', timeout: 5000 });
     await firstOption.click();
-    
+
     // Wait for API call to complete
     await page.waitForTimeout(3000);
 
@@ -93,7 +93,7 @@ test.describe('BankId Fix Verification', () => {
       console.log('Captured URL:', capturedUrl);
       expect(capturedUrl).not.toContain('bankId=null');
       expect(hasBankIdNull).toBe(false);
-      
+
       // If bankId is present, it should be a valid number, not null
       if (capturedUrl.includes('bankId=')) {
         const bankIdMatch = capturedUrl.match(/bankId=(\d+)/);
@@ -104,7 +104,9 @@ test.describe('BankId Fix Verification', () => {
         console.log('✅ bankId parameter correctly omitted (not needed)');
       }
     } else {
-      console.warn('⚠️  getTransactionCat API call was not captured. This might be okay if transaction type doesn\'t require categories.');
+      console.warn(
+        "⚠️  getTransactionCat API call was not captured. This might be okay if transaction type doesn't require categories."
+      );
     }
 
     // Take screenshot for verification

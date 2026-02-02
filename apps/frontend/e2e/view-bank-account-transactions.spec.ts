@@ -11,7 +11,7 @@ import { getApiBaseUrl, getFrontendBaseUrl } from './helpers/test-setup-helpers'
 
 /**
  * Test: View transactions for a bank account
- * 
+ *
  * This test demonstrates how to:
  * 1. Create a bank account
  * 2. Create some transactions
@@ -185,7 +185,9 @@ test.describe('View Bank Account Transactions', () => {
     await page.waitForSelector('table, [class*="table"]', { timeout: 10000 });
 
     // Look for filter tabs or buttons (All, Deposits, Withdrawals, etc.)
-    const allTab = page.getByRole('button', { name: /all/i }).or(page.getByRole('tab', { name: /all/i }));
+    const allTab = page
+      .getByRole('button', { name: /all/i })
+      .or(page.getByRole('tab', { name: /all/i }));
     const depositTab = page
       .getByRole('button', { name: /deposit/i })
       .or(page.getByRole('tab', { name: /deposit/i }));

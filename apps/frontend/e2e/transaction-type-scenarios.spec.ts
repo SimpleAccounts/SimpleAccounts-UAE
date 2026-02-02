@@ -10,9 +10,12 @@ import { getFrontendBaseUrl } from './helpers/test-setup-helpers';
 const TARGET_BANK_ID = 13507;
 
 async function navigateToTransactionCreate(page: Page, bankId: number) {
-  await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`, {
-    waitUntil: 'networkidle',
-  });
+  await page.goto(
+    `${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`,
+    {
+      waitUntil: 'networkidle',
+    }
+  );
   await page.waitForSelector('form', { timeout: 15000 });
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(2000);
@@ -27,7 +30,9 @@ async function selectTransactionType(page: Page, transactionTypeName: string) {
   const optionsMenu = page.locator('[role="listbox"]').first();
   await optionsMenu.waitFor({ state: 'visible', timeout: 10000 });
 
-  const transactionTypeOption = page.getByRole('option', { name: new RegExp(transactionTypeName, 'i') });
+  const transactionTypeOption = page.getByRole('option', {
+    name: new RegExp(transactionTypeName, 'i'),
+  });
   const isVisible = await transactionTypeOption.isVisible({ timeout: 5000 }).catch(() => false);
 
   if (!isVisible) {
@@ -58,7 +63,9 @@ async function selectTransactionCategory(page: Page) {
 
   if (categorySelectCount > 1) {
     const categorySelect = categorySelects.nth(1);
-    const categorySelectVisible = await categorySelect.isVisible({ timeout: 5000 }).catch(() => false);
+    const categorySelectVisible = await categorySelect
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
 
     if (categorySelectVisible) {
       await categorySelect.click();
@@ -77,30 +84,39 @@ async function selectTransactionCategory(page: Page) {
 }
 
 async function fillTransactionForm(page: Page, amount: string, description: string) {
-  const dateInput = page.locator('input[type="date"], input[name*="date"], input[id*="date"]').first();
+  const dateInput = page
+    .locator('input[type="date"], input[name*="date"], input[id*="date"]')
+    .first();
   if (await dateInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     const today = new Date().toISOString().split('T')[0];
     await dateInput.fill(today);
     await page.waitForTimeout(500);
   }
 
-  const amountInput = page.locator('input[name*="amount"], input[id*="amount"], input[type="number"]').first();
+  const amountInput = page
+    .locator('input[name*="amount"], input[id*="amount"], input[type="number"]')
+    .first();
   await amountInput.waitFor({ state: 'visible', timeout: 10000 });
   await amountInput.fill(amount);
   await page.waitForTimeout(500);
 
-  const descriptionInput = page.locator('input[name*="description"], textarea[name*="description"], input[id*="description"]').first();
+  const descriptionInput = page
+    .locator('input[name*="description"], textarea[name*="description"], input[id*="description"]')
+    .first();
   if (await descriptionInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     await descriptionInput.fill(description);
     await page.waitForTimeout(500);
   }
 }
 
-async function submitTransactionAndGetResponse(page: Page): Promise<{ status: number; body: string }> {
-  const saveResponsePromise = page.waitForResponse(
-    (response) => response.url().includes('/rest/transaction/save'),
-    { timeout: 30000 }
-  ).catch(() => null);
+async function submitTransactionAndGetResponse(
+  page: Page
+): Promise<{ status: number; body: string }> {
+  const saveResponsePromise = page
+    .waitForResponse(response => response.url().includes('/rest/transaction/save'), {
+      timeout: 30000,
+    })
+    .catch(() => null);
 
   const submitButton = page.getByRole('button', { name: /^create$/i }).first();
   await expect(submitButton).toBeVisible({ timeout: 5000 });
@@ -175,7 +191,16 @@ test.describe('Transaction Type Scenarios', () => {
       console.log(`${txType}: ${status} - ${body.substring(0, 80)}`);
 
       // Basic types should succeed (200); Sales/Expense/Invoice may need extra setup
-      if (['Money Received', 'Money Spent', 'Transfered From', 'Transfered To', 'Refund Received', 'Money Spent Others'].includes(txType)) {
+      if (
+        [
+          'Money Received',
+          'Money Spent',
+          'Transfered From',
+          'Transfered To',
+          'Refund Received',
+          'Money Spent Others',
+        ].includes(txType)
+      ) {
         expect(status).toBe(200);
         expect(body).toContain('Saved successfull');
       }

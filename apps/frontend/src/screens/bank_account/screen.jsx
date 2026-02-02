@@ -2,7 +2,17 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, RefreshCw, Landmark, Eye, Edit, Trash2, CreditCard, List } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  Landmark,
+  Eye,
+  Edit,
+  Trash2,
+  CreditCard,
+  List,
+} from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -223,13 +233,17 @@ function BankAccount() {
               label: strings.Edit,
               icon: Edit,
               onClick: () =>
-                navigate('/admin/banking/bank-account/detail', { state: { bankAccountId: account.id } }),
+                navigate('/admin/banking/bank-account/detail', {
+                  state: { bankAccountId: account.id },
+                }),
             },
             {
               label: strings.View,
               icon: Eye,
               onClick: () =>
-                navigate('/admin/banking/bank-account/detail', { state: { bankAccountId: account.id } }),
+                navigate('/admin/banking/bank-account/detail', {
+                  state: { bankAccountId: account.id },
+                }),
             },
             {
               label: strings.ViewTransactions || 'View Transactions',

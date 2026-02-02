@@ -3,11 +3,13 @@
 ## ✅ Fix 1: Expense List Not Displaying
 
 ### Problem
+
 - Expense list at `/admin/expense/expense` showed no data
 - Reducer stores expense_list as an **array** (with `.count` property)
 - Screen was trying to access `expense_list.data` which doesn't exist on arrays
 
 ### Solution Applied
+
 **File:** `apps/frontend/src/screens/expense/screen.jsx`
 
 ```javascript
@@ -24,6 +26,7 @@ data={tableData}
 ```
 
 ### Verification
+
 - ✅ Code change verified in `screen.jsx` lines 497-499, 642
 - ✅ Handles both data structures:
   - Array with `.count` property (from reducer)
@@ -35,6 +38,7 @@ data={tableData}
 ## ✅ Fix 2: Transaction Save 500 Error
 
 ### Problem
+
 - `POST /rest/transaction/save` returned 500 Internal Server Error
 - Date field from frontend (JavaScript Date object) wasn't being parsed correctly by Spring
 - Missing validation for required fields
@@ -42,6 +46,7 @@ data={tableData}
 ### Solution Applied
 
 #### Frontend Change
+
 **File:** `apps/frontend/src/screens/bank_account/screens/transactions/screens/create/screen.jsx`
 
 ```javascript
@@ -54,6 +59,7 @@ formData.append('date', transactionDate ? String(new Date(transactionDate).getTi
 ```
 
 #### Backend Changes
+
 **File:** `apps/backend/.../TransactionRestController.java`
 
 1. **Added @InitBinder** (lines 256-283):
@@ -68,6 +74,7 @@ formData.append('date', transactionDate ? String(new Date(transactionDate).getTi
    - Returns 400 Bad Request with clear error messages
 
 ### Verification
+
 - ✅ `@InitBinder` method added and compiles successfully
 - ✅ Validation logic added for date and amount
 - ✅ Frontend sends date as epoch milliseconds
@@ -88,12 +95,14 @@ formData.append('date', transactionDate ? String(new Date(transactionDate).getTi
 ## Manual Testing Checklist
 
 ### Expense List
+
 1. Navigate to http://localhost:3000/admin/expense/expense
 2. ✅ Verify expenses are displayed in the table
 3. ✅ Verify pagination works correctly
 4. ✅ Verify filters work (payee, date, category)
 
 ### Transaction Save
+
 1. Navigate to bank account transaction create screen
 2. ✅ Fill in required fields (date, amount, category, bank)
 3. ✅ Submit transaction
@@ -106,11 +115,13 @@ formData.append('date', transactionDate ? String(new Date(transactionDate).getTi
 ## Code Changes Summary
 
 ### Files Modified
+
 1. `apps/frontend/src/screens/expense/screen.jsx` - Fixed expense list data access
 2. `apps/frontend/src/screens/bank_account/screens/transactions/screens/create/screen.jsx` - Fixed date format
 3. `apps/backend/src/main/java/com/simpleaccounts/rest/transactioncontroller/TransactionRestController.java` - Added date binding and validation
 
 ### Lines Changed
+
 - Frontend: ~5 lines
 - Backend: ~35 lines (InitBinder + validation)
 

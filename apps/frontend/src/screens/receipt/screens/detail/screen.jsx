@@ -148,7 +148,9 @@ const DetailReceipt = ({
             setCurrentReceiptId(id);
             const contactIdRaw = res.data.contactId;
             const contactIdPrimitive =
-              contactIdRaw != null && typeof contactIdRaw === 'object' && 'contactId' in contactIdRaw
+              contactIdRaw != null &&
+              typeof contactIdRaw === 'object' &&
+              'contactId' in contactIdRaw
                 ? contactIdRaw.contactId
                 : contactIdRaw;
             reset({
@@ -387,7 +389,9 @@ const DetailReceipt = ({
                                 control={control}
                                 render={({ field }) => {
                                   const id =
-                                    field.value != null && typeof field.value === 'object' && 'contactId' in field.value
+                                    field.value != null &&
+                                    typeof field.value === 'object' &&
+                                    'contactId' in field.value
                                       ? field.value.contactId
                                       : field.value;
                                   const option =
@@ -397,7 +401,13 @@ const DetailReceipt = ({
                                         ) ?? null)
                                       : null;
                                   const safeOptions = contact_list?.length
-                                    ? [{ value: '', label: `Select ${strings.CustomerName || 'Customer Name'}` }, ...normalizeContactOptions(contact_list)]
+                                    ? [
+                                        {
+                                          value: '',
+                                          label: `Select ${strings.CustomerName || 'Customer Name'}`,
+                                        },
+                                        ...normalizeContactOptions(contact_list),
+                                      ]
                                     : [];
                                   const safeValue = option ? normalizeContactOption(option) : null;
                                   return (

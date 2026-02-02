@@ -99,11 +99,16 @@ test.describe('Record Payment Workflow', () => {
     const payModeSelect = page.locator('[id="payMode"]').or(page.getByLabel(/payment mode/i));
     if (await payModeSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
       await payModeSelect.click();
-      await page.getByRole('option', { name: /CASH|BANK/i }).first().click();
+      await page
+        .getByRole('option', { name: /CASH|BANK/i })
+        .first()
+        .click();
     }
 
     // Received Through dropdown
-    const depositSelect = page.locator('[id="depositeTo"]').or(page.getByLabel(/received through/i));
+    const depositSelect = page
+      .locator('[id="depositeTo"]')
+      .or(page.getByLabel(/received through/i));
     if (await depositSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
       await depositSelect.click();
       await page.getByRole('option').first().click();
@@ -123,7 +128,10 @@ test.describe('Record Payment Workflow', () => {
     // Verify we're back at invoice list or see success
     const success =
       page.url().includes(INVOICE_LIST_PATH) ||
-      (await page.getByText(/success|recorded/i).isVisible().catch(() => false));
+      (await page
+        .getByText(/success|recorded/i)
+        .isVisible()
+        .catch(() => false));
     expect(success).toBeTruthy();
   });
 
@@ -152,7 +160,12 @@ test.describe('Record Payment Workflow', () => {
     await page.waitForTimeout(2000);
 
     // Check Payment Mode has options (CASH, BANK)
-    const payModeDropdown = page.locator('[id="payMode"]').or(page.getByText(/payment mode/i).locator('..').locator('[class*="control"]'));
+    const payModeDropdown = page.locator('[id="payMode"]').or(
+      page
+        .getByText(/payment mode/i)
+        .locator('..')
+        .locator('[class*="control"]')
+    );
     if (await payModeDropdown.isVisible({ timeout: 3000 }).catch(() => false)) {
       await payModeDropdown.click();
       await page.waitForTimeout(500);

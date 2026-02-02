@@ -215,9 +215,7 @@ function Receipt() {
 
   // Transform data for table (reducer stores array with .count when API returns { data, count })
   const tableData = useMemo(() => {
-    const data = Array.isArray(receipt_list)
-      ? receipt_list
-      : receipt_list?.data || [];
+    const data = Array.isArray(receipt_list) ? receipt_list : receipt_list?.data || [];
     if (!data.length && !receipt_list) return [];
     return data.map(item => ({
       receiptId: item.receiptId,

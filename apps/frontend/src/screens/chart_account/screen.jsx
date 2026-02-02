@@ -356,7 +356,7 @@ function ChartAccount() {
   const tableData = useMemo(() => {
     const data = Array.isArray(transaction_category_list)
       ? transaction_category_list
-      : transaction_category_list?.data ?? [];
+      : (transaction_category_list?.data ?? []);
     if (!data.length && !transaction_category_list) return [];
     return data.map(item => ({
       transactionCategoryId: item.transactionCategoryId,
@@ -464,7 +464,10 @@ function ChartAccount() {
               >
                 <option value="">Filter by Account Type</option>
                 {transaction_type_list?.map((type, index) => (
-                  <option key={type.id ?? type.transactionTypeId ?? index} value={type.id ?? type.transactionTypeId ?? ''}>
+                  <option
+                    key={type.id ?? type.transactionTypeId ?? index}
+                    value={type.id ?? type.transactionTypeId ?? ''}
+                  >
                     {type.transactionTypeName}
                   </option>
                 ))}

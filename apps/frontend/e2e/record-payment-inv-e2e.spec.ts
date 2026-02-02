@@ -34,14 +34,17 @@ test.describe('Record payment on INV-E2E', () => {
     const listData = await listRes.json();
     const invoices = listData?.data ?? listData ?? [];
     const invoice = Array.isArray(invoices)
-      ? invoices.find((inv: any) => (inv.referenceNumber || inv.invoiceNumber || '').includes(INVOICE_REF))
+      ? invoices.find((inv: any) =>
+          (inv.referenceNumber || inv.invoiceNumber || '').includes(INVOICE_REF)
+        )
       : null;
 
     test.skip(!invoice, `Invoice ${INVOICE_REF} not found`);
 
     const invoiceId = invoice.id ?? invoice.invoiceId;
     const contactId = invoice.contactId ?? invoice.contact?.contactId;
-    const dueAmount = parseFloat(invoice.dueAmount ?? invoice.remainingInvoiceAmount ?? 0) || PAYMENT_AMOUNT;
+    const dueAmount =
+      parseFloat(invoice.dueAmount ?? invoice.remainingInvoiceAmount ?? 0) || PAYMENT_AMOUNT;
 
     // 2. Get deposit options to find Petty Cash transaction category ID
     const depRes = await request.get(`${apiUrl}/rest/datalist/receipt/tnxCat`, {
@@ -54,8 +57,9 @@ test.describe('Record payment on INV-E2E', () => {
         const opts = group?.options ?? [];
         const petty = opts.find(
           (o: any) =>
-            String(o.label || o.name || '').toLowerCase().includes('petty') ||
-            String(o.value || o.id).includes('47')
+            String(o.label || o.name || '')
+              .toLowerCase()
+              .includes('petty') || String(o.value || o.id).includes('47')
         );
         if (petty) {
           depositeToId = petty.value ?? petty.id ?? 47;
@@ -65,9 +69,12 @@ test.describe('Record payment on INV-E2E', () => {
     }
 
     // 3. Get invoice details for paidInvoiceListStr
-    const invDetailsRes = await request.get(`${apiUrl}/rest/invoice/getInvoiceById?id=${invoiceId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const invDetailsRes = await request.get(
+      `${apiUrl}/rest/invoice/getInvoiceById?id=${invoiceId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     const invDetails = invDetailsRes.ok() ? await invDetailsRes.json() : invoice;
 
     const today = new Date();
@@ -91,7 +98,10 @@ test.describe('Record payment on INV-E2E', () => {
     formData.append('receiptDate', dateStr);
     formData.append('paidInvoiceListStr', paidInvoiceListStr);
     formData.append('invoiceNumber', invDetails.referenceNumber || INVOICE_REF);
-    formData.append('invoiceAmount', String(invDetails.totalAmount ?? invDetails.invoiceAmount ?? dueAmount));
+    formData.append(
+      'invoiceAmount',
+      String(invDetails.totalAmount ?? invDetails.invoiceAmount ?? dueAmount)
+    );
     formData.append('amount', String(PAYMENT_AMOUNT));
     formData.append('contactId', String(contactId));
     formData.append('payMode', 'CASH');
@@ -143,7 +153,9 @@ test.describe('Record payment on INV-E2E', () => {
     await expect(page).toHaveURL(/record-payment/, { timeout: 5000 });
     await page.waitForTimeout(3000);
 
-    const amountField = page.locator('input#amount').or(page.locator('input[placeholder*="Amount"]').first());
+    const amountField = page
+      .locator('input#amount')
+      .or(page.locator('input[placeholder*="Amount"]').first());
     await amountField.waitFor({ state: 'visible', timeout: 5000 });
     await amountField.click();
     await amountField.fill('');
@@ -163,16 +175,24 @@ test.describe('Record payment on INV-E2E', () => {
 
     await page.waitForTimeout(5000);
 
-    const errorToast = await page.locator('[class*="toast"], [class*="Toastify"]').filter({ hasText: /mandatory|required|fill/i }).textContent().catch(() => null);
+    const errorToast = await page
+      .locator('[class*="toast"], [class*="Toastify"]')
+      .filter({ hasText: /mandatory|required|fill/i })
+      .textContent()
+      .catch(() => null);
     if (errorToast) {
       console.log('Validation error shown:', errorToast);
     }
 
-    const redirected = page.url().includes('customer-invoice') && !page.url().includes('record-payment');
+    const redirected =
+      page.url().includes('customer-invoice') && !page.url().includes('record-payment');
     const successToast = await page
       .getByText(/payment recorded|success|recorded successfully/i)
       .isVisible()
       .catch(() => false);
-    expect(redirected || successToast, errorToast ? `Form validation failed: ${errorToast}` : 'Payment was not recorded').toBeTruthy();
+    expect(
+      redirected || successToast,
+      errorToast ? `Form validation failed: ${errorToast}` : 'Payment was not recorded'
+    ).toBeTruthy();
   });
 });

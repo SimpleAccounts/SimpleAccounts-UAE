@@ -1,9 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { loginTestUser, getTestUserCredentials } from './helpers/test-user-helpers';
-import {
-  getFrontendBaseUrl,
-  getApiBaseUrl,
-} from './helpers/test-setup-helpers';
+import { getFrontendBaseUrl, getApiBaseUrl } from './helpers/test-setup-helpers';
 import {
   createProductViaAPI,
   generateProductCode,
@@ -92,7 +89,10 @@ test.describe('Bank Transaction - Dropdowns Comprehensive', () => {
       await page.waitForTimeout(2000);
 
       // Verify customer invoice dropdown has options (or at least the API was called)
-      const invoiceSelect = page.locator('text=Customer Invoice').locator('xpath=following::*[@role="combobox"][1]').first();
+      const invoiceSelect = page
+        .locator('text=Customer Invoice')
+        .locator('xpath=following::*[@role="combobox"][1]')
+        .first();
       const hasInvoiceSelect = await invoiceSelect.isVisible({ timeout: 3000 }).catch(() => false);
       if (hasInvoiceSelect) {
         await invoiceSelect.click();
@@ -198,7 +198,10 @@ test.describe('Bank Transaction - Dropdowns Comprehensive', () => {
     const savePromise = page.waitForResponse(r => r.url().includes('/rest/transaction/save'), {
       timeout: 15_000,
     });
-    await page.getByRole('button', { name: /^create$/i }).first().click();
+    await page
+      .getByRole('button', { name: /^create$/i })
+      .first()
+      .click();
     const saveResp = await savePromise;
     expect([200, 400]).toContain(saveResp.status());
   });

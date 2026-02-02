@@ -13,7 +13,10 @@ const credentials = {
 
 test.describe('Verify fixes', () => {
   test.beforeEach(async ({ page }) => {
-    test.skip(!credentials.username || !credentials.password, 'E2E_USERNAME and E2E_PASSWORD required');
+    test.skip(
+      !credentials.username || !credentials.password,
+      'E2E_USERNAME and E2E_PASSWORD required'
+    );
     await loginTestUser(page, credentials.username, credentials.password);
     await page.waitForURL(/\/admin/, { timeout: 15000 });
   });
@@ -27,7 +30,10 @@ test.describe('Verify fixes', () => {
     await expect(receiptScreen).toBeVisible({ timeout: 10000 });
     const table = page.locator('table').first();
     await expect(table).toBeVisible({ timeout: 10000 });
-    const hasError = await page.getByText(/500|Internal Server Error|Something Went Wrong/i).isVisible().catch(() => false);
+    const hasError = await page
+      .getByText(/500|Internal Server Error|Something Went Wrong/i)
+      .isVisible()
+      .catch(() => false);
     expect(hasError).toBe(false);
   });
 
@@ -59,13 +65,20 @@ test.describe('Verify fixes', () => {
     await expect(table).toBeVisible({ timeout: 10000 });
   });
 
-  test('quotation create customer select does not show expected string received number', async ({ page }) => {
+  test('quotation create customer select does not show expected string received number', async ({
+    page,
+  }) => {
     const baseUrl = getFrontendBaseUrl();
     await page.goto(`${baseUrl}/admin/income/quotation/create`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(3000);
-    const customerSelect = page.locator('[id="customerId"], [name="customerId"], [placeholder*="Customer"]').first();
+    const customerSelect = page
+      .locator('[id="customerId"], [name="customerId"], [placeholder*="Customer"]')
+      .first();
     await expect(customerSelect).toBeVisible({ timeout: 10000 });
-    const errBefore = await page.getByText(/Invalid input: expected string, received number/i).isVisible().catch(() => false);
+    const errBefore = await page
+      .getByText(/Invalid input: expected string, received number/i)
+      .isVisible()
+      .catch(() => false);
     expect(errBefore).toBe(false);
   });
 });

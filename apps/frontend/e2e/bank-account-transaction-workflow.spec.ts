@@ -14,7 +14,11 @@ import {
 import { matchTransactionWithReceipt } from './helpers/reconciliation-helpers';
 import { createInvoiceViaAPI, postInvoice, InvoiceData } from './helpers/invoice-helpers';
 import { createReceiptViaAPI, ReceiptData } from './helpers/receipt-helpers';
-import { createSupplierInvoiceViaAPI, postSupplierInvoice, SupplierInvoiceData } from './helpers/supplier-invoice-helpers';
+import {
+  createSupplierInvoiceViaAPI,
+  postSupplierInvoice,
+  SupplierInvoiceData,
+} from './helpers/supplier-invoice-helpers';
 import { createPaymentViaAPI, PaymentData } from './helpers/payment-helpers';
 import { createProductViaAPI } from './helpers/product-helpers';
 import { createTestContact } from './helpers/contact-helpers';
@@ -334,21 +338,24 @@ test.describe('Bank Account Transaction Workflow', () => {
     await page.waitForTimeout(2000);
 
     // 6. Get transaction ID from list
-    const transactionsResponse = await getTransactionList(request, token, testBankAccount.bankAccountId, {
-      paginationDisable: true,
-    });
+    const transactionsResponse = await getTransactionList(
+      request,
+      token,
+      testBankAccount.bankAccountId,
+      {
+        paginationDisable: true,
+      }
+    );
     const transactionList = Array.isArray(transactionsResponse)
       ? transactionsResponse
       : transactionsResponse?.data || [];
     // API returns debitCreditFlag 'C', depositeAmount; not transactionType/transactionAmount
-    const matchingTransaction = transactionList.find(
-      (t: any) => {
-        const amount = t.depositeAmount ?? t.transactionAmount;
-        const amtMatch = amount === invoiceAmount || parseFloat(String(amount)) === invoiceAmount;
-        const isDeposit = t.debitCreditFlag === 'C' || t.transactionType === 'DEPOSIT';
-        return amtMatch && isDeposit;
-      }
-    );
+    const matchingTransaction = transactionList.find((t: any) => {
+      const amount = t.depositeAmount ?? t.transactionAmount;
+      const amtMatch = amount === invoiceAmount || parseFloat(String(amount)) === invoiceAmount;
+      const isDeposit = t.debitCreditFlag === 'C' || t.transactionType === 'DEPOSIT';
+      return amtMatch && isDeposit;
+    });
     expect(matchingTransaction).toBeDefined();
 
     const transactionId = matchingTransaction.transactionId ?? matchingTransaction.id;
@@ -366,12 +373,17 @@ test.describe('Bank Account Transaction Workflow', () => {
     const receiptListPath = '/admin/income/receipt';
     await page.goto(`${getFrontendBaseUrl()}${receiptListPath}`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(4000);
-    await expect(page).toHaveURL(new RegExp(receiptListPath.replace(/\//g, '\\/')), { timeout: 5000 });
+    await expect(page).toHaveURL(new RegExp(receiptListPath.replace(/\//g, '\\/')), {
+      timeout: 5000,
+    });
     const receiptTable = page.locator('table').first();
     await expect(receiptTable).toBeVisible({ timeout: 15000 });
     await expect(page.getByText(String(invoiceAmount)).first()).toBeVisible({ timeout: 10000 });
     await expect(
-      page.getByText(receiptNo).or(page.getByText(String(invoiceAmount))).first()
+      page
+        .getByText(receiptNo)
+        .or(page.getByText(String(invoiceAmount)))
+        .first()
     ).toBeVisible({ timeout: 5000 });
 
     // 9. Verify transaction list shows deposit
@@ -446,22 +458,25 @@ test.describe('Bank Account Transaction Workflow', () => {
     await page.waitForTimeout(2000);
 
     // 6. Get transaction list and verify withdrawal exists
-    const transactionsResponse = await getTransactionList(request, token, testBankAccount.bankAccountId, {
-      transactionType: 'WITHDRAWAL',
-      paginationDisable: true,
-    });
+    const transactionsResponse = await getTransactionList(
+      request,
+      token,
+      testBankAccount.bankAccountId,
+      {
+        transactionType: 'WITHDRAWAL',
+        paginationDisable: true,
+      }
+    );
     const transactionList = Array.isArray(transactionsResponse)
       ? transactionsResponse
       : transactionsResponse?.data || [];
     // API returns debitCreditFlag 'D', withdrawalAmount; not transactionType/transactionAmount
-    const matchingTransaction = transactionList.find(
-      (t: any) => {
-        const amount = t.withdrawalAmount ?? t.transactionAmount;
-        const amtMatch = amount === invoiceAmount || parseFloat(String(amount)) === invoiceAmount;
-        const isWithdrawal = t.debitCreditFlag === 'D' || t.transactionType === 'WITHDRAWAL';
-        return amtMatch && isWithdrawal;
-      }
-    );
+    const matchingTransaction = transactionList.find((t: any) => {
+      const amount = t.withdrawalAmount ?? t.transactionAmount;
+      const amtMatch = amount === invoiceAmount || parseFloat(String(amount)) === invoiceAmount;
+      const isWithdrawal = t.debitCreditFlag === 'D' || t.transactionType === 'WITHDRAWAL';
+      return amtMatch && isWithdrawal;
+    });
     expect(matchingTransaction).toBeDefined();
 
     // 7. Verify: transaction history shows withdrawal; reconciliation/link UI exists

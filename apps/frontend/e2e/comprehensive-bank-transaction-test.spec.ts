@@ -4,7 +4,7 @@ import { getFrontendBaseUrl } from './helpers/test-setup-helpers';
 
 /**
  * Comprehensive E2E Test: Bank Account Transactions
- * 
+ *
  * Tests:
  * 1. Expense list page loads without errors
  * 2. Can add a new expense
@@ -19,9 +19,12 @@ const TARGET_BANK_ID = 13507;
 const TARGET_BANK_ACCOUNT_NUMBER = '9049372202130484927050482';
 
 async function navigateToTransactionCreate(page: Page, bankId: number) {
-  await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`, {
-    waitUntil: 'networkidle',
-  });
+  await page.goto(
+    `${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`,
+    {
+      waitUntil: 'networkidle',
+    }
+  );
   await page.waitForSelector('form', { timeout: 15000 });
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(2000);
@@ -36,14 +39,19 @@ async function selectTransactionType(page: Page, transactionTypeName: string) {
   const optionsMenu = page.locator('[role="listbox"]').first();
   await optionsMenu.waitFor({ state: 'visible', timeout: 10000 });
 
-  const categoryResponsePromise = page.waitForResponse(
-    (response) => response.url().includes('/rest/reconsile/getTransactionCat') && response.status() === 200,
-    { timeout: 15000 }
-  ).catch(() => null);
+  const categoryResponsePromise = page
+    .waitForResponse(
+      response =>
+        response.url().includes('/rest/reconsile/getTransactionCat') && response.status() === 200,
+      { timeout: 15000 }
+    )
+    .catch(() => null);
 
-  const transactionTypeOption = page.getByRole('option', { name: new RegExp(transactionTypeName, 'i') });
+  const transactionTypeOption = page.getByRole('option', {
+    name: new RegExp(transactionTypeName, 'i'),
+  });
   const isVisible = await transactionTypeOption.isVisible({ timeout: 5000 }).catch(() => false);
-  
+
   if (!isVisible) {
     const allOptions = page.getByRole('option');
     const optionCount = await allOptions.count();
@@ -71,18 +79,20 @@ async function selectTransactionType(page: Page, transactionTypeName: string) {
 async function selectTransactionCategory(page: Page) {
   const categorySelects = page.locator('input[aria-autocomplete="list"]');
   const categorySelectCount = await categorySelects.count();
-  
+
   if (categorySelectCount > 1) {
     const categorySelect = categorySelects.nth(1);
-    const categorySelectVisible = await categorySelect.isVisible({ timeout: 5000 }).catch(() => false);
-    
+    const categorySelectVisible = await categorySelect
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+
     if (categorySelectVisible) {
       await categorySelect.click();
       await page.waitForTimeout(1000);
-      
+
       const categoryOptions = page.getByRole('option');
       const optionCount = await categoryOptions.count();
-      
+
       if (optionCount > 0) {
         await categoryOptions.first().waitFor({ state: 'visible', timeout: 5000 });
         await categoryOptions.first().click();
@@ -93,19 +103,25 @@ async function selectTransactionCategory(page: Page) {
 }
 
 async function fillTransactionForm(page: Page, amount: string, description: string) {
-  const dateInput = page.locator('input[type="date"], input[name*="date"], input[id*="date"]').first();
+  const dateInput = page
+    .locator('input[type="date"], input[name*="date"], input[id*="date"]')
+    .first();
   if (await dateInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     const today = new Date().toISOString().split('T')[0];
     await dateInput.fill(today);
     await page.waitForTimeout(500);
   }
 
-  const amountInput = page.locator('input[name*="amount"], input[id*="amount"], input[type="number"]').first();
+  const amountInput = page
+    .locator('input[name*="amount"], input[id*="amount"], input[type="number"]')
+    .first();
   await amountInput.waitFor({ state: 'visible', timeout: 10000 });
   await amountInput.fill(amount);
   await page.waitForTimeout(500);
 
-  const descriptionInput = page.locator('input[name*="description"], textarea[name*="description"], input[id*="description"]').first();
+  const descriptionInput = page
+    .locator('input[name*="description"], textarea[name*="description"], input[id*="description"]')
+    .first();
   if (await descriptionInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     await descriptionInput.fill(description);
     await page.waitForTimeout(500);
@@ -113,19 +129,23 @@ async function fillTransactionForm(page: Page, amount: string, description: stri
 }
 
 async function submitTransaction(page: Page) {
-  const saveResponsePromise = page.waitForResponse(
-    (response) => response.url().includes('/rest/transaction/save') && response.status() === 200,
-    { timeout: 60000 }
-  ).catch(() => null);
+  const saveResponsePromise = page
+    .waitForResponse(
+      response => response.url().includes('/rest/transaction/save') && response.status() === 200,
+      { timeout: 60000 }
+    )
+    .catch(() => null);
 
   const submitButton = page.getByRole('button', { name: /^create$/i }).first();
   await expect(submitButton).toBeVisible({ timeout: 5000 });
   await submitButton.click();
 
   const response = await saveResponsePromise;
-  
+
   if (!response) {
-    const errorMessage = page.locator('[class*="error"], [class*="invalid"], [role="alert"]').first();
+    const errorMessage = page
+      .locator('[class*="error"], [class*="invalid"], [role="alert"]')
+      .first();
     const hasError = await errorMessage.isVisible({ timeout: 3000 }).catch(() => false);
     if (hasError) {
       const errorText = await errorMessage.textContent().catch(() => 'Unknown error');
@@ -151,24 +171,32 @@ async function verifyTransactionInList(page: Page, description: string, bankAcco
     waitUntil: 'networkidle',
   });
 
-  const bankAccountRow = page.locator('table tbody tr').filter({ hasText: bankAccountNumber }).first();
+  const bankAccountRow = page
+    .locator('table tbody tr')
+    .filter({ hasText: bankAccountNumber })
+    .first();
   await bankAccountRow.waitFor({ state: 'visible', timeout: 10000 });
-  
+
   await bankAccountRow.locator('td').first().click();
   await page.waitForURL('**/bank-account/detail**', { timeout: 15000 });
   await page.waitForTimeout(3000);
 
   const viewTransactionsButton = page.getByRole('button', { name: /view.*transaction/i });
-  const viewTransactionsVisible = await viewTransactionsButton.isVisible({ timeout: 5000 }).catch(() => false);
-  
+  const viewTransactionsVisible = await viewTransactionsButton
+    .isVisible({ timeout: 5000 })
+    .catch(() => false);
+
   if (viewTransactionsVisible) {
     await viewTransactionsButton.click();
     await page.waitForURL('**/bank-account/transaction**', { timeout: 15000 });
     await page.waitForTimeout(3000);
   } else {
-    await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction?bankId=${TARGET_BANK_ID}`, {
-      waitUntil: 'networkidle',
-    });
+    await page.goto(
+      `${getFrontendBaseUrl()}/admin/banking/bank-account/transaction?bankId=${TARGET_BANK_ID}`,
+      {
+        waitUntil: 'networkidle',
+      }
+    );
     await page.waitForTimeout(3000);
   }
 
@@ -188,10 +216,10 @@ test.describe('Comprehensive Bank Transaction Tests', () => {
     await page.goto(`${getFrontendBaseUrl()}/admin/expense/expense`, {
       waitUntil: 'networkidle',
     });
-    
+
     // Wait for page to load
     await page.waitForTimeout(3000);
-    
+
     // Check for console errors
     const errors: string[] = [];
     page.on('console', msg => {
@@ -199,16 +227,17 @@ test.describe('Comprehensive Bank Transaction Tests', () => {
         errors.push(msg.text());
       }
     });
-    
+
     await page.waitForTimeout(2000);
-    
+
     // Verify no critical errors
-    const criticalErrors = errors.filter(e => 
-      e.includes('Cannot assign to read only property') || 
-      e.includes('TypeError') ||
-      e.includes('Uncaught')
+    const criticalErrors = errors.filter(
+      e =>
+        e.includes('Cannot assign to read only property') ||
+        e.includes('TypeError') ||
+        e.includes('Uncaught')
     );
-    
+
     expect(criticalErrors.length).toBe(0);
   });
 
@@ -252,9 +281,9 @@ test.describe('Comprehensive Bank Transaction Tests', () => {
     await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction`, {
       waitUntil: 'networkidle',
     });
-    
+
     await page.waitForTimeout(3000);
-    
+
     // Check for console errors
     const errors: string[] = [];
     page.on('console', msg => {
@@ -262,14 +291,14 @@ test.describe('Comprehensive Bank Transaction Tests', () => {
         errors.push(msg.text());
       }
     });
-    
+
     await page.waitForTimeout(2000);
-    
+
     // Verify no critical errors related to getBankTransactionTypes
-    const criticalErrors = errors.filter(e => 
-      e.includes('getBankTransactionTypes') && e.includes('500')
+    const criticalErrors = errors.filter(
+      e => e.includes('getBankTransactionTypes') && e.includes('500')
     );
-    
+
     expect(criticalErrors.length).toBe(0);
   });
 });

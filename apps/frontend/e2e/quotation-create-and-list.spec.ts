@@ -58,7 +58,7 @@ test.describe('Quotation - Create via UI and verify on list', () => {
     });
 
     const customerDropdownPromise = page.waitForResponse(
-      (r) => r.url().includes('/rest/contact/getContactsForDropdown') && r.status() === 200,
+      r => r.url().includes('/rest/contact/getContactsForDropdown') && r.status() === 200,
       { timeout: 60_000 }
     );
 
@@ -76,11 +76,9 @@ test.describe('Quotation - Create via UI and verify on list', () => {
     await selectFirstNonPlaceholderOption(page);
 
     await page
-      .waitForResponse(
-        (r) =>
-          r.url().includes('/rest/datalist/product') && r.status() === 200,
-        { timeout: 60_000 }
-      )
+      .waitForResponse(r => r.url().includes('/rest/datalist/product') && r.status() === 200, {
+        timeout: 60_000,
+      })
       .catch(() => {});
 
     const table = page.locator('table').first();
@@ -107,11 +105,14 @@ test.describe('Quotation - Create via UI and verify on list', () => {
     }
 
     const saveReqPromise = page.waitForRequest(
-      (r) => r.url().includes('/rest/poquatation/saveQuatation') && r.method() === 'POST',
+      r => r.url().includes('/rest/poquatation/saveQuatation') && r.method() === 'POST',
       { timeout: 15_000 }
     );
 
-    await page.getByRole('button', { name: /^create$/i }).first().click();
+    await page
+      .getByRole('button', { name: /^create$/i })
+      .first()
+      .click();
 
     let saveReq;
     try {
@@ -136,13 +137,12 @@ test.describe('Quotation - Create via UI and verify on list', () => {
 
     await page.goto(QUOTATION_LIST_PATH, { waitUntil: 'domcontentloaded' });
     const listResp = await page.waitForResponse(
-      (r) => r.url().includes('/rest/poquatation/getListForQuatation') && r.status() === 200,
+      r => r.url().includes('/rest/poquatation/getListForQuatation') && r.status() === 200,
       { timeout: 60_000 }
     );
 
     const listJson = await listResp.json().catch(() => null);
-    const listData =
-      listJson && listJson.data && Array.isArray(listJson.data) ? listJson.data : [];
+    const listData = listJson && listJson.data && Array.isArray(listJson.data) ? listJson.data : [];
     const found = listData.some(
       (r: { quatationNumber?: string; quotationNumber?: string }) =>
         String(r.quatationNumber || r.quotationNumber || '') === quotationNumber

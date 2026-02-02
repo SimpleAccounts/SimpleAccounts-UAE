@@ -114,10 +114,7 @@ const ViewExpense = () => {
           />
         </div>
         <div className="mt-4">
-          <InvoiceViewJournalEntries
-            id={location.state?.expenseId}
-            postingRefType={'EXPENSE'}
-          />
+          <InvoiceViewJournalEntries id={location.state?.expenseId} postingRefType={'EXPENSE'} />
         </div>
       </div>
     </div>

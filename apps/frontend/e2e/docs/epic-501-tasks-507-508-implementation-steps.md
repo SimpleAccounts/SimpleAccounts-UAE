@@ -103,9 +103,9 @@ These tasks require **full E2E verification** of transaction linking (not just U
 
 ## Summary
 
-| Task | Link type              | Key helpers                                      | Verification |
-|------|------------------------|--------------------------------------------------|--------------|
-| #507 | Transaction → Receipt   | `createReceiptViaAPI`, `createDepositTransaction`, `matchTransactionWithReceipt` | API and/or UI: transaction shows linked receipt |
-| #508 | Transaction → Payment  | `createPaymentViaAPI`, `createWithdrawalTransaction`, and match API/UI if available | API and/or UI: transaction shows linked payment |
+| Task | Link type             | Key helpers                                                                         | Verification                                    |
+| ---- | --------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------- |
+| #507 | Transaction → Receipt | `createReceiptViaAPI`, `createDepositTransaction`, `matchTransactionWithReceipt`    | API and/or UI: transaction shows linked receipt |
+| #508 | Transaction → Payment | `createPaymentViaAPI`, `createWithdrawalTransaction`, and match API/UI if available | API and/or UI: transaction shows linked payment |
 
 After implementing these steps in `bank-account-transaction-workflow.spec.ts`, replace the current “link button exists” assertions with the above create → link → verify flow so the epic success criterion “Transaction linking verified” is met.

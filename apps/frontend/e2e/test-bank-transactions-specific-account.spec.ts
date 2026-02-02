@@ -4,7 +4,7 @@ import { getFrontendBaseUrl } from './helpers/test-setup-helpers';
 
 /**
  * E2E Test: Create Transactions on Specific Bank Account
- * 
+ *
  * This test verifies transaction creation on bank account with account number 9049372202130484927050482 (bankId=13507)
  * and verifies transactions appear in the transaction list.
  */
@@ -14,10 +14,13 @@ const TARGET_BANK_ACCOUNT_NUMBER = '9049372202130484927050482';
 const TARGET_BANK_ID = 13507;
 
 async function navigateToTransactionCreate(page: Page, bankId: number) {
-  await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`, {
-    waitUntil: 'networkidle',
-  });
-  
+  await page.goto(
+    `${getFrontendBaseUrl()}/admin/banking/bank-account/transaction/create?bankId=${bankId}`,
+    {
+      waitUntil: 'networkidle',
+    }
+  );
+
   // Wait for form to be fully loaded
   await page.waitForSelector('form', { timeout: 15000 });
   await page.waitForLoadState('networkidle');
@@ -36,15 +39,20 @@ async function selectTransactionType(page: Page, transactionTypeName: string) {
   await optionsMenu.waitFor({ state: 'visible', timeout: 10000 });
 
   // Set up response listener for transaction category API call
-  const categoryResponsePromise = page.waitForResponse(
-    (response) => response.url().includes('/rest/reconsile/getTransactionCat') && response.status() === 200,
-    { timeout: 15000 }
-  ).catch(() => null);
+  const categoryResponsePromise = page
+    .waitForResponse(
+      response =>
+        response.url().includes('/rest/reconsile/getTransactionCat') && response.status() === 200,
+      { timeout: 15000 }
+    )
+    .catch(() => null);
 
   // Select transaction type by name (case-insensitive partial match)
-  const transactionTypeOption = page.getByRole('option', { name: new RegExp(transactionTypeName, 'i') });
+  const transactionTypeOption = page.getByRole('option', {
+    name: new RegExp(transactionTypeName, 'i'),
+  });
   const isVisible = await transactionTypeOption.isVisible({ timeout: 5000 }).catch(() => false);
-  
+
   if (!isVisible) {
     // Try finding by text content
     const allOptions = page.getByRole('option');
@@ -68,7 +76,7 @@ async function selectTransactionType(page: Page, transactionTypeName: string) {
   // Wait for transaction category API call to complete
   await categoryResponsePromise;
   await page.waitForTimeout(2000);
-  
+
   return categoryResponsePromise;
 }
 
@@ -76,19 +84,21 @@ async function selectTransactionCategory(page: Page) {
   // Select transaction category if available
   const categorySelects = page.locator('input[aria-autocomplete="list"]');
   const categorySelectCount = await categorySelects.count();
-  
+
   if (categorySelectCount > 1) {
     const categorySelect = categorySelects.nth(1);
-    const categorySelectVisible = await categorySelect.isVisible({ timeout: 5000 }).catch(() => false);
-    
+    const categorySelectVisible = await categorySelect
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+
     if (categorySelectVisible) {
       await categorySelect.click();
       await page.waitForTimeout(1000);
-      
+
       // Wait for options to appear
       const categoryOptions = page.getByRole('option');
       const optionCount = await categoryOptions.count();
-      
+
       if (optionCount > 0) {
         await categoryOptions.first().waitFor({ state: 'visible', timeout: 5000 });
         await categoryOptions.first().click();
@@ -100,7 +110,9 @@ async function selectTransactionCategory(page: Page) {
 
 async function fillTransactionForm(page: Page, amount: string, description: string) {
   // Fill transaction date (today)
-  const dateInput = page.locator('input[type="date"], input[name*="date"], input[id*="date"]').first();
+  const dateInput = page
+    .locator('input[type="date"], input[name*="date"], input[id*="date"]')
+    .first();
   if (await dateInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     const today = new Date().toISOString().split('T')[0];
     await dateInput.fill(today);
@@ -108,13 +120,17 @@ async function fillTransactionForm(page: Page, amount: string, description: stri
   }
 
   // Fill amount - this is required
-  const amountInput = page.locator('input[name*="amount"], input[id*="amount"], input[type="number"]').first();
+  const amountInput = page
+    .locator('input[name*="amount"], input[id*="amount"], input[type="number"]')
+    .first();
   await amountInput.waitFor({ state: 'visible', timeout: 10000 });
   await amountInput.fill(amount);
   await page.waitForTimeout(500);
 
   // Fill description
-  const descriptionInput = page.locator('input[name*="description"], textarea[name*="description"], input[id*="description"]').first();
+  const descriptionInput = page
+    .locator('input[name*="description"], textarea[name*="description"], input[id*="description"]')
+    .first();
   if (await descriptionInput.isVisible({ timeout: 5000 }).catch(() => false)) {
     await descriptionInput.fill(description);
     await page.waitForTimeout(500);
@@ -123,10 +139,12 @@ async function fillTransactionForm(page: Page, amount: string, description: stri
 
 async function submitTransaction(page: Page) {
   // Set up response listener for save
-  const saveResponsePromise = page.waitForResponse(
-    (response) => response.url().includes('/rest/transaction/save') && response.status() === 200,
-    { timeout: 60000 }
-  ).catch(() => null);
+  const saveResponsePromise = page
+    .waitForResponse(
+      response => response.url().includes('/rest/transaction/save') && response.status() === 200,
+      { timeout: 60000 }
+    )
+    .catch(() => null);
 
   // Submit the form
   const submitButton = page.getByRole('button', { name: /^create$/i }).first();
@@ -135,10 +153,12 @@ async function submitTransaction(page: Page) {
 
   // Wait for save response
   const response = await saveResponsePromise;
-  
+
   if (!response) {
     // Check for error messages on page
-    const errorMessage = page.locator('[class*="error"], [class*="invalid"], [role="alert"]').first();
+    const errorMessage = page
+      .locator('[class*="error"], [class*="invalid"], [role="alert"]')
+      .first();
     const hasError = await errorMessage.isVisible({ timeout: 3000 }).catch(() => false);
     if (hasError) {
       const errorText = await errorMessage.textContent().catch(() => 'Unknown error');
@@ -167,9 +187,12 @@ async function verifyTransactionInList(page: Page, description: string, bankAcco
   });
 
   // Find the bank account row by account number
-  const bankAccountRow = page.locator('table tbody tr').filter({ hasText: bankAccountNumber }).first();
+  const bankAccountRow = page
+    .locator('table tbody tr')
+    .filter({ hasText: bankAccountNumber })
+    .first();
   await bankAccountRow.waitFor({ state: 'visible', timeout: 10000 });
-  
+
   // Click on the bank account name to view transactions
   await bankAccountRow.locator('td').first().click();
   await page.waitForURL('**/bank-account/detail**', { timeout: 15000 });
@@ -177,17 +200,22 @@ async function verifyTransactionInList(page: Page, description: string, bankAcco
 
   // Click on "View Transactions" or navigate to transaction list
   const viewTransactionsButton = page.getByRole('button', { name: /view.*transaction/i });
-  const viewTransactionsVisible = await viewTransactionsButton.isVisible({ timeout: 5000 }).catch(() => false);
-  
+  const viewTransactionsVisible = await viewTransactionsButton
+    .isVisible({ timeout: 5000 })
+    .catch(() => false);
+
   if (viewTransactionsVisible) {
     await viewTransactionsButton.click();
     await page.waitForURL('**/bank-account/transaction**', { timeout: 15000 });
     await page.waitForTimeout(3000);
   } else {
     // Try navigating directly to transaction list
-    await page.goto(`${getFrontendBaseUrl()}/admin/banking/bank-account/transaction?bankId=${TARGET_BANK_ID}`, {
-      waitUntil: 'networkidle',
-    });
+    await page.goto(
+      `${getFrontendBaseUrl()}/admin/banking/bank-account/transaction?bankId=${TARGET_BANK_ID}`,
+      {
+        waitUntil: 'networkidle',
+      }
+    );
     await page.waitForTimeout(3000);
   }
 

@@ -3,13 +3,15 @@ import { authApi } from 'utils';
 
 export const getQuotationList = postObj => {
   const rawCustomerId = postObj.customerId ? (postObj.customerId.value ?? postObj.customerId) : '';
-  const customerId = rawCustomerId !== '' && rawCustomerId != null && !Number.isNaN(Number(rawCustomerId))
-    ? Number(rawCustomerId)
-    : '';
+  const customerId =
+    rawCustomerId !== '' && rawCustomerId != null && !Number.isNaN(Number(rawCustomerId))
+      ? Number(rawCustomerId)
+      : '';
   const quatationNumber = postObj.quatationNumber ? postObj.quatationNumber : '';
   const status = postObj.status ? postObj.status.value : '';
   const pageNo = postObj?.pageNo !== undefined && postObj?.pageNo !== '' ? postObj.pageNo : 0;
-  const pageSize = postObj?.pageSize !== undefined && postObj?.pageSize !== '' ? postObj.pageSize : 10;
+  const pageSize =
+    postObj?.pageSize !== undefined && postObj?.pageSize !== '' ? postObj.pageSize : 10;
   const order = postObj?.order ? postObj.order : '';
   const sortingCol = postObj?.sortingCol ? postObj.sortingCol : '';
   const paginationDisable = postObj?.paginationDisable ? postObj.paginationDisable : false;

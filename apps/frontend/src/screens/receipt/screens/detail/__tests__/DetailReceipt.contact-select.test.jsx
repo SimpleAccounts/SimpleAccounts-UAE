@@ -10,10 +10,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import * as thunkModule from 'redux-thunk';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import {
-  normalizeContactOption,
-  normalizeContactOptions,
-} from '../screen';
+import { normalizeContactOption, normalizeContactOptions } from '../screen';
 
 const thunk = thunkModule.default || thunkModule.thunk || thunkModule;
 const middlewares = [thunk];
@@ -47,10 +44,7 @@ describe('normalizeContactOption / normalizeContactOptions', () => {
   });
 
   it('normalizeContactOptions maps entire list to string labels', () => {
-    const list = [
-      contactOptionWithObjectLabel,
-      { value: 2, label: 'Second Customer' },
-    ];
+    const list = [contactOptionWithObjectLabel, { value: 2, label: 'Second Customer' }];
     const result = normalizeContactOptions(list);
     expect(result).toHaveLength(2);
     expect(result[0]).toEqual({ value: 42, label: 'Acme Corp' });
@@ -181,9 +175,7 @@ describe('DetailReceipt contact Select (no object-as-child)', () => {
       render(
         <Provider store={store}>
           <MemoryRouter
-            initialEntries={[
-              { pathname: '/admin/income/receipt/detail', state: { id: 100 } },
-            ]}
+            initialEntries={[{ pathname: '/admin/income/receipt/detail', state: { id: 100 } }]}
           >
             <ConnectedDetailReceipt />
           </MemoryRouter>

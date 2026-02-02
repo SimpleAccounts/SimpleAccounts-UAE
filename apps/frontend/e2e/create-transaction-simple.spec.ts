@@ -4,7 +4,7 @@ import { getFrontendBaseUrl } from './helpers/test-setup-helpers';
 
 /**
  * Simple E2E Test: Create Transaction via UI
- * 
+ *
  * This test verifies transaction creation works end-to-end:
  * 1. Login
  * 2. Navigate to bank account list
@@ -38,7 +38,7 @@ test.describe('Create Transaction (Simple)', () => {
     // Get first bank account row
     const firstRow = page.locator('table tbody tr').first();
     await firstRow.waitFor({ state: 'visible', timeout: 10000 });
-    
+
     // Get bank account name for later verification
     const bankAccountName = await firstRow.locator('td').first().textContent();
     expect(bankAccountName).toBeTruthy();
@@ -47,12 +47,16 @@ test.describe('Create Transaction (Simple)', () => {
     // For now, we'll rely on the navigation state being set correctly by the menu click
 
     // Click 3-dots menu and select "Add Transaction"
-    const menuButton = firstRow.locator('button[aria-haspopup="menu"], button[aria-label*="menu"], button[aria-label*="actions"]').first();
+    const menuButton = firstRow
+      .locator(
+        'button[aria-haspopup="menu"], button[aria-label*="menu"], button[aria-label*="actions"]'
+      )
+      .first();
     await menuButton.waitFor({ state: 'visible', timeout: 10000 });
     await menuButton.scrollIntoViewIfNeeded();
     await menuButton.click({ force: true });
     await page.waitForTimeout(1000);
-    
+
     // Wait for menu to appear and click "Add Transaction"
     const addTransactionMenuItem = page.getByRole('menuitem', { name: /add.*transaction/i });
     await addTransactionMenuItem.waitFor({ state: 'visible', timeout: 10000 });
@@ -60,7 +64,7 @@ test.describe('Create Transaction (Simple)', () => {
 
     // Wait for transaction create page to load
     await page.waitForURL('**/bank-account/transaction/create**', { timeout: 15000 });
-    
+
     // Wait for page to be fully loaded
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
@@ -69,39 +73,53 @@ test.describe('Create Transaction (Simple)', () => {
     const errorElements = page.locator('[class*="error"], [role="alert"]');
     const errorCount = await errorElements.count();
     if (errorCount > 0) {
-      const errorText = await errorElements.first().textContent().catch(() => 'Unknown error');
+      const errorText = await errorElements
+        .first()
+        .textContent()
+        .catch(() => 'Unknown error');
       await page.screenshot({ path: 'test-results/transaction-page-error.png' });
       throw new Error(`Error on transaction create page: ${errorText}`);
     }
 
     // Wait for form to be ready
     await page.waitForSelector('form', { timeout: 15000 });
-    
+
     // Wait for transaction types API to load (this populates the dropdown)
     // Try multiple possible API endpoints
     const transactionTypesResponse = await Promise.race([
-      page.waitForResponse(
-        (response) => response.url().includes('/rest/datalist/getTransactionTypes') && response.status() === 200,
-        { timeout: 20000 }
-      ).catch(() => null),
-      page.waitForResponse(
-        (response) => response.url().includes('/rest/datalist') && response.status() === 200,
-        { timeout: 20000 }
-      ).catch(() => null),
+      page
+        .waitForResponse(
+          response =>
+            response.url().includes('/rest/datalist/getTransactionTypes') &&
+            response.status() === 200,
+          { timeout: 20000 }
+        )
+        .catch(() => null),
+      page
+        .waitForResponse(
+          response => response.url().includes('/rest/datalist') && response.status() === 200,
+          { timeout: 20000 }
+        )
+        .catch(() => null),
     ]).catch(() => null);
-    
+
     // Don't fail if API doesn't load - just wait a bit for form to be ready
     await page.waitForTimeout(3000);
-    
+
     // Verify form fields are present
-    const formExists = await page.locator('form').isVisible({ timeout: 5000 }).catch(() => false);
+    const formExists = await page
+      .locator('form')
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
     if (!formExists) {
       await page.screenshot({ path: 'test-results/form-not-visible.png' });
       throw new Error('Form is not visible on the page');
     }
 
     // Fill transaction date - use DatePicker input
-    const dateInput = page.locator('input[placeholder*="Transaction Date"], input[id="transactionDate"]').first();
+    const dateInput = page
+      .locator('input[placeholder*="Transaction Date"], input[id="transactionDate"]')
+      .first();
     if (await dateInput.isVisible({ timeout: 5000 }).catch(() => false)) {
       // DatePicker format is dd-MM-yyyy
       const today = new Date();
@@ -113,13 +131,17 @@ test.describe('Create Transaction (Simple)', () => {
     }
 
     // Fill amount - REQUIRED (field name is "transactionAmount")
-    const amountInput = page.locator('input[name="transactionAmount"], input[type="number"]').first();
+    const amountInput = page
+      .locator('input[name="transactionAmount"], input[type="number"]')
+      .first();
     await amountInput.waitFor({ state: 'visible', timeout: 15000 });
     await amountInput.fill(transactionAmount);
     await page.waitForTimeout(500);
 
     // Fill description (textarea)
-    const descriptionInput = page.locator('textarea[name="description"], input[name="description"]').first();
+    const descriptionInput = page
+      .locator('textarea[name="description"], input[name="description"]')
+      .first();
     if (await descriptionInput.isVisible({ timeout: 5000 }).catch(() => false)) {
       await descriptionInput.fill(transactionDescription);
       await page.waitForTimeout(500);
@@ -128,11 +150,11 @@ test.describe('Create Transaction (Simple)', () => {
     // Select Transaction Type - REQUIRED
     // Try multiple selectors to find the dropdown
     let transactionTypeOpened = false;
-    
+
     // Method 1: Find react-select by looking for the label "Transaction Type"
     const transactionTypeLabel = page.locator('label:has-text("Transaction Type")').first();
     const hasLabel = await transactionTypeLabel.isVisible({ timeout: 5000 }).catch(() => false);
-    
+
     if (hasLabel) {
       const labelParent = transactionTypeLabel.locator('..');
       const reactSelect = labelParent.locator('[class*="react-select"]').first();
@@ -143,7 +165,7 @@ test.describe('Create Transaction (Simple)', () => {
         transactionTypeOpened = true;
       }
     }
-    
+
     // Method 2: Find by input aria-autocomplete
     if (!transactionTypeOpened) {
       const transactionTypeInput = page.locator('input[aria-autocomplete="list"]').first();
@@ -167,12 +189,12 @@ test.describe('Create Transaction (Simple)', () => {
         }
       }
     }
-    
+
     if (!transactionTypeOpened) {
       await page.screenshot({ path: 'test-results/transaction-type-dropdown-not-found.png' });
       throw new Error('Could not find or open transaction type dropdown');
     }
-    
+
     await page.waitForTimeout(2000);
 
     // Wait for options menu to appear
@@ -182,27 +204,29 @@ test.describe('Create Transaction (Simple)', () => {
 
     // Set up response listener for transaction category API - VERIFY NO bankId=null
     let categoryResponseUrl = '';
-    const categoryResponsePromise = page.waitForResponse(
-      (response) => {
-        const url = response.url();
-        if (url.includes('/rest/reconsile/getTransactionCat')) {
-          categoryResponseUrl = url;
-          // CRITICAL: Verify that bankId=null is NOT in the URL
-          if (url.includes('bankId=null')) {
-            console.error('ERROR: bankId=null found in URL:', url);
-            throw new Error(`bankId=null found in URL: ${url}`);
+    const categoryResponsePromise = page
+      .waitForResponse(
+        response => {
+          const url = response.url();
+          if (url.includes('/rest/reconsile/getTransactionCat')) {
+            categoryResponseUrl = url;
+            // CRITICAL: Verify that bankId=null is NOT in the URL
+            if (url.includes('bankId=null')) {
+              console.error('ERROR: bankId=null found in URL:', url);
+              throw new Error(`bankId=null found in URL: ${url}`);
+            }
+            return response.status() === 200;
           }
-          return response.status() === 200;
+          return false;
+        },
+        { timeout: 15000 }
+      )
+      .catch(err => {
+        if (categoryResponseUrl && categoryResponseUrl.includes('bankId=null')) {
+          throw new Error(`bankId=null error: ${err.message}`);
         }
-        return false;
-      },
-      { timeout: 15000 }
-    ).catch((err) => {
-      if (categoryResponseUrl && categoryResponseUrl.includes('bankId=null')) {
-        throw new Error(`bankId=null error: ${err.message}`);
-      }
-      return null;
-    });
+        return null;
+      });
 
     // Select first available transaction type
     const firstOption = page.getByRole('option').first();
@@ -216,7 +240,7 @@ test.describe('Create Transaction (Simple)', () => {
     // Select transaction category if available
     const allSelects = page.locator('input[aria-autocomplete="list"]');
     const selectCount = await allSelects.count();
-    
+
     if (selectCount > 1) {
       const categorySelect = allSelects.nth(1);
       if (await categorySelect.isVisible({ timeout: 5000 }).catch(() => false)) {
@@ -225,7 +249,7 @@ test.describe('Create Transaction (Simple)', () => {
           (el as any).click();
         });
         await page.waitForTimeout(1500);
-        
+
         const categoryOptions = page.getByRole('option');
         const optionCount = await categoryOptions.count();
         if (optionCount > 0) {
@@ -238,7 +262,8 @@ test.describe('Create Transaction (Simple)', () => {
 
     // Set up response listener for transaction save
     const saveResponsePromise = page.waitForResponse(
-      (response) => response.url().includes('/rest/transaction/save') && response.request().method() === 'POST',
+      response =>
+        response.url().includes('/rest/transaction/save') && response.request().method() === 'POST',
       { timeout: 60000 }
     );
 
@@ -249,17 +274,17 @@ test.describe('Create Transaction (Simple)', () => {
 
     // Wait for save response
     const saveResponse = await saveResponsePromise;
-    
+
     // Verify success
     expect(saveResponse.status()).toBe(200);
-    
+
     // Verify transaction was created by checking response or navigation
     await page.waitForTimeout(2000);
-    
+
     // Check for success message or navigation
     const successMessage = page.getByText(/success|created|saved/i);
     const hasSuccess = await successMessage.isVisible({ timeout: 5000 }).catch(() => false);
-    
+
     // If still on create page, check for error
     if (page.url().includes('/create')) {
       const errorMessage = page.locator('[class*="error"], [role="alert"]').first();
@@ -277,15 +302,21 @@ test.describe('Create Transaction (Simple)', () => {
     });
 
     // Find the bank account and click to view transactions
-    const bankAccountRow = page.locator('table tbody tr').filter({ hasText: bankAccountName }).first();
+    const bankAccountRow = page
+      .locator('table tbody tr')
+      .filter({ hasText: bankAccountName })
+      .first();
     await bankAccountRow.waitFor({ state: 'visible', timeout: 10000 });
     await bankAccountRow.locator('td').first().click();
-    
+
     await page.waitForURL('**/bank-account/detail**', { timeout: 15000 });
     await page.waitForTimeout(3000);
 
     // Verify transaction appears (by amount or description)
-    const transactionFound = await page.getByText(transactionAmount).isVisible({ timeout: 10000 }).catch(() => false);
+    const transactionFound = await page
+      .getByText(transactionAmount)
+      .isVisible({ timeout: 10000 })
+      .catch(() => false);
     expect(transactionFound).toBeTruthy();
   });
 });

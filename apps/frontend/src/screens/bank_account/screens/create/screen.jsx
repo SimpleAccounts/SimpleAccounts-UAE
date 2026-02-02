@@ -384,13 +384,12 @@ const CreateBankAccount = ({
                                     value={
                                       currency_convert_list &&
                                       (() => {
-                                        const options = selectCurrencyFactory
-                                          .renderOptions(
-                                            'currencyName',
-                                            'currencyCode',
-                                            currency_convert_list,
-                                            'Currency'
-                                          );
+                                        const options = selectCurrencyFactory.renderOptions(
+                                          'currencyName',
+                                          'currencyCode',
+                                          currency_convert_list,
+                                          'Currency'
+                                        );
                                         // Deduplicate before finding
                                         const seen = new Set();
                                         const uniqueOptions = options.filter(option => {
@@ -400,7 +399,9 @@ const CreateBankAccount = ({
                                           seen.add(option.value);
                                           return true;
                                         });
-                                        return uniqueOptions.find(option => option.value === +field.value);
+                                        return uniqueOptions.find(
+                                          option => option.value === +field.value
+                                        );
                                       })()
                                     }
                                     onChange={option => {
@@ -605,7 +606,10 @@ const CreateBankAccount = ({
                                     {...field}
                                     onChange={e => {
                                       // Allow alphanumeric characters (letters, numbers, hyphens, underscores)
-                                      if (e.target.value === '' || regExAlpha.test(e.target.value)) {
+                                      if (
+                                        e.target.value === '' ||
+                                        regExAlpha.test(e.target.value)
+                                      ) {
                                         field.onChange(e);
                                       }
                                       validationCheck(e.target.value);

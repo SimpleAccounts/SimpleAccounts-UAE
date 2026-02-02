@@ -393,7 +393,11 @@ function Journal() {
               columns={columns}
               data={tableData}
               manualPagination
-              pageCount={Math.ceil((journal_list?.count ?? journal_list?.data?.count ?? 0) / pagination.pageSize) || 1}
+              pageCount={
+                Math.ceil(
+                  (journal_list?.count ?? journal_list?.data?.count ?? 0) / pagination.pageSize
+                ) || 1
+              }
               onPaginationChange={setPagination}
               pagination={pagination}
               manualSorting

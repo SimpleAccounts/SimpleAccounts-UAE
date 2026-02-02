@@ -115,7 +115,10 @@ test.describe('Bank Transaction - All Dropdowns', () => {
       expect(invoiceApiCalls[0].status).toBe(200);
     }
 
-    const invoiceSelect = page.locator('text=Customer Invoice').locator('xpath=following::*[@role="combobox"][1]').first();
+    const invoiceSelect = page
+      .locator('text=Customer Invoice')
+      .locator('xpath=following::*[@role="combobox"][1]')
+      .first();
     if (await invoiceSelect.isVisible({ timeout: 3000 }).catch(() => false)) {
       await invoiceSelect.click();
       await page.waitForTimeout(1500);

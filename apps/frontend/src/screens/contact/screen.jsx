@@ -271,7 +271,7 @@ function Contact() {
 
   // Transform data for table (reducer getArray returns array with .count; not { data })
   const tableData = useMemo(() => {
-    const data = Array.isArray(contact_list) ? contact_list : contact_list?.data ?? [];
+    const data = Array.isArray(contact_list) ? contact_list : (contact_list?.data ?? []);
     if (!data.length && !contact_list) return [];
     return data.map(contact => {
       // Build fullName from firstName, middleName, lastName
