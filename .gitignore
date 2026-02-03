@@ -16,6 +16,7 @@ target/
 *.iml
 .vscode/
 !.vscode/settings.json
+.cursor/
 
 # Claude Code local settings
 .claude/

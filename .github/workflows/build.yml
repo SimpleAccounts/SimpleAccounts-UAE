@@ -109,11 +109,11 @@ jobs:
 
       - name: Run Backend Tests with Coverage
         working-directory: apps/backend
-        run: ./mvnw clean test -Dspring.profiles.active=test
+        run: bash ./mvnw clean test -Dspring.profiles.active=test -B
 
       - name: Generate Coverage Report
         working-directory: apps/backend
-        run: ./mvnw jacoco:report
+        run: bash ./mvnw jacoco:report
         if: always()
 
       - name: Upload Backend Test Results
@@ -244,7 +244,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: apps/backend
-        run: ./mvnw clean package -DskipTests
+        run: bash ./mvnw clean package -DskipTests -B
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4

@@ -23,8 +23,13 @@ public class MessageUtil implements ApplicationContextAware {
 	    }
 
 	    public static String getMessage(String key) {
-	    	if (messageSource == null)
+	    	if (appContext == null) {
+	    		// No Spring context (e.g. unit tests with standalone MockMvc) - return key as fallback
+	    		return key != null ? key : "";
+	    	}
+	    	if (messageSource == null) {
 	    		messageSource = appContext.getBean(ReloadableResourceBundleMessageSource.class);
+	    	}
 	    	Locale locale = LocaleContextHolder.getLocale();
 	    	if (!locale.getLanguage().equals("en"))
 	    		log.debug("The local is not supported " + locale.getLanguage() );

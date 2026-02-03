@@ -106,9 +106,6 @@ public abstract class AbstractDoubleEntryRestController {
 	@Transactional
 	@PostMapping(value = "/posting")
 	public ResponseEntity<?> posting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
-		// #region agent log
-		try { java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"entry\",\"data\":{\"postingRefId\":"+postingRequestModel.getPostingRefId()+"},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-		// #endregion
 		String validationCheck = "";
 		Journal journal = null;
 
@@ -121,14 +118,8 @@ public abstract class AbstractDoubleEntryRestController {
 				journal = expenseRestHelper.expensePosting(postingRequestModel, userId);
 			}
 		} catch (RuntimeException e) {
-			// #region agent log
-			try { String m = e.getMessage() != null ? e.getMessage().replace("\"", "'") : "null"; java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"caught_returning_400\",\"data\":{\"exception\":\""+e.getClass().getSimpleName()+"\",\"msg\":\""+m+"\",\"httpStatus\":400},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-			// #endregion
 			log.error("Invoice posting failed: {}", e.getMessage());
 			SimpleAccountsMessage errorMsg = new SimpleAccountsMessage("", e.getMessage(), true);
-			// #region agent log
-			try { java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"about_to_return_400\",\"data\":{\"msgError\":"+errorMsg.isErrorMessage()+"},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-			// #endregion
 			return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
 		}
 
@@ -139,9 +130,6 @@ public abstract class AbstractDoubleEntryRestController {
 
 		if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
 			Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
-			// #region agent log
-			try { java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"invoice_block\",\"data\":{\"invoiceNull\":"+(invoice==null)+",\"contactNull\":"+(invoice!=null&&invoice.getContact()==null)+"},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-			// #endregion
 			invoice.setStatus(CommonStatusEnum.POST.getValue());
 			boolean hasContactEmail = invoice.getContact() != null &&
 					((invoice.getContact().getBillingEmail() != null && !invoice.getContact().getBillingEmail().isEmpty())
@@ -160,19 +148,10 @@ public abstract class AbstractDoubleEntryRestController {
 			expenseService.persist(expense);
 		}
 		if (validationCheck.isEmpty()) {
-			// #region agent log
-			try { java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"success_return_200\",\"data\":{},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-			// #endregion
 			return new ResponseEntity<>("Journal Entries created Successfully", HttpStatus.OK);
 		}
-		// #region agent log
-		try { java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"validation_return_200\",\"data\":{\"validationCheck\":\""+validationCheck.replace("\"","'")+"\"},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-		// #endregion
 		return new ResponseEntity<>(validationCheck,HttpStatus.OK);
 		} catch (Exception ex) {
-			// #region agent log
-			try { String m = ex.getMessage() != null ? ex.getMessage().replace("\"", "'") : "null"; java.nio.file.Files.write(java.nio.file.Paths.get("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), ("{\"timestamp\":"+System.currentTimeMillis()+",\"location\":\"posting\",\"message\":\"exception_after_try_returning_400\",\"data\":{\"exception\":\""+ex.getClass().getSimpleName()+"\",\"msg\":\""+m+"\"},\"sessionId\":\"debug-session\"}\n").getBytes(java.nio.charset.StandardCharsets.UTF_8), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND); } catch (Exception ignored) {}
-			// #endregion
 			log.error("Invoice posting failed (post-try): {}", ex.getMessage());
 			String msg = ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName();
 			return new ResponseEntity<>(new SimpleAccountsMessage("", msg, true), HttpStatus.BAD_REQUEST);

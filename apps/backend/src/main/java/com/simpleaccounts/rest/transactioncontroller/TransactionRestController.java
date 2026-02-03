@@ -645,20 +645,6 @@ public class TransactionRestController {
 		} catch (IllegalArgumentException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			// #region agent log
-			try {
-				java.io.File logFile = new java.io.File("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log");
-				try (java.io.FileWriter fw = new java.io.FileWriter(logFile, true)) {
-					String msg = e.getMessage() != null ? e.getMessage().replace("\"", "'").replace("\n", " ").replace("%", "%%") : "null";
-					String trace = java.util.Arrays.stream(e.getStackTrace())
-							.limit(15)
-							.map(StackTraceElement::toString)
-							.collect(java.util.stream.Collectors.joining(" | ")).replace("\"", "'").replace("%", "%%");
-					fw.write(String.format("{\"location\":\"TransactionRestController.saveTransaction:catch\",\"message\":\"exception\",\"data\":{\"message\":\"%s\",\"class\":\"%s\",\"trace\":\"%s\"},\"timestamp\":%d,\"hypothesisId\":\"A\"}\n",
-							msg, e.getClass().getName(), trace, System.currentTimeMillis()));
-				}
-			} catch (Exception ignored) { /* ignore */ }
-			// #endregion
 			Integer userIdForLogging = null;
 			try {
 				userIdForLogging = jwtTokenUtil.getUserIdFromHttpRequest(request);
