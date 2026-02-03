@@ -195,7 +195,7 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.27.6</version>
+			<version>3.27.7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -485,7 +485,7 @@
 					<plugin>
 						<groupId>io.gatling</groupId>
 						<artifactId>gatling-maven-plugin</artifactId>
-						<version>4.20.16</version>
+						<version>4.21.0</version>
 						<configuration>
 							<simulationsFolder>src/perf/scala/simulations</simulationsFolder>
 							<resultsFolder>target/gatling</resultsFolder>
