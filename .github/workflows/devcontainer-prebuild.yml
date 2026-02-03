@@ -23,7 +23,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
       packages: write

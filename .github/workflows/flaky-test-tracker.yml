@@ -13,7 +13,7 @@ on:
 jobs:
   analyze-flakiness:
     name: Analyze Test Flakiness
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
       issues: write

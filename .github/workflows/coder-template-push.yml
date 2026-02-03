@@ -16,7 +16,7 @@ permissions:
 jobs:
   deploy-template:
     name: Push Template to Coder
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
 
     steps:
       - name: Checkout code
