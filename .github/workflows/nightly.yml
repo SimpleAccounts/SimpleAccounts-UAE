@@ -28,7 +28,7 @@ jobs:
   # Stage 1: Unit Tests (quick validation)
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
     outputs:
@@ -94,7 +94,7 @@ jobs:
   e2e-tests:
     name: E2E Tests (Full Suite)
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
 
@@ -139,7 +139,7 @@ jobs:
   visual-regression:
     name: Visual Regression
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
 
@@ -180,7 +180,7 @@ jobs:
   contract-tests:
     name: Contract Tests
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
 
@@ -211,7 +211,7 @@ jobs:
   mutation-testing:
     name: Mutation Testing
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
     timeout-minutes: 60
@@ -244,7 +244,7 @@ jobs:
   performance-tests:
     name: Performance Tests (k6)
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     if: ${{ !inputs.skip_perf }}
     permissions:
       contents: read
@@ -281,7 +281,7 @@ jobs:
   security-scan:
     name: Security Scan (OWASP)
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     if: ${{ !inputs.skip_security }}
     permissions:
       contents: read
@@ -322,7 +322,7 @@ jobs:
   accessibility-tests:
     name: Accessibility Tests
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     permissions:
       contents: read
 
@@ -371,7 +371,7 @@ jobs:
         security-scan,
         accessibility-tests,
       ]
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     if: always()
     permissions:
       contents: read

@@ -32,7 +32,7 @@ env:
 jobs:
   sonarqube:
     name: Build and Analyze
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 45
     permissions:
       contents: read

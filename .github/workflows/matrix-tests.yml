@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: k3s-simpleaccounts-runners
             java: '21'
             experimental: false
           - os: windows-latest
@@ -65,7 +65,7 @@ jobs:
 
   frontend:
     name: Frontend Unit Tests (Matrix)
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 40
     continue-on-error: ${{ matrix.experimental }}
     strategy:

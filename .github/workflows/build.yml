@@ -21,7 +21,7 @@ env:
 jobs:
   lint-format:
     name: Lint and Format
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 15
     permissions:
       contents: read
@@ -85,7 +85,7 @@ jobs:
   # Stage 1: Lint and Unit Tests (fail-fast)
   test-backend:
     name: Backend Tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -128,7 +128,7 @@ jobs:
 
   test-frontend-unit:
     name: Frontend Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -175,7 +175,7 @@ jobs:
   build-frontend:
     name: Build Frontend
     needs: test-frontend-unit
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -220,7 +220,7 @@ jobs:
   build-backend:
     name: Build Backend
     needs: test-backend
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -257,7 +257,7 @@ jobs:
   test-e2e:
     name: E2E Tests
     needs: [build-frontend, build-backend]
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
     timeout-minutes: 45
     permissions:
