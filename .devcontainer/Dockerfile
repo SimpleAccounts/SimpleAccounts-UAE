@@ -184,8 +184,9 @@ COPY --chown=vscode:vscode apps/frontend/package.json apps/frontend/package-lock
 RUN . /usr/local/share/nvm/nvm.sh && (npm ci --legacy-peer-deps --ignore-scripts || npm install --legacy-peer-deps --ignore-scripts || true)
 
 # Install Playwright browsers (baked into image for faster test execution)
-# This prevents the need to run 'npx playwright install' every time tests run
-RUN . /usr/local/share/nvm/nvm.sh && npx playwright install chromium
+# Allow failure under QEMU (multi-platform build): arm64/amd64 cross-build can fail;
+# system chromium is already installed via apt above; browsers can be installed at container start if needed
+RUN . /usr/local/share/nvm/nvm.sh && npx playwright install chromium || true
 
 # Clean up temp directories
 USER root
