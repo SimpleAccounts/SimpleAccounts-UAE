@@ -12,3 +12,7 @@ deploy/helm/**/*.yaml
 # Lock files
 package-lock.json
 pnpm-lock.yaml
+
+# Playwright and test outputs (generated, often not in PR diff)
+apps/frontend/test-results/
+apps/frontend/playwright-report/
