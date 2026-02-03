@@ -61,6 +61,8 @@ const NeuInput = React.forwardRef(
       plaintext = false,
       addon: _addon = false,
       style,
+      children,
+      dangerouslySetInnerHTML,
       ...props
     },
     ref
@@ -68,10 +70,17 @@ const NeuInput = React.forwardRef(
     const [isFocused, setIsFocused] = React.useState(false);
     const sizeClass = SIZE_CLASSES[bsSize] || SIZE_CLASSES.md;
 
+    // Determine background color based on disabled state
+    const isDisabled = props.disabled || props.readOnly;
+    const backgroundColor = isDisabled
+      ? 'var(--corp-bg-secondary, #f8f9fa)' // Light gray for disabled/read-only fields
+      : '#ffffff'; // White for editable fields
+
     const inputStyle = {
       ...NEU_INPUT_STYLES.input,
+      background: backgroundColor,
       ...(type === 'select' ? NEU_INPUT_STYLES.select : {}),
-      ...(isFocused ? NEU_INPUT_STYLES.inputFocus : {}),
+      ...(isFocused && !isDisabled ? NEU_INPUT_STYLES.inputFocus : {}),
       ...(invalid
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(255, 77, 106, 0.3)` }
         : {}),
@@ -79,8 +88,12 @@ const NeuInput = React.forwardRef(
         ? { boxShadow: `${NEU_INPUT_STYLES.input.boxShadow}, 0 0 0 2px rgba(0, 200, 150, 0.3)` }
         : {}),
       ...(plaintext ? { background: 'transparent', boxShadow: 'none' } : {}),
+      ...(isDisabled ? { cursor: 'not-allowed', opacity: 0.7 } : {}),
       ...style,
     };
+
+    // Ensure value is never null to avoid React warning
+    const safeValue = props.value === null ? '' : props.value;
 
     const commonProps = {
       ref,
@@ -95,10 +108,12 @@ const NeuInput = React.forwardRef(
         props.onBlur?.(e);
       },
       ...props,
+      // Override value with safe value (null -> '')
+      ...(props.value !== undefined ? { value: safeValue } : {}),
     };
 
     if (type === 'select') {
-      return <select {...commonProps}>{props.children}</select>;
+      return <select {...commonProps}>{children}</select>;
     }
 
     if (type === 'textarea') {
@@ -110,6 +125,7 @@ const NeuInput = React.forwardRef(
       );
     }
 
+    // input is a void element: never pass children or dangerouslySetInnerHTML
     return <input type={type} {...commonProps} />;
   }
 );

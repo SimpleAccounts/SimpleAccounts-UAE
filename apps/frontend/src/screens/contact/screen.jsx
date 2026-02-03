@@ -269,10 +269,11 @@ function Contact() {
     [navigate]
   );
 
-  // Transform data for table
+  // Transform data for table (reducer getArray returns array with .count; not { data })
   const tableData = useMemo(() => {
-    if (!contact_list?.data) return [];
-    return contact_list.data.map(contact => {
+    const data = Array.isArray(contact_list) ? contact_list : (contact_list?.data ?? []);
+    if (!data.length && !contact_list) return [];
+    return data.map(contact => {
       // Build fullName from firstName, middleName, lastName
       const nameParts = [];
       if (contact.firstName) nameParts.push(contact.firstName);

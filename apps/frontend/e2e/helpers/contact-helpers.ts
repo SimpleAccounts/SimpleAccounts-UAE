@@ -38,7 +38,8 @@ export interface ContactData {
 }
 
 /**
- * Creates a contact via API
+ * Creates a contact via API.
+ * Payload uses flat fields (addressLine1, city, countryId, etc.) to match ContactPersistModel.
  */
 export async function createContactViaAPI(
   request: APIRequestContext,
@@ -46,34 +47,33 @@ export async function createContactViaAPI(
   contactData: Partial<ContactData> = {}
 ): Promise<ContactData & { contactId: number }> {
   const apiUrl = getApiBaseUrl();
+  const bill = contactData.billingAddress;
+  const ship = contactData.shippingAddress;
   const payload = {
-    firstName: contactData.firstName,
-    lastName: contactData.lastName,
-    email: contactData.email,
+    firstName: contactData.firstName ?? '',
+    lastName: contactData.lastName ?? '',
+    email: contactData.email ?? '',
     contactType: contactData.contactType === 'SUPPLIER' ? 1 : 2,
-    currencyCode: contactData.currencyCode || 150, // Default to AED
-    taxTreatmentId: contactData.taxTreatmentId || 6, // Default to GCC NON-VAT REGISTERED
-    organization: contactData.organization || '',
-    telephone: contactData.phone || '',
-    mobileNumber: contactData.mobileNumber || '',
-    website: contactData.website || '',
-    vatRegistrationNumber: contactData.vatRegistrationNumber || '',
+    currencyCode: contactData.currencyCode ?? 150,
+    taxTreatmentId: contactData.taxTreatmentId ?? 6,
+    organization: contactData.organization ?? '',
+    telephone: contactData.phone ?? contactData.mobileNumber ?? '',
+    mobileNumber: contactData.mobileNumber ?? '',
+    website: contactData.website ?? '',
+    vatRegistrationNumber: contactData.vatRegistrationNumber ?? '',
     isActive: contactData.isActive ?? true,
     isBillingAndShippingAddressSame: contactData.isBillingAndShippingAddressSame ?? true,
-    billingAddress: contactData.billingAddress || {
-      address: 'Test Billing Address',
-      city: 'Dubai',
-      countryId: 229,
-      stateId: 1,
-      postZipCode: '12345',
-    },
-    shippingAddress: contactData.shippingAddress || {
-      address: 'Test Shipping Address',
-      city: 'Dubai',
-      countryId: 229,
-      stateId: 1,
-      postZipCode: '12345',
-    },
+    addressLine1: bill?.address ?? 'Test Billing Address',
+    addressLine2: '',
+    addressLine3: '',
+    city: bill?.city ?? 'Dubai',
+    countryId: bill?.countryId ?? 229,
+    stateId: bill?.stateId ?? 1,
+    postZipCode: bill?.postZipCode ?? '12345',
+    shippingCity: ship?.city ?? 'Dubai',
+    shippingCountryId: ship?.countryId ?? 229,
+    shippingStateId: ship?.stateId ?? 1,
+    shippingPostZipCode: ship?.postZipCode ?? '12345',
   };
 
   const response = await request.post(`${apiUrl}/rest/contact/save`, {
@@ -90,11 +90,9 @@ export async function createContactViaAPI(
   }
 
   const responseData = await response.json().catch(() => ({}));
-  console.log('Contact creation response:', responseData);
   let contactId = responseData?.contactId || responseData?.id || 0;
 
   if (!contactId) {
-    console.log('Contact ID not in response, fetching from list...');
     // Wait for DB sync if needed
     await new Promise(resolve => setTimeout(resolve, 3000));
     try {
@@ -106,16 +104,12 @@ export async function createContactViaAPI(
       );
       if (listResponse.ok()) {
         const listData = await listResponse.json();
-        console.log('Contact list received, count:', listData.data?.length || listData.length);
-        const contact = (listData.data || []).find((c: any) => c.email === payload.email);
+        const contact = (listData.data || listData || []).find(
+          (c: any) => c.email === payload.email
+        );
         if (contact) {
           contactId = contact.contactId || contact.id || 0;
-          console.log('Found contact in list, ID:', contactId);
-        } else {
-          console.warn('Contact not found in list by email:', payload.email);
         }
-      } else {
-        console.error('Failed to fetch contact list:', listResponse.status());
       }
     } catch (error) {
       console.warn('Could not retrieve contact ID after creation:', error);
@@ -132,29 +126,58 @@ export async function createContactViaAPI(
   } as ContactData & { contactId: number };
 }
 
+type CreateTestContactOptions = {
+  contactType?: 'CUSTOMER' | 'SUPPLIER';
+  phone?: string;
+  organization?: string;
+};
+
 /**
- * Helper to create a test contact with all required fields
+ * Helper to create a test contact with all required fields.
+ * Supports (page, firstName, lastName, email, options?) or (page, { contactName, contactType }).
  */
 export async function createTestContact(
   page: Page,
-  firstName: string,
-  lastName: string,
-  email: string,
-  options?: {
-    contactType?: 'CUSTOMER' | 'SUPPLIER';
-    phone?: string;
-    organization?: string;
-  }
+  firstNameOrOptions: string | { contactName: string; contactType?: 'CUSTOMER' | 'SUPPLIER' },
+  lastName?: string,
+  email?: string,
+  options?: CreateTestContactOptions
 ): Promise<ContactData & { contactId: number }> {
-  const authToken = await page.evaluate(() => localStorage.getItem('accessToken'));
+  let firstName: string;
+  let lastNameVal: string;
+  let emailVal: string;
+  let opts: CreateTestContactOptions | undefined;
 
+  if (
+    typeof firstNameOrOptions === 'object' &&
+    firstNameOrOptions !== null &&
+    'contactName' in firstNameOrOptions
+  ) {
+    const o = firstNameOrOptions as { contactName: string; contactType?: 'CUSTOMER' | 'SUPPLIER' };
+    const parts = o.contactName.trim().split(/\s+/);
+    firstName = parts[0] ?? 'Test';
+    lastNameVal = parts.length > 1 ? parts.slice(1).join(' ') : 'Contact';
+    const slug = o.contactName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    emailVal = `${slug}-${Date.now()}@example.com`;
+    opts = { contactType: o.contactType };
+  } else {
+    firstName = firstNameOrOptions as string;
+    lastNameVal = lastName ?? '';
+    emailVal = email ?? '';
+    opts = options;
+  }
+
+  const authToken = await page.evaluate(() => localStorage.getItem('accessToken'));
   const contactData: Partial<ContactData> = {
     firstName,
-    lastName,
-    email,
-    contactType: options?.contactType,
-    organization: options?.organization,
-    phone: options?.phone,
+    lastName: lastNameVal,
+    email: emailVal,
+    contactType: opts?.contactType,
+    organization: opts?.organization,
+    phone: opts?.phone,
   };
 
   if (authToken) {
@@ -165,7 +188,7 @@ export async function createTestContact(
     }
   }
 
-  return await createContactViaUI(page, firstName, lastName, email, options);
+  return await createContactViaUI(page, firstName, lastNameVal, emailVal, opts);
 }
 
 /**

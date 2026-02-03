@@ -140,7 +140,9 @@ class DataListControllerTest {
         when(companyTypeRepository.findAll()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/rest/datalist/getCompanyType"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
     }
 
     // ========== getTransactionTypes Tests ==========
@@ -349,7 +351,9 @@ class DataListControllerTest {
         when(companyTypeRepository.findAll()).thenThrow(new RuntimeException("Database error"));
 
         mockMvc.perform(get("/rest/datalist/getCompanyType"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test

@@ -2223,15 +2223,25 @@ public class PoQuatationRestHelper {
             Date date = Date.from(quotation.getQuotaionDate().atZone(ZoneId.systemDefault()).toInstant());
             poQuatationRequestModel.setQuotationdate(date);
         }
-        if (quotation.getCustomer().getOrganization() != null && !quotation.getCustomer().getOrganization().isEmpty() ) {
-            poQuatationRequestModel.setCustomerName(quotation.getCustomer().getOrganization());
-            poQuatationRequestModel.setCustomerId(quotation.getCustomer().getContactId());
-            poQuatationRequestModel.setTaxtreatment(quotation.getCustomer().getTaxTreatment().getTaxTreatment());
-        }
-        else {
-            poQuatationRequestModel.setCustomerId(quotation.getCustomer().getContactId());
-            poQuatationRequestModel.setCustomerName(quotation.getCustomer().getFirstName() + " " + quotation.getCustomer().getLastName());
-            poQuatationRequestModel.setTaxtreatment(quotation.getCustomer().getTaxTreatment().getTaxTreatment());
+        // Customer quotations use getCustomer(); supplier/PO use getSupplierId()
+        Contact contact = quotation.getCustomer() != null ? quotation.getCustomer() : quotation.getSupplierId();
+        if (contact != null) {
+            if (contact.getOrganization() != null && !contact.getOrganization().isEmpty()) {
+                poQuatationRequestModel.setCustomerName(contact.getOrganization());
+                poQuatationRequestModel.setCustomerId(contact.getContactId());
+                if (contact.getTaxTreatment() != null) {
+                    poQuatationRequestModel.setTaxtreatment(contact.getTaxTreatment().getTaxTreatment());
+                }
+            } else {
+                poQuatationRequestModel.setCustomerId(contact.getContactId());
+                poQuatationRequestModel.setCustomerName(contact.getFirstName() + " " + contact.getLastName());
+                if (contact.getTaxTreatment() != null) {
+                    poQuatationRequestModel.setTaxtreatment(contact.getTaxTreatment().getTaxTreatment());
+                }
+            }
+            if (contact.getVatRegistrationNumber() != null) {
+                poQuatationRequestModel.setVatRegistrationNumber(contact.getVatRegistrationNumber());
+            }
         }
         if (quotation.getReferenceNumber()!=null){
             poQuatationRequestModel.setReceiptNumber(quotation.getReferenceNumber());
@@ -2243,9 +2253,6 @@ public class PoQuatationRestHelper {
             poQuatationRequestModel.setCurrencySymbol(quotation.getCurrency().getCurrencySymbol());
             poQuatationRequestModel.setCurrencyName(quotation.getCurrency().getCurrencyName());
             poQuatationRequestModel.setCurrencyIsoCode(quotation.getCurrency().getCurrencyIsoCode());
-        }
-        if (quotation.getCustomer().getVatRegistrationNumber() != null){
-            poQuatationRequestModel.setVatRegistrationNumber(quotation.getCustomer().getVatRegistrationNumber());
         }
         if(quotation.getCreatedDate()!=null){
             poQuatationRequestModel.setCreatedDate(quotation.getCreatedDate());
@@ -2260,12 +2267,16 @@ public class PoQuatationRestHelper {
             poQuatationRequestModel.setPlaceOfSupplyId(quotation.getPlaceOfSupplyId().getId());
         }
         poQuatationRequestModel.setNotes(quotation.getNotes());
-        poQuatationRequestModel.setType(quotation.getType().toString());
+        if (quotation.getType() != null) {
+            poQuatationRequestModel.setType(quotation.getType().toString());
+        }
         poQuatationRequestModel.setStatus(CommonStatusEnum.getInvoiceTypeByValue(quotation.getStatus()));
         poQuatationRequestModel.setTotalAmount(quotation.getTotalAmount());
         poQuatationRequestModel.setTotalVatAmount(quotation.getTotalVatAmount());
         poQuatationRequestModel.setDiscount(quotation.getDiscount());
-        poQuatationRequestModel.setTaxtreatment(quotation.getCustomer().getTaxTreatment().getTaxTreatment());
+        if (contact != null && contact.getTaxTreatment() != null) {
+            poQuatationRequestModel.setTaxtreatment(contact.getTaxTreatment().getTaxTreatment());
+        }
         //added by shoaib for setting attachment description in quotation
         poQuatationRequestModel.setAttachmentDescription(quotation.getAttachmentDescription());
         List<PoQuatationLineItemRequestModel> poQuatationLineItemRequestModelList= new ArrayList<>();
@@ -2287,7 +2298,9 @@ public class PoQuatationRestHelper {
         lineItemModel.setDescription(lineItem.getDescription());
         lineItemModel.setQuantity(lineItem.getQuantity());
         lineItemModel.setUnitType(lineItem.getUnitType());
-        lineItemModel.setUnitTypeId(lineItem.getUnitTypeId().getUnitTypeId());
+        if (lineItem.getUnitTypeId() != null) {
+            lineItemModel.setUnitTypeId(lineItem.getUnitTypeId().getUnitTypeId());
+        }
         lineItemModel.setUnitPrice(lineItem.getUnitCost());
         lineItemModel.setSubTotal(lineItem.getSubTotal());
         if (lineItem.getTrnsactioncCategory()!=null){
@@ -2332,11 +2345,14 @@ public class PoQuatationRestHelper {
                 QuatationListModel model = new QuatationListModel();
                 model.setId(poQuatation.getId());
                 model.setQuatationNumber(poQuatation.getQuotationNumber());
-                if (poQuatation.getCustomer().getOrganization() != null && !poQuatation.getCustomer().getOrganization().isEmpty()) {
-                    model.setCustomerName(poQuatation.getCustomer().getOrganization());
-                }
-                else{
-                    model.setCustomerName(poQuatation.getCustomer().getFirstName()+" "+poQuatation.getCustomer().getLastName());
+                if (poQuatation.getCustomer() != null) {
+                    if (poQuatation.getCustomer().getOrganization() != null && !poQuatation.getCustomer().getOrganization().isEmpty()) {
+                        model.setCustomerName(poQuatation.getCustomer().getOrganization());
+                    } else {
+                        model.setCustomerName(poQuatation.getCustomer().getFirstName() + " " + poQuatation.getCustomer().getLastName());
+                    }
+                } else {
+                    model.setCustomerName("");
                 }
                 if (poQuatation.getQuotaionExpiration() != null) {
                     model.setQuotaionExpiration(dateFormtUtil.getLocalDateTimeAsString(poQuatation.getQuotaionExpiration(), DATE_FORMAT_DD_MM_YYYY));
@@ -2360,9 +2376,9 @@ public class PoQuatationRestHelper {
                 if (poQuatation.getCustomer() != null) {
                     model.setSupplierId(poQuatation.getCustomer().getContactId());
                     model.setSupplierName(poQuatation.getCustomer().getFirstName());
-                }
-                if (poQuatation.getCustomer().getVatRegistrationNumber() != null){
-                    model.setVatRegistrationNumber(model.getVatRegistrationNumber());
+                    if (poQuatation.getCustomer().getVatRegistrationNumber() != null) {
+                        model.setVatRegistrationNumber(poQuatation.getCustomer().getVatRegistrationNumber());
+                    }
                 }
                 quatationListModels.add(model);
             }
@@ -2373,18 +2389,26 @@ public class PoQuatationRestHelper {
     public void sendQuotation(PoQuatation poQuatation, Integer userId, PostingRequestModel postingRequestModel,HttpServletRequest request) {
         String subject = "";
         String body = "";
-        Contact contact = poQuatation.getSupplierId();
+        // Customer quotations use getCustomer(); supplier/PO use getSupplierId()
+        Contact contact = poQuatation.getSupplierId() != null ? poQuatation.getSupplierId() : poQuatation.getCustomer();
         String quertStr = "SELECT m FROM MailThemeTemplates m WHERE m.moduleId=6 and m.templateEnable=true";
 
         Query query = entityManager.createQuery(quertStr);
 
-        MailThemeTemplates quatationEmailBody =(MailThemeTemplates) query.getSingleResult();
+        MailThemeTemplates quatationEmailBody = null;
+        java.util.List<?> results = query.getResultList();
+        if (results != null && !results.isEmpty()) {
+            quatationEmailBody = (MailThemeTemplates) results.get(0);
+        }
         Map<String, String> map = getQuotationData(poQuatation, userId);
         //code added by mudassar for quotation email issue
         String content = "";
         String htmlText="";
         String htmlContent="";
         try {
+            if (quatationEmailBody == null) {
+                logger.info("No mail template found for quotation (moduleId=6); skipping email body");
+            } else {
             String emailBody=quatationEmailBody.getPath();
 
             byte[] bodyData = Files.readAllBytes(Paths.get(resourceLoader.getResource("CLASSPATH_PREFIX"+emailBody).getURI()));
@@ -2399,11 +2423,12 @@ public class PoQuatationRestHelper {
             if(postingRequestModel !=null && postingRequestModel.getVatInWords() !=null)
                 vatInWords= postingRequestModel.getVatInWords();
 
+            String currencyIso = (poQuatation.getCurrency() != null) ? poQuatation.getCurrency().getCurrencyIsoCode() : "";
             htmlText = new String(bodyData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords).replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
-            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_CURRENCY,poQuatation.getCurrency().getCurrencyIsoCode())
+            htmlContent= new String(contentData, StandardCharsets.UTF_8).replace(TEMPLATE_VAR_CURRENCY, currencyIso)
                     .replace(TEMPLATE_VAR_AMOUNT_IN_WORDS,amountInWords)
                     .replace(TEMPLATE_VAR_VAT_IN_WORDS,vatInWords);
-
+            }
         } catch (IOException e) {
             logger.error(ERROR_PROCESSING_QUOTATION, e);
         }
@@ -2415,29 +2440,30 @@ public class PoQuatationRestHelper {
         }
 
         if (quatationEmailBody != null && !htmlText.isEmpty()) {
-           if (poQuatation.getPoQuatationLineItems().size()>1){
-                body = mailUtility.create(map,updatePoQuotationLineItem(poQuatation.getPoQuatationLineItems().size(),quatationEmailBody,postingRequestModel));
+           int lineItemCount = (poQuatation.getPoQuatationLineItems() != null) ? poQuatation.getPoQuatationLineItems().size() : 0;
+           if (lineItemCount > 1){
+                body = mailUtility.create(map,updatePoQuotationLineItem(lineItemCount,quatationEmailBody,postingRequestModel));
             }
             else {
                 body = mailUtility.create(map,htmlText);
             }
         }
 
-     if (poQuatation.getSupplierId() != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
+     if (contact != null && contact.getBillingEmail() != null && !contact.getBillingEmail().isEmpty()) {
         mailUtility.triggerEmailOnBackground2(subject, content, body, EmailConstant.ADMIN_SUPPORT_EMAIL,
-                EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{poQuatation.getSupplierId().getBillingEmail()},
+                EmailConstant.ADMIN_EMAIL_SENDER_NAME, new String[]{contact.getBillingEmail()},
                 true);
         User user = userService.findByPK(userId);
         EmailLogs emailLogs = new EmailLogs();
         emailLogs.setEmailDate(LocalDateTime.now());
-        emailLogs.setEmailTo(poQuatation.getSupplierId().getBillingEmail());
+        emailLogs.setEmailTo(contact.getBillingEmail());
         emailLogs.setEmailFrom(user.getUserEmail());
         String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
                 .replacePath(null)
                 .build()
                 .toUriString();
         emailLogs.setBaseUrl(baseUrl);
-        emailLogs.setModuleName("PURCHASE ORDER");
+        emailLogs.setModuleName("QUOTATION");
         emaiLogsService.persist(emailLogs);
     } else {
         logger.info("BILLING ADDRESS NOT PRESENT");
@@ -2446,7 +2472,7 @@ public class PoQuatationRestHelper {
     public Map<String, String> getQuotationData(PoQuatation poQuatation, Integer userId) {
         Map<String, String> map = mailUtility.getQuotationEmailParamMap();
         Map<String, String> quotationDataMap = new HashMap<>();
-        User user = userService.findByPK(userId);
+        User user = userId != null ? userService.findByPK(userId) : null;
         for (String key : map.keySet()) {
             String value = map.get(key);
             switch (key) {
@@ -2490,10 +2516,10 @@ public class PoQuatationRestHelper {
                     getQuantity(poQuatation,quotationDataMap,value);
                     break;
                 case MailUtility.SENDER_NAME:
-                    quotationDataMap.put(value, user.getUserEmail());
+                    quotationDataMap.put(value, user != null ? (user.getUserEmail() != null ? user.getUserEmail() : "") : "");
                     break;
                 case MailUtility.COMPANYLOGO:
-                    if (user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
+                    if (user != null && user.getCompany() != null  && user.getCompany().getCompanyLogo() != null) {
                         String image = DATA_IMAGE_JPG_BASE64 + DatatypeConverter.printBase64Binary(
                                 user.getCompany().getCompanyLogo()) ;
                         quotationDataMap.put(value, image);
@@ -2502,10 +2528,14 @@ public class PoQuatationRestHelper {
                     }
                     break;
                 case MailUtility.CURRENCY:
-                    quotationDataMap.put(value, poQuatation.getCurrency().getCurrencyIsoCode());
+                    if (poQuatation.getCurrency() != null) {
+                        quotationDataMap.put(value, poQuatation.getCurrency().getCurrencyIsoCode());
+                    } else {
+                        quotationDataMap.put(value, "");
+                    }
                     break;
                 case MailUtility.COMPANY_NAME:
-                    if (user.getCompany() != null)
+                    if (user != null && user.getCompany() != null)
                         quotationDataMap.put(value, user.getCompany().getCompanyName());
                     break;
                 case MailUtility.VAT_TYPE:
@@ -2530,21 +2560,21 @@ public class PoQuatationRestHelper {
                     getSubTotal(poQuatation,quotationDataMap,value);
                     break;
                 case MailUtility.COMPANY_ADDRESS_LINE1:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null) {
                         quotationDataMap.put(value, user.getCompany().getCompanyAddressLine1());
                     } else {
                         quotationDataMap.put(value, "---");
                     }
                     break;
                 case MailUtility.COMPANY_ADDRESS_LINE2:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null) {
                         quotationDataMap.put(value,user.getCompany().getCompanyAddressLine2());
                     } else {
                         quotationDataMap.put(value, "---");
                     }
                     break;
                 case MailUtility.COMPANY_POST_ZIP_CODE:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null) {
                         quotationDataMap.put(value,user.getCompany().getCompanyPostZipCode());
 
                     } else {
@@ -2552,28 +2582,28 @@ public class PoQuatationRestHelper {
                     }
                     break;
                 case MailUtility.COMPANY_COUNTRY_CODE:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null && user.getCompany().getCompanyCountryCode() != null) {
                         quotationDataMap.put(value, user.getCompany().getCompanyCountryCode().getCountryName());
                     } else {
                         quotationDataMap.put(value, "---");
                     }
                     break;
                 case MailUtility.COMPANY_STATE_REGION:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null && user.getCompany().getCompanyStateCode() != null) {
                         quotationDataMap.put(value, user.getCompany().getCompanyStateCode().getStateName());
                     } else {
                         quotationDataMap.put(value, "---");
                     }
                     break;
                 case MailUtility.VAT_NUMBER:
-                    if (user.getCompany() != null) {
+                    if (user != null && user.getCompany() != null) {
                         quotationDataMap.put(value, user.getCompany().getVatNumber());
                     } else {
                         quotationDataMap.put(value, "---");
                     }
                     break;
                 case MailUtility.COMPANY_MOBILE_NUMBER:
-                    if (user.getCompany() != null && user.getCompany().getPhoneNumber() != null){
+                    if (user != null && user.getCompany() != null && user.getCompany().getPhoneNumber() != null){
                         String[] numbers=user.getCompany().getPhoneNumber().split(",");
                         String mobileNumber="";
                         if (numbers.length > 0 && numbers[0] != null) {

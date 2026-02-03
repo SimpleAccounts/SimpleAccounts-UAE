@@ -353,6 +353,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@Cacheable(cacheNames = "dashboardInvoiceChart", key = "#monthCount")
 	@GetMapping(value = "/getChartData")
 	public ResponseEntity<Object> getChartData(@RequestParam int monthCount) {
@@ -524,6 +525,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getSuggestionInvoicesFotCust")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForCustomer(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("currency") Integer currency, @RequestParam("id") Integer contactId,
@@ -532,7 +534,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
 			List<Invoice> invoiceList = invoiceService.getSuggestionInvoices(amount, contactId,
-					ContactTypeEnum.CUSTOMER, currency,userId);
+					ContactTypeEnum.CUSTOMER, currency, userId);
 			return new ResponseEntity<>(invoiceRestHelper.getDropDownModelList(invoiceList), HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -548,6 +550,7 @@ public class InvoiceRestController extends AbstractDoubleEntryRestController {
 	 * @return List<InvoiceDueAmountModel> InvoiceDueAmountModel data list
 	 */
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/getSuggestionInvoicesFotVend")
 	public ResponseEntity<List<InviceSingleLevelDropdownModel>> getSuggestionUnpaidInvoicesForVendor(
 			@RequestParam("amount") BigDecimal amount, @RequestParam("id") Integer contactId, @RequestParam("currency") Integer currency,

@@ -80,7 +80,12 @@ public class Transaction implements Serializable {
 	private String explainedTransactionAttachementDescription;
 
 	@Basic(optional = true, fetch = FetchType.LAZY)
-	@Column(name = "EXPLAINED_TRANSACTION_ATTACHEMENT", columnDefinition = "bytea")
+	@Column(
+			name = "EXPLAINED_TRANSACTION_ATTACHEMENT",
+			columnDefinition = "oid",
+			insertable = false,
+			updatable = false
+	)
 	private byte[] explainedTransactionAttachement;
 
 	@Basic

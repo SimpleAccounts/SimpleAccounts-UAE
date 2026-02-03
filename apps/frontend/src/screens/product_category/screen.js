@@ -155,9 +155,9 @@ class ProductCategory extends React.Component {
   bulkDelete = () => {
     const { selectedRows } = this.state;
     const message1 = (
-      <text>
+      <span>
         <b>Delete Product Category?</b>
-      </text>
+      </span>
     );
     const message = 'This Product Category will be deleted permanently and cannot be recovered. ';
     if (selectedRows.length > 0) {

@@ -48,7 +48,7 @@ public class PoQuatationDaoImpl extends AbstractDao<Integer,PoQuatation> impleme
                 (productFilter, value) -> dbFilters.add(DbFilter.builder().dbCoulmnName(productFilter.getDbColumnName())
                         .condition(productFilter.getCondition()).value(value).build()));
         paginationModel.setSortingCol(
-                datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.INVOICE));
+                datatableUtil.getColName(paginationModel.getSortingCol(), DatatableSortingFilterConstant.PO_QUATAION));
         PaginationResponseModel response = new PaginationResponseModel();
         response.setCount(this.getResultCount(dbFilters));
         response.setData(this.executeQuery(dbFilters, paginationModel));

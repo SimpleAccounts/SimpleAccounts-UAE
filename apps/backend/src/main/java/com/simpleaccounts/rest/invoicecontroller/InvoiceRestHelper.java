@@ -2817,12 +2817,16 @@ public class InvoiceRestHelper {
 		return journalLineItem;
 	}
 
-	@Transactional(rollbackFor = Exception.class)
 	public Journal invoicePosting(PostingRequestModel postingRequestModel, Integer userId) {
 
 		List<JournalLineItem> journalLineItemList = new ArrayList<>();
 
 		Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
+
+		if (invoice.getContact() == null) {
+			logger.error("Invoice {} has no contact assigned", invoice.getReferenceNumber());
+			throw new RuntimeException("Invoice must have a contact assigned before posting. Please update the invoice.");
+		}
 
 		boolean isCustomerInvoice = InvoiceTypeConstant.isCustomerInvoice(invoice.getType());
 
@@ -2830,32 +2834,28 @@ public class InvoiceRestHelper {
 		JournalLineItem journalLineItem1 = new JournalLineItem();
 
 			Map<String, Object> map = new HashMap<>();
-			map.put("contact",invoice.getContact());
+			map.put("contact", invoice.getContact());
 			map.put("contactType", isCustomerInvoice ? 2 : 1);
-		    map.put(JSON_KEY_DELETE_FLAG,Boolean.FALSE);
+		    map.put(JSON_KEY_DELETE_FLAG, Boolean.FALSE);
 			List<ContactTransactionCategoryRelation> relations = contactTransactionCategoryService.findByAttributes(map);
 			if (relations.isEmpty()) {
-				logger.error("No ContactTransactionCategoryRelation found for contact ID: " + 
-						invoice.getContact().getContactId() + ", contactType: " + (isCustomerInvoice ? 2 : 1));
-				throw new RuntimeException("No ContactTransactionCategoryRelation found for contact ID: " + 
-						invoice.getContact().getContactId());
+				logger.error("No ContactTransactionCategoryRelation found for contact ID: {}, contactType: {}",
+						invoice.getContact().getContactId(), (isCustomerInvoice ? 2 : 1));
+				throw new RuntimeException("No transaction category is configured for this contact. Please assign a transaction category to the contact in Settings.");
 			}
 			ContactTransactionCategoryRelation contactTransactionCategoryRelation = relations.get(0);
 		journalLineItem1.setTransactionCategory(contactTransactionCategoryRelation.getTransactionCategory());
 
-		BigDecimal amountWithoutDiscount = invoice.getTotalAmount();
+		BigDecimal amountWithoutDiscount = invoice.getTotalAmount() != null ? invoice.getTotalAmount() : BigDecimal.ZERO;
+		BigDecimal exchangeRate = invoice.getExchangeRate() != null ? invoice.getExchangeRate() : BigDecimal.ONE;
 		if (isCustomerInvoice)
-
-			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
-
-		else
-
-		if (invoice.getIsReverseChargeEnabled().equals(Boolean.TRUE)){
-			BigDecimal amnt = amountWithoutDiscount.subtract(invoice.getTotalVatAmount());
-			journalLineItem1.setCreditAmount(amnt.multiply(invoice.getExchangeRate()));
-		}
-		else {
-			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(invoice.getExchangeRate()));
+			journalLineItem1.setDebitAmount(amountWithoutDiscount.multiply(exchangeRate));
+		else if (Boolean.TRUE.equals(invoice.getIsReverseChargeEnabled())) {
+			BigDecimal totalVat = invoice.getTotalVatAmount() != null ? invoice.getTotalVatAmount() : BigDecimal.ZERO;
+			BigDecimal amnt = amountWithoutDiscount.subtract(totalVat);
+			journalLineItem1.setCreditAmount(amnt.multiply(exchangeRate));
+		} else {
+			journalLineItem1.setCreditAmount(amountWithoutDiscount.multiply(exchangeRate));
 		}
 		journalLineItem1.setReferenceType(PostingReferenceTypeEnum.INVOICE);
 		journalLineItem1.setReferenceId(postingRequestModel.getPostingRefId());
@@ -3029,7 +3029,10 @@ public class InvoiceRestHelper {
 										 userId) {
 		TransactionCategory category;
 		for (InvoiceLineItem lineItem : invoiceLineItemList) {
-
+			if (lineItem.getProduct() == null) {
+				logger.error("Invoice line item {} has no product assigned", lineItem.getId());
+				throw new RuntimeException("Invoice line item has no product assigned. Please update the invoice and ensure all line items have a product.");
+			}
 			Product product=productService.findByPK(lineItem.getProduct().getProductID());
 								if(Boolean.TRUE.equals(product.getIsInventoryEnabled()))
 								{

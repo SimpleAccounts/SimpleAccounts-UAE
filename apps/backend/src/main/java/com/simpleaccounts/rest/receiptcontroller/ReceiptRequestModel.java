@@ -7,12 +7,14 @@ import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import org.json.JSONArray;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ReceiptRequestModel {
 
 	private Integer receiptId;
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	private Date receiptDate;
 	private String receiptNo; // payment filed from ui
 	private String referenceCode; // reference number

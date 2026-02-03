@@ -21,5 +21,6 @@ public abstract class JournalService extends SimpleAccountsService<Integer, Jour
 
 	public abstract Journal getJournalByReferenceId(Integer transactionId);
 	public abstract Journal getJournalByReferenceIdAndType(Integer transactionId, PostingReferenceTypeEnum refType);
+	public abstract void persistInNewTransaction(Journal journal);
 
 }

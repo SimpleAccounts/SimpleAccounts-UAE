@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -105,6 +106,7 @@ const mapDispatchToProps = dispatch => {
 
 const regExAlpha = /^[a-zA-Z ]+$/;
 const regEx = /^\d+$/;
+const regExDecimal = /^\d*\.?\d*$/; // Allows decimals for opening balance
 
 const account_for = [
   { label: 'Personal', value: 'P' },
@@ -118,14 +120,14 @@ const DetailBankAccount = ({
   commonActions,
   bankAccountActions,
   detailBankAccountActions,
-  history,
-  location,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('Loading...');
   const [dialog, setDialog] = useState(null);
   const [disabled, setDisabled] = useState(false);
-  const [disabledDate, setDisabledDate] = useState(true);
+  const [disabledDate, setDisabledDate] = useState(false); // Default to false (editable) unless transactions exist
   const [disabled1, setDisabled1] = useState(false);
   const [currentBankAccountId, setCurrentBankAccountId] = useState(null);
   const [currentBankAccount, setCurrentBankAccount] = useState(null);
@@ -171,13 +173,24 @@ const DetailBankAccount = ({
       const bankAccountId = location.state.bankAccountId;
       initializeData();
 
-      detailBankAccountActions.getTransactionsCountByBankId(bankAccountId).then(res => {
-        if (res.status === 200) {
-          if (res.data === 0) {
-            setDisabledDate(false);
+      detailBankAccountActions
+        .getTransactionsCountByBankId(bankAccountId)
+        .then(res => {
+          if (res.status === 200) {
+            // If there are transactions, disable opening date editing
+            if (res.data > 0) {
+              setDisabledDate(true);
+            } else {
+              setDisabledDate(false);
+            }
           }
-        }
-      });
+        })
+        .catch(err => {
+          // Silently handle error - endpoint may not exist or fail
+          // Default to editable (disabledDate = false) if we can't determine transaction count
+          console.warn('Could not get transaction count:', err);
+          setDisabledDate(false);
+        });
 
       updateOpeningBalance(bankAccountId);
       setCurrentBankAccountId(bankAccountId);
@@ -189,7 +202,7 @@ const DetailBankAccount = ({
           reset({
             account_name: res.bankAccountName,
             currency: res.bankAccountCurrency ? res.bankAccountCurrency : '',
-            opening_balance: res.openingBalance,
+            opening_balance: res.openingBalance != null ? String(res.openingBalance) : '',
             account_type: res.bankAccountType ? res.bankAccountType : '',
             bank_name: res.bankName,
             account_number: res.accountNumber,
@@ -207,12 +220,12 @@ const DetailBankAccount = ({
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          history.push('/admin/banking/bank-account');
+          navigate('/admin/banking/bank-account');
         });
     } else {
-      history.push('/admin/banking/bank-account');
+      navigate('/admin/banking/bank-account');
     }
-  }, [location.state, history]);
+  }, [location.state, navigate]);
 
   const initializeData = useCallback(() => {
     detailBankAccountActions.getAccountTypeList();
@@ -303,7 +316,7 @@ const DetailBankAccount = ({
             'success',
             res.data ? res.data.message : 'Bank Account Details Updated Successfully'
           );
-          history.push('/admin/banking/bank-account');
+          navigate('/admin/banking/bank-account');
         }
       })
       .catch(err => {
@@ -366,7 +379,7 @@ const DetailBankAccount = ({
           'success',
           res.data ? res.data.message : 'Bank Account Deleted Successfully'
         );
-        history.push('/admin/banking/bank-account');
+        navigate('/admin/banking/bank-account');
       })
       .catch(err => {
         setDisabled1(false);
@@ -501,16 +514,16 @@ const DetailBankAccount = ({
                             render={({ field }) => (
                               <Input
                                 type="text"
-                                maxLength="14,2"
                                 id="opening_balance"
                                 placeholder={strings.Enter + strings.OpeningBalance}
                                 {...field}
                                 onChange={e => {
-                                  if (e.target.value === '' || regEx.test(e.target.value)) {
+                                  if (e.target.value === '' || regExDecimal.test(e.target.value)) {
                                     field.onChange(e);
                                   }
                                 }}
                                 className={errors.opening_balance ? 'is-invalid' : ''}
+                                style={{ background: 'white' }}
                               />
                             )}
                           />
@@ -822,7 +835,7 @@ const DetailBankAccount = ({
                             color="secondary"
                             className="btn-square"
                             onClick={() => {
-                              history.push('/admin/banking/bank-account');
+                              navigate('/admin/banking/bank-account');
                             }}
                           >
                             <Ban className="h-4 w-4" /> {strings.Cancel}

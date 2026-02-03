@@ -68,7 +68,7 @@ jobs:
       - name: Run Backend Tests
         id: backend
         working-directory: apps/backend
-        run: mvn clean test -Dspring.profiles.active=test
+        run: ./mvnw clean test -Dspring.profiles.active=test
         continue-on-error: true
 
       - name: Run Frontend Tests
@@ -197,7 +197,7 @@ jobs:
 
       - name: Run Contract Tests
         working-directory: apps/backend
-        run: mvn test -Pcontract -Dspring.profiles.active=test
+        run: ./mvnw test -Pcontract -Dspring.profiles.active=test
 
       - name: Upload Contract Test Results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
@@ -229,7 +229,7 @@ jobs:
 
       - name: Run Mutation Tests (Pitest)
         working-directory: apps/backend
-        run: mvn test org.pitest:pitest-maven:mutationCoverage -Dspring.profiles.active=test
+        run: ./mvnw test org.pitest:pitest-maven:mutationCoverage -Dspring.profiles.active=test
         continue-on-error: true
 
       - name: Upload Mutation Report
@@ -300,7 +300,7 @@ jobs:
 
       - name: Run OWASP Dependency Check
         working-directory: apps/backend
-        run: mvn verify -Psecurity -DskipTests
+        run: ./mvnw verify -Psecurity -DskipTests
         continue-on-error: true
 
       - name: Upload Security Report

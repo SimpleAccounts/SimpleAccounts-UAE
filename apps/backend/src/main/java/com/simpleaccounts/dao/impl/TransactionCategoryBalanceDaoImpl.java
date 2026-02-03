@@ -14,6 +14,7 @@ import com.simpleaccounts.rest.PaginationResponseModel;
 import com.simpleaccounts.service.TransactionCategoryService;
 import com.simpleaccounts.service.bankaccount.ChartOfAccountService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,19 +47,21 @@ public class TransactionCategoryBalanceDaoImpl extends AbstractDao<Integer, Tran
 		transactionCategorymap2.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.OPENING_BALANCE_OFFSET_ASSETS.getCode());
 		transactionCategorymap3.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.PETTY_CASH.getCode());
 		transactionCategorymap4.put(CommonColumnConstants.TRANSACTION_CATEGORY_CODE, TransactionCategoryCodeEnum.EMPLOYEE_REIMBURSEMENT.getCode());
-		ChartOfAccount chartOfAccount=chartOfAccountService.findByPK(7);
-		transactionCategorymap5.put("chartOfAccount", chartOfAccount);
-		List<TransactionCategory> transactionCategories1=transactionCategoryService.findByAttributes(transactionCategorymap1);
-		List<TransactionCategory> transactionCategories2=transactionCategoryService.findByAttributes(transactionCategorymap2);
-		List<TransactionCategory> transactionCategories3=transactionCategoryService.findByAttributes(transactionCategorymap3);
-		List<TransactionCategory> transactionCategories4=transactionCategoryService.findByAttributes(transactionCategorymap4);
-		List<TransactionCategory> transactionCategories5=transactionCategoryService.findByAttributes(transactionCategorymap5);
-		List<TransactionCategory> transactionCategories=new ArrayList<>();
-		transactionCategories.addAll(transactionCategories1);
-		transactionCategories.addAll(transactionCategories2);
-		transactionCategories.addAll(transactionCategories3);
-		transactionCategories.addAll(transactionCategories4);
-		transactionCategories.addAll(transactionCategories5);
+		ChartOfAccount chartOfAccount = chartOfAccountService.findByPK(7);
+		if (chartOfAccount != null) {
+			transactionCategorymap5.put("chartOfAccount", chartOfAccount);
+		}
+		List<TransactionCategory> transactionCategories1 = transactionCategoryService.findByAttributes(transactionCategorymap1);
+		List<TransactionCategory> transactionCategories2 = transactionCategoryService.findByAttributes(transactionCategorymap2);
+		List<TransactionCategory> transactionCategories3 = transactionCategoryService.findByAttributes(transactionCategorymap3);
+		List<TransactionCategory> transactionCategories4 = transactionCategoryService.findByAttributes(transactionCategorymap4);
+		List<TransactionCategory> transactionCategories5 = transactionCategorymap5.isEmpty() ? new ArrayList<>() : transactionCategoryService.findByAttributes(transactionCategorymap5);
+		List<TransactionCategory> transactionCategories = new ArrayList<>();
+		transactionCategories.addAll(transactionCategories1 != null ? transactionCategories1 : Collections.emptyList());
+		transactionCategories.addAll(transactionCategories2 != null ? transactionCategories2 : Collections.emptyList());
+		transactionCategories.addAll(transactionCategories3 != null ? transactionCategories3 : Collections.emptyList());
+		transactionCategories.addAll(transactionCategories4 != null ? transactionCategories4 : Collections.emptyList());
+		transactionCategories.addAll(transactionCategories5 != null ? transactionCategories5 : Collections.emptyList());
 
 		dbFilters.add(DbFilter.builder().dbCoulmnName("transactionCategory")
 										.condition(" NOT IN(:transactionCategory)")

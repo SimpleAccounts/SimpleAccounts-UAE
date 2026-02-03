@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
@@ -22,6 +22,7 @@ import './style.scss';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import * as transactionDetailActions from '../transactions/screens/detail/actions';
+import * as detailBankAccountActions from '../detail/actions';
 
 const ZERO = 0.0;
 let strings = new LocalizedStrings(data);
@@ -29,7 +30,13 @@ let strings = new LocalizedStrings(data);
 function BankTransactions() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
+
+  // Support bankId from URL query (e.g. E2E: /admin/banking/bank-account/transaction?bankId=123)
+  const bankAccountId =
+    location.state?.bankAccountId ??
+    (searchParams.get('bankId') ? Number(searchParams.get('bankId')) : null);
 
   // Redux state
   const bank_transaction_list = useSelector(state => state.bank_account.bank_transaction_list);
@@ -41,7 +48,7 @@ function BankTransactions() {
     () => bindActionCreators(TransactionsActions, dispatch),
     [dispatch]
   );
-  const detailBankAccountActions = useMemo(
+  const detailBankAccountActionsObj = useMemo(
     () => bindActionCreators(detailBankAccountActions, dispatch),
     [dispatch]
   );
@@ -53,7 +60,7 @@ function BankTransactions() {
 
   // Local state
   const [language] = useState(() => window.localStorage.getItem('language') || 'en');
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [dialog, setDialog] = useState(null);
   const [actionButtons, setActionButtons] = useState({});
   const [filterData, setFilterData] = useState({
@@ -86,9 +93,9 @@ function BankTransactions() {
   }, [language]);
 
   const getnewbackdetails = useCallback(() => {
-    if (location.state && location.state.bankAccountId) {
-      detailBankAccountActions
-        .getBankAccountByID(location.state.bankAccountId)
+    if (bankAccountId) {
+      detailBankAccountActionsObj
+        .getBankAccountByID(bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
@@ -109,18 +116,18 @@ function BankTransactions() {
       transactionsActions.getTransactionTypeList();
       initializeData();
     }
-  }, [location.state]);
+  }, [bankAccountId]);
 
   const initializeData = useCallback(() => {
     const data = {
       pageNo: pagination.pageIndex,
       pageSize: pagination.pageSize,
     };
-    if (location.state && location.state.bankAccountId) {
+    if (bankAccountId) {
       const postData = {
         ...filterData,
         ...data,
-        id: location.state.bankAccountId,
+        id: bankAccountId,
         transactionType: transactionType,
       };
       transactionsActions
@@ -128,7 +135,7 @@ function BankTransactions() {
         .then(res => {
           const array = [];
           if (res.status === 200) {
-            setLoading(false);
+            setIsLoading(false);
             setTransationData(res.data.data);
             res.data.data.forEach(item => {
               if (item.creationMode === 'POTENTIAL_DUPLICATE') {
@@ -143,14 +150,14 @@ function BankTransactions() {
             'error',
             err && err.data ? err.data.message : 'Something Went Wrong'
           );
-          setLoading(false);
+          setIsLoading(false);
         });
     } else {
       navigate('/admin/banking/bank-account');
     }
   }, [
     filterData,
-    location.state,
+    bankAccountId,
     pagination,
     transactionType,
     transactionsActions,
@@ -159,9 +166,9 @@ function BankTransactions() {
   ]);
 
   useEffect(() => {
-    if (location.state && location.state.bankAccountId) {
-      detailBankAccountActions
-        .getBankAccountByID(location.state.bankAccountId)
+    if (bankAccountId) {
+      detailBankAccountActionsObj
+        .getBankAccountByID(bankAccountId)
         .then(res => {
           setBankAccountCurrencySymbol(res.bankAccountCurrencySymbol);
           setBankAccountCurrencyIsoCode(res.bankAccountCurrencyIsoCode);
@@ -187,8 +194,11 @@ function BankTransactions() {
       });
       transactionsActions.getTransactionTypeList();
       initializeData();
+    } else {
+      // If no bankAccountId in state or URL, redirect to bank accounts list
+      navigate('/admin/banking/bank-account');
     }
-  }, []);
+  }, [bankAccountId]);
 
   useEffect(() => {
     initializeData();
@@ -438,7 +448,7 @@ function BankTransactions() {
           </CardHeader>
           <CardContent>
             {dialog}
-            {loading ? (
+            {isLoading ? (
               <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12">
                   <Loader />
@@ -501,17 +511,14 @@ function BankTransactions() {
                     </div>
                   </div>
                   <div className="d-flex justify-content-end">
-                    {location.state && location.state.bankAccountId !== 1001 && (
+                    {bankAccountId != null && bankAccountId !== 1001 && (
                       <div className="inline-flex rounded-md" role="group">
                         <Button
                           color="info"
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/upload-statement', {
-                              bankAccountId:
-                                location.state && location.state.bankAccountId
-                                  ? location.state.bankAccountId
-                                  : '',
+                              bankAccountId: bankAccountId ?? '',
                             })
                           }
                         >
@@ -527,10 +534,9 @@ function BankTransactions() {
                             className="btn-square mr-1"
                             onClick={() =>
                               navigate('/admin/banking/bank-account/detail', {
-                                bankAccountId:
-                                  location.state && location.state.bankAccountId
-                                    ? location.state.bankAccountId
-                                    : '',
+                                state: {
+                                  bankAccountId: bankAccountId ?? '',
+                                },
                               })
                             }
                           >
@@ -544,10 +550,7 @@ function BankTransactions() {
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/bank-account/transaction/reconcile', {
-                              bankAccountId:
-                                location.state && location.state.bankAccountId
-                                  ? location.state.bankAccountId
-                                  : '',
+                              bankAccountId: bankAccountId ?? '',
                             })
                           }
                         >
@@ -576,16 +579,19 @@ function BankTransactions() {
                     <Button
                       variant="default"
                       className="btn-square"
-                      onClick={() =>
-                        navigate('/admin/banking/bank-account/transaction/create', {
-                          bankAccountId:
-                            location.state && location.state.bankAccountId
-                              ? location.state.bankAccountId
-                              : '',
-                          currency: location.state.currency,
-                          isRegisteredVat: location.state.isRegisteredVat,
-                        })
-                      }
+                      onClick={() => {
+                        const navBankAccountId = bankAccountId ?? '';
+                        navigate(
+                          `/admin/banking/bank-account/transaction/create?bankId=${navBankAccountId}`,
+                          {
+                            state: {
+                              bankAccountId: navBankAccountId,
+                              currency: location.state?.currency,
+                              isRegisteredVat: location.state?.isRegisteredVat,
+                            },
+                          }
+                        );
+                      }}
                     >
                       <Plus className="h-4 w-4" />
                       {strings.AddnewTransaction}
@@ -593,17 +599,20 @@ function BankTransactions() {
                   </div>
                   <div>
                     <DataTable
+                      key={
+                        bankAccountId != null
+                          ? `${bankAccountId}-${transactionType}`
+                          : 'transactions'
+                      }
                       columns={columns}
                       data={bank_transaction_list.data || []}
                       manualPagination={true}
                       pageCount={Math.ceil(
                         (bank_transaction_list.count || 0) / pagination.pageSize
                       )}
-                      totalRows={bank_transaction_list.count || 0}
-                      pagination={pagination}
+                      totalCount={bank_transaction_list.count || 0}
                       onPaginationChange={handlePaginationChange}
-                      loading={loading}
-                      emptyMessage="There are no records to display."
+                      isLoading={isLoading}
                     />
                   </div>
                 </div>

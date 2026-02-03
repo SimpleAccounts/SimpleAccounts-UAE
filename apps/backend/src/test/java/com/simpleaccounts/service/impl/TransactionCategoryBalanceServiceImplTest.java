@@ -173,7 +173,7 @@ class TransactionCategoryBalanceServiceImplTest {
 
             ArgumentCaptor<TransactionCategoryBalance> balanceCaptor =
                     ArgumentCaptor.forClass(TransactionCategoryBalance.class);
-            verify(transactionCategoryBalanceDao).update(balanceCaptor.capture());
+            verify(transactionCategoryBalanceDao).persist(balanceCaptor.capture());
 
             TransactionCategoryBalance capturedBalance = balanceCaptor.getValue();
             assertThat(capturedBalance.getTransactionCategory()).isEqualTo(testCategory);

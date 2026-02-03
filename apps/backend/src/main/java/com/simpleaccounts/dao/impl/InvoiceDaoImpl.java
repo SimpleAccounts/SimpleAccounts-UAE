@@ -313,28 +313,29 @@ public class InvoiceDaoImpl extends AbstractDao<Integer, Invoice> implements Inv
 		User user = userService.findByPK(userId);
 		Integer companyCurrency = user.getCompany().getCurrencyCode().getCurrencyCode();
 
+		List<Integer> statusList = Arrays.asList(
+				CommonStatusEnum.SAVED.getValue(),
+				CommonStatusEnum.PENDING.getValue(),
+				CommonStatusEnum.PARTIALLY_PAID.getValue(),
+				CommonStatusEnum.POST.getValue(),
+				CommonStatusEnum.OPEN.getValue());
+		List<Integer> currencyList = (currency != null && !currency.equals(0))
+				? Arrays.asList(currency, companyCurrency)
+				: Arrays.asList(companyCurrency);
+
 		if (!user.getRole().getRoleCode().equals(1)){
 
 		 query = getEntityManager().createNamedQuery("suggestionUnpaidInvoices", Invoice.class);
-		query.setParameter(CommonColumnConstants.STATUS, Arrays.asList(new Integer[]{
-				CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
-			if (currency != null && !currency.equals(0)) {
-
-				query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{
-						currency,  companyCurrency }));
-			}
+		query.setParameter(CommonColumnConstants.STATUS, statusList);
+			query.setParameter(CommonColumnConstants.CURRENCY, currencyList);
 		query.setParameter("type", type.getValue());
 		query.setParameter("id", contactId);
 			query.setParameter("userId", userId);
 	}
 	else{
 		   query = getEntityManager().createNamedQuery("suggestionUnpaidInvoicesAdmin", Invoice.class);
-			query.setParameter("status", Arrays.asList(new Integer[]{
-					CommonStatusEnum.PARTIALLY_PAID.getValue(), CommonStatusEnum.POST.getValue()}));
-				if (currency != null && !currency.equals(0)) {
-
-					query.setParameter(CommonColumnConstants.CURRENCY, Arrays.asList(new Integer[]{currency, companyCurrency}));
-				}
+			query.setParameter("status", statusList);
+				query.setParameter(CommonColumnConstants.CURRENCY, currencyList);
 			query.setParameter("type", type.getValue());
 			query.setParameter("id", contactId);
 		}

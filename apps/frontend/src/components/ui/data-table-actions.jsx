@@ -129,8 +129,8 @@ export function DataTableRowActions({
 
         {/* Custom actions */}
         {actions.map((action, index) => {
-          // Support separator items
-          if (action.separator) {
+          // Support separator items (both formats: { separator: true } or { type: 'separator' })
+          if (action.separator || action.type === 'separator') {
             return <DropdownMenuSeparator key={`sep-${index}`} />;
           }
 

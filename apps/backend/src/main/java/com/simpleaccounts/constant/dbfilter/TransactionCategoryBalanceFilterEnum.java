@@ -6,7 +6,7 @@ public enum TransactionCategoryBalanceFilterEnum {
 
 	ID("id", " = :id"),
 	DELETE_FLAG("deleteFlag", " = :deleteFlag"),
-	ORDER_BY("transactionCategoryBalanceId"," =:transactionCategoryBalanceId"),
+	ORDER_BY("id", " = :id"),
 	USER_ID("createdBy", "= :createdBy");
 	@Getter
 	String dbColumnName;

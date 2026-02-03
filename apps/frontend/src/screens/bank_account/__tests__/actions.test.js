@@ -272,7 +272,7 @@ describe('Bank Account Actions', () => {
 
       expect(authApi).toHaveBeenCalledWith({
         method: 'get',
-        url: `/rest/transaction/getExplainedTransactionCount/?bankAccountId=${bankAccountId}`,
+        url: `/rest/transaction/getExplainedTransactionCount?bankAccountId=${bankAccountId}`,
       });
 
       expect(result.status).toBe(200);

@@ -123,13 +123,13 @@ jobs:
         working-directory: apps/backend
         env:
           SPRING_PROFILES_ACTIVE: test
-        run: mvn -B test -Dspring.profiles.active=test || true
+        run: ./mvnw -B test -Dspring.profiles.active=test || true
         continue-on-error: true
 
       - name: Generate Coverage Report
         if: steps.sonar.outputs.run == 'true'
         working-directory: apps/backend
-        run: mvn jacoco:report || true
+        run: ./mvnw jacoco:report || true
         continue-on-error: true
 
       # Import SSL certificate and run SonarQube Analysis

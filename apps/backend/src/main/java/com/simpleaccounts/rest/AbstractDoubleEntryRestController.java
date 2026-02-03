@@ -16,6 +16,7 @@ import com.simpleaccounts.rest.creditnotecontroller.CreditNoteRestHelper;
 import com.simpleaccounts.rest.invoicecontroller.InvoiceRestHelper;
 import com.simpleaccounts.security.JwtTokenUtil;
 import com.simpleaccounts.service.*;
+import com.simpleaccounts.utils.SimpleAccountsMessage;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import java.util.HashMap;
 import java.util.List;
@@ -102,20 +103,27 @@ public abstract class AbstractDoubleEntryRestController {
 	}
 
 	@LogRequest
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	@PostMapping(value = "/posting")
-	public ResponseEntity<String> posting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
+	public ResponseEntity<?> posting(@RequestBody PostingRequestModel postingRequestModel, HttpServletRequest request) {
 		String validationCheck = "";
 		Journal journal = null;
 
 		Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 
-		if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
-			journal = invoiceRestHelper.invoicePosting(postingRequestModel, userId);
-		} else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.EXPENSE.name())) {
-			journal = expenseRestHelper.expensePosting(postingRequestModel, userId);
+		try {
+			if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
+				journal = invoiceRestHelper.invoicePosting(postingRequestModel, userId);
+			} else if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.EXPENSE.name())) {
+				journal = expenseRestHelper.expensePosting(postingRequestModel, userId);
+			}
+		} catch (RuntimeException e) {
+			log.error("Invoice posting failed: {}", e.getMessage());
+			SimpleAccountsMessage errorMsg = new SimpleAccountsMessage("", e.getMessage(), true);
+			return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
 		}
 
+		try {
 		if (journal != null) {
 			journalService.persist(journal);
 		}
@@ -123,11 +131,14 @@ public abstract class AbstractDoubleEntryRestController {
 		if (postingRequestModel.getPostingRefType().equalsIgnoreCase(PostingReferenceTypeEnum.INVOICE.name())) {
 			Invoice invoice = invoiceService.findByPK(postingRequestModel.getPostingRefId());
 			invoice.setStatus(CommonStatusEnum.POST.getValue());
-			if (invoice.getContact().getBillingEmail()!=null && !invoice.getContact().getBillingEmail().isEmpty() ||
-					invoice.getContact().getEmail()!=null && !invoice.getContact().getEmail().isEmpty()) {
-				if(postingRequestModel.getMarkAsSent()==false)
-					invoiceRestHelper.send(invoice, userId,postingRequestModel,request);
-			}else {
+			boolean hasContactEmail = invoice.getContact() != null &&
+					((invoice.getContact().getBillingEmail() != null && !invoice.getContact().getBillingEmail().isEmpty())
+							|| (invoice.getContact().getEmail() != null && !invoice.getContact().getEmail().isEmpty()));
+			if (hasContactEmail) {
+				if (Boolean.FALSE.equals(postingRequestModel.getMarkAsSent())) {
+					invoiceRestHelper.send(invoice, userId, postingRequestModel, request);
+				}
+			} else if (invoice.getContact() != null) {
 				validationCheck = "Please update the contact email Details";
 			}
 			invoiceService.persist(invoice);
@@ -140,6 +151,11 @@ public abstract class AbstractDoubleEntryRestController {
 			return new ResponseEntity<>("Journal Entries created Successfully", HttpStatus.OK);
 		}
 		return new ResponseEntity<>(validationCheck,HttpStatus.OK);
+		} catch (Exception ex) {
+			log.error("Invoice posting failed (post-try): {}", ex.getMessage());
+			String msg = ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName();
+			return new ResponseEntity<>(new SimpleAccountsMessage("", msg, true), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@LogRequest

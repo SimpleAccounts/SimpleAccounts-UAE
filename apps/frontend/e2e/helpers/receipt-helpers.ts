@@ -76,9 +76,11 @@ export async function createReceiptViaAPI(
     notes: receiptData.notes || '',
   };
 
-  // Add invoice ID if provided
-  if (receiptData.invoiceId) {
-    payload.invoiceId = receiptData.invoiceId;
+  // Backend expects paidInvoiceListStr (JSON array of { id, dueAmount }) to link receipt to invoice
+  if (receiptData.invoiceId != null) {
+    payload.paidInvoiceListStr = JSON.stringify([
+      { id: receiptData.invoiceId, dueAmount: receiptData.amount },
+    ]);
   }
 
   // Add bank account transaction category if provided

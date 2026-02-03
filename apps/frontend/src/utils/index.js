@@ -24,6 +24,8 @@ const selectStyles = {
   control: (base, state) => ({
     ...base,
     minHeight: '40px',
+    paddingLeft: 0,
+    paddingRight: 0,
     borderColor: state.isFocused ? 'hsl(var(--ring))' : 'hsl(var(--input))',
     backgroundColor: 'hsl(var(--background))',
     boxShadow: state.isFocused ? '0 0 0 2px hsl(var(--ring))' : 'none',
@@ -51,17 +53,35 @@ const selectStyles = {
     color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
     cursor: 'pointer',
   }),
-  singleValue: base => ({
+  valueContainer: (base, state) => ({
+    ...base,
+    paddingLeft: '16px',
+    paddingRight: '8px',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+  }),
+  singleValue: (base, state) => ({
     ...base,
     color: 'hsl(var(--foreground))',
-  }),
-  placeholder: base => ({
-    ...base,
-    color: 'hsl(var(--muted-foreground))',
+    marginLeft: 0,
+    marginRight: 0,
+    paddingLeft: 0,
+    paddingRight: 0,
+    position: 'relative',
+    left: 0,
+    maxWidth: 'calc(100% - 8px)',
+    overflow: 'visible',
+    textOverflow: 'clip',
   }),
   input: base => ({
     ...base,
     color: 'hsl(var(--foreground))',
+    margin: 0,
+    paddingLeft: '2px',
+  }),
+  placeholder: base => ({
+    ...base,
+    color: 'hsl(var(--muted-foreground))',
   }),
   noOptionsMessage: base => ({
     ...base,

@@ -33,7 +33,7 @@ describe('BankAccountReducer', () => {
       payload,
     });
 
-    expect(state.bank_account_list).toEqual(payload.data);
-    expect(state.bank_account_list).not.toBe(payload.data);
+    expect(state.bank_account_list).toEqual(payload);
+    expect(state.bank_account_list).not.toBe(payload);
   });
 });

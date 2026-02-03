@@ -102,7 +102,12 @@
     "vitest": "^4.0.18",
     "web-streams-polyfill": "^4.2.0"
   },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
+    "prestart": "node -e \"const v=process.versions.node.split('.');if(+v[0]<20){console.error('Node 20+ required. Current:',process.versions.node);process.exit(1)}\"",
     "start": "NODE_OPTIONS=--max-old-space-size=4096 vite",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
     "preview": "vite preview",

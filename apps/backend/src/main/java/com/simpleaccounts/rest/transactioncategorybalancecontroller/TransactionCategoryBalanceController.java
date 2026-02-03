@@ -270,6 +270,7 @@ public class TransactionCategoryBalanceController {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAll(OpeningBalanceRequestFilterModel filterModel,HttpServletRequest request) {

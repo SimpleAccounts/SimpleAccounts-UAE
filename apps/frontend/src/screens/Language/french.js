@@ -117,6 +117,7 @@ const fr = {
   EFFECTIVEDATE: "DATE D'ENTRÉE EN VIGUEUR",
   EffectiveDate: "Date d'entrée en vigueur",
   OPENINGBALANCE: "SOLDE D'OUVERTURE",
+  CURRENTBALANCE: 'SOLDE ACTUEL',
   CURRENCY: 'DEVISE',
   NewOpeningBalance: "Nouveau solde d'ouverture",
   TransactionCategory: 'Catégorie de transaction',

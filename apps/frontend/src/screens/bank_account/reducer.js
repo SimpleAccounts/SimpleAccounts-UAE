@@ -2,7 +2,7 @@ import { BANK_ACCOUNT } from 'constants/types';
 
 const initState = {
   bank_account_list: [],
-  bank_transaction_list: [],
+  bank_transaction_list: { data: [], count: 0 },
   account_type_list: [],
   currency_list: [],
   country_list: [],
@@ -14,6 +14,7 @@ const initState = {
   expense_categories_list: [],
   user_list: [],
   vendor_list: [],
+  customer_list: [],
   vat_list: [],
   reconcile_list: [],
   UnPaidPayrolls_List: [],
@@ -43,15 +44,21 @@ const BankAccountReducer = (state = initState, action) => {
 
   switch (type) {
     case BANK_ACCOUNT.BANK_ACCOUNT_LIST:
+      // Preserve pagination structure: { data: [...], count: X }
       return {
         ...state,
-        bank_account_list: getArray(payload),
+        bank_account_list: payload?.data
+          ? { ...payload, data: payload.data.slice() }
+          : payload || { data: [], count: 0 },
       };
 
     case BANK_ACCOUNT.BANK_TRANSACTION_LIST:
+      // Preserve pagination structure: { data: [...], count: X }
       return {
         ...state,
-        bank_transaction_list: getArray(payload),
+        bank_transaction_list: payload?.data
+          ? { ...payload, data: payload.data.slice() }
+          : { data: getArray(payload), count: payload?.length || 0 },
       };
 
     case BANK_ACCOUNT.ACCOUNT_TYPE_LIST:
@@ -82,6 +89,12 @@ const BankAccountReducer = (state = initState, action) => {
       return {
         ...state,
         vendor_list: getArray(payload),
+      };
+
+    case BANK_ACCOUNT.CUSTOMER_LIST:
+      return {
+        ...state,
+        customer_list: getArray(payload),
       };
 
     case BANK_ACCOUNT.PROJECT_LIST:

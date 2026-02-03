@@ -60,8 +60,8 @@ jobs:
 
       - name: Run backend tests
         working-directory: apps/backend
-        # Use env SPRING_PROFILES_ACTIVE for cross-platform compatibility (PowerShell can split -D args).
-        run: mvn -B -ntp test
+        # Use Maven wrapper so mvn is always available regardless of runner/setup-java cache.
+        run: ./mvnw -B -ntp test
 
   frontend:
     name: Frontend Unit Tests (Matrix)

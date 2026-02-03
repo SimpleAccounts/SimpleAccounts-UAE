@@ -149,7 +149,10 @@ function CustomerInvoice() {
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+        commonActions.tostifyAlert({
+          status: 'error',
+          message: err?.data?.message || 'Something Went Wrong',
+        });
         setLoading(false);
       });
   }, [customerInvoiceActions, commonActions, filterData, pagination, sorting, location.state?.id]);
@@ -163,7 +166,10 @@ function CustomerInvoice() {
         }
       })
       .catch(err => {
-        commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');
+        commonActions.tostifyAlert({
+          status: 'error',
+          message: err?.data?.message || 'Something Went Wrong',
+        });
       });
   }, [customerInvoiceActions, commonActions, filterData.contactType]);
 
@@ -203,19 +209,29 @@ function CustomerInvoice() {
         .postInvoice(postingRequestModel)
         .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert(
-              'success',
-              markAsSent
+            commonActions.tostifyAlert({
+              status: 'success',
+              message: markAsSent
                 ? strings.InvoiceStatusChangedSuccessfully
-                : strings.InvoiceSentSuccessfully
-            );
+                : strings.InvoiceSentSuccessfully,
+            });
             setLoading(false);
             getOverdue();
             initializeData();
           }
         })
-        .catch(() => {
-          commonActions.tostifyAlert('error', 'Customer Invoice Posted Unsuccessfully');
+        .catch(err => {
+          // authApi interceptor rejects with error.response, so err is { data, status, ... }
+          const msg =
+            err?.data?.message ||
+            err?.data?.error ||
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            'Customer Invoice Posted Unsuccessfully';
+          commonActions.tostifyAlert({
+            status: 'error',
+            message: typeof msg === 'string' ? msg : 'Customer Invoice Posted Unsuccessfully',
+          });
           setLoading(false);
         });
     },
@@ -235,14 +251,20 @@ function CustomerInvoice() {
         .unPostInvoice(postingRequestModel)
         .then(res => {
           if (res.status === 200) {
-            commonActions.tostifyAlert('success', strings.InvoiceMovedToDraftSuccessfully);
+            commonActions.tostifyAlert({
+              status: 'success',
+              message: strings.InvoiceMovedToDraftSuccessfully,
+            });
             setLoading(false);
             getOverdue();
             initializeData();
           }
         })
         .catch(() => {
-          commonActions.tostifyAlert('error', 'Invoice Moved To Draft Unsuccessfully!');
+          commonActions.tostifyAlert({
+            status: 'error',
+            message: 'Invoice Moved To Draft Unsuccessfully!',
+          });
           setLoading(false);
         });
     },
@@ -278,10 +300,10 @@ function CustomerInvoice() {
   const closeInvoice = useCallback(
     (id, status) => {
       if (status === 'Paid') {
-        commonActions.tostifyAlert(
-          'error',
-          'Please delete the receipt first to delete the invoice'
-        );
+        commonActions.tostifyAlert({
+          status: 'error',
+          message: 'Please delete the receipt first to delete the invoice',
+        });
       } else {
         setDialog(
           <ConfirmDeleteModal
@@ -289,10 +311,10 @@ function CustomerInvoice() {
             okHandler={() => {
               setDialog(null);
               customerInvoiceActions.deleteInvoice(id).then(res => {
-                commonActions.tostifyAlert(
-                  'success',
-                  res.data?.message || 'Customer Invoice Deleted Successfully'
-                );
+                commonActions.tostifyAlert({
+                  status: 'success',
+                  message: res.data?.message || 'Customer Invoice Deleted Successfully',
+                });
                 initializeData();
               });
             }}
@@ -447,10 +469,10 @@ function CustomerInvoice() {
                 if (invoice.editFlag) {
                   navigate('/admin/income/customer-invoice/detail', { state: { id: invoice.id } });
                 } else {
-                  commonActions.tostifyAlert(
-                    'error',
-                    'You cannot edit transactions for which VAT is recorded'
-                  );
+                  commonActions.tostifyAlert({
+                    status: 'error',
+                    message: 'You cannot edit transactions for which VAT is recorded',
+                  });
                 }
               },
             });
@@ -491,10 +513,10 @@ function CustomerInvoice() {
                 if (invoice.editFlag) {
                   unPostInvoice(invoice);
                 } else {
-                  commonActions.tostifyAlert(
-                    'error',
-                    'You cannot edit transactions for which VAT is recorded'
-                  );
+                  commonActions.tostifyAlert({
+                    status: 'error',
+                    message: 'You cannot edit transactions for which VAT is recorded',
+                  });
                 }
               },
             });

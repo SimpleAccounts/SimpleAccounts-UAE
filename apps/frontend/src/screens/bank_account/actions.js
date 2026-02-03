@@ -134,7 +134,7 @@ export const getExplainCount = id => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: `/rest/transaction/getExplainedTransactionCount/?bankAccountId=${id}`,
+      url: `/rest/transaction/getExplainedTransactionCount?bankAccountId=${id}`,
     };
     return authApi(data)
       .then(res => {

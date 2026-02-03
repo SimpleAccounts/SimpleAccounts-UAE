@@ -64,9 +64,10 @@ export const removeBulk = obj => {
 
 export const getContactList = id => {
   return dispatch => {
+    const contactType = id != null && id !== '' ? id : 2;
     let data = {
       method: 'GET',
-      url: `/rest/contact/getContactsForDropdown?contactType=${id}`,
+      url: `/rest/contact/getContactsForDropdown?contactType=${contactType}`,
     };
 
     return authApi(data)

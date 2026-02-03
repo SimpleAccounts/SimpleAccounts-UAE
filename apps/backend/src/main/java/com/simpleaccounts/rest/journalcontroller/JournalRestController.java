@@ -72,6 +72,7 @@ public class JournalRestController {
 
 	private final ExpenseService expenseService;
 
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/getList")
 	public ResponseEntity<PaginationResponseModel> getList(JournalRequestFilterModel filterModel, HttpServletRequest request) {
@@ -79,7 +80,7 @@ public class JournalRestController {
 			Integer userId = jwtTokenUtil.getUserIdFromHttpRequest(request);
 			User user = userService.findByPK(userId);
 			Map<JournalFilterEnum, Object> filterDataMap = new EnumMap<>(JournalFilterEnum.class);
-			if(user.getRole().getRoleCode()!=1) {
+			if (user != null && user.getRole() != null && user.getRole().getRoleCode() != null && user.getRole().getRoleCode() != 1) {
 				filterDataMap.put(JournalFilterEnum.USER_ID, userId);
 			}
 			if (filterModel.getDescription() != null && !filterModel.getDescription().equals(" "))
@@ -155,6 +156,7 @@ public class JournalRestController {
 
 	}
 
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/getById")
 	public ResponseEntity<JournalModel> getInvoiceById(@RequestParam(value = "id") Integer id) {
@@ -231,6 +233,7 @@ public class JournalRestController {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	@LogRequest
 	@GetMapping(value = "/getJournalsByInvoiceId")
 	public ResponseEntity<Object> getJournalsByInvoiceId(@RequestParam(value = "id") Integer id,@RequestParam(value = "type") Integer type) {
@@ -272,6 +275,7 @@ public class JournalRestController {
 					if(invoice.getStatus() == 5 || invoice.getStatus() == 6){
 						List<CustomerInvoiceReceipt> receiptList = customerInvoiceReceiptRepository.findByCustomerInvoiceIdAndDeleteFlag(invoice.getId(), false);
 						for (CustomerInvoiceReceipt receipt : receiptList) {
+							if (receipt.getTransaction() == null) continue;
 							List<JournalLineItem> journalLineItemList = journalLineItemRepository.findAllByReferenceIdAndReferenceType(receipt.getTransaction().getTransactionId(), RECEIPT);
 							for (JournalLineItem journalLineItem : journalLineItemList) {
 								if (!journalIds.contains(journalLineItem.getJournal().getId())) {
@@ -333,6 +337,7 @@ public class JournalRestController {
 			return new ResponseEntity<>( journalRestHelper.getEntriesListModel(journalList), HttpStatus.OK);
 		}
 		catch (Exception e){
+			logger.error("getJournalsByInvoiceId failed for id={}, type={}", id, type, e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

@@ -213,10 +213,11 @@ function Receipt() {
     []
   );
 
-  // Transform data for table
+  // Transform data for table (reducer stores array with .count when API returns { data, count })
   const tableData = useMemo(() => {
-    if (!receipt_list?.data) return [];
-    return receipt_list.data.map(item => ({
+    const data = Array.isArray(receipt_list) ? receipt_list : receipt_list?.data || [];
+    if (!data.length && !receipt_list) return [];
+    return data.map(item => ({
       receiptId: item.receiptId,
       invoiceNumber: item.invoiceNumber || '',
       customerName: item.customerName || '',
@@ -227,9 +228,9 @@ function Receipt() {
     }));
   }, [receipt_list]);
 
-  // Row click handler
+  // Row click handler: navigate to receipt detail (route is income/receipt/detail)
   const handleRowClick = row => {
-    navigate('/admin/income/viewCustomerInvoice/detail', {
+    navigate('/admin/income/receipt/detail', {
       state: { id: row.receiptId },
     });
   };
