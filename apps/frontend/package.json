@@ -21,7 +21,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@reduxjs/toolkit": "^2.11.2",
     "@tanstack/react-table": "^8.21.3",
-    "axios": "^1.13.2",
+    "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
