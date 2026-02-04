@@ -113,26 +113,55 @@ vi.mock('screens/contact/sections', () => ({
 // Import component AFTER mocks are set up
 import DetailContact from '../screen';
 
-// Mock prop action objects
+// Contact data returned by getContactById - component expects this shape to leave loading state
+const mockContactData = {
+  contactId: 1,
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
+  isActive: true,
+  taxTreatmentId: '',
+  billingEmail: '',
+  city: '',
+  countryId: '',
+  addressLine1: '',
+  postZipCode: '',
+  stateId: '',
+  billingTelephone: '',
+  fax: '',
+  shippingCity: '',
+  shippingCountryId: '',
+  addressLine2: '',
+  shippingPostZipCode: '',
+  shippingStateId: '',
+  shippingTelephone: '',
+  shippingFax: '',
+  contactType: '',
+  currencyCode: '',
+  middleName: '',
+  website: '',
+  mobileNumber: '',
+  organization: '',
+  telephone: '',
+  vatRegistrationNumber: '',
+  isRegisteredForVat: false,
+  isBillingAndShippingAddressSame: false,
+};
+
+// Mock prop action objects. getContactById must return a Promise (not a thunk) so component's .then() runs and setLoading(false).
 const mockActions = {
-  getContactById: vi.fn(
-    () => () =>
-      Promise.resolve({
-        status: 200,
-        data: {
-          contactId: 1,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          isActive: true,
-        },
-      })
+  getContactById: vi.fn(() =>
+    Promise.resolve({
+      status: 200,
+      data: mockContactData,
+    })
   ),
   getTaxTreatment: vi.fn(() => () => Promise.resolve({ status: 200, data: [] })),
   getCountryList: vi.fn(() => () => Promise.resolve({ data: [] })),
   getStateList: vi.fn(() => () => Promise.resolve({ data: [] })),
   getCityList: vi.fn(() => () => Promise.resolve({ data: [] })),
   getContactTypeList: vi.fn(() => () => Promise.resolve({ data: [] })),
+  getInvoicesCountContact: vi.fn(() => Promise.resolve({ data: 0 })),
   updateContact: vi.fn(() => () => Promise.resolve({ status: 200 })),
   deleteContact: vi.fn(() => () => Promise.resolve({ status: 200 })),
   checkValidation: vi.fn(() => () => Promise.resolve({ status: 200, data: { exist: false } })),
