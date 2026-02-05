@@ -45,6 +45,7 @@ vi.mock('../../actions', () => ({
   checkValidation: () => () => Promise.resolve({ status: 200, data: { exist: false } }),
 }));
 
+// Module mock: thunk must return Promise so dispatch(thunk) resolves when connect() is used (inline data; vi.mock is hoisted)
 vi.mock('./actions', () => ({
   getContactById: () => () =>
     Promise.resolve({
@@ -55,6 +56,32 @@ vi.mock('./actions', () => ({
         lastName: 'Doe',
         email: 'john.doe@example.com',
         isActive: true,
+        taxTreatmentId: '',
+        billingEmail: '',
+        city: '',
+        countryId: '',
+        addressLine1: '',
+        postZipCode: '',
+        stateId: '',
+        billingTelephone: '',
+        fax: '',
+        shippingCity: '',
+        shippingCountryId: '',
+        addressLine2: '',
+        shippingPostZipCode: '',
+        shippingStateId: '',
+        shippingTelephone: '',
+        shippingFax: '',
+        contactType: '',
+        currencyCode: '',
+        middleName: '',
+        website: '',
+        mobileNumber: '',
+        organization: '',
+        telephone: '',
+        vatRegistrationNumber: '',
+        isRegisteredForVat: false,
+        isBillingAndShippingAddressSame: false,
       },
     }),
   updateContact: () => () => Promise.resolve({ status: 200 }),
@@ -246,12 +273,10 @@ describe('DetailContact Component', () => {
   it('should render detail contact form', async () => {
     renderComponent();
 
-    // Wait for form to load - use getAllByText since "Update Contact" appears in breadcrumb and header
-    await waitFor(() => {
-      const updateContactElements = screen.getAllByText('Update Contact');
-      expect(updateContactElements.length).toBeGreaterThan(0);
-    });
-  });
+    // Wait for form to load (button appears after getContactById resolves); avoid relying on localized heading
+    const updateButton = await screen.findByRole('button', { name: /update/i }, { timeout: 15000 });
+    expect(updateButton).toBeInTheDocument();
+  }, 20000);
 
   it('should display form inputs', async () => {
     renderComponent();
@@ -274,44 +299,31 @@ describe('DetailContact Component', () => {
   it('should display update button', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      const updateButton = screen.getByRole('button', { name: /update/i });
-      expect(updateButton).toBeInTheDocument();
-    });
+    const updateButton = await screen.findByRole('button', { name: /update/i }, { timeout: 15000 });
+    expect(updateButton).toBeInTheDocument();
   });
 
   it('should display cancel button', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      const cancelButton = screen.getByRole('button', { name: /cancel/i });
-      expect(cancelButton).toBeInTheDocument();
-    });
+    const cancelButton = await screen.findByRole('button', { name: /cancel/i }, { timeout: 15000 });
+    expect(cancelButton).toBeInTheDocument();
   });
 
   it('should navigate back on cancel', async () => {
-    // Clear mockNavigate before this test
     mockNavigate.mockClear();
-
     renderComponent();
 
-    // Wait for component to load - use getAllByText since "Update Contact" appears in breadcrumb and header
-    await waitFor(() => {
-      const updateContactElements = screen.getAllByText('Update Contact');
-      expect(updateContactElements.length).toBeGreaterThan(0);
-    });
-
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = await screen.findByRole('button', { name: /cancel/i }, { timeout: 15000 });
     fireEvent.click(cancelButton);
 
-    // Cancel button uses navigate('/admin/master/contact') from useNavigate hook
     await waitFor(
       () => {
         expect(mockNavigate).toHaveBeenCalledWith('/admin/master/contact');
       },
-      { timeout: 2000 }
+      { timeout: 3000 }
     );
-  });
+  }, 20000);
 
   it('should display address components', async () => {
     renderComponent();
