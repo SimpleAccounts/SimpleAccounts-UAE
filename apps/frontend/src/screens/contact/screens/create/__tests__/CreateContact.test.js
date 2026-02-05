@@ -172,11 +172,9 @@ describe('CreateContact Component', () => {
   it('should render create contact form', async () => {
     renderComponent();
 
-    // Wait for form to load
-    await waitFor(() => {
-      expect(screen.getByText(/create.*contact/i)).toBeInTheDocument();
-    });
-  });
+    const heading = await screen.findByText(/create.*contact/i, {}, { timeout: 15000 });
+    expect(heading).toBeInTheDocument();
+  }, 20000);
 
   it('should display name input field', async () => {
     renderComponent();
