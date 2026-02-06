@@ -60,7 +60,7 @@
     "sass": "1.97.3"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.3.1",
+    "@commitlint/cli": "^20.4.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@eslint/js": "^9.39.2",
     "eslint": "^9.39.2",
