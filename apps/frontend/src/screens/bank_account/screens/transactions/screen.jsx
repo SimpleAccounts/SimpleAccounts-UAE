@@ -518,7 +518,7 @@ function BankTransactions() {
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/upload-statement', {
-                              bankAccountId: bankAccountId ?? '',
+                              state: { bankAccountId: bankAccountId ?? '' },
                             })
                           }
                         >
@@ -550,7 +550,7 @@ function BankTransactions() {
                           className="btn-square mr-1"
                           onClick={() =>
                             navigate('/admin/banking/bank-account/transaction/reconcile', {
-                              bankAccountId: bankAccountId ?? '',
+                              state: { bankAccountId: bankAccountId ?? '' },
                             })
                           }
                         >

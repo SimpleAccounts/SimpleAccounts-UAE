@@ -26,6 +26,10 @@ import com.simpleaccounts.service.bankaccount.ReconcileStatusService;
 import com.simpleaccounts.service.bankaccount.TransactionService;
 import com.simpleaccounts.service.impl.TransactionCategoryClosingBalanceServiceImpl;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -312,6 +316,7 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
+	@Transactional(readOnly = true)
 	@GetMapping(value = "/list")
 	public ResponseEntity<PaginationResponseModel> getAllReconcileStatus(ReconcileStatusRequestModel filterModel) {
 
@@ -350,12 +355,44 @@ public class ReconsilationController {
 	}
 
 	@LogRequest
+	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/reconcilenow")
 	public ResponseEntity<ReconcilationResponseModel> reconcileNow(@ModelAttribute ReconcilationPersistModel reconcilationPersistModel,
 																   HttpServletRequest request) {
+		// #region agent log
+		try {
+			Integer bid = reconcilationPersistModel != null ? reconcilationPersistModel.getBankId() : null;
+			String dt = reconcilationPersistModel != null && reconcilationPersistModel.getDate() != null ? reconcilationPersistModel.getDate().replace("\"", "\\\"") : null;
+			BigDecimal cb = reconcilationPersistModel != null ? reconcilationPersistModel.getClosingBalance() : null;
+			String line = "{\"location\":\"ReconsilationController.java:reconcileNow:entry\",\"message\":\"reconcileNow entry\",\"data\":{\"bankId\":" + bid + ",\"date\":\"" + (dt != null ? dt : "null") + "\",\"closingBalance\":" + (cb != null ? cb.toString() : "null") + "},\"timestamp\":" + System.currentTimeMillis() + ",\"hypothesisId\":\"H1,H2\"}\n";
+			Files.write(Path.of("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+		} catch (Exception ignored) { }
+		// #endregion
 		try {
 			ReconcilationResponseModel responseModel = new ReconcilationResponseModel();
+			if (reconcilationPersistModel.getBankId() == null) {
+				responseModel.setStatus(0);
+				responseModel.setMessage("Bank account is required.");
+				return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+			}
 			LocalDateTime reconcileDate = reconsilationRestHelper.getDateFromRequest(reconcilationPersistModel);
+			// #region agent log
+			try {
+				String line2 = "{\"location\":\"ReconsilationController.java:afterGetDateFromRequest\",\"message\":\"reconcileDate\",\"data\":{\"reconcileDate\":" + (reconcileDate == null ? "null" : "\"" + reconcileDate.toString() + "\"") + "},\"timestamp\":" + System.currentTimeMillis() + ",\"hypothesisId\":\"H3\"}\n";
+				Files.write(Path.of("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), line2.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+			} catch (Exception ignored) { }
+			// #endregion
+			if (reconcileDate == null) {
+				responseModel.setStatus(0);
+				responseModel.setMessage("Invalid or missing date. Use format DD-MM-YYYY.");
+				return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+			}
+
+			if (reconcilationPersistModel.getClosingBalance() == null) {
+				responseModel.setStatus(0);
+				responseModel.setMessage("Closing balance is required.");
+				return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+			}
 
 			ReconcileStatus status = reconsilationRestHelper.getReconcileStatus(reconcilationPersistModel);
 			LocalDateTime startDate = null;
@@ -368,7 +405,11 @@ public class ReconsilationController {
 				}
 			} else {
 				startDate = status.getReconciledDate();
-
+				if (startDate == null) {
+					responseModel.setStatus(0);
+					responseModel.setMessage("Invalid reconcile status: missing start date.");
+					return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+				}
 			}
 			Integer unexplainedTransaction = 1;
 			if (startDate.isEqual(reconcileDate) && status !=null)
@@ -378,10 +419,21 @@ public class ReconsilationController {
 			if (unexplainedTransaction == 0) {
 				//1 check if this matches with closing balance
 				BigDecimal closingBalance = reconcilationPersistModel.getClosingBalance();
+				var bankAccount = bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId());
+				if (bankAccount == null || bankAccount.getTransactionCategory() == null) {
+					responseModel.setStatus(0);
+					responseModel.setMessage("Bank account or transaction category not found.");
+					return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+				}
 				BigDecimal dbClosingBalance = transactionCategoryClosingBalanceService.matchClosingBalanceForReconcile(reconcileDate,
-						bankAccountService.getBankAccountById(reconcilationPersistModel.getBankId()).getTransactionCategory());
-				if(dbClosingBalance.longValue()<0)
+						bankAccount.getTransactionCategory());
+				if(dbClosingBalance != null && dbClosingBalance.longValue()<0)
 					dbClosingBalance = dbClosingBalance.negate();
+				if (dbClosingBalance == null) {
+					responseModel.setStatus(0);
+					responseModel.setMessage("Could not compute closing balance.");
+					return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+				}
 				boolean isClosingBalanceMatches = dbClosingBalance.compareTo(closingBalance)==0;
 				if (isClosingBalanceMatches) {
 					transactionService.updateTransactionStatusReconcile(startDate, reconcileDate.plusHours(23).plusMinutes(59), reconcilationPersistModel.getBankId(),
@@ -413,8 +465,18 @@ public class ReconsilationController {
 			}
 
 		} catch (Exception e) {
+			// #region agent log
+			try {
+				String msg = e.getMessage() != null ? e.getMessage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") : "";
+				String line3 = "{\"location\":\"ReconsilationController.java:catch\",\"message\":\"reconcileNow exception\",\"data\":{\"exceptionClass\":\"" + e.getClass().getName() + "\",\"message\":\"" + msg + "\"},\"timestamp\":" + System.currentTimeMillis() + ",\"hypothesisId\":\"H2,H4\"}\n";
+				Files.write(Path.of("/Users/zecs/workspaces/SimpleAccounts-UAE/.cursor/debug.log"), line3.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+			} catch (Exception ignored) { }
+			// #endregion
 			logger.error(ERROR, e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			ReconcilationResponseModel errModel = new ReconcilationResponseModel();
+			errModel.setStatus(0);
+			errModel.setMessage(e.getMessage() != null ? e.getMessage() : "Reconciliation failed. Please try again.");
+			return new ResponseEntity<>(errModel, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
