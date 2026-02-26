@@ -143,7 +143,9 @@ function ReconcileTransaction() {
     data => {
       const bankAccountId = location.state?.bankAccountId;
       if (!bankAccountId) {
-        showError('Bank account is missing. Please go back and open Reconcile from the transaction list.');
+        showError(
+          'Bank account is missing. Please go back and open Reconcile from the transaction list.'
+        );
         return;
       }
 
@@ -153,14 +155,33 @@ function ReconcileTransaction() {
       setLoadingMsg('Reconciling...');
 
       const { closingBalance, date } = data;
-      const dateStr = date ? (typeof date === 'string' ? date : dayjs(date).format('DD-MM-YYYY')) : '';
+      const dateStr = date
+        ? typeof date === 'string'
+          ? date
+          : dayjs(date).format('DD-MM-YYYY')
+        : '';
       const params = new URLSearchParams();
       params.append('bankId', String(bankAccountId));
       params.append('closingBalance', String(closingBalance ?? ''));
       params.append('date', dateStr);
 
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'reconcile/screen.jsx:before-reconcilenow', message: 'Reconcile submit payload', data: { bankAccountId, dateStr, closingBalance: closingBalance ?? '', paramsString: params.toString() }, timestamp: Date.now(), hypothesisId: 'H5' }) }).catch(() => {});
+      fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          location: 'reconcile/screen.jsx:before-reconcilenow',
+          message: 'Reconcile submit payload',
+          data: {
+            bankAccountId,
+            dateStr,
+            closingBalance: closingBalance ?? '',
+            paramsString: params.toString(),
+          },
+          timestamp: Date.now(),
+          hypothesisId: 'H5',
+        }),
+      }).catch(() => {});
       // #endregion
 
       transactionReconcileActionsObj
@@ -182,14 +203,31 @@ function ReconcileTransaction() {
         })
         .catch(err => {
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'reconcile/screen.jsx:catch', message: 'Reconcile request failed', data: { status: err?.response?.status, dataMessage: err?.data?.message ?? err?.response?.data?.message, responseData: err?.response?.data }, timestamp: Date.now(), hypothesisId: 'H1,H2,H4' }) }).catch(() => {});
+          fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              location: 'reconcile/screen.jsx:catch',
+              message: 'Reconcile request failed',
+              data: {
+                status: err?.response?.status,
+                dataMessage: err?.data?.message ?? err?.response?.data?.message,
+                responseData: err?.response?.data,
+              },
+              timestamp: Date.now(),
+              hypothesisId: 'H1,H2,H4',
+            }),
+          }).catch(() => {});
           // #endregion
           setDisabled(false);
           setIsLoading(false);
           setDisableLeavePage(false);
           setLoadingMsg('');
           const message =
-            err?.data?.message ?? err?.response?.data?.message ?? err?.message ?? 'Something went wrong. Please try again.';
+            err?.data?.message ??
+            err?.response?.data?.message ??
+            err?.message ??
+            'Something went wrong. Please try again.';
           showError(message);
         });
     },
@@ -435,13 +473,13 @@ function ReconcileTransaction() {
                                 type="button"
                                 variant="secondary"
                                 className="btn-square"
-onClick={() =>
-                                    navigate('/admin/banking/bank-account/transaction', {
-                                      state: {
-                                        bankAccountId: location.state?.bankAccountId,
-                                      },
-                                    })
-                                  }
+                                onClick={() =>
+                                  navigate('/admin/banking/bank-account/transaction', {
+                                    state: {
+                                      bankAccountId: location.state?.bankAccountId,
+                                    },
+                                  })
+                                }
                               >
                                 <Ban className="h-4 w-4" /> {strings.Cancel}
                               </Button>

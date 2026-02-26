@@ -159,7 +159,9 @@ test.describe('Bank Reconciliation Workflow', () => {
     await page.waitForURL(/\/admin\/banking\/upload-statement/);
     await expect(page).toHaveURL(/upload-statement/);
     await expect(
-      page.getByRole('heading', { name: /import statement/i }).or(page.getByText(/import statement/i))
+      page
+        .getByRole('heading', { name: /import statement/i })
+        .or(page.getByText(/import statement/i))
     ).toBeVisible();
 
     // Go back to View Transaction (with state so page has bankAccountId)
@@ -196,9 +198,9 @@ test.describe('Bank Reconciliation Workflow', () => {
     await page.waitForURL(/\/admin\/banking\/bank-account\/transaction\/reconcile/);
     await expect(page).toHaveURL(/reconcile/);
     // Reconcile page shows closing balance or reconcile form
-    await expect(
-      page.getByText(/closing balance|reconcile/i).first()
-    ).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/closing balance|reconcile/i).first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   // Task #575: Implement transaction matching with invoices test
