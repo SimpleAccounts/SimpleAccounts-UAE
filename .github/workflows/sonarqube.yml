@@ -32,7 +32,7 @@ env:
 jobs:
   sonarqube:
     name: Build and Analyze
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 45
     permissions:
       contents: read
@@ -79,7 +79,7 @@ jobs:
 
       - name: Cache SonarQube packages
         if: steps.sonar.outputs.run == 'true'
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -87,7 +87,7 @@ jobs:
 
       - name: Cache Maven packages
         if: steps.sonar.outputs.run == 'true'
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -95,7 +95,7 @@ jobs:
 
       - name: Cache Node dependencies
         if: steps.sonar.outputs.run == 'true'
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: |
             node_modules
@@ -123,13 +123,13 @@ jobs:
         working-directory: apps/backend
         env:
           SPRING_PROFILES_ACTIVE: test
-        run: mvn -B test -Dspring.profiles.active=test || true
+        run: ./mvnw -B test -Dspring.profiles.active=test || true
         continue-on-error: true
 
       - name: Generate Coverage Report
         if: steps.sonar.outputs.run == 'true'
         working-directory: apps/backend
-        run: mvn jacoco:report || true
+        run: ./mvnw jacoco:report || true
         continue-on-error: true
 
       # Import SSL certificate and run SonarQube Analysis

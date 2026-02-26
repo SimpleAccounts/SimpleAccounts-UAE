@@ -56,7 +56,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "playwright": "^1.57.0",
+    "playwright": "^1.58.0",
     "sass": "1.97.3"
   },
   "devDependencies": {
@@ -67,7 +67,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-unused-imports": "^4.3.0",
-    "globals": "^17.0.0",
+    "globals": "^17.2.0",
     "husky": "^9.0.6",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",

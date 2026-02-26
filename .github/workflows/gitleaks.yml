@@ -20,7 +20,7 @@ permissions:
 jobs:
   gitleaks:
     name: Gitleaks
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 10
 
     steps:
@@ -34,8 +34,15 @@ jobs:
           set -euo pipefail
 
           VERSION="8.30.0"
+          # Use correct binary for runner architecture (x64 or ARM64)
+          ARCH="${{ runner.arch }}"
+          if [ "$ARCH" = "ARM64" ]; then
+            SUFFIX="linux_arm64"
+          else
+            SUFFIX="linux_x64"
+          fi
           curl -sSfL --retry 5 --retry-delay 3 --retry-all-errors \
-            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_${SUFFIX}.tar.gz" \
             -o /tmp/gitleaks.tar.gz
           tar -xzf /tmp/gitleaks.tar.gz -C /tmp
           sudo install -m 0755 /tmp/gitleaks /usr/local/bin/gitleaks

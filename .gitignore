@@ -16,6 +16,7 @@ target/
 *.iml
 .vscode/
 !.vscode/settings.json
+.cursor/
 
 # Claude Code local settings
 .claude/
@@ -142,3 +143,7 @@ apps/frontend/.dockerignore
 
 # Auto Claude data directory
 .auto-claude/
+
+# Temporary E2E phase-4 verification (do not commit)
+apps/frontend/e2e/docs/phase-4-remaining-tasks-action-plan.md
+apps/frontend/e2e/phase-4-completed-tasks-verification.spec.ts

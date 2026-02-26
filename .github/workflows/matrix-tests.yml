@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: k3s-simpleaccounts-runners
             java: '21'
             experimental: false
           - os: windows-latest
@@ -60,12 +60,12 @@ jobs:
 
       - name: Run backend tests
         working-directory: apps/backend
-        # Use env SPRING_PROFILES_ACTIVE for cross-platform compatibility (PowerShell can split -D args).
-        run: mvn -B -ntp test
+        # Use Maven wrapper so mvn is always available regardless of runner/setup-java cache.
+        run: ./mvnw -B -ntp test
 
   frontend:
     name: Frontend Unit Tests (Matrix)
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 40
     continue-on-error: ${{ matrix.experimental }}
     strategy:

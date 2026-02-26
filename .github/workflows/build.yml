@@ -21,7 +21,7 @@ env:
 jobs:
   lint-format:
     name: Lint and Format
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 15
     permissions:
       contents: read
@@ -38,7 +38,7 @@ jobs:
           node-version: 20.x
 
       - name: Cache dependencies
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: node_modules
           key: ${{ runner.os }}-lint-${{ hashFiles('package-lock.json') }}
@@ -85,7 +85,7 @@ jobs:
   # Stage 1: Lint and Unit Tests (fail-fast)
   test-backend:
     name: Backend Tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -109,11 +109,11 @@ jobs:
 
       - name: Run Backend Tests with Coverage
         working-directory: apps/backend
-        run: mvn clean test -Dspring.profiles.active=test
+        run: bash ./mvnw clean test -Dspring.profiles.active=test -B
 
       - name: Generate Coverage Report
         working-directory: apps/backend
-        run: mvn jacoco:report
+        run: bash ./mvnw jacoco:report
         if: always()
 
       - name: Upload Backend Test Results
@@ -128,7 +128,7 @@ jobs:
 
   test-frontend-unit:
     name: Frontend Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -138,7 +138,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4
 
       - name: Cache dependencies
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: |
             node_modules
@@ -175,7 +175,7 @@ jobs:
   build-frontend:
     name: Build Frontend
     needs: test-frontend-unit
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -185,7 +185,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4
 
       - name: Cache dependencies
-        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v4
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v4
         with:
           path: |
             node_modules
@@ -220,7 +220,7 @@ jobs:
   build-backend:
     name: Build Backend
     needs: test-backend
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     timeout-minutes: 25
     permissions:
       contents: read
@@ -244,7 +244,7 @@ jobs:
 
       - name: Build with Maven
         working-directory: apps/backend
-        run: mvn clean package -DskipTests
+        run: bash ./mvnw clean package -DskipTests -B
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
@@ -257,7 +257,7 @@ jobs:
   test-e2e:
     name: E2E Tests
     needs: [build-frontend, build-backend]
-    runs-on: ubuntu-latest
+    runs-on: k3s-simpleaccounts-runners
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/master'
     timeout-minutes: 45
     permissions:

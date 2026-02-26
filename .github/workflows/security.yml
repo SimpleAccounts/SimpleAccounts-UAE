@@ -18,6 +18,7 @@ concurrency:
 jobs:
   codeql:
     name: CodeQL Analysis
+    # CodeQL does not support linux/arm64; use GitHub-hosted x64 runner
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # Skip fork PRs: CodeQL upload requires elevated permissions not granted to forks.
@@ -60,7 +61,7 @@ jobs:
       - name: Build Java
         if: matrix.language == 'java'
         working-directory: apps/backend
-        run: mvn clean compile -DskipTests
+        run: ./mvnw clean compile -DskipTests
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@5d4e8d1aca955e8d8589aabd499c5cae939e33c7 # v4
