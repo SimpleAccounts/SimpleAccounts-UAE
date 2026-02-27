@@ -14,4 +14,31 @@
       color: #9b9393;
     }
   }
+
+  /* Reconcile history table: full page width + prevent truncated headers */
+  .space-y-4 {
+    width: 100%;
+  }
+  .rounded-xl {
+    width: 100%;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    min-width: 100%;
+    table-layout: auto;
+    th {
+      white-space: nowrap;
+      min-width: 120px;
+    }
+    th:first-child {
+      min-width: 180px;
+    }
+    th:nth-child(2) {
+      min-width: 160px;
+    }
+    th:nth-child(3) {
+      min-width: 140px;
+    }
+  }
 }

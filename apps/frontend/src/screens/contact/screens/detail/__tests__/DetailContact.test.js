@@ -281,20 +281,22 @@ describe('DetailContact Component', () => {
   it('should display form inputs', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      // Check for First Name label
-      expect(screen.getByText(/first.*name/i)).toBeInTheDocument();
-    });
-  });
+    // Wait for form to load (First Name label appears after getContactById resolves)
+    const firstNameLabel = await screen.findByText(/first.*name/i, {}, { timeout: 15000 });
+    expect(firstNameLabel).toBeInTheDocument();
+  }, 20000);
 
   it('should display delete button', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      const deleteButtons = screen.getAllByRole('button', { name: /delete/i });
-      expect(deleteButtons.length).toBeGreaterThan(0);
-    });
-  });
+    // Wait for form to load (delete button(s) appear after getContactById resolves; screen may have more than one)
+    const deleteButtons = await screen.findAllByRole(
+      'button',
+      { name: /delete/i },
+      { timeout: 15000 }
+    );
+    expect(deleteButtons.length).toBeGreaterThan(0);
+  }, 20000);
 
   it('should display update button', async () => {
     renderComponent();

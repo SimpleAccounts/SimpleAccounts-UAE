@@ -48,6 +48,28 @@ export const getReconcileList = obj => {
 
 export const reconcilenow = obj => {
   return dispatch => {
+    // #region agent log
+    const paramsString = obj && typeof obj.toString === 'function' ? obj.toString() : String(obj);
+    fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        location: 'actions.js:reconcilenow',
+        message: 'reconcilenow request config',
+        data: {
+          objType: obj && obj.constructor ? obj.constructor.name : typeof obj,
+          paramsString:
+            paramsString && paramsString.length <= 500
+              ? paramsString
+              : paramsString
+                ? paramsString.slice(0, 500) + '...'
+                : '',
+        },
+        timestamp: Date.now(),
+        hypothesisId: 'H5',
+      }),
+    }).catch(() => {});
+    // #endregion
     let data = {
       method: 'post',
       url: '/rest/reconsile/reconcilenow',

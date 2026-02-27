@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Ban, ChevronDown, ChevronUp, CircleDot, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import DatePicker from 'react-datepicker';
 import { CommonActions } from 'services/global';
 import dayjs from '@/utils/date';
@@ -31,12 +32,12 @@ import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings(data);
 
-// Zod validation schema
+// Zod validation schema (date can be Date or string from picker/locale)
 const reconcileSchema = z.object({
-  date: z.date({
-    required_error: 'Date is Required',
-    invalid_type_error: 'Date is Required',
-  }),
+  date: z.union([
+    z.date({ required_error: 'Date is Required', invalid_type_error: 'Date is Required' }),
+    z.string().min(1, 'Date is Required'),
+  ]),
   closingBalance: z.string().min(1, 'Closing Balance is Required'),
 });
 
@@ -96,6 +97,14 @@ function ReconcileTransaction() {
     strings.setLanguage(language);
   }, [language]);
 
+  const showError = useCallback(message => {
+    toast.error(message, { position: 'top-right', duration: 5000 });
+  }, []);
+
+  const showSuccess = useCallback(message => {
+    toast.success(message, { position: 'top-right', duration: 4000 });
+  }, []);
+
   const initializeData = useCallback(() => {
     const data = {
       pageNo: pagination.pageIndex,
@@ -114,16 +123,13 @@ function ReconcileTransaction() {
           }
         })
         .catch(err => {
-          commonActions.tostifyAlert(
-            'error',
-            err && err.data ? err.data.message : 'Something Went Wrong'
-          );
+          showError(err && err.data ? err.data.message : 'Something Went Wrong');
           setIsLoading(false);
         });
     } else {
       navigate('/admin/banking/bank-account');
     }
-  }, [location.state, pagination, transactionReconcileActionsObj, commonActions, navigate]);
+  }, [location.state, pagination, transactionReconcileActionsObj, showError, navigate]);
 
   useEffect(() => {
     initializeData();
@@ -135,44 +141,106 @@ function ReconcileTransaction() {
 
   const onSubmit = useCallback(
     data => {
+      const bankAccountId = location.state?.bankAccountId;
+      if (!bankAccountId) {
+        showError(
+          'Bank account is missing. Please go back and open Reconcile from the transaction list.'
+        );
+        return;
+      }
+
       setDisabled(true);
       setIsLoading(true);
       setDisableLeavePage(true);
       setLoadingMsg('Reconciling...');
 
-      const bankAccountId = location.state.bankAccountId;
       const { closingBalance, date } = data;
-      let formData = new FormData();
-      formData.append('bankId ', bankAccountId ? bankAccountId : '');
-      formData.append('closingBalance', closingBalance ? closingBalance : '');
-      formData.append('date', date ? dayjs(date).format('DD-MM-YYYY') : '');
+      const dateStr = date
+        ? typeof date === 'string'
+          ? date
+          : dayjs(date).format('DD-MM-YYYY')
+        : '';
+      const params = new URLSearchParams();
+      params.append('bankId', String(bankAccountId));
+      params.append('closingBalance', String(closingBalance ?? ''));
+      params.append('date', dateStr);
+
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          location: 'reconcile/screen.jsx:before-reconcilenow',
+          message: 'Reconcile submit payload',
+          data: {
+            bankAccountId,
+            dateStr,
+            closingBalance: closingBalance ?? '',
+            paramsString: params.toString(),
+          },
+          timestamp: Date.now(),
+          hypothesisId: 'H5',
+        }),
+      }).catch(() => {});
+      // #endregion
 
       transactionReconcileActionsObj
-        .reconcilenow(formData)
+        .reconcilenow(params)
         .then(res => {
-          if (res.status === 200) {
+          if (res?.status === 200) {
             setDisabled(false);
+            setIsLoading(false);
+            setDisableLeavePage(false);
+            setLoadingMsg('');
             reset();
-            if (res.data.status === 1) {
-              commonActions.tostifyAlert('success', res.data.message);
+            if (res.data?.status === 1) {
+              showSuccess(res.data.message ?? 'Reconciled successfully.');
               initializeData();
             } else {
-              commonActions.tostifyAlert('error', res.data.message);
-              setDisabled(false);
-              setIsLoading(false);
-              setDisableLeavePage(true);
-              setLoadingMsg('');
+              showError(res.data?.message ?? 'Reconciliation failed.');
             }
           }
         })
         .catch(err => {
-          commonActions.tostifyAlert(
-            'error',
-            err && err.data ? err.data.message : 'Something Went Wrong'
-          );
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/9820ccb9-53bb-49da-b89d-d829448cd2c5', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              location: 'reconcile/screen.jsx:catch',
+              message: 'Reconcile request failed',
+              data: {
+                status: err?.response?.status,
+                dataMessage: err?.data?.message ?? err?.response?.data?.message,
+                responseData: err?.response?.data,
+              },
+              timestamp: Date.now(),
+              hypothesisId: 'H1,H2,H4',
+            }),
+          }).catch(() => {});
+          // #endregion
+          setDisabled(false);
+          setIsLoading(false);
+          setDisableLeavePage(false);
+          setLoadingMsg('');
+          const message =
+            err?.data?.message ??
+            err?.response?.data?.message ??
+            err?.message ??
+            'Something went wrong. Please try again.';
+          showError(message);
         });
     },
-    [location.state, transactionReconcileActionsObj, commonActions, initializeData, reset]
+    [location.state, transactionReconcileActionsObj, initializeData, reset, showError, showSuccess]
+  );
+
+  const onInvalid = useCallback(
+    errors => {
+      const firstError = errors?.date?.message ?? errors?.closingBalance?.message;
+      const message = firstError ?? 'Please fill in Bank Closing Date and Closing Balance.';
+      showError(message);
+    },
+    [showError]
   );
 
   const editDetails = useCallback(() => {
@@ -181,9 +249,9 @@ function ReconcileTransaction() {
 
   const closeReconciled = useCallback(_id => {
     const message1 = (
-      <text>
+      <span>
         <b>Delete Bank Reconciliation?</b>
-      </text>
+      </span>
     );
     const message = 'The bank reconciliation of the transaction will be undone. ';
     setDialog(
@@ -206,17 +274,14 @@ function ReconcileTransaction() {
       transactionReconcileActionsObj
         .removeBulkReconciled(obj)
         .then(() => {
-          commonActions.tostifyAlert('success', 'Deleted Successfully');
+          showSuccess('Deleted Successfully');
           initializeData();
         })
         .catch(err => {
-          commonActions.tostifyAlert(
-            'error',
-            err && err.data ? err.data.message : 'Something Went Wrong'
-          );
+          showError(err && err.data ? err.data.message : 'Something Went Wrong');
         });
     },
-    [transactionReconcileActionsObj, commonActions, initializeData]
+    [transactionReconcileActionsObj, initializeData, showSuccess, showError]
   );
 
   const removeDialog = useCallback(() => {
@@ -230,23 +295,26 @@ function ReconcileTransaction() {
     }));
   }, []);
 
-  // Column definitions
+  // Column definitions (minSize prevents header truncation e.g. "Reconcile Run Date" -> "REC RUN")
   const columns = useMemo(
     () => [
       {
         accessorKey: 'reconciledDate',
         header: strings.RECONCILEDATE,
         enableSorting: true,
+        minSize: 180,
       },
       {
         accessorKey: 'reconciledDuration',
         header: strings.RECONCILEDURATION,
         enableSorting: true,
+        minSize: 160,
       },
       {
         accessorKey: 'closingBalance',
         header: strings.ClosingBalance,
         enableSorting: true,
+        minSize: 140,
         cell: ({ row }) => {
           const balance = row.original.closingBalance;
           return balance ? `AED ${balance.toFixed(2)}` : '';
@@ -256,6 +324,7 @@ function ReconcileTransaction() {
         id: 'actions',
         header: '',
         enableSorting: false,
+        size: 60,
         cell: ({ row }) => (
           <div className="text-right">
             <DropdownMenu>
@@ -320,7 +389,7 @@ function ReconcileTransaction() {
                 <CardContent>
                   <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-12">
-                      <form onSubmit={handleSubmit(onSubmit)}>
+                      <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
                         <div className="grid grid-cols-12 gap-4">
                           <div className="col-span-4">
                             <div className="mb-3">
@@ -406,7 +475,9 @@ function ReconcileTransaction() {
                                 className="btn-square"
                                 onClick={() =>
                                   navigate('/admin/banking/bank-account/transaction', {
-                                    bankAccountId: location.state.bankAccountId,
+                                    state: {
+                                      bankAccountId: location.state?.bankAccountId,
+                                    },
                                   })
                                 }
                               >
@@ -420,15 +491,17 @@ function ReconcileTransaction() {
                   </div>
                   <hr />
                   <div className="grid grid-cols-12 gap-4">
-                    <DataTable
-                      columns={columns}
-                      data={reconcile_list.data || []}
-                      manualPagination={true}
-                      pageCount={Math.ceil((reconcile_list.count || 0) / pagination.pageSize)}
-                      totalCount={reconcile_list.count || 0}
-                      onPaginationChange={handlePaginationChange}
-                      isLoading={isLoading}
-                    />
+                    <div className="col-span-12 w-full">
+                      <DataTable
+                        columns={columns}
+                        data={reconcile_list.data || []}
+                        manualPagination={true}
+                        pageCount={Math.ceil((reconcile_list.count || 0) / pagination.pageSize)}
+                        totalCount={reconcile_list.count || 0}
+                        onPaginationChange={handlePaginationChange}
+                        isLoading={isLoading}
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>

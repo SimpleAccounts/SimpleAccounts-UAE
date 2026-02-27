@@ -16,3 +16,4 @@ pnpm-lock.yaml
 # Playwright and test outputs (generated, often not in PR diff)
 apps/frontend/test-results/
 apps/frontend/playwright-report/
+test-results/
