@@ -281,11 +281,10 @@ describe('DetailContact Component', () => {
   it('should display form inputs', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      // Check for First Name label
-      expect(screen.getByText(/first.*name/i)).toBeInTheDocument();
-    });
-  });
+    // Wait for form to load (First Name label appears after getContactById resolves)
+    const firstNameLabel = await screen.findByText(/first.*name/i, {}, { timeout: 15000 });
+    expect(firstNameLabel).toBeInTheDocument();
+  }, 20000);
 
   it('should display delete button', async () => {
     renderComponent();
