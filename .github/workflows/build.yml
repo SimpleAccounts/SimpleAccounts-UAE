@@ -117,7 +117,7 @@ jobs:
         if: always()
 
       - name: Upload Backend Test Results
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         if: always()
         with:
           name: backend-test-results
@@ -164,7 +164,7 @@ jobs:
           CI: true
 
       - name: Upload Frontend Coverage
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         if: always()
         with:
           name: frontend-coverage
@@ -211,7 +211,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: frontend-build
           path: apps/frontend/dist
@@ -247,7 +247,7 @@ jobs:
         run: bash ./mvnw clean package -DskipTests -B
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: backend-build
           path: apps/backend/target/*.war
@@ -286,7 +286,7 @@ jobs:
         run: npx playwright test environment.smoke.spec.ts --project=chromium
 
       - name: Upload E2E Results
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         if: always()
         with:
           name: e2e-results
