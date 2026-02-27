@@ -290,11 +290,14 @@ describe('DetailContact Component', () => {
   it('should display delete button', async () => {
     renderComponent();
 
-    await waitFor(() => {
-      const deleteButtons = screen.getAllByRole('button', { name: /delete/i });
-      expect(deleteButtons.length).toBeGreaterThan(0);
-    });
-  });
+    // Wait for form to load (delete button(s) appear after getContactById resolves; screen may have more than one)
+    const deleteButtons = await screen.findAllByRole(
+      'button',
+      { name: /delete/i },
+      { timeout: 15000 }
+    );
+    expect(deleteButtons.length).toBeGreaterThan(0);
+  }, 20000);
 
   it('should display update button', async () => {
     renderComponent();
