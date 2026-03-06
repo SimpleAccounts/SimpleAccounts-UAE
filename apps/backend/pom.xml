@@ -188,7 +188,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.2</version>
 		</dependency>
 
 		<!-- JUnit dependencies managed by Spring Boot 4 through spring-boot-starter-test -->
