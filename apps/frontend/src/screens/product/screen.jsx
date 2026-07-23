@@ -88,10 +88,9 @@ function Product() {
 
     productActions
       .getProductList(postData)
-      .then(res => {
-        if (res.status === 200) {
-          setLoading(false);
-        }
+      .unwrap()
+      .then(() => {
+        setLoading(false);
       })
       .catch(err => {
         commonActions.tostifyAlert('error', err?.data?.message || 'Something Went Wrong');

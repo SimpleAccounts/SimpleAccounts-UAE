@@ -203,7 +203,7 @@ export const getInvoicesCountContact = id => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: `/rest/contact/getInvoicesCountForContact/?contactId=${id}`,
+      url: `/rest/contact/getInvoicesCountForContact?contactId=${id}`,
     };
     return authApi(data)
       .then(res => {
