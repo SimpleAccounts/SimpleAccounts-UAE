@@ -254,7 +254,7 @@ export const checkProductNameValidation = obj => {
 export const getInvoicesCountProduct = id => {
   const data = {
     method: 'get',
-    url: `/rest/product/getInvoicesCountForProduct/?productId=${id}`,
+    url: `/rest/product/getInvoicesCountForProduct?productId=${id}`,
   };
   return authApi(data);
 };

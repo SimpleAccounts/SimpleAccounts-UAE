@@ -31,6 +31,18 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
+// Route components are written as a mix of legacy class components (which read
+// `history`/`location`/`match` as props) and modern hook-based components. Since
+// `<Routes>` renders them with no props, wrap each once here so both styles work.
+// Cached per component reference so identity stays stable across renders (avoids remounts).
+const navWrapperCache = new WeakMap();
+const withRouteNavigation = Component => {
+  if (!navWrapperCache.has(Component)) {
+    navWrapperCache.set(Component, withNavigation(Component));
+  }
+  return navWrapperCache.get(Component);
+};
+
 let strings = new LocalizedStrings(data);
 if (localStorage.getItem('language') == null) {
   strings.setLanguage('en');
@@ -339,13 +351,14 @@ class AdminLayout extends React.Component {
                         />
                       );
                     }
+                    const RouteComponent = withRouteNavigation(prop.component);
                     return (
                       <Route
                         path={prop.path}
                         key={key}
                         element={
                           <PrivateRoute
-                            element={<prop.component />}
+                            element={<RouteComponent />}
                             name={prop.name}
                             node={user_role_list}
                           />

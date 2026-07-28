@@ -15,7 +15,7 @@ import generalSettingsReducer from 'screens/general_settings/reducer';
 import customerInvoiceReducer from 'screens/customer_invoice/reducer';
 import receiptReducer from 'screens/receipt/reducer';
 import supplierInvoiceReducer from 'screens/supplier_invoice/reducer';
-import productReducer from 'screens/product/reducer';
+import productReducer from 'screens/product/productSlice';
 import projectReducer from 'screens/project/reducer';
 import paymentReducer from 'screens/payment/reducer';
 import transactionCategoryReducer from 'screens/transaction_category/reducer';

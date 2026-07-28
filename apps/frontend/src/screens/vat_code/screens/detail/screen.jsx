@@ -22,37 +22,9 @@ import { CommonActions } from 'services/global';
 import './style.scss';
 import * as VatDetailActions from './actions';
 import * as VatActions from '../../actions';
-import { NumericFormat } from 'react-number-format';
-import PropTypes from 'prop-types';
-import { Input as ShadcnInput } from '@/components/ui/input';
 import { data } from '../../../Language/index';
 import LocalizedStrings from 'react-localization';
 import { Ban, CircleDot, HelpCircle, Trash2 } from 'lucide-react';
-
-function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumericFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      suffix="%"
-    />
-  );
-}
-
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
 
 const mapStateToProps = state => {
   return {
@@ -197,8 +169,6 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
   };
 
   const vatCode = /[a-zA-Z0-9 ]+$/;
-  const regExPercentage = /^(100(\.00?)?|[1-9]?\d(\.\d\d?)?)$/;
-
   return loading === true ? (
     <Loader />
   ) : (
@@ -268,24 +238,18 @@ const DetailVatCode = ({ vatDetailActions, vatActions, commonActions, history, l
                               control={control}
                               render={({ field }) => (
                                 <div className="w-full">
-                                  <NumericFormat
-                                    customInput={ShadcnInput}
-                                    type="text"
+                                  <Input
+                                    type="number"
                                     id="vat"
                                     placeholder="Enter Tax Percentage"
                                     {...field}
                                     className={errors.vat ? 'border-red-500' : ''}
-                                    onValueChange={values => {
-                                      if (
-                                        values.value === '' ||
-                                        regExPercentage.test(values.value)
-                                      ) {
-                                        field.onChange(values.value);
-                                      }
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    onChange={event => {
+                                      field.onChange(event.target.value);
                                     }}
-                                    thousandSeparator
-                                    suffix="%"
-                                    maxLength={5}
                                   />
                                 </div>
                               )}

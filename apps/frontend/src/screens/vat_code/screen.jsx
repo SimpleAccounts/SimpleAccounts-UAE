@@ -161,9 +161,9 @@ function VatCode() {
 
   // Transform data for table (filter out specific IDs)
   const tableData = useMemo(() => {
-    if (!vat_list?.data) return [];
+    if (!Array.isArray(vat_list)) return [];
     // Filter out IDs 3, 4, and 10
-    return vat_list.data
+    return vat_list
       .filter(item => ![3, 4, 10].includes(item.id))
       .map(item => ({
         id: item.id,

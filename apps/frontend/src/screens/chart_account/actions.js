@@ -119,7 +119,7 @@ export const getExplainedTransactionCountForTransactionCategory = id => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: `/rest/transactioncategory/getExplainedTransactionCountForTransactionCategory/?transactionCategoryId=${id}`,
+      url: `/rest/transactioncategory/getExplainedTransactionCountForTransactionCategory?transactionCategoryId=${id}`,
     };
     return authApi(data)
       .then(res => {

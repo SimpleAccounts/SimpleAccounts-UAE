@@ -101,7 +101,7 @@ export const getVatCount = id => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: `/rest/vat/getProductCountsForVat/?vatId=${id}`,
+      url: `/rest/vat/getProductCountsForVat?vatId=${id}`,
     };
     return authApi(data)
       .then(res => {

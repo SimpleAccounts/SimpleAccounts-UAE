@@ -472,7 +472,7 @@ export const getCustomerInvoicesCountForDelete = id => {
   return dispatch => {
     let data = {
       method: 'get',
-      url: `/rest/invoice/getCustomerInvoicesCountForDelete/?invoiceId=${id}`,
+      url: `/rest/invoice/getCustomerInvoicesCountForDelete?invoiceId=${id}`,
     };
     return authApi(data)
       .then(res => {
