@@ -207,7 +207,7 @@ const CreateVatCode = ({ vatActions, vatCreateActions, commonActions, history })
                                 id="vat"
                                 placeholder="Enter VAT Percentage"
                                 {...field}
-                                className={errors.vat ? 'border-red-500' : ''}
+invalid={!!errors.vat}
                                 min="0"
                                 max="100"
                                 step="0.01"
